@@ -1,5 +1,391 @@
 {
   "title": "Optimality & convexity",
+  "notes": [
+    {
+      "h": "Calculus toolkit",
+      "items": [
+        {
+          "t": "Gradients",
+          "d": [
+            "∇(bᵀx) = b.  ∇(xᵀBx) = (B + Bᵀ)x, Hessian B + Bᵀ (equal to 2Bx and 2B only when B is symmetric).",
+            "For f(x) = ½xᵀAx + bᵀx + c with A symmetric: ∇f = Ax + b, Hessian H = A."
+          ],
+          "cards": [
+            "NLO-02-02"
+          ]
+        },
+        {
+          "t": "Taylor, first order",
+          "d": [
+            "f(x̄ + d) = f(x̄) + ∇f(x̄)ᵀd + o(‖d‖). Used to prove FONC."
+          ],
+          "cards": [
+            "NLO-02-04"
+          ]
+        },
+        {
+          "t": "Taylor, second order",
+          "d": [
+            "f(x̄ + d) = f(x̄) + ∇f(x̄)ᵀd + ½dᵀH(x̄)d + o(‖d‖²). Used for SONC and SOSC."
+          ],
+          "cards": [
+            "NLO-02-17"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Optimality definitions",
+      "items": [
+        {
+          "t": "Global minimizer",
+          "d": [
+            "x* ∈ S with f(x) ≥ f(x*) for all x ∈ S."
+          ],
+          "cards": [
+            "NLO-02-01"
+          ]
+        },
+        {
+          "t": "Local minimizer",
+          "d": [
+            "There is ε > 0 with f(x) ≥ f(x*) for all x ∈ B(x*, ε) ∩ S."
+          ],
+          "cards": [
+            "NLO-02-01"
+          ]
+        },
+        {
+          "t": "Strict",
+          "d": [
+            "Replace ≥ with > for all x ≠ x*. A strict global minimizer is unique.",
+            "Strict global ⇒ global ⇒ local, and strict global ⇒ strict local ⇒ local."
+          ],
+          "cards": [
+            "NLO-02-01"
+          ]
+        },
+        {
+          "t": "Stationary point",
+          "d": [
+            "A point x̄ with ∇f(x̄) = 0. It can be a local min, a local max or a saddle point."
+          ],
+          "cards": [
+            "NLO-02-03",
+            "NLO-02-05"
+          ]
+        },
+        {
+          "t": "Saddle point",
+          "d": [
+            "A stationary point that is neither a local min nor a local max."
+          ],
+          "cards": [
+            "NLO-02-18"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "First-order necessary condition",
+      "items": [
+        {
+          "t": "FONC",
+          "d": [
+            "If f is differentiable at x* and x* is a local minimizer of min f(x) over ℝⁿ, then ∇f(x*) = 0.",
+            "Necessary only: f = x³ has f′(0) = 0 but no min at 0."
+          ],
+          "cards": [
+            "NLO-02-03"
+          ]
+        },
+        {
+          "t": "Proof of FONC",
+          "d": [
+            "1. For any d and small t > 0: f(x* + td) − f(x*) ≥ 0.",
+            "2. Divide by t, let t ↓ 0 (first-order Taylor): ∇f(x*)ᵀd ≥ 0 for every d.",
+            "3. Take d = −∇f(x*): −‖∇f(x*)‖² ≥ 0, so ∇f(x*) = 0."
+          ],
+          "cards": [
+            "NLO-02-04"
+          ]
+        },
+        {
+          "t": "What FONC cannot do",
+          "d": [
+            "Tell a min from a max (f and −f share stationary points); rule out saddle points; guarantee that a stationary point or a minimizer exists."
+          ],
+          "cards": [
+            "NLO-02-05"
+          ]
+        },
+        {
+          "t": "Where FONC does not apply",
+          "d": [
+            "Boundary points of a constraint set: only ∇f(x*)ᵀd ≥ 0 for feasible d holds (leads to KKT).",
+            "Points where f is not differentiable, e.g. |x| at 0."
+          ],
+          "cards": [
+            "NLO-02-06"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Convex sets",
+      "items": [
+        {
+          "t": "Convex set",
+          "d": [
+            "x, y ∈ C and λ ∈ [0, 1] ⇒ λx + (1 − λ)y ∈ C."
+          ],
+          "cards": [
+            "NLO-02-07"
+          ]
+        },
+        {
+          "t": "Examples",
+          "d": [
+            "ℝⁿ, ∅, half-spaces {aᵀx ≥ β}, balls, affine sets {Ax = b}, the PSD cone, polyhedra {Ax ≤ b}."
+          ],
+          "cards": [
+            "NLO-02-07",
+            "NLO-02-08"
+          ]
+        },
+        {
+          "t": "Operations that preserve convexity",
+          "d": [
+            "Intersection (any number of sets), scaling βC, Minkowski sum C₁ + C₂. Not unions.",
+            "Sublevel sets {g(x) ≤ 0} of a convex g are convex."
+          ],
+          "cards": [
+            "NLO-02-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Convex functions",
+      "items": [
+        {
+          "t": "Convex function",
+          "d": [
+            "On a convex set S: f(λx + (1 − λ)y) ≤ λf(x) + (1 − λ)f(y) for all x, y ∈ S, λ ∈ [0, 1].",
+            "Strictly convex: strict inequality for x ≠ y, λ ∈ (0, 1). Concave: −f is convex."
+          ],
+          "cards": [
+            "NLO-02-09"
+          ]
+        },
+        {
+          "t": "Quadratics",
+          "d": [
+            "f = ½xᵀAx + bᵀx + c (A symmetric) is convex ⇔ A ⪰ 0, strictly convex ⇔ A ≻ 0.",
+            "Identity: λf(x) + (1 − λ)f(y) − f(λx + (1 − λ)y) = ½λ(1 − λ)(x − y)ᵀA(x − y)."
+          ],
+          "cards": [
+            "NLO-02-10"
+          ]
+        },
+        {
+          "t": "Operations that preserve convexity",
+          "d": [
+            "f₁ + f₂;  αf with α > 0;  g(f(x)) with g convex and nondecreasing;  f(Ax + b);  max{f₁, f₂}."
+          ],
+          "cards": [
+            "NLO-02-11"
+          ]
+        },
+        {
+          "t": "Hessian test",
+          "d": [
+            "C open and convex, f twice continuously differentiable. f convex on C ⇔ H(x) ⪰ 0 for all x ∈ C.",
+            "H(x) ≻ 0 for all x ∈ C ⇒ strictly convex. The converse fails (x⁴)."
+          ],
+          "cards": [
+            "NLO-02-12"
+          ]
+        },
+        {
+          "t": "Checking PD / PSD",
+          "d": [
+            "PD: all leading principal minors > 0, or all eigenvalues > 0.",
+            "PSD: all principal minors ≥ 0 (not only leading), or all eigenvalues ≥ 0.",
+            "2×2 with rows (a, b), (b, c): PSD ⇔ a ≥ 0, c ≥ 0, ac − b² ≥ 0."
+          ],
+          "cards": [
+            "NLO-02-13"
+          ]
+        },
+        {
+          "t": "Common cases",
+          "d": [
+            "Convex: affine functions, e^(ax), −log x on (0, ∞), xᵀQx with Q a covariance matrix, ½‖Xw − y‖², hinge loss, logistic loss.",
+            "Not convex: e^(−x²), x³ on ℝ."
+          ],
+          "cards": [
+            "NLO-02-20"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Convex optimization",
+      "items": [
+        {
+          "t": "Convex problem",
+          "d": [
+            "min f(x) over x ∈ S, with S a convex set and f convex on S."
+          ],
+          "cards": [
+            "NLO-02-14"
+          ]
+        },
+        {
+          "t": "Local = global",
+          "d": [
+            "In a convex problem every local minimizer is a global minimizer. If f is strictly convex the minimizer is unique.",
+            "Proof idea: for y outside the ball take z = λ′x* + (1 − λ′)y with 1 − λ′ = ε/‖y − x*‖; then f(x*) ≤ f(z) ≤ λ′f(x*) + (1 − λ′)f(y)."
+          ],
+          "cards": [
+            "NLO-02-14"
+          ]
+        },
+        {
+          "t": "Gradient inequality",
+          "d": [
+            "f differentiable on an open convex C. f convex ⇔ f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) for all x, y ∈ C.",
+            "The tangent plane lies below the graph everywhere."
+          ],
+          "cards": [
+            "NLO-02-15"
+          ]
+        },
+        {
+          "t": "Stationary ⇒ global",
+          "d": [
+            "If f is convex and differentiable and ∇f(x*) = 0, then x* is a global minimizer. On ℝⁿ, FONC is necessary and sufficient for convex f.",
+            "Constrained convex S: x* is optimal ⇔ ∇f(x*)ᵀ(y − x*) ≥ 0 for all y ∈ S."
+          ],
+          "cards": [
+            "NLO-02-15"
+          ]
+        },
+        {
+          "t": "Least squares",
+          "d": [
+            "f(w) = ½‖Xw − y‖²: ∇f = Xᵀ(Xw − y), H = XᵀX ⪰ 0, always convex.",
+            "X full column rank ⇒ unique minimizer w* = (XᵀX)⁻¹Xᵀy, and the residual satisfies Xᵀr = 0."
+          ],
+          "cards": [
+            "NLO-02-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Second-order conditions (f not convex)",
+      "items": [
+        {
+          "t": "SONC",
+          "d": [
+            "If x* is a local minimizer, then ∇f(x*) = 0 and H(x*) ⪰ 0."
+          ],
+          "cards": [
+            "NLO-02-17"
+          ]
+        },
+        {
+          "t": "SOSC",
+          "d": [
+            "If ∇f(x*) = 0 and H(x*) ≻ 0, then x* is a strict local minimizer. Local only."
+          ],
+          "cards": [
+            "NLO-02-17",
+            "NLO-02-19"
+          ]
+        },
+        {
+          "t": "Undecided case",
+          "d": [
+            "∇f(x*) = 0 and H(x*) PSD but singular: no conclusion. x⁴ (min), x³ (neither), x₁² − x₂⁴ (saddle) all have this at 0."
+          ],
+          "cards": [
+            "NLO-02-17"
+          ]
+        },
+        {
+          "t": "Saddle test",
+          "d": [
+            "∇f(x*) = 0 and H(x*) indefinite (a positive and a negative eigenvalue) ⇒ saddle point."
+          ],
+          "cards": [
+            "NLO-02-18"
+          ]
+        },
+        {
+          "t": "Classifying a stationary point",
+          "d": [
+            "H ≻ 0: strict local min.  H ≺ 0: strict local max.  H indefinite: saddle.  H singular and semidefinite: look along the null directions."
+          ],
+          "cards": [
+            "NLO-02-19"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Derivative table",
+          "d": [
+            "∇(xᵀBx) = 2Bx needs B symmetric."
+          ],
+          "cards": [
+            "NLO-02-02"
+          ]
+        },
+        {
+          "t": "FONC proof, last step",
+          "d": [
+            "“∇f(x*)ᵀd = 0 for some d ≠ 0” does not give ∇f(x*) = 0. It must hold for all d."
+          ],
+          "cards": [
+            "NLO-02-04"
+          ]
+        },
+        {
+          "t": "Hessian test",
+          "d": [
+            "“Strictly convex iff H is PD” is wrong: only PD ⇒ strictly convex."
+          ],
+          "cards": [
+            "NLO-02-12"
+          ]
+        },
+        {
+          "t": "Least squares",
+          "d": [
+            "“Full row rank” should be full column rank."
+          ],
+          "cards": [
+            "NLO-02-16"
+          ]
+        },
+        {
+          "t": "Cubic example",
+          "d": [
+            "The derivative of x³ − x² − 4x − 6 is 3x² − 2x − 4, not 3x² − 2x − 2."
+          ],
+          "cards": [
+            "NLO-02-19"
+          ]
+        }
+      ]
+    }
+  ],
   "cards": [
     {
       "id": "NLO-02-01",

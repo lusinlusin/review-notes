@@ -12,7 +12,7 @@
     button, select, textarea, input { font:inherit; color:inherit; }
     button { cursor:pointer; background:none; border:none; padding:0; }
     button:disabled { cursor:default; color:#bbb; }
-    .wrap { max-width:960px; margin:0 auto; padding:28px 24px 48px; }
+    .wrap { max-width:1040px; margin:0 auto; padding:28px 24px 48px; }
     header { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid #e6e6e6; padding-bottom:12px; }
     h1 { font-size:15px; font-weight:600; margin:0; letter-spacing:.01em; }
     .tabs { display:flex; gap:18px; font-size:13px; }
@@ -36,6 +36,8 @@
     .control:focus-visible, button:focus-visible, textarea:focus-visible { outline:1px solid #666; outline-offset:1px; }
     .card-head { display:flex; justify-content:space-between; font-size:12px; color:#999; margin-bottom:8px; font-variant-numeric:tabular-nums; }
     .question { font-size:17px; font-weight:600; margin:0 0 16px; line-height:1.45; }
+    .parts { list-style:none; margin:-6px 0 18px; padding:0; font-size:15px; font-weight:500; line-height:1.55; }
+    .parts li { padding:2px 0; }
     .work { display:grid; grid-template-columns:1fr; gap:24px; }
     .work.split { grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); }
     .label { font-size:11px; color:#999; letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; }
@@ -68,20 +70,37 @@
     .utilities .group button { color:#999; font-size:12px; }
     .utilities .group button:hover { color:#444; }
     #filePicker { display:none; }
+    .layout.with-side { display:grid; grid-template-columns:100px minmax(0,1fr); gap:28px; }
+    .side { display:flex; flex-direction:column; font-size:12px; font-variant-numeric:tabular-nums; border-right:1px solid #f0f0f0; padding:12px 12px 0 0; align-self:start; position:sticky; top:12px; max-height:calc(100vh - 24px); overflow:auto; }
+    .side-item { text-align:left; color:#777; padding:3px 0; white-space:nowrap; }
+    .side-item:hover { color:#222; }
+    .side-item.done { color:#c4c4c4; }
+    .side-item.again::after { content:" \2022"; color:#888; }
+    .side-item.current { color:#222; font-weight:600; }
+    .note-block h2 { font-size:15px; font-weight:600; margin:22px 0 0; }
+    .note-sec { margin-top:20px; }
+    .note-sec h3 { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#999; font-weight:600; margin:0 0 2px; }
+    .note-row { display:grid; grid-template-columns:190px minmax(0,1fr); gap:18px; padding:9px 0; border-bottom:1px solid #f0f0f0; font-size:13.5px; line-height:1.6; }
+    .note-row .term { font-weight:600; }
+    .note-row p { margin:0 0 5px; }
+    .note-row p:last-of-type { margin-bottom:0; }
+    .note-cards { margin-top:4px; font-size:11px; color:#bbb; font-variant-numeric:tabular-nums; }
+    .note-cards button { color:#999; font-size:11px; margin-right:8px; }
+    .note-cards button:hover { color:#222; text-decoration:underline; }
     .sync-panel { margin-top:14px; padding:14px 0; border-top:1px solid #eee; font-size:13px; }
     .sync-grid { display:grid; grid-template-columns:110px minmax(0,1fr); gap:8px 12px; align-items:center; max-width:560px; }
     .sync-grid label { color:#888; font-size:12px; }
     .sync-grid .control { width:100%; }
     .sync-note { color:#999; font-size:12px; margin:10px 0 0; max-width:560px; line-height:1.6; }
     #syncStatus { color:#999; }
-    @media (max-width:760px) { .work.split { grid-template-columns:1fr; } .work.split textarea { min-height:120px; } .wrap { padding:18px 14px 36px; } }
+    @media (max-width:760px) { .layout.with-side { display:block; } .side { flex-direction:row; flex-wrap:wrap; gap:2px 12px; border-right:none; position:static; padding:8px 0 0; max-height:none; } .note-row { grid-template-columns:1fr; gap:2px; } .work.split { grid-template-columns:1fr; } .work.split textarea { min-height:120px; } .wrap { padding:18px 14px 36px; } }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <h1>Review Notes</h1>
-      <nav class="tabs"><button class="tab active" id="tabPractice">Practice</button><button class="tab" id="tabGaps">Gaps</button></nav>
+      <nav class="tabs"><button class="tab active" id="tabPractice">Practice</button><button class="tab" id="tabNotes">Notes</button><button class="tab" id="tabGaps">Gaps</button></nav>
     </header>
 
     <div class="meta">
@@ -94,9 +113,15 @@
 
     <div class="loading" id="loading">Loading…</div>
 
-    <div id="practiceView" class="hidden">
+    <div id="navBar" class="hidden">
       <nav class="cats" id="subjects"></nav>
       <nav class="cats sub" id="topics"></nav>
+    </div>
+
+    <div id="practiceView" class="hidden">
+      <div class="layout" id="layout">
+      <aside class="side hidden" id="side" aria-label="Cards in this topic"></aside>
+      <div class="main">
       <div class="controls">
         <select class="control" id="mode" aria-label="Mode">
           <option value="all">All</option>
@@ -112,6 +137,7 @@
         <div id="cardContent">
           <div class="card-head"><span id="cardId"></span><span id="counter"></span></div>
           <h2 class="question" id="question"></h2>
+          <ol class="parts" id="parts"></ol>
           <div class="work" id="work">
             <div><div class="label">Your answer</div><textarea id="draft" placeholder="Not saved." aria-label="Your answer"></textarea></div>
             <div id="answerCol" class="hidden">
@@ -134,6 +160,12 @@
         </div>
         <div class="empty hidden" id="empty">No cards match. <button class="btn" id="resetFilters">Show all</button></div>
       </section>
+      </div>
+      </div>
+    </div>
+
+    <div id="notesView" class="hidden">
+      <div id="notesList"></div>
     </div>
 
     <div id="gapsView" class="hidden">
@@ -168,6 +200,7 @@ const $ = id => document.getElementById(id);
 
 let QUESTION_BANK = [];          // flat list of cards: {id, q, pts, pit, subj, topic}
 let SUBJECTS = [];               // [{name, topics:[title]}]
+let NOTES = [];                  // [{subj, topic, sections}] reference notes per topic
 let subject = ALL, topic = ALL, view = 'practice', currentId = null, shown = false, missed = new Set(), status = {};
 
 // ---------- local storage ----------
@@ -221,7 +254,7 @@ function validCard(c) {
 async function loadTopics() {
   const getJson = async path => { const r = await fetch(path, { cache: 'no-cache' }); if (!r.ok) throw Error(path + ' (' + r.status + ')'); return r.json(); };
   const manifest = await getJson('topics/manifest.json');
-  const bank = [], subjects = [], seen = new Set(), problems = [];
+  const bank = [], subjects = [], seen = new Set(), problems = [], notes = [];
   const jobs = [];
   for (const s of manifest.subjects || []) {
     const subj = { name: String(s.name), topics: [] };
@@ -233,6 +266,7 @@ async function loadTopics() {
   }
   for (const res of await Promise.all(jobs)) {
     if (!res) continue;
+    if (Array.isArray(res.data.notes) && res.data.notes.length) notes.push({ subj: res.subj, topic: res.title, sections: res.data.notes });
     for (const c of res.data.cards || []) {
       if (!validCard(c)) { problems.push('bad card in ' + res.title); continue; }
       if (seen.has(c.id)) { problems.push('duplicate id ' + c.id); continue; }
@@ -243,7 +277,7 @@ async function loadTopics() {
   // keep manifest order
   const order = new Map(); subjects.forEach((s, i) => s.topics.forEach((t, j) => order.set(s.name + '|' + t, i * 1000 + j)));
   bank.sort((a, b) => (order.get(a.subj + '|' + a.topic) - order.get(b.subj + '|' + b.topic)) || 0);
-  return { bank, subjects, problems };
+  return { bank, subjects, problems, notes };
 }
 
 // ---------- sync (GitHub contents API) ----------
@@ -320,14 +354,14 @@ function navButton(text, count, active, onClick) {
 }
 function renderNav() {
   const sp = $('subjects'); sp.replaceChildren();
-  sp.append(navButton(ALL, QUESTION_BANK.length, subject === ALL, () => { subject = ALL; topic = ALL; currentId = null; renderNav(); render(); }));
-  for (const s of SUBJECTS) sp.append(navButton(s.name, QUESTION_BANK.filter(q => q.subj === s.name).length, subject === s.name, () => { subject = s.name; topic = ALL; currentId = null; renderNav(); render(); }));
+  sp.append(navButton(ALL, QUESTION_BANK.length, subject === ALL, () => { subject = ALL; topic = ALL; currentId = null; renderNav(); rerender(); }));
+  for (const s of SUBJECTS) sp.append(navButton(s.name, QUESTION_BANK.filter(q => q.subj === s.name).length, subject === s.name, () => { subject = s.name; topic = ALL; currentId = null; renderNav(); rerender(); }));
   const tp = $('topics'); tp.replaceChildren();
   const s = SUBJECTS.find(x => x.name === subject);
   tp.classList.toggle('hidden', !s || s.topics.length < 2);
   if (s && s.topics.length >= 2) {
-    tp.append(navButton('All topics', QUESTION_BANK.filter(q => q.subj === s.name).length, topic === ALL, () => { topic = ALL; currentId = null; renderNav(); render(); }));
-    for (const t of s.topics) tp.append(navButton(t, QUESTION_BANK.filter(q => q.subj === s.name && q.topic === t).length, topic === t, () => { topic = t; currentId = null; renderNav(); render(); }));
+    tp.append(navButton('All topics', QUESTION_BANK.filter(q => q.subj === s.name).length, topic === ALL, () => { topic = ALL; currentId = null; renderNav(); rerender(); }));
+    for (const t of s.topics) tp.append(navButton(t, QUESTION_BANK.filter(q => q.subj === s.name && q.topic === t).length, topic === t, () => { topic = t; currentId = null; renderNav(); rerender(); }));
   }
 }
 function renderMeta() {
@@ -373,13 +407,16 @@ function renderGradeButtons(q) {
 function render() {
   renderMeta();
   const list = visible();
-  if (!list.length) { $('cardContent').classList.add('hidden'); $('empty').classList.remove('hidden'); return; }
+  if (!list.length) { $('cardContent').classList.add('hidden'); $('empty').classList.remove('hidden'); renderSide([]); return; }
   $('cardContent').classList.remove('hidden'); $('empty').classList.add('hidden');
   if (!list.some(q => q.id === currentId)) { currentId = list[0].id; shown = false; missed = new Set(); $('draft').value = ''; }
   const index = list.findIndex(q => q.id === currentId), q = list[index];
   $('cardId').textContent = `${q.id} · ${label(q)}`;
   $('counter').textContent = `${index + 1} / ${list.length}`;
-  $('question').textContent = q.q;
+  const chunks = q.q.split(/\s(?=\(\d+\)\s)/), stem = /^\(\d+\)\s/.test(chunks[0]) ? '' : chunks.shift();
+  $('question').textContent = stem; $('question').classList.toggle('hidden', !stem);
+  const pl = $('parts'); pl.replaceChildren(); pl.classList.toggle('hidden', !chunks.length);
+  for (const c of chunks) { const li = document.createElement('li'); li.textContent = c; pl.append(li); }
   $('pitfall').textContent = q.pit; $('pitfall').parentElement.classList.toggle('hidden', !q.pit);
   $('ref').textContent = q.src ? 'Ref — ' + q.src : ''; $('ref').classList.toggle('hidden', !q.src);
   $('answerCol').classList.toggle('hidden', !shown);
@@ -388,6 +425,7 @@ function render() {
   $('reviewButtons').classList.toggle('hidden', !shown);
   if (shown) { renderPoints(q); renderGradeButtons(q); }
   $('previous').disabled = index === 0; $('next').disabled = index === list.length - 1;
+  renderSide(list);
 }
 function refresh() { if (view === 'gaps') { renderMeta(); renderGaps(); } else if (shown) renderMeta(); else render(); }
 function toggleMiss(i) {
@@ -440,14 +478,70 @@ function setView(v) {
   view = v;
   $('practiceView').classList.toggle('hidden', v !== 'practice');
   $('gapsView').classList.toggle('hidden', v !== 'gaps');
+  $('notesView').classList.toggle('hidden', v !== 'notes');
+  $('navBar').classList.toggle('hidden', v === 'gaps');
   $('tabPractice').classList.toggle('active', v === 'practice');
   $('tabGaps').classList.toggle('active', v === 'gaps');
+  $('tabNotes').classList.toggle('active', v === 'notes');
   if (v === 'gaps') { renderMeta(); renderGaps(); }
+  if (v === 'notes') { renderMeta(); renderNotes(); }
+}
+function rerender() { if (view === 'notes') { renderMeta(); renderNotes(); } else render(); }
+// The single topic currently in scope, or null when several topics are shown together.
+function effectiveTopic() {
+  if (topic !== ALL) return topic;
+  const s = SUBJECTS.find(x => x.name === subject);
+  return s && s.topics.length === 1 ? s.topics[0] : null;
+}
+// Sidebar: card IDs of the selected topic (only when one topic is selected).
+function renderSide(list) {
+  const side = $('side'), show = subject !== ALL && !!effectiveTopic() && list.length > 0;
+  side.classList.toggle('hidden', !show); $('layout').classList.toggle('with-side', show);
+  side.replaceChildren(); if (!show) return;
+  for (const q of list) {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = q.id; b.title = q.q;
+    const g = status[q.id]?.grade;
+    b.className = 'side-item' + (q.id === currentId ? ' current' : '') + (g === 'again' ? ' again' : g ? ' done' : '');
+    b.addEventListener('click', () => switchTo(q.id));
+    side.append(b);
+  }
+}
+// Notes: reference sheet (definitions, theorems) for the topics in scope.
+function renderNotes() {
+  const root = $('notesList'); root.replaceChildren();
+  const et = effectiveTopic();
+  const blocks = NOTES.filter(n => (subject === ALL || n.subj === subject) && (!et || n.topic === et));
+  if (!blocks.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'No notes for this selection yet.'; root.append(p); return; }
+  for (const n of blocks) {
+    const blk = document.createElement('div'); blk.className = 'note-block';
+    const h2 = document.createElement('h2'); h2.textContent = `${n.subj} · ${n.topic}`; blk.append(h2);
+    for (const sec of n.sections) {
+      if (!sec || !Array.isArray(sec.items)) continue;
+      const sd = document.createElement('div'); sd.className = 'note-sec';
+      const h3 = document.createElement('h3'); h3.textContent = String(sec.h || ''); sd.append(h3);
+      for (const it of sec.items) {
+        const row = document.createElement('div'); row.className = 'note-row';
+        const term = document.createElement('div'); term.className = 'term'; term.textContent = String(it.t || '');
+        const def = document.createElement('div');
+        for (const line of (Array.isArray(it.d) ? it.d : [it.d])) { const p = document.createElement('p'); p.textContent = String(line || ''); def.append(p); }
+        const ids = (Array.isArray(it.cards) ? it.cards : []).filter(id => byId(id));
+        if (ids.length) {
+          const c = document.createElement('div'); c.className = 'note-cards'; c.append('Cards ');
+          for (const id of ids) { const b = document.createElement('button'); b.type = 'button'; b.textContent = id; b.addEventListener('click', () => { $('mode').value = 'all'; $('search').value = ''; setView('practice'); switchTo(id); }); c.append(b); }
+          def.append(c);
+        }
+        row.append(term, def); sd.append(row);
+      }
+      blk.append(sd);
+    }
+    root.append(blk);
+  }
 }
 
 // ---------- events ----------
 $('tabPractice').addEventListener('click', () => { setView('practice'); render(); });
 $('tabGaps').addEventListener('click', () => setView('gaps'));
+$('tabNotes').addEventListener('click', () => setView('notes'));
 $('mode').addEventListener('change', () => { currentId = null; shown = false; missed = new Set(); $('draft').value = ''; render(); });
 $('search').addEventListener('input', () => { currentId = null; shown = false; missed = new Set(); $('draft').value = ''; render(); });
 $('reveal').addEventListener('click', () => { shown = true; render(); });
@@ -498,8 +592,8 @@ $('clear').addEventListener('click', () => {
 (async function start() {
   status = sanitizeProgress(lsGet(STORAGE_KEY, {}));
   try {
-    const { bank, subjects, problems } = await loadTopics();
-    QUESTION_BANK = bank; SUBJECTS = subjects;
+    const { bank, subjects, problems, notes } = await loadTopics();
+    QUESTION_BANK = bank; SUBJECTS = subjects; NOTES = notes;
     if (problems.length) $('feedback').textContent = 'Some topic files could not be read: ' + problems.slice(0, 3).join('; ');
     if (!bank.length) throw Error('no cards found');
   } catch (e) {
@@ -508,7 +602,7 @@ $('clear').addEventListener('click', () => {
       : 'Could not load topics (' + e.message + ').';
     return;
   }
-  $('loading').classList.add('hidden'); $('practiceView').classList.remove('hidden');
+  $('loading').classList.add('hidden'); $('navBar').classList.remove('hidden'); $('practiceView').classList.remove('hidden');
   renderNav(); render();
   if (configured()) syncNow(); else setSyncStatus(lsGet(DIRTY_KEY, false) ? 'Local only' : '');
 })();
