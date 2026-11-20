@@ -84,6 +84,7 @@
     .side-item:hover { color:#222; }
     .side-item.done { color:#c4c4c4; }
     .side-item.again::after { content:" \2022"; color:#888; }
+    .side-item.giveup::after { content:" ?"; color:#888; }
     .side-item.current { color:#222; font-weight:600; }
     .note-block h2 { font-size:15px; font-weight:600; margin:22px 0 0; }
     .note-sec { margin-top:20px; }
@@ -114,7 +115,7 @@
     <div class="meta">
       <span>Reviewed <b id="reviewed">0</b></span>
       <span>Due <b id="dueCount">0</b></span>
-      <span>Again <b id="weakCount">0</b></span>
+      <span>Shaky <b id="weakCount">0</b></span>
       <span>Gaps <b id="gapCount">0</b></span>
       <span>Today <b id="todayCodes">–</b></span>
     </div>
@@ -134,7 +135,8 @@
         <select class="control" id="mode" aria-label="Mode">
           <option value="all">All</option>
           <option value="due">Due</option>
-          <option value="weak">Again</option>
+          <option value="weak">Shaky</option>
+          <option value="giveup">Give up</option>
           <option value="gaps">With gaps</option>
           <option value="seen">Tested</option>
         </select>
@@ -161,9 +163,11 @@
             <button id="reveal" class="btn">Show key points (Ctrl/⌘ + Enter)</button>
             <div id="reviewButtons" class="group hidden">
               <span class="hint" id="suggestText"></span>
-              <button data-grade="again" class="btn" id="gAgain">Again</button>
-              <button data-grade="good" class="btn" id="gGood">Good</button>
               <button data-grade="easy" class="btn" id="gEasy">Easy</button>
+              <button data-grade="solid" class="btn" id="gSolid">Solid</button>
+              <button data-grade="guess" class="btn" id="gGuess">Guessing</button>
+              <button data-grade="noclue" class="btn" id="gNoclue">No clue</button>
+              <button data-grade="giveup" class="btn" id="gGiveup">Give up</button>
             </div>
           </div>
         </div>
@@ -205,7 +209,10 @@ const DIRTY_KEY = 'review-notes-dirty';
 const DAY = 86400000;
 const HIST_MAX = 200;
 const ALL = 'All';
-const GRADES = ['again', 'good', 'easy'];
+const GRADES = ['easy', 'solid', 'guess', 'noclue', 'giveup'];
+const OLD_GRADES = { again: 'noclue', good: 'solid' };            // records made before the five-level scale
+const fixGrade = g => OLD_GRADES[g] || g;
+const SHAKY = g => g === 'guess' || g === 'noclue' || g === 'giveup';
 const $ = id => document.getElementById(id);
 
 let QUESTION_BANK = [];          // flat list of cards: {id, q, pts, pit, subj, topic}
@@ -239,15 +246,15 @@ const isDue = q => { const r = status[q.id]; return !r || !r.due || r.due <= Dat
 const missOf = q => { const c = new Array(q.pts.length).fill(0); for (const h of status[q.id]?.hist || []) for (const i of h.m || []) if (i < c.length) c[i]++; return c; };
 const hasGaps = q => missOf(q).some(n => n > 0);
 const sameDay = t => new Date(t).toDateString() === new Date().toDateString();
-const nextInterval = (g, prev) => g === 'again' ? 0 : g === 'good' ? Math.max(3, Math.round((prev || 0) * 2)) : Math.max(7, Math.round((prev || 0) * 3));
+const nextInterval = (g, prev) => g === 'easy' ? Math.max(7, Math.round((prev || 0) * 3)) : g === 'solid' ? Math.max(3, Math.round((prev || 0) * 2)) : g === 'guess' ? 1 : 0;
 const fmtPts = arr => arr.map(i => i + 1).join(',');
 const label = q => `${q.subj} · ${q.topic}`;
 
 function sanitizeRecord(r) {
-  if (!r || typeof r !== 'object' || !GRADES.includes(r.grade) || !Number.isFinite(r.due)) return null;
-  const hist = Array.isArray(r.hist) ? r.hist.filter(h => h && Number.isFinite(h.t) && GRADES.includes(h.g))
-    .map(h => ({ t: h.t, g: h.g, m: Array.isArray(h.m) ? h.m.filter(i => Number.isInteger(i) && i >= 0 && i < 12) : [] })) : [];
-  return { grade: r.grade, due: r.due, interval: Number(r.interval) || 0, reviewedAt: Number(r.reviewedAt) || 0, hist: hist.slice(-HIST_MAX) };
+  if (!r || typeof r !== 'object' || !GRADES.includes(fixGrade(r.grade)) || !Number.isFinite(r.due)) return null;
+  const hist = Array.isArray(r.hist) ? r.hist.filter(h => h && Number.isFinite(h.t) && GRADES.includes(fixGrade(h.g)))
+    .map(h => ({ t: h.t, g: fixGrade(h.g), m: Array.isArray(h.m) ? h.m.filter(i => Number.isInteger(i) && i >= 0 && i < 12) : [] })) : [];
+  return { grade: fixGrade(r.grade), due: r.due, interval: Number(r.interval) || 0, reviewedAt: Number(r.reviewedAt) || 0, hist: hist.slice(-HIST_MAX) };
 }
 // Keeps records for every card ID, including cards from topic files that are not loaded right now,
 // so one page never deletes another topic's progress when it syncs.
@@ -369,7 +376,7 @@ function visible() {
   const term = $('search').value.trim().toLowerCase(), mode = $('mode').value;
   return QUESTION_BANK.filter(q => inScope(q) &&
     (!term || [q.id, q.k, q.subj, q.topic, q.q, q.pit, ...q.pts].some(v => v.toLowerCase().includes(term))) &&
-    (mode === 'all' || (mode === 'due' && isDue(q)) || (mode === 'weak' && status[q.id]?.grade === 'again') || (mode === 'gaps' && hasGaps(q)) || (mode === 'seen' && q.seen.length > 0)));
+    (mode === 'all' || (mode === 'due' && isDue(q)) || (mode === 'weak' && SHAKY(status[q.id]?.grade)) || (mode === 'giveup' && status[q.id]?.grade === 'giveup') || (mode === 'gaps' && hasGaps(q)) || (mode === 'seen' && q.seen.length > 0)));
 }
 function navButton(text, count, active, onClick) {
   const b = document.createElement('button'); b.type = 'button'; b.className = 'cat' + (active ? ' active' : '');
@@ -392,15 +399,15 @@ function renderNav() {
 function renderMeta() {
   $('reviewed').textContent = QUESTION_BANK.filter(q => status[q.id]?.grade).length;
   $('dueCount').textContent = QUESTION_BANK.filter(isDue).length;
-  $('weakCount').textContent = QUESTION_BANK.filter(q => status[q.id]?.grade === 'again').length;
+  $('weakCount').textContent = QUESTION_BANK.filter(q => SHAKY(status[q.id]?.grade)).length;
   $('gapCount').textContent = QUESTION_BANK.reduce((s, q) => s + missOf(q).filter(n => n > 0).length, 0);
   const items = [];
   for (const q of QUESTION_BANK) {
     const hist = (status[q.id]?.hist || []).filter(h => sameDay(h.t));
     if (!hist.length) continue;
-    const m = new Set(); let again = false;
-    for (const h of hist) { (h.m || []).forEach(i => m.add(i)); if (h.g === 'again') again = true; }
-    if (m.size || again) items.push(q.id + (m.size ? ` (${fmtPts([...m].sort((a, b) => a - b))})` : ''));
+    const m = new Set(); let shaky = false, gave = false;
+    for (const h of hist) { (h.m || []).forEach(i => m.add(i)); if (SHAKY(h.g)) shaky = true; if (h.g === 'giveup') gave = true; }
+    if (m.size || shaky) items.push(q.id + (gave ? '?' : '') + (m.size ? ` (${fmtPts([...m].sort((a, b) => a - b))})` : ''));
   }
   $('todayCodes').textContent = items.length ? items.join('  ·  ') : '–';
 }
@@ -418,15 +425,18 @@ function renderPoints(q) {
     li.append(b); ol.append(li);
   });
 }
-function suggestion(q) { const k = missed.size; return k === 0 ? 'easy' : (k === 1 && q.pts.length >= 3) ? 'good' : 'again'; }
+// Suggest from missed points only; Easy and Give up are always the user's own call.
+function suggestion(q) { const k = missed.size; return k === 0 ? 'solid' : (k === 1 && q.pts.length >= 3) ? 'guess' : 'noclue'; }
 function renderGradeButtons(q) {
   const prev = status[q.id]?.interval || 0;
-  $('gAgain').textContent = 'Again · today';
-  $('gGood').textContent = `Good · ${nextInterval('good', prev)}d`;
   $('gEasy').textContent = `Easy · ${nextInterval('easy', prev)}d`;
+  $('gSolid').textContent = `Solid · ${nextInterval('solid', prev)}d`;
+  $('gGuess').textContent = 'Guessing · 1d';
+  $('gNoclue').textContent = 'No clue · today';
+  $('gGiveup').textContent = 'Give up · ask';
   const s = suggestion(q);
-  ['gAgain', 'gGood', 'gEasy'].forEach(id => $(id).classList.remove('strong'));
-  $({ again: 'gAgain', good: 'gGood', easy: 'gEasy' }[s]).classList.add('strong');
+  ['gEasy', 'gSolid', 'gGuess', 'gNoclue', 'gGiveup'].forEach(id => $(id).classList.remove('strong'));
+  $({ solid: 'gSolid', guess: 'gGuess', noclue: 'gNoclue' }[s]).classList.add('strong');
   $('suggestText').textContent = `${missed.size} missed`;
 }
 function render() {
@@ -531,7 +541,7 @@ function renderSide(list) {
     if (q.k) { const no = document.createElement('span'); no.className = 'no'; no.textContent = q.id.split('-').pop(); const kw = document.createElement('span'); kw.className = 'kw'; kw.textContent = q.k; b.append(no, kw); }
     else b.textContent = q.id;
     const g = status[q.id]?.grade;
-    b.className = 'side-item' + (q.id === currentId ? ' current' : '') + (g === 'again' ? ' again' : g ? ' done' : '');
+    b.className = 'side-item' + (q.id === currentId ? ' current' : '') + (g === 'giveup' ? ' again giveup' : SHAKY(g) ? ' again' : g ? ' done' : '');
     b.addEventListener('click', () => switchTo(q.id));
     side.append(b);
   }
