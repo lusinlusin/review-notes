@@ -83,7 +83,8 @@
     .side-item .kw { overflow:hidden; text-overflow:ellipsis; }
     .side-item:hover { color:#222; }
     .side-item.done { color:#c4c4c4; }
-    .side-item.again::after { content:" \2022"; color:#888; }
+    .side-item.guess::after { content:" *"; color:#888; }
+    .side-item.noclue::after { content:" !"; color:#888; }
     .side-item.giveup::after { content:" ?"; color:#888; }
     .side-item.current { color:#222; font-weight:600; }
     .note-block h2 { font-size:15px; font-weight:600; margin:22px 0 0; }
@@ -212,6 +213,7 @@ const ALL = 'All';
 const GRADES = ['easy', 'solid', 'guess', 'noclue', 'giveup'];
 const OLD_GRADES = { again: 'noclue', good: 'solid' };            // records made before the five-level scale
 const fixGrade = g => OLD_GRADES[g] || g;
+const MARK_RANK = { guess: 1, noclue: 2, giveup: 3 };
 const SHAKY = g => g === 'guess' || g === 'noclue' || g === 'giveup';
 const $ = id => document.getElementById(id);
 
@@ -405,9 +407,9 @@ function renderMeta() {
   for (const q of QUESTION_BANK) {
     const hist = (status[q.id]?.hist || []).filter(h => sameDay(h.t));
     if (!hist.length) continue;
-    const m = new Set(); let shaky = false, gave = false;
-    for (const h of hist) { (h.m || []).forEach(i => m.add(i)); if (SHAKY(h.g)) shaky = true; if (h.g === 'giveup') gave = true; }
-    if (m.size || shaky) items.push(q.id + (gave ? '?' : '') + (m.size ? ` (${fmtPts([...m].sort((a, b) => a - b))})` : ''));
+    const m = new Set(); let worst = 0;                         // worst rating today: 1 guessing, 2 no clue, 3 give up
+    for (const h of hist) { (h.m || []).forEach(i => m.add(i)); worst = Math.max(worst, MARK_RANK[h.g] || 0); }
+    if (m.size || worst) items.push(q.id + ['', '*', '!', '?'][worst] + (m.size ? ` (${fmtPts([...m].sort((a, b) => a - b))})` : ''));
   }
   $('todayCodes').textContent = items.length ? items.join('  ·  ') : '–';
 }
@@ -431,9 +433,9 @@ function renderGradeButtons(q) {
   const prev = status[q.id]?.interval || 0;
   $('gEasy').textContent = `Easy · ${nextInterval('easy', prev)}d`;
   $('gSolid').textContent = `Solid · ${nextInterval('solid', prev)}d`;
-  $('gGuess').textContent = 'Guessing · 1d';
-  $('gNoclue').textContent = 'No clue · today';
-  $('gGiveup').textContent = 'Give up · ask';
+  $('gGuess').textContent = 'Guessing * · 1d';
+  $('gNoclue').textContent = 'No clue ! · today';
+  $('gGiveup').textContent = 'Give up ? · ask';
   const s = suggestion(q);
   ['gEasy', 'gSolid', 'gGuess', 'gNoclue', 'gGiveup'].forEach(id => $(id).classList.remove('strong'));
   $({ solid: 'gSolid', guess: 'gGuess', noclue: 'gNoclue' }[s]).classList.add('strong');
@@ -541,7 +543,7 @@ function renderSide(list) {
     if (q.k) { const no = document.createElement('span'); no.className = 'no'; no.textContent = q.id.split('-').pop(); const kw = document.createElement('span'); kw.className = 'kw'; kw.textContent = q.k; b.append(no, kw); }
     else b.textContent = q.id;
     const g = status[q.id]?.grade;
-    b.className = 'side-item' + (q.id === currentId ? ' current' : '') + (g === 'giveup' ? ' again giveup' : SHAKY(g) ? ' again' : g ? ' done' : '');
+    b.className = 'side-item' + (q.id === currentId ? ' current' : '') + (SHAKY(g) ? ' ' + g : g ? ' done' : '');
     b.addEventListener('click', () => switchTo(q.id));
     side.append(b);
   }
