@@ -345,6 +345,196 @@
       ]
     },
     {
+      "h": "Coercivity and global arguments",
+      "items": [
+        {
+          "t": "Coercive",
+          "d": [
+            "$f(x) \\to \\infty$ whenever $\\lVert x \\rVert \\to \\infty$; equivalently every sublevel set $\\{x : f(x) \\le M\\}$ is bounded.",
+            "Continuous and coercive ⇒ a global minimizer exists, and it is a stationary point. Compare $f$ over all stationary points."
+          ],
+          "cards": [
+            "NLO-02-22"
+          ]
+        },
+        {
+          "t": "Showing not coercive",
+          "d": [
+            "Find one path with $\\lVert x \\rVert \\to \\infty$ along which $f$ stays bounded or goes to $-\\infty$. Try the diagonal $x_1 = x_2 = t$, or a curve that cancels a square.",
+            "A function bounded above is never coercive."
+          ],
+          "cards": [
+            "NLO-02-23"
+          ]
+        },
+        {
+          "t": "Showing coercive",
+          "d": [
+            "Bound below by a term that blows up, e.g. for $A \\succ 0$:",
+            "$$x^\\top A x + b^\\top x \\ge \\lambda_{\\min}(A)\\lVert x \\rVert^2 - \\lVert b \\rVert \\lVert x \\rVert$$",
+            "Or show that $f(x) \\le M$ forces every coordinate to be bounded."
+          ],
+          "cards": [
+            "NLO-02-24"
+          ]
+        },
+        {
+          "t": "Rayleigh quotient",
+          "d": [
+            "For symmetric $A$ and any $x$:",
+            "$$\\lambda_{\\min}(A)\\lVert x \\rVert^2 \\le x^\\top A x \\le \\lambda_{\\max}(A)\\lVert x \\rVert^2$$"
+          ],
+          "cards": [
+            "NLO-02-23",
+            "NLO-02-24",
+            "NLO-02-32"
+          ]
+        },
+        {
+          "t": "Sum of squares",
+          "d": [
+            "If $f$ is a sum of squares then $f \\ge 0$, and any point with $f = 0$ is a global minimizer. It is unique (strict global) iff the squares vanish at only one point."
+          ],
+          "cards": [
+            "NLO-02-26",
+            "NLO-02-27",
+            "NLO-02-28"
+          ]
+        },
+        {
+          "t": "Strict global min without convexity",
+          "d": [
+            "If $\\nabla f(x^*) = 0$ and $H(z) \\succ 0$ for every $z$, then $x^*$ is a strict global minimizer. Proof: Taylor with an intermediate point $z$,",
+            "$$f(x) = f(x^*) + \\tfrac12 (x - x^*)^\\top H(z)\\,(x - x^*) > f(x^*)$$",
+            "With $H(z) \\prec 0$ everywhere: strict global maximizer."
+          ],
+          "cards": [
+            "NLO-02-31"
+          ]
+        },
+        {
+          "t": "Local vs global vs strict",
+          "d": [
+            "Strict local min: SOSC at the point. Global min: $f(x) \\ge f(x^*)$ everywhere. Strict global: additionally unique. Several global minimizers can each be strict local but none strict global."
+          ],
+          "cards": [
+            "NLO-02-26",
+            "NLO-02-27"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Proof templates",
+      "items": [
+        {
+          "t": "SOSC",
+          "d": [
+            "1. $v^\\top H(x^*)\\,v \\ge \\lambda \\lVert v \\rVert^2$ with $\\lambda = \\lambda_{\\min}(H(x^*)) > 0$.",
+            "2. Continuity of $H$: on a ball around $x^*$, $v^\\top H(z)\\,v \\ge \\tfrac{\\lambda}{2}\\lVert v \\rVert^2$.",
+            "3. Taylor with intermediate point $z$ in the ball: $f(x) \\ge f(x^*) + \\tfrac{\\lambda}{4}\\lVert x - x^* \\rVert^2$."
+          ],
+          "cards": [
+            "NLO-02-32"
+          ]
+        },
+        {
+          "t": "Indefinite ⇒ saddle",
+          "d": [
+            "Take eigenvectors $q_\\pm$ with eigenvalues $\\mu_+ > 0 > \\mu_-$. Then",
+            "$$f(x^* + t q_\\pm) - f(x^*) = \\tfrac{t^2}{2}\\mu_\\pm + o(t^2)$$",
+            "which takes both signs near $x^*$."
+          ],
+          "cards": [
+            "NLO-02-33"
+          ]
+        },
+        {
+          "t": "A set is convex",
+          "d": [
+            "Take $x, z$ in the set and $\\lambda \\in [0, 1]$; show $\\lambda x + (1 - \\lambda) z$ satisfies the defining condition. Use linearity for $Ax = b$, the triangle inequality for norms, Jensen for $g(x) \\le 0$ with $g$ convex.",
+            "Or write the set as an intersection of known convex sets."
+          ],
+          "cards": [
+            "NLO-02-34",
+            "NLO-02-35"
+          ]
+        },
+        {
+          "t": "Epigraph",
+          "d": [
+            "$\\operatorname{epi}(f) = \\{(x, \\alpha) : f(x) \\le \\alpha\\}$. If $f$ is convex then $\\operatorname{epi}(f)$ is a convex set."
+          ],
+          "cards": [
+            "NLO-02-35"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "Classify stationary points",
+          "d": [
+            "Solve $\\nabla f = 0$ fully → Hessian at each point → paths if singular → global and strict-global.",
+            "Appears as the first problem on every past paper."
+          ],
+          "cards": [
+            "NLO-02-25",
+            "NLO-02-26",
+            "NLO-02-27",
+            "NLO-02-29",
+            "NLO-02-30"
+          ]
+        },
+        {
+          "t": "Coercive or not",
+          "d": [
+            "A path to show not coercive; a lower bound or bounded sublevel sets to show coercive."
+          ],
+          "cards": [
+            "NLO-02-22",
+            "NLO-02-23",
+            "NLO-02-24"
+          ]
+        },
+        {
+          "t": "Prove a set is convex",
+          "d": [
+            "Two points, one combination, one inequality."
+          ],
+          "cards": [
+            "NLO-02-34",
+            "NLO-02-35"
+          ]
+        },
+        {
+          "t": "State and prove a sufficient condition",
+          "d": [
+            "Strict global min or max without assuming convexity; SOSC; indefinite Hessian ⇒ saddle; FONC."
+          ],
+          "cards": [
+            "NLO-02-31",
+            "NLO-02-32",
+            "NLO-02-33",
+            "NLO-02-04"
+          ]
+        },
+        {
+          "t": "Quadratic: stationary point and uniqueness",
+          "d": [
+            "Hessian $S$ constant; unique global minimizer iff $S \\succ 0$; solve $S x^* = \\text{rhs}$."
+          ],
+          "cards": [
+            "NLO-02-36",
+            "NLO-02-10",
+            "NLO-02-16"
+          ]
+        }
+      ]
+    },
+    {
       "h": "Slide errata",
       "items": [
         {
@@ -407,7 +597,10 @@
         "(4) Strict global ⇒ global ⇒ local, and strict global ⇒ strict local ⇒ local. A strict global minimizer is unique."
       ],
       "pit": "Global does not imply strict: for a constant function every point is a global min and none is strict.",
-      "src": "L2-1 s.7, 18–22"
+      "src": "L2-1 s.7, 18–22",
+      "seen": [
+        "MT26F P1b"
+      ]
     },
     {
       "id": "NLO-02-02",
@@ -443,7 +636,11 @@
         "(3) Choose $d = -\\nabla f(x^*)$. This gives $-\\lVert \\nabla f(x^*) \\rVert^2 \\ge 0$, so $\\nabla f(x^*) = 0$."
       ],
       "pit": "The slide ends with “$\\nabla f(x^*)^\\top d = 0$ and $d \\ne 0$, so $\\nabla f(x^*) = 0$”. That is false for a single $d$ (take $g = (1, 0)$ and $d = (0, 1)$). The inequality must hold for all $d$.",
-      "src": "L2-1 s.37–41"
+      "src": "L2-1 s.37–41",
+      "seen": [
+        "T2 P3",
+        "MT26W P2d"
+      ]
     },
     {
       "id": "NLO-02-05",
@@ -456,7 +653,10 @@
         "(2c) It may find nothing: $f(x) = x_1 - 2x_2$ has $\\nabla f = (1, -2)^\\top \\ne 0$ everywhere, and the problem is unbounded below."
       ],
       "pit": "Existence is a separate question. $e^x$ is strictly convex with infimum $0$, yet has no minimizer and no stationary point.",
-      "src": "L2-1 s.26–36, 42"
+      "src": "L2-1 s.26–36, 42",
+      "seen": [
+        "T2 P4d"
+      ]
     },
     {
       "id": "NLO-02-06",
@@ -467,7 +667,10 @@
         "(2) $|x|$ is not differentiable at $0$ (one-sided derivatives are $-1$ and $+1$), so the hypothesis of FONC fails."
       ],
       "pit": "Non-smooth losses such as the hinge loss have the same issue at the kink. That is why subgradients exist.",
-      "src": "Notes §2.3, CX 2.1–2.2"
+      "src": "Notes §2.3, CX 2.1–2.2",
+      "seen": [
+        "T2 P3d"
+      ]
     },
     {
       "id": "NLO-02-07",
@@ -491,7 +694,10 @@
         "(3) Each row $a_i^\\top x \\le b_i$ is a half-space, and the set is the intersection of these half-spaces."
       ],
       "pit": "Unions do not preserve convexity.",
-      "src": "L2-2 s.12–13"
+      "src": "L2-2 s.12–13",
+      "seen": [
+        "MT26W P2b"
+      ]
     },
     {
       "id": "NLO-02-09",
@@ -515,7 +721,11 @@
         "(3) $x^\\top Q x = \\operatorname{Var}(x^\\top r) \\ge 0$, so $Q$ is PSD and variance is convex in $x$. It is strictly convex iff $Q \\succ 0$, i.e. no combination of the assets is riskless."
       ],
       "pit": "The condition is also necessary: if $v^\\top A v < 0$ for some $v$, take $x - y = v$ and the gap becomes negative.",
-      "src": "L2-2 s.17–18"
+      "src": "L2-2 s.17–18",
+      "seen": [
+        "MT25 P2c",
+        "MT26F P2b"
+      ]
     },
     {
       "id": "NLO-02-11",
@@ -527,7 +737,10 @@
         "(3) Both always. These two rules are not on the slides, but they are what makes the hinge loss (a max of affine functions) and the logistic loss (a convex function of an affine map) convex."
       ],
       "pit": "Rule (2) needs “nondecreasing”: $g(y) = e^{-y}$ is convex and $x^2$ is convex, but $e^{-x^2}$ has second derivative $-2$ at $0$.",
-      "src": "L2-2 s.20–23"
+      "src": "L2-2 s.20–23",
+      "seen": [
+        "HW1 P6a"
+      ]
     },
     {
       "id": "NLO-02-12",
@@ -539,7 +752,10 @@
         "(3) $H(x) \\succ 0$ at every $x \\in C$ ⇒ $f$ is strictly convex. One direction only: $x^4$ is strictly convex, yet its second derivative is $0$ at $x = 0$."
       ],
       "pit": "The slide says “strictly convex iff PD”, which is wrong in the ⇒ direction. Also, $H \\succeq 0$ at one point proves nothing: it must hold on all of $C$.",
-      "src": "L2-2 s.24–28"
+      "src": "L2-2 s.24–28",
+      "seen": [
+        "HW1 P3b"
+      ]
     },
     {
       "id": "NLO-02-13",
@@ -551,7 +767,10 @@
         "(3) $a \\ge 0$, $c \\ge 0$ and $ac - b^2 \\ge 0$."
       ],
       "pit": "Leading minors $\\ge 0$ does not give PSD: $\\operatorname{diag}(0, -1)$ has leading minors $0$ and $0$, but it is not PSD.",
-      "src": "L1 s.61–62"
+      "src": "L1 s.61–62",
+      "seen": [
+        "T2 P6b"
+      ]
     },
     {
       "id": "NLO-02-14",
@@ -562,7 +781,10 @@
         "(2) Take $z = \\lambda' x^* + (1 - \\lambda') y$ with $1 - \\lambda' = \\varepsilon / \\lVert y - x^* \\rVert$. Then $z \\in S$ because $S$ is convex, and $z$ lies on the ball. Local optimality, then convexity of $f$, give $$f(x^*) \\le f(z) \\le \\lambda' f(x^*) + (1 - \\lambda') f(y)$$ Divide by $1 - \\lambda' > 0$ to get $f(x^*) \\le f(y)$."
       ],
       "pit": "Both convexities are needed. $(x - 2)^2$ on $S = [-1, 0] \\cup [1, 3]$ has a local min at $0$ that is not global, because $S$ is not convex.",
-      "src": "L2-2 s.29–36"
+      "src": "L2-2 s.29–36",
+      "seen": [
+        "T2 P6c"
+      ]
     },
     {
       "id": "NLO-02-15",
@@ -574,7 +796,10 @@
         "(3) FONC becomes necessary and sufficient: $x^*$ is a global minimizer ⇔ $\\nabla f(x^*) = 0$."
       ],
       "pit": "On a constrained convex set $S$ the minimizer need not be stationary. The right condition is $\\nabla f(x^*)^\\top (y - x^*) \\ge 0$ for all $y \\in S$.",
-      "src": "L2-2 s.37–39"
+      "src": "L2-2 s.37–39",
+      "seen": [
+        "T2 P6c"
+      ]
     },
     {
       "id": "NLO-02-16",
@@ -599,7 +824,11 @@
         "(3) $\\nabla f(x^*) = 0$ with $H(x^*)$ PSD but singular. $x^4$ has a minimum at $0$ while $x^3$ has neither a min nor a max there, and both have second derivative $0$."
       ],
       "pit": "SOSC is local only. $x^3 - x^2 - 4x - 6$ has a strict local min, yet it is unbounded below. A global conclusion needs $H \\succeq 0$ everywhere (convexity).",
-      "src": "L2-2 s.41–47"
+      "src": "L2-2 s.41–47",
+      "seen": [
+        "T2 P5",
+        "MT26F P6"
+      ]
     },
     {
       "id": "NLO-02-18",
@@ -610,7 +839,10 @@
         "(2) $H(x^*)$ is indefinite, i.e. it has at least one positive and at least one negative eigenvalue."
       ],
       "pit": "Indefinite is sufficient, not necessary. $x_1^2 - x_2^4$ has $H(0) = \\operatorname{diag}(2, 0)$, which is PSD, yet $0$ is a saddle. $x_1^2 + x_2^4$ has the same Hessian and a strict min.",
-      "src": "L2-2 s.48–50"
+      "src": "L2-2 s.48–50",
+      "seen": [
+        "MT26W P6"
+      ]
     },
     {
       "id": "NLO-02-19",
@@ -622,7 +854,10 @@
         "(3) No. $f(x) \\to -\\infty$ as $x \\to -\\infty$."
       ],
       "pit": "The slide prints the derivative as $3x^2 - 2x - 2$, which does not match the stationary points it quotes. The correct one is $3x^2 - 2x - 4$.",
-      "src": "L2-1 s.16, 31–33; L2-2 s.42"
+      "src": "L2-1 s.16, 31–33; L2-2 s.42",
+      "seen": [
+        "MT26F P3d"
+      ]
     },
     {
       "id": "NLO-02-20",
@@ -636,6 +871,282 @@
       ],
       "pit": "The hinge loss is convex but not differentiable at $z = 1$, and not strictly convex (it is piecewise linear).",
       "src": "L2-2 s.16, 20"
+    },
+    {
+      "id": "NLO-02-21",
+      "k": "Taylor error order",
+      "q": "Let $T_1$ and $T_2$ be the first- and second-order Taylor approximations of a smooth $f$ around a point, evaluated at distance $h$ from it. (1) What is the order of each error as $h \\to 0$? (2) If $h$ is halved, by what factor does each error shrink? (3) For which functions is $T_2$ exact?",
+      "pts": [
+        "(1) $|f - T_1| = O(h^2)$ and $|f - T_2| = O(h^3)$. For $e^h$ around $0$ the errors are about $h^2/2$ and $h^3/6$.",
+        "(2) By about $4 = 2^2$ for $T_1$ and $8 = 2^3$ for $T_2$.",
+        "(3) Quadratic functions: all third derivatives are zero, so the second-order expansion is an identity."
+      ],
+      "pit": "The ratios are only approximately $4$ and $8$ for finite $h$ (for $e^h$: $4.14$ and $8.21$ from $h = 0.2$ to $0.1$). They converge to $4$ and $8$ as $h \\to 0$.",
+      "src": "",
+      "seen": [
+        "T2 P1",
+        "T2 P2"
+      ]
+    },
+    {
+      "id": "NLO-02-22",
+      "k": "Coercivity",
+      "q": "Let $f: \\mathbb{R}^n \\to \\mathbb{R}$ be continuous. (1) Define “$f$ is coercive”. (2) What does coercivity guarantee? (3) How do you use it to find the global minimum of a differentiable, non-convex $f$?",
+      "pts": [
+        "(1) $f(x) \\to \\infty$ whenever $\\lVert x \\rVert \\to \\infty$. Equivalently, every sublevel set $\\{x : f(x) \\le M\\}$ is bounded.",
+        "(2) A global minimizer exists (a continuous function attains its minimum on a closed bounded sublevel set).",
+        "(3) The global minimizer is a stationary point by FONC, so list all stationary points and compare their $f$ values: the smallest value is the global minimum."
+      ],
+      "pit": "Coercivity gives existence, not uniqueness: $x^4 - 2x^2 + y^4 - 2y^2$ is coercive and has four global minimizers. And convex does not imply coercive: $e^x$ is convex with no minimizer.",
+      "src": "",
+      "seen": [
+        "T2 P4c",
+        "MT26F P1c"
+      ]
+    },
+    {
+      "id": "NLO-02-23",
+      "k": "Not coercive",
+      "q": "To show $f$ is not coercive, exhibit a path with $\\lVert x \\rVert \\to \\infty$ along which $f$ does not go to $+\\infty$. Find such a path for (1) $f(x) = 2x_1^2 - 8x_1x_2 + x_2^2$, (2) $f(x) = x_1^4 - 3x_1^2x_2^2 + x_2^4$, (3) $f(x) = x_1^2 - 2x_1x_2^2 + \\tfrac12 x_2^4$, using $f(x) = (x_1 - x_2^2)^2 - \\tfrac12 x_2^4$. (4) Is $f(x) = \\dfrac{x^\\top A x}{\\lVert x \\rVert^2 + 1}$ with $A \\succ 0$ coercive?",
+      "pts": [
+        "(1) $x = (t, t)$: $f = (2 - 8 + 1)t^2 = -5t^2 \\to -\\infty$.",
+        "(2) $x = (t, t)$: $f = (1 - 3 + 1)t^4 = -t^4 \\to -\\infty$.",
+        "(3) $x = (t^2, t)$ makes the square vanish: $f = -\\tfrac12 t^4 \\to -\\infty$.",
+        "(4) No. $x^\\top A x \\le \\lambda_{\\max}(A)\\lVert x \\rVert^2$, so $f(x) < \\lambda_{\\max}(A)$ for all $x$: $f$ is bounded and cannot go to $\\infty$."
+      ],
+      "pit": "Checking the coordinate axes is not enough. In (1) and (2), $f \\to +\\infty$ along both axes, yet $f \\to -\\infty$ along the diagonal.",
+      "src": "",
+      "seen": [
+        "MT24 P2a",
+        "MT25 P2a",
+        "MT26W P2a",
+        "HW1 P3c"
+      ]
+    },
+    {
+      "id": "NLO-02-24",
+      "k": "Coercive",
+      "q": "To show $f$ is coercive, bound it below by something that goes to $\\infty$ with $\\lVert x \\rVert$, or show every sublevel set is bounded. Do this for (1) $f(x) = x^\\top A x + b^\\top x$ with $A \\succ 0$, (2) $f(x) = (x_1^2 - 1)^2 + (x_2 - x_1)^2$.",
+      "pts": [
+        "(1) Rayleigh quotient and Cauchy–Schwarz give $$f(x) \\ge \\lambda_{\\min}(A)\\lVert x \\rVert^2 - \\lVert b \\rVert \\lVert x \\rVert \\to \\infty$$ because $\\lambda_{\\min}(A) > 0$ and the quadratic term dominates.",
+        "(2) Suppose $f(x) \\le M$. Each square is at most $M$, so $|x_1^2 - 1| \\le \\sqrt{M}$ and $|x_2 - x_1| \\le \\sqrt{M}$. Then $|x_1| \\le \\sqrt{1 + \\sqrt{M}}$ and $|x_2| \\le |x_1| + \\sqrt{M}$. Every sublevel set is bounded, so $f$ is coercive."
+      ],
+      "pit": "In (2) the two coordinates can grow together, so a bound along the axes proves nothing. Bounding the sublevel set handles all paths at once.",
+      "src": "",
+      "seen": [
+        "MT26W P2c",
+        "MT26F P1c"
+      ]
+    },
+    {
+      "id": "NLO-02-25",
+      "k": "Classification workflow",
+      "q": "A standard problem: “find all stationary points of $f$ and classify them as saddle points or strict / non-strict, local / global minima or maxima”. Describe the workflow: (1) finding the points, (2) the second-order test at each point, (3) what to do when the Hessian is singular, (4) how to decide global and strict-global.",
+      "pts": [
+        "(1) Solve $\\nabla f(x) = 0$ completely. Use one equation to eliminate a variable or split into cases, and list every solution.",
+        "(2) Evaluate $H$ at each point. $H \\succ 0$: strict local min. $H \\prec 0$: strict local max. $H$ indefinite (for $2 \\times 2$: $\\det H < 0$): saddle.",
+        "(3) The test is inconclusive. Compare $f$ with $f(x^*)$ along paths through the point: one path with larger values and one with smaller values proves a saddle.",
+        "(4) Global min: show $f(x) \\ge f(x^*)$ for all $x$ (sum of squares, convexity, or coercivity plus comparing stationary values). No global min if $f \\to -\\infty$ along some path. Strict global only if the global minimizer is unique."
+      ],
+      "pit": "A strict local min with the lowest value among stationary points is still not global if $f$ is unbounded below. Always check the behaviour at infinity.",
+      "src": "",
+      "seen": [
+        "MT24 P1",
+        "MT25 P1",
+        "MT26W P1",
+        "MT26F P1",
+        "HW1 P5",
+        "T2 P4"
+      ]
+    },
+    {
+      "id": "NLO-02-26",
+      "k": "Double well",
+      "q": "Let $f(x, y) = x^4 - 2x^2 + y^4 - 2y^2$. (1) Find all stationary points. (2) Classify each with the Hessian. (3) Which are global minimizers, and are they strict global minimizers?",
+      "pts": [
+        "(1) $\\nabla f = (4x^3 - 4x,\\ 4y^3 - 4y)$, so $x, y \\in \\{0, 1, -1\\}$ independently: $9$ stationary points.",
+        "(2) $H = \\operatorname{diag}(12x^2 - 4,\\ 12y^2 - 4)$, with entries $-4$ at $0$ and $8$ at $\\pm 1$. $(0,0)$: strict local max. $(\\pm 1, 0)$ and $(0, \\pm 1)$: saddles. $(\\pm 1, \\pm 1)$: strict local minima.",
+        "(3) $f = (x^2 - 1)^2 + (y^2 - 1)^2 - 2 \\ge -2$ with equality exactly at $(\\pm 1, \\pm 1)$. All four are global minimizers with $f = -2$. None is a strict global minimizer, because the other three have the same value."
+      ],
+      "pit": "Strict local does not imply strict global. Each of the four points is a strict local min and a global min, but not a strict global min.",
+      "src": "",
+      "seen": [
+        "T2 P4",
+        "MT26W P1"
+      ]
+    },
+    {
+      "id": "NLO-02-27",
+      "k": "Coupled squares",
+      "q": "Let $f(x) = (x_1^2 - 1)^2 + (x_2 - x_1)^2$. (1) Compute $\\nabla f$ and $H$. (2) Find the stationary points. (3) Classify them. (4) Which are global minimizers? Is there a global maximum?",
+      "pts": [
+        "(1) $$\\nabla f = \\begin{pmatrix} 4x_1(x_1^2 - 1) + 2(x_1 - x_2) \\\\ 2(x_2 - x_1) \\end{pmatrix}$$ $$H = \\begin{pmatrix} 12x_1^2 - 2 & -2 \\\\ -2 & 2 \\end{pmatrix}$$",
+        "(2) The second component gives $x_2 = x_1$; then $4x_1(x_1^2 - 1) = 0$. Points: $(0,0)$, $(1,1)$, $(-1,-1)$.",
+        "(3) At $(0,0)$: $\\det H = -8 < 0$, indefinite, saddle. At $(\\pm 1, \\pm 1)$: leading minors $10$ and $16$, so $H \\succ 0$ and both are strict local minima.",
+        "(4) $f$ is a sum of squares, so $f \\ge 0$, with equality only at $(1,1)$ and $(-1,-1)$. Both are global minimizers, neither is strict global. No global max: $f(0, t) = 1 + t^2 \\to \\infty$."
+      ],
+      "pit": "The $(1,1)$ entry of $H$ is $12x_1^2 - 2$, not $12x_1^2 - 4$: the term $(x_2 - x_1)^2$ contributes $+2$.",
+      "src": "",
+      "seen": [
+        "MT26F P1"
+      ]
+    },
+    {
+      "id": "NLO-02-28",
+      "k": "Rosenbrock",
+      "q": "Let $f(x) = 100(x_2 - x_1^2)^2 + (1 - x_1)^2$. Prove that $x^* = (1, 1)^\\top$ is the unique global minimizer over $\\mathbb{R}^2$, without computing a Hessian.",
+      "pts": [
+        "$f$ is a sum of squares, so $f(x) \\ge 0$ for all $x$, and $f(1, 1) = 0$. Hence $(1,1)$ is a global minimizer.",
+        "Uniqueness: $f(x) = 0$ forces both squares to vanish, i.e. $x_1 = 1$ and $x_2 = x_1^2 = 1$. So $(1,1)$ is the only point with $f = 0$, and it is a strict global minimizer."
+      ],
+      "pit": "Stopping after “$f \\ge 0 = f(x^*)$” proves global but not unique. The second step (when is equality attained?) carries the marks for uniqueness.",
+      "src": "",
+      "seen": [
+        "MT24 P4a",
+        "MT25 P4a"
+      ]
+    },
+    {
+      "id": "NLO-02-29",
+      "k": "Cubic in 2D",
+      "q": "Let $f(x) = x_1^3 - 12x_1x_2 + 8x_2^3$. (1) Find the stationary points. (2) Classify them. (3) Is the local minimizer a global minimizer?",
+      "pts": [
+        "(1) $\\nabla f = (3x_1^2 - 12x_2,\\ -12x_1 + 24x_2^2)$. The first equation gives $x_2 = x_1^2/4$; the second becomes $x_1(x_1^3 - 8) = 0$. Points: $(0,0)$ and $(2,1)$.",
+        "(2) $H = \\begin{pmatrix} 6x_1 & -12 \\\\ -12 & 48x_2 \\end{pmatrix}$. At $(0,0)$: $\\det H = -144 < 0$, saddle. At $(2,1)$: leading minors $12$ and $12 \\cdot 48 - 144 = 432$, so $H \\succ 0$: strict local min.",
+        "(3) No. $f(t, 0) = t^3 \\to -\\infty$ as $t \\to -\\infty$, so $f$ has no global minimum (and no global maximum)."
+      ],
+      "pit": "$(2,1)$ has the lowest value among the stationary points ($f = -8$), but that does not make it global. A cubic is never bounded below.",
+      "src": "",
+      "seen": [
+        "MT24 P1"
+      ]
+    },
+    {
+      "id": "NLO-02-30",
+      "k": "Degenerate point",
+      "q": "Let $f(x) = x_1^2 - 2x_1x_2^2 + \\tfrac12 x_2^4$. (1) Find the stationary points. (2) What does the Hessian say there? (3) Classify the point with a path argument, using $f(x) = (x_1 - x_2^2)^2 - \\tfrac12 x_2^4$.",
+      "pts": [
+        "(1) $\\nabla f = (2x_1 - 2x_2^2,\\ -4x_1x_2 + 2x_2^3)$. The first gives $x_1 = x_2^2$; the second becomes $-2x_2^3 = 0$. Only $(0,0)$.",
+        "(2) $H(0,0) = \\operatorname{diag}(2, 0)$: PSD but singular. SONC holds, SOSC fails, so the second-order test is inconclusive.",
+        "(3) Along $(t, 0)$: $f = t^2 > 0$. Along the parabola $(t^2, t)$: $f = -\\tfrac12 t^4 < 0$. Both signs occur arbitrarily close to the origin, so $(0,0)$ is a saddle point."
+      ],
+      "pit": "Straight lines through the origin are not enough here: on every line $f > 0$ near $0$. The negative values live on the curve $x_1 = x_2^2$, which the rewritten form of $f$ reveals.",
+      "src": "",
+      "seen": [
+        "MT25 P1",
+        "T2 P5"
+      ]
+    },
+    {
+      "id": "NLO-02-31",
+      "k": "Strict global min",
+      "q": "Let $f: \\mathbb{R}^n \\to \\mathbb{R}$ be twice continuously differentiable, and do not assume $f$ is convex. (1) State a sufficient condition for a point $x^*$ to be a strict global minimizer. (2) Prove it with Taylor’s theorem. (3) What is the version for a strict global maximizer?",
+      "pts": [
+        "(1) $\\nabla f(x^*) = 0$ and $H(z) \\succ 0$ for every $z \\in \\mathbb{R}^n$.",
+        "(2) For any $x \\ne x^*$, Taylor’s theorem gives a point $z$ on the segment between them with $$f(x) = f(x^*) + \\nabla f(x^*)^\\top (x - x^*) + \\tfrac12 (x - x^*)^\\top H(z)\\,(x - x^*)$$ The gradient term is zero and the quadratic term is $> 0$, so $f(x) > f(x^*)$.",
+        "(3) $\\nabla f(x^*) = 0$ and $H(z) \\prec 0$ for every $z$. The same proof gives $f(x) < f(x^*)$."
+      ],
+      "pit": "The Hessian must be definite at every point, because the Taylor point $z$ is unknown. $H(x^*) \\succ 0$ alone only gives a strict local minimizer.",
+      "src": "",
+      "seen": [
+        "MT24 P2d",
+        "MT25 P2d",
+        "HW1 P4"
+      ]
+    },
+    {
+      "id": "NLO-02-32",
+      "k": "SOSC proof",
+      "q": "Let $f$ be twice continuously differentiable with $\\nabla f(x^*) = 0$ and $H(x^*) \\succ 0$. Prove there are $\\delta > 0$ and $c > 0$ with $f(x) \\ge f(x^*) + c\\lVert x - x^* \\rVert^2$ whenever $\\lVert x - x^* \\rVert < \\delta$. Give the three steps: (1) a bound at $x^*$, (2) extending it to a neighbourhood, (3) applying Taylor’s theorem.",
+      "pts": [
+        "(1) Let $\\lambda = \\lambda_{\\min}(H(x^*)) > 0$. By the Rayleigh quotient bound, $v^\\top H(x^*)\\,v \\ge \\lambda \\lVert v \\rVert^2$ for every $v$.",
+        "(2) $H$ is continuous, so there is $\\delta > 0$ with $\\lVert H(z) - H(x^*) \\rVert < \\lambda/2$ for $\\lVert z - x^* \\rVert < \\delta$. Then $v^\\top H(z)\\,v \\ge \\tfrac{\\lambda}{2}\\lVert v \\rVert^2$ for all such $z$ and all $v$.",
+        "(3) For $\\lVert x - x^* \\rVert < \\delta$, Taylor gives $z$ on the segment (so inside the ball) with $f(x) = f(x^*) + \\tfrac12 (x - x^*)^\\top H(z)\\,(x - x^*) \\ge f(x^*) + \\tfrac{\\lambda}{4}\\lVert x - x^* \\rVert^2$. So $c = \\lambda/4$, and $x^*$ is a strict local minimizer."
+      ],
+      "pit": "Step (2) is the point of the proof. Positivity at $x^*$ alone does not let you bound $H(z)$ at the unknown Taylor point $z$; you need the bound uniformly on a ball.",
+      "src": "",
+      "seen": [
+        "MT26F P6"
+      ]
+    },
+    {
+      "id": "NLO-02-33",
+      "k": "Saddle proof",
+      "q": "Let $f$ be twice continuously differentiable, $\\nabla f(x^*) = 0$, and $H(x^*)$ indefinite. Prove that $x^*$ is a saddle point. (1) Which directions do you use? (2) What does Taylor give along them?",
+      "pts": [
+        "(1) $H(x^*)$ has an eigenvalue $\\mu_+ > 0$ and an eigenvalue $\\mu_- < 0$. Take unit eigenvectors $q_+$ and $q_-$, so $q_\\pm^\\top H(x^*)\\,q_\\pm = \\mu_\\pm$.",
+        "(2) Second-order Taylor with zero gradient: $$f(x^* + t q_\\pm) - f(x^*) = \\tfrac{t^2}{2}\\mu_\\pm + o(t^2)$$ For small $t \\ne 0$ this has the sign of $\\mu_\\pm$. So every ball around $x^*$ contains points with larger $f$ and points with smaller $f$: neither a local min nor a local max."
+      ],
+      "pit": "A saddle point must be a stationary point first. An indefinite Hessian at a non-stationary point says nothing.",
+      "src": "",
+      "seen": [
+        "MT26W P6"
+      ]
+    },
+    {
+      "id": "NLO-02-34",
+      "k": "Convex set proofs",
+      "q": "Template: take two points of the set and $\\lambda \\in [0, 1]$, and show the combination stays in the set. Prove convexity of (1) $C = \\{x : \\lVert Ax - b \\rVert \\le r\\}$ for $r \\ge 0$, (2) $S = \\{x : Ax = b,\\ \\lVert x \\rVert \\le 1\\}$. (3) If $C$ is convex, $x_1, x_2, x_3 \\in C$ and $\\theta_i \\ge 0$ with $\\theta_1 + \\theta_2 + \\theta_3 = 1$, why is $\\theta_1x_1 + \\theta_2x_2 + \\theta_3x_3 \\in C$?",
+      "pts": [
+        "(1) For $x, z \\in C$: $A(\\lambda x + (1 - \\lambda)z) - b = \\lambda(Ax - b) + (1 - \\lambda)(Az - b)$. The triangle inequality gives norm $\\le \\lambda r + (1 - \\lambda) r = r$. If $C$ is empty it is convex by definition.",
+        "(2) $S$ is the intersection of the affine set $\\{Ax = b\\}$ and the unit ball. Both are convex, and intersections of convex sets are convex.",
+        "(3) If $\\theta_3 = 1$ the point is $x_3$. Otherwise write it as $(1 - \\theta_3)\\,y + \\theta_3 x_3$ with $y = \\dfrac{\\theta_1 x_1 + \\theta_2 x_2}{\\theta_1 + \\theta_2}$. Then $y \\in C$ (a two-point combination), and so is the result."
+      ],
+      "pit": "In (1), say explicitly which norm properties you use (triangle inequality and $\\lVert \\lambda v \\rVert = \\lambda \\lVert v \\rVert$ for $\\lambda \\ge 0$), and cover the empty-set case if asked.",
+      "src": "",
+      "seen": [
+        "HW1 P1",
+        "MT25 P2b",
+        "MT26W P2b",
+        "MT26F P2a"
+      ]
+    },
+    {
+      "id": "NLO-02-35",
+      "k": "Epigraph",
+      "q": "Let $f: D \\to \\mathbb{R}$ with $D \\subseteq \\mathbb{R}^n$ convex. (1) Define the epigraph of $f$. (2) Prove that if $f$ is convex then its epigraph is a convex set.",
+      "pts": [
+        "(1) $\\operatorname{epi}(f) = \\{(x, \\alpha) : x \\in D,\\ \\alpha \\in \\mathbb{R},\\ f(x) \\le \\alpha\\}$: all points on or above the graph.",
+        "(2) Take $(x, \\alpha), (y, \\beta) \\in \\operatorname{epi}(f)$ and $\\lambda \\in [0, 1]$. Then $$f(\\lambda x + (1 - \\lambda) y) \\le \\lambda f(x) + (1 - \\lambda) f(y) \\le \\lambda \\alpha + (1 - \\lambda)\\beta$$ so $(\\lambda x + (1 - \\lambda)y,\\ \\lambda\\alpha + (1 - \\lambda)\\beta) \\in \\operatorname{epi}(f)$."
+      ],
+      "pit": "The epigraph lives in $\\mathbb{R}^{n+1}$, and $\\alpha$ is a free variable, not a fixed level. For $f(x) = x_1^2 + x_2^2$ it is the solid region above the paraboloid.",
+      "src": "",
+      "seen": [
+        "MT24 P2b",
+        "MT24 P2c"
+      ]
+    },
+    {
+      "id": "NLO-02-36",
+      "k": "Penalized quadratic",
+      "q": "Let $q(x) = \\tfrac12 x^\\top Q x + \\rho\\lVert Ax - b \\rVert^2 + c^\\top x$ with $Q$ symmetric PSD and $\\rho > 0$. (1) Compute $\\nabla q$ and the Hessian $S$. (2) Why is $q$ convex? (3) When is $S$ positive definite? (4) Give the stationary point and explain why it is then the unique global minimizer.",
+      "pts": [
+        "(1) $\\nabla q(x) = Qx + 2\\rho A^\\top (Ax - b) + c$ and $S = Q + 2\\rho A^\\top A$.",
+        "(2) $z^\\top S z = z^\\top Q z + 2\\rho \\lVert Az \\rVert^2 \\ge 0$ for all $z$, so $S \\succeq 0$.",
+        "(3) Both terms are $\\ge 0$, so $z^\\top S z = 0$ iff $Qz = 0$ and $Az = 0$. Hence $S \\succ 0$ iff $\\{z : Qz = 0\\} \\cap \\{z : Az = 0\\} = \\{0\\}$.",
+        "(4) $S x^* = 2\\rho A^\\top b - c$, which has exactly one solution when $S \\succ 0$. For a quadratic, $q(x) - q(x^*) = \\tfrac12 (x - x^*)^\\top S\\,(x - x^*) > 0$ for $x \\ne x^*$."
+      ],
+      "pit": "$Q \\succeq 0$ alone does not make the minimizer unique, and neither does $A$ alone. What matters is that their null spaces share only $0$.",
+      "src": "",
+      "seen": [
+        "MT25 P2c",
+        "MT26F P2"
+      ]
+    },
+    {
+      "id": "NLO-02-37",
+      "k": "Exponential of norm",
+      "q": "Let $f(x) = e^{\\lVert x \\rVert^2}$ on $\\mathbb{R}^n$. (1) Compute $\\nabla f$ and the Hessian. (2) Prove $f$ is strictly convex using the Hessian. (3) Give a second proof using the composition rule.",
+      "pts": [
+        "(1) $\\nabla f(x) = 2x\\,e^{\\lVert x \\rVert^2}$ and $H(x) = e^{\\lVert x \\rVert^2}\\,(2I + 4xx^\\top)$.",
+        "(2) For $v \\ne 0$: $v^\\top H(x)\\,v = e^{\\lVert x \\rVert^2}\\big(2\\lVert v \\rVert^2 + 4(x^\\top v)^2\\big) > 0$. So $H(x) \\succ 0$ at every $x$, and $f$ is strictly convex.",
+        "(3) $\\lVert x \\rVert^2$ is strictly convex and $e^y$ is convex and strictly increasing, so the composition is strictly convex."
+      ],
+      "pit": "Do not forget the outer-product term: differentiating $2x_i e^{\\lVert x \\rVert^2}$ with respect to $x_j$ gives $4x_ix_j e^{\\lVert x \\rVert^2}$, plus $2e^{\\lVert x \\rVert^2}$ on the diagonal.",
+      "src": "",
+      "seen": [
+        "HW1 P3"
+      ]
     }
   ]
 }

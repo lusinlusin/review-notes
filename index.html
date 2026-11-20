@@ -134,6 +134,7 @@
           <option value="due">Due</option>
           <option value="weak">Again</option>
           <option value="gaps">With gaps</option>
+          <option value="seen">Tested</option>
         </select>
         <input id="search" class="control" type="search" placeholder="Search" aria-label="Search">
         <button class="btn" id="shuffle">Random</button>
@@ -293,7 +294,7 @@ async function loadTopics() {
       if (!validCard(c)) { problems.push('bad card in ' + res.title); continue; }
       if (seen.has(c.id)) { problems.push('duplicate id ' + c.id); continue; }
       seen.add(c.id);
-      bank.push({ id: c.id, k: typeof c.k === 'string' ? c.k : '', q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', src: typeof c.src === 'string' ? c.src : '', subj: res.subj, topic: res.title });
+      bank.push({ id: c.id, k: typeof c.k === 'string' ? c.k : '', q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', src: typeof c.src === 'string' ? c.src : '', seen: Array.isArray(c.seen) ? c.seen.filter(v => typeof v === 'string') : [], subj: res.subj, topic: res.title });
     }
   }
   // keep manifest order
@@ -366,7 +367,7 @@ function visible() {
   const term = $('search').value.trim().toLowerCase(), mode = $('mode').value;
   return QUESTION_BANK.filter(q => inScope(q) &&
     (!term || [q.id, q.k, q.subj, q.topic, q.q, q.pit, ...q.pts].some(v => v.toLowerCase().includes(term))) &&
-    (mode === 'all' || (mode === 'due' && isDue(q)) || (mode === 'weak' && status[q.id]?.grade === 'again') || (mode === 'gaps' && hasGaps(q))));
+    (mode === 'all' || (mode === 'due' && isDue(q)) || (mode === 'weak' && status[q.id]?.grade === 'again') || (mode === 'gaps' && hasGaps(q)) || (mode === 'seen' && q.seen.length > 0)));
 }
 function navButton(text, count, active, onClick) {
   const b = document.createElement('button'); b.type = 'button'; b.className = 'cat' + (active ? ' active' : '');
@@ -440,7 +441,8 @@ function render() {
   const pl = $('parts'); pl.replaceChildren(); pl.classList.toggle('hidden', !chunks.length);
   for (const c of chunks) { const li = document.createElement('li'); setMath(li, c); pl.append(li); }
   setMath($('pitfall'), q.pit); $('pitfall').parentElement.classList.toggle('hidden', !q.pit);
-  $('ref').textContent = q.src ? 'Ref — ' + q.src : ''; $('ref').classList.toggle('hidden', !q.src);
+  const refBits = []; if (q.src) refBits.push('Ref — ' + q.src); if (q.seen.length) refBits.push('Tested — ' + q.seen.join(', '));
+  $('ref').textContent = refBits.join('   ·   '); $('ref').classList.toggle('hidden', !refBits.length);
   $('answerCol').classList.toggle('hidden', !shown);
   $('work').classList.toggle('split', shown);
   $('reveal').classList.toggle('hidden', shown);
