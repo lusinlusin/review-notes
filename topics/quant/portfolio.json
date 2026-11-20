@@ -1,0 +1,88 @@
+{
+  "title": "Portfolio",
+  "cards": [
+    {
+      "id": "PF-01",
+      "q": "What is the main limitation of mean–variance optimization?",
+      "pts": [
+        "Weights are very sensitive to errors in expected returns μ — small changes cause large weight swings ('error maximization').",
+        "Covariance estimation error, especially in Σ⁻¹ when assets are highly correlated or N is large relative to T.",
+        "Result: extreme, concentrated, unstable portfolios.",
+        "Remedies: shrinkage (Ledoit–Wolf), Black–Litterman, constraints, robust optimization, risk-based allocation."
+      ],
+      "pit": "Chopra & Ziemba (1993): errors in means matter roughly an order of magnitude more than errors in variances."
+    },
+    {
+      "id": "PF-02",
+      "q": "What changes when you add transaction costs to portfolio optimization?",
+      "pts": [
+        "The objective adds a cost on trades, e.g. Σ cᵢ|wᵢ − wᵢ⁰| (proportional) or a quadratic market-impact term.",
+        "Current holdings w⁰ become an input — the optimum depends on where you start.",
+        "It creates a no-trade region: you move only partway toward the target.",
+        "Multi-period: trade gradually toward a moving target (Gârleanu–Pedersen)."
+      ],
+      "pit": "Costs depend on the change in holdings, not on the target weights alone."
+    },
+    {
+      "id": "PF-03",
+      "q": "Risk parity vs minimum variance portfolio?",
+      "pts": [
+        "Risk contribution of asset i: RCᵢ = wᵢ(Σw)ᵢ; the contributions sum to portfolio variance wᵀΣw.",
+        "Risk parity: equal (or target) risk contributions across assets.",
+        "Minimum variance: minimize wᵀΣw; ignores how risk is distributed and often concentrates in low-volatility assets.",
+        "If all pairwise correlations are equal, risk parity = inverse-volatility weights."
+      ],
+      "pit": "Equal risk contributions do not mean equal weights or minimum variance."
+    },
+    {
+      "id": "PF-04",
+      "q": "What is Black–Litterman designed to address?",
+      "pts": [
+        "Start from equilibrium implied returns π = δΣw_mkt (reverse optimization).",
+        "Combine with investor views Pμ = q + ε, ε ~ N(0, Ω), via Bayesian updating.",
+        "The posterior returns are more stable and give diversified portfolios that tilt toward views in proportion to confidence."
+      ],
+      "pit": "Results depend on calibrating τ, Ω and δ."
+    },
+    {
+      "id": "PF-05",
+      "q": "What is tracking error?",
+      "pts": [
+        "Active return = r_portfolio − r_benchmark.",
+        "Tracking error = standard deviation of active returns (annualize by × √periods per year).",
+        "Information ratio = mean active return / tracking error."
+      ],
+      "pit": "TE is symmetric — it measures active volatility, not downside risk or expected underperformance."
+    },
+    {
+      "id": "PF-06",
+      "q": "What is CVaR / expected shortfall?",
+      "pts": [
+        "VaR_α: the α-quantile of the loss distribution.",
+        "ES / CVaR_α: the expected loss in the worst (1 − α) tail, i.e. beyond VaR (defined via an integral of quantiles for general distributions).",
+        "ES is coherent (subadditive) while VaR is not; ES can be optimized as an LP (Rockafellar–Uryasev)."
+      ],
+      "pit": "Watch the sign convention (loss vs return) and the large estimation error in the tail."
+    },
+    {
+      "id": "PF-07",
+      "q": "Why is Monte Carlo useful for multi-period asset allocation?",
+      "pts": [
+        "Simulate joint return paths from an explicit stochastic model (e.g. regime-switching, block bootstrap).",
+        "Apply each dynamic policy along every path, including rebalancing and cash flows.",
+        "Compare the distributions: terminal wealth, probability of reaching the goal, drawdowns, shortfall."
+      ],
+      "pit": "Randomly generating portfolio weights is not the same as simulating return paths and evaluating a policy."
+    },
+    {
+      "id": "PF-08",
+      "q": "What is robust optimization trying to protect against?",
+      "pts": [
+        "Inputs (e.g. μ) are treated as lying in an uncertainty set U rather than at a single point estimate.",
+        "Optimize the worst case: max_w min_{μ∈U} (wᵀμ − λ wᵀΣw).",
+        "Ellipsoidal U around μ̂ ⇒ the worst case is wᵀμ̂ − κ‖Σ_μ^{1/2} w‖, a penalty term that makes it an SOCP."
+      ],
+      "pit": "A too-large uncertainty set is overly conservative; calibrating κ matters."
+    }
+  ]
+}

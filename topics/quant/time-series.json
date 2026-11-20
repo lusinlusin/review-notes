@@ -1,0 +1,87 @@
+{
+  "title": "Time series",
+  "cards": [
+    {
+      "id": "TS-01",
+      "q": "What is weak stationarity?",
+      "pts": [
+        "E[Xₜ] = μ is constant over time.",
+        "Var(Xₜ) is finite and constant.",
+        "Cov(Xₜ, Xₜ₊ₕ) depends only on the lag h, not on t."
+      ],
+      "pit": "Strict stationarity is about all joint distributions; strict + finite second moments ⇒ weak, but weak ⇏ strict (except for Gaussian processes)."
+    },
+    {
+      "id": "TS-02",
+      "q": "What does the ACF tell you compared with the PACF?",
+      "pts": [
+        "ACF ρ(h): correlation between Xₜ and Xₜ₋ₕ, including indirect effects through the lags in between.",
+        "PACF at lag h: correlation after removing the linear effect of lags 1, …, h − 1.",
+        "Identification: AR(p) ⇒ PACF cuts off after p; MA(q) ⇒ ACF cuts off after q."
+      ],
+      "pit": "In finite samples the cut-offs are noisy — combine with information criteria (AIC/BIC)."
+    },
+    {
+      "id": "TS-03",
+      "q": "What is the key distinction between AR(p) and MA(q)?",
+      "pts": [
+        "AR(p): Xₜ = c + φ₁Xₜ₋₁ + … + φₚXₜ₋ₚ + εₜ — depends on past values of the series.",
+        "MA(q): Xₜ = μ + εₜ + θ₁εₜ₋₁ + … + θ_qεₜ₋q — depends on current and past shocks.",
+        "AR is stationary iff the roots of 1 − φ₁z − … − φₚzᵖ lie outside the unit circle; MA is always stationary, and invertible iff the roots of θ(z) lie outside it."
+      ],
+      "pit": "A stationary AR has an MA(∞) representation; an invertible MA has an AR(∞) representation."
+    },
+    {
+      "id": "TS-04",
+      "q": "What is cointegration?",
+      "pts": [
+        "Each series is I(1): nonstationary with a unit root.",
+        "Some nontrivial linear combination βᵀXₜ is I(0), i.e. stationary.",
+        "It implies a long-run equilibrium and an error-correction model (VECM); it is the basis of pairs trading.",
+        "Tests: Engle–Granger (two-step), Johansen (multivariate)."
+      ],
+      "pit": "Correlation ≠ cointegration: two series can have highly correlated returns and still drift apart in levels."
+    },
+    {
+      "id": "TS-05",
+      "q": "Why can random train/test splitting be dangerous in time-series ML?",
+      "pts": [
+        "A random split lets future information leak into training, so scores look too optimistic.",
+        "Use chronological / walk-forward (rolling-origin) evaluation.",
+        "With overlapping labels (e.g. 20-day forward returns), purge training samples whose label windows overlap the test set and add an embargo after it."
+      ],
+      "pit": "Scalers and feature selection must also be fit on the training window only."
+    },
+    {
+      "id": "TS-06",
+      "q": "What does GARCH(1,1) model?",
+      "pts": [
+        "Conditional variance: hₜ = ω + α ε²ₜ₋₁ + β hₜ₋₁ with ω > 0, α, β ≥ 0.",
+        "It captures volatility clustering: a large shock raises next period’s variance.",
+        "α + β < 1 ⇒ covariance stationary with long-run variance ω / (1 − α − β); α + β near 1 means very persistent volatility."
+      ],
+      "pit": "Standard GARCH is symmetric; the leverage effect needs EGARCH or GJR-GARCH."
+    },
+    {
+      "id": "TS-07",
+      "q": "What is the difference between white noise and a martingale difference sequence?",
+      "pts": [
+        "White noise: zero mean, constant finite variance, zero autocorrelation at all nonzero lags.",
+        "MDS: E[εₜ | ℱₜ₋₁] = 0 — unpredictable in mean from the past.",
+        "An MDS with finite variance is uncorrelated; but white noise need not be an MDS (it can be nonlinearly predictable).",
+        "Example: ARCH errors are an MDS but not i.i.d. — returns unpredictable, volatility predictable."
+      ],
+      "pit": "Uncorrelated ≠ independent."
+    },
+    {
+      "id": "TS-08",
+      "q": "What is look-ahead bias in a trading backtest?",
+      "pts": [
+        "The strategy uses information that was not available at the decision time.",
+        "Examples: revised macro data, restated fundamentals, trading at the same close used to compute the signal, today’s index constituents.",
+        "Fix: point-in-time data, align features by publication / availability timestamps, lag signals."
+      ],
+      "pit": "Using today’s index membership also creates survivorship bias."
+    }
+  ]
+}

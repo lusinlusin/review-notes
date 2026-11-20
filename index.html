@@ -24,6 +24,8 @@
     .cat { color:#888; }
     .cat:hover { color:#222; }
     .cat.active { color:#222; font-weight:600; }
+    .cats.sub { padding-top:2px; font-size:12px; }
+    .loading { padding:40px 0; color:#888; font-size:13px; }
     .cat .n { color:#bbb; font-size:11px; margin-left:3px; font-weight:400; }
     .controls { display:flex; gap:8px; margin:12px 0 22px; }
     .control { height:30px; padding:0 8px; border:1px solid #ddd; border-radius:3px; background:#fff; font-size:13px; }
@@ -89,8 +91,11 @@
       <span>Today <b id="todayCodes">–</b></span>
     </div>
 
-    <div id="practiceView">
-      <nav class="cats" id="categories"></nav>
+    <div class="loading" id="loading">Loading…</div>
+
+    <div id="practiceView" class="hidden">
+      <nav class="cats" id="subjects"></nav>
+      <nav class="cats sub" id="topics"></nav>
       <div class="controls">
         <select class="control" id="mode" aria-label="Mode">
           <option value="all">All</option>
@@ -150,298 +155,22 @@
   </div>
 <script>
 'use strict';
-const QUESTION_BANK = [
-  // ---------- Nonlinear Optimization ----------
-  { id:"OPT-01", cat:"Nonlinear Optimization", q:"When are the KKT conditions sufficient for global optimality?",
-    pts:["The problem is convex: convex objective f, convex inequality constraints gᵢ(x) ≤ 0, affine equality constraints.",
-         "x* is feasible and there exist multipliers λ ≥ 0 (and μ) with stationarity: ∇f(x*) + Σλᵢ∇gᵢ(x*) + Σμⱼ∇hⱼ(x*) = 0.",
-         "Complementary slackness holds: λᵢ gᵢ(x*) = 0 for all i.",
-         "Then x* is a global minimizer — no constraint qualification is needed for this direction."],
-    pit:"Slater / a constraint qualification is what makes KKT necessary; it is not needed for sufficiency." },
-  { id:"OPT-02", cat:"Nonlinear Optimization", q:"What role does Slater’s condition play in convex optimization?",
-    pts:["Definition: there is a strictly feasible point — gᵢ(x) < 0 for the non-affine inequality constraints, with affine constraints satisfied.",
-         "It is a constraint qualification: for a convex problem it guarantees strong duality (zero duality gap).",
-         "If the optimal value is finite, the dual optimum is attained, so KKT multipliers exist — KKT becomes necessary for optimality."],
-    pit:"Slater does not imply that a primal optimum exists or is unique, and it is a statement about convex problems." },
-  { id:"OPT-03", cat:"Nonlinear Optimization", q:"What distinguishes convexity from strong convexity?",
-    pts:["Convex (differentiable f): f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) — f lies above every tangent plane.",
-         "m-strongly convex (m > 0): f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) + (m/2)‖y − x‖² — a uniform quadratic lower bound on curvature.",
-         "For twice differentiable f: ∇²f(x) ⪰ mI for all x.",
-         "Consequences: at most one minimizer; with L-smoothness, gradient descent converges linearly."],
-    pit:"Strictly convex ≠ strongly convex: eˣ is strictly convex on ℝ but not strongly convex (f″ = eˣ → 0)." },
-  { id:"OPT-04", cat:"Nonlinear Optimization", q:"When is a stationary point globally optimal?",
-    pts:["Unconstrained, differentiable convex f: ∇f(x*) = 0 ⇔ x* is a global minimizer.",
-         "Constrained convex problem: the condition becomes ∇f(x*)ᵀ(x − x*) ≥ 0 for all feasible x (−∇f(x*) lies in the normal cone).",
-         "Nonconvex f: ∇f(x*) = 0 can be a local min, a local max or a saddle point."],
-    pit:"At a constrained optimum ∇f(x*) is usually not zero — don't set the gradient to zero when constraints are active." },
-  { id:"OPT-05", cat:"Nonlinear Optimization", q:"Why is a positive semidefinite Hessian useful?",
-    pts:["On an open convex set, for f ∈ C²: ∇²f(x) ⪰ 0 for all x ⇔ f is convex.",
-         "∇²f(x) ≻ 0 for all x ⇒ strictly convex (the converse fails: x⁴ is strictly convex but f″(0) = 0).",
-         "∇²f(x) ⪰ mI for all x ⇒ m-strongly convex.",
-         "Locally: ∇f(x*) = 0 and ∇²f(x*) ≻ 0 ⇒ strict local minimum (second-order sufficient condition)."],
-    pit:"A PSD Hessian at a single point says nothing about global convexity." },
-  { id:"OPT-06", cat:"Nonlinear Optimization", q:"What is the difference between a local minimum and a strict local minimum?",
-    pts:["Local minimum: f(x*) ≤ f(x) for all feasible x in some neighborhood of x*.",
-         "Strict local minimum: f(x*) < f(x) for all feasible x ≠ x* in some neighborhood.",
-         "Example: for a constant function every point is a local minimum, but none is strict."],
-    pit:"∇f(x*) = 0 and ∇²f(x*) ⪰ 0 are only necessary at an interior local minimum, not sufficient." },
-  { id:"OPT-07", cat:"Nonlinear Optimization", q:"What is the duality gap and when is it zero?",
-    pts:["Weak duality (minimization): the dual optimum d* ≤ primal optimum p*, always — even for nonconvex problems.",
-         "Duality gap = p* − d* ≥ 0.",
-         "The gap is zero (strong duality) for convex problems under a constraint qualification such as Slater; for LP whenever an optimum exists."],
-    pit:"Nonconvex problems (e.g. integer programs) typically have a positive gap; the dual still gives a valid lower bound." },
-  { id:"OPT-08", cat:"Nonlinear Optimization", q:"Why can Newton’s method converge faster than gradient descent?",
-    pts:["The Newton step solves ∇²f(x)d = −∇f(x): it minimizes the local quadratic model, using curvature.",
-         "Near a minimizer with ∇²f(x*) ≻ 0 (and a Lipschitz Hessian) it converges quadratically.",
-         "Gradient descent converges linearly at best, with a rate that worsens with the condition number κ.",
-         "Newton is affine-invariant, so it is insensitive to bad scaling of the variables."],
-    pit:"Far from the optimum or with an indefinite Hessian Newton can diverge — use line search / damping; each step costs about O(n³)." },
-  { id:"OPT-09", cat:"Nonlinear Optimization", q:"What is complementary slackness?",
-    pts:["For gᵢ(x) ≤ 0 with multipliers λᵢ ≥ 0, KKT requires λᵢ gᵢ(x*) = 0 for every i.",
-         "Inactive constraint (gᵢ(x*) < 0) ⇒ λᵢ = 0.",
-         "λᵢ > 0 ⇒ the constraint is active (gᵢ(x*) = 0).",
-         "λᵢ is the shadow price: the marginal improvement in the objective from relaxing constraint i."],
-    pit:"Active does NOT imply λᵢ > 0: an active constraint can have λᵢ = 0 (degenerate case). The reverse direction, λᵢ > 0 ⇒ active, always holds." },
-  { id:"OPT-10", cat:"Nonlinear Optimization", q:"When is projected gradient descent useful?",
-    pts:["Update: xₖ₊₁ = Proj_C(xₖ − αₖ∇f(xₖ)) — take a gradient step, then project back onto the feasible set C.",
-         "Useful when C is closed and convex with a cheap projection: box, ball, simplex.",
-         "A fixed point x* = Proj_C(x* − α∇f(x*)) is exactly the first-order optimality condition on C.",
-         "Portfolio example: long-only, fully invested weights = projection onto the probability simplex."],
-    pit:"If projecting onto C is itself a hard optimization problem, prefer other methods (Frank–Wolfe, ADMM)." },
-
-  // ---------- MDP / RL ----------
-  { id:"MDP-01", cat:"MDP / RL", q:"What is the Markov property?",
-    pts:["P(sₜ₊₁, rₜ₊₁ | sₜ, aₜ, full history) = P(sₜ₊₁, rₜ₊₁ | sₜ, aₜ).",
-         "The current state is a sufficient statistic of the past for prediction and control.",
-         "It is a property of how you define the state — often restored by augmenting the state (lagged signals, current holdings, wealth)."],
-    pit:"Raw prices alone are rarely a Markov state for trading decisions." },
-  { id:"MDP-02", cat:"MDP / RL", q:"Bellman expectation equation vs Bellman optimality equation?",
-    pts:["Expectation: V^π(s) = Σₐ π(a|s) Σₛ′ P(s′|s,a)[r + γV^π(s′)] — evaluates a fixed policy π.",
-         "Optimality: V*(s) = maxₐ Σₛ′ P(s′|s,a)[r + γV*(s′)] — picks the best action in each state.",
-         "The expectation equation is linear in V (a linear system); the optimality equation is nonlinear because of the max."],
-    pit:"Policy evaluation uses the expectation equation; value iteration uses the optimality equation — don't mix them." },
-  { id:"MDP-03", cat:"MDP / RL", q:"What is the difference between value iteration and policy iteration?",
-    pts:["Value iteration: repeatedly apply the Bellman optimality operator V ← TV; extract the greedy policy at the end.",
-         "Policy iteration: evaluate the current policy exactly (solve for V^π), then improve it greedily; repeat until the policy stops changing.",
-         "For finite MDPs PI terminates in finitely many (expensive) iterations; VI has cheap iterations but converges geometrically.",
-         "Modified policy iteration does partial evaluation and interpolates between the two."],
-    pit:"Exact policy evaluation can be costly for large state spaces." },
-  { id:"MDP-04", cat:"MDP / RL", q:"Why does a discount factor γ < 1 help?",
-    pts:["With bounded rewards, the infinite-horizon value is finite: |V| ≤ R_max / (1 − γ).",
-         "The Bellman operator is a γ-contraction in the sup norm: ‖TV − TU‖∞ ≤ γ‖V − U‖∞.",
-         "By the Banach fixed-point theorem there is a unique V*, and value iteration converges geometrically at rate γ."],
-    pit:"γ = 1 is fine for finite-horizon or episodic problems, but convergence then needs other conditions (e.g. proper policies)." },
-  { id:"MDP-05", cat:"MDP / RL", q:"What is the difference between on-policy and off-policy learning?",
-    pts:["On-policy: learn the value of the same policy that generates the data (e.g. SARSA).",
-         "Off-policy: learn a target policy from data generated by a different behavior policy (e.g. Q-learning, importance sampling).",
-         "Off-policy lets you reuse historical data — important in finance, where you cannot freely experiment."],
-    pit:"Off-policy + function approximation + bootstrapping (the 'deadly triad') can be unstable or diverge." },
-  { id:"MDP-06", cat:"MDP / RL", q:"What does temporal-difference learning update?",
-    pts:["TD(0): V(sₜ) ← V(sₜ) + α[rₜ₊₁ + γV(sₜ₊₁) − V(sₜ)].",
-         "The target bootstraps on the current estimate V(sₜ₊₁) instead of waiting for the full return Gₜ.",
-         "Versus Monte Carlo: a biased target but lower variance, and it learns online, step by step."],
-    pit:"The bracket rₜ₊₁ + γV(sₜ₊₁) − V(sₜ) is the TD error — the same quantity used as the advantage signal in actor–critic methods." },
-  { id:"MDP-07", cat:"MDP / RL", q:"How would transaction costs change an asset-allocation MDP?",
-    pts:["The state must include current holdings / weights (and wealth), not just market signals.",
-         "The action is the trade (change in holdings), not only the target weights.",
-         "The reward or transition subtracts a cost that depends on trade size, e.g. c·|Δw|.",
-         "Result: a no-trade region — small deviations from target are not worth rebalancing."],
-    pit:"The relevant state may also need cash, liabilities and risk budgets." },
-  { id:"MDP-08", cat:"MDP / RL", q:"What is the exploration–exploitation tradeoff?",
-    pts:["Exploit: choose the action with the highest current estimated value.",
-         "Explore: try uncertain actions to improve estimates and future decisions.",
-         "Typical methods: ε-greedy, UCB, Thompson sampling."],
-    pit:"In live markets exploration is costly — use offline RL, simulators or conservative / constrained policies." },
-
-  // ---------- Statistics ----------
-  { id:"STA-01", cat:"Statistics", q:"Why is an estimator being unbiased not enough to make it good?",
-    pts:["Unbiased only means E[θ̂] = θ — it says nothing about how spread out θ̂ is.",
-         "MSE = Var(θ̂) + Bias(θ̂)².",
-         "A slightly biased estimator (shrinkage, ridge, Ledoit–Wolf covariance) can have much lower MSE."],
-    pit:"Also judge consistency, efficiency and robustness, not just bias." },
-  { id:"STA-02", cat:"Statistics", q:"What is the central limit theorem in its basic i.i.d. form?",
-    pts:["X₁, …, Xₙ i.i.d. with mean μ and finite variance σ² > 0.",
-         "√n (X̄ₙ − μ) / σ converges in distribution to N(0, 1).",
-         "It describes the sample mean’s distribution, not the individual observations."],
-    pit:"Infinite variance breaks this form; with fat tails the finite-sample approximation can be poor." },
-  { id:"STA-03", cat:"Statistics", q:"What is the difference between bootstrap and cross-validation?",
-    pts:["Bootstrap: resample with replacement to approximate an estimator’s sampling distribution (standard errors, confidence intervals).",
-         "Cross-validation: split data into folds to estimate out-of-sample prediction error and tune hyperparameters.",
-         "Different goals: uncertainty of an estimate vs. generalization error of a model."],
-    pit:"For time series use a block bootstrap and chronological / purged CV; i.i.d. resampling breaks the dependence." },
-  { id:"STA-04", cat:"Statistics", q:"MLE vs MAP estimation?",
-    pts:["MLE: θ̂ = argmax p(data | θ).",
-         "MAP: θ̂ = argmax p(θ | data) = argmax p(data | θ) p(θ) — adds a prior.",
-         "Gaussian prior ⇒ MAP = L2 (ridge) penalty; Laplace prior ⇒ L1 (lasso) penalty.",
-         "As n → ∞ the likelihood dominates and MAP approaches MLE (under regularity)."],
-    pit:"MAP is not invariant to reparameterization, and neither estimator is unbiased in general." },
-  { id:"STA-05", cat:"Statistics", q:"What is a p-value, and what is it not?",
-    pts:["The probability, assuming H₀ is true, of a test statistic at least as extreme as the one observed.",
-         "It is NOT P(H₀ is true | data).",
-         "A small p-value is not a large effect: statistical significance ≠ economic significance."],
-    pit:"Testing many strategies inflates false positives — adjust for multiple testing (e.g. Harvey–Liu–Zhu suggest t > 3)." },
-  { id:"STA-06", cat:"Statistics", q:"Why can heteroskedasticity cause problems in OLS inference?",
-    pts:["Under exogeneity, OLS coefficients stay unbiased and consistent.",
-         "But conventional standard errors are wrong ⇒ t-tests and confidence intervals are invalid, and OLS is no longer BLUE.",
-         "Fixes: White (HC) robust SEs; Newey–West (HAC) if errors are also autocorrelated; WLS/GLS for efficiency."],
-    pit:"Robust standard errors fix inference only — not omitted-variable bias or endogeneity." },
-  { id:"STA-07", cat:"Statistics", q:"What is the difference between confidence and prediction intervals?",
-    pts:["Confidence interval: for a parameter or the conditional mean E[y | x].",
-         "Prediction interval: for a new individual observation y — it adds the irreducible noise σ².",
-         "So the PI is wider; as n → ∞ the CI shrinks toward zero width but the PI does not."],
-    pit:"Reporting a CI when someone asks about the next observation understates uncertainty." },
-  { id:"STA-08", cat:"Statistics", q:"What is the bias–variance tradeoff?",
-    pts:["Expected squared prediction error = Bias² + Variance + irreducible noise σ².",
-         "More flexible models: bias goes down, variance goes up.",
-         "Regularization or ensembling trades a little bias for less variance ⇒ better out-of-sample error."],
-    pit:"Training error keeps falling with complexity; only out-of-sample error shows the U-shape." },
-
-  // ---------- Time Series ----------
-  { id:"TS-01", cat:"Time Series", q:"What is weak stationarity?",
-    pts:["E[Xₜ] = μ is constant over time.",
-         "Var(Xₜ) is finite and constant.",
-         "Cov(Xₜ, Xₜ₊ₕ) depends only on the lag h, not on t."],
-    pit:"Strict stationarity is about all joint distributions; strict + finite second moments ⇒ weak, but weak ⇏ strict (except for Gaussian processes)." },
-  { id:"TS-02", cat:"Time Series", q:"What does the ACF tell you compared with the PACF?",
-    pts:["ACF ρ(h): correlation between Xₜ and Xₜ₋ₕ, including indirect effects through the lags in between.",
-         "PACF at lag h: correlation after removing the linear effect of lags 1, …, h − 1.",
-         "Identification: AR(p) ⇒ PACF cuts off after p; MA(q) ⇒ ACF cuts off after q."],
-    pit:"In finite samples the cut-offs are noisy — combine with information criteria (AIC/BIC)." },
-  { id:"TS-03", cat:"Time Series", q:"What is the key distinction between AR(p) and MA(q)?",
-    pts:["AR(p): Xₜ = c + φ₁Xₜ₋₁ + … + φₚXₜ₋ₚ + εₜ — depends on past values of the series.",
-         "MA(q): Xₜ = μ + εₜ + θ₁εₜ₋₁ + … + θ_qεₜ₋q — depends on current and past shocks.",
-         "AR is stationary iff the roots of 1 − φ₁z − … − φₚzᵖ lie outside the unit circle; MA is always stationary, and invertible iff the roots of θ(z) lie outside it."],
-    pit:"A stationary AR has an MA(∞) representation; an invertible MA has an AR(∞) representation." },
-  { id:"TS-04", cat:"Time Series", q:"What is cointegration?",
-    pts:["Each series is I(1): nonstationary with a unit root.",
-         "Some nontrivial linear combination βᵀXₜ is I(0), i.e. stationary.",
-         "It implies a long-run equilibrium and an error-correction model (VECM); it is the basis of pairs trading.",
-         "Tests: Engle–Granger (two-step), Johansen (multivariate)."],
-    pit:"Correlation ≠ cointegration: two series can have highly correlated returns and still drift apart in levels." },
-  { id:"TS-05", cat:"Time Series", q:"Why can random train/test splitting be dangerous in time-series ML?",
-    pts:["A random split lets future information leak into training, so scores look too optimistic.",
-         "Use chronological / walk-forward (rolling-origin) evaluation.",
-         "With overlapping labels (e.g. 20-day forward returns), purge training samples whose label windows overlap the test set and add an embargo after it."],
-    pit:"Scalers and feature selection must also be fit on the training window only." },
-  { id:"TS-06", cat:"Time Series", q:"What does GARCH(1,1) model?",
-    pts:["Conditional variance: hₜ = ω + α ε²ₜ₋₁ + β hₜ₋₁ with ω > 0, α, β ≥ 0.",
-         "It captures volatility clustering: a large shock raises next period’s variance.",
-         "α + β < 1 ⇒ covariance stationary with long-run variance ω / (1 − α − β); α + β near 1 means very persistent volatility."],
-    pit:"Standard GARCH is symmetric; the leverage effect needs EGARCH or GJR-GARCH." },
-  { id:"TS-07", cat:"Time Series", q:"What is the difference between white noise and a martingale difference sequence?",
-    pts:["White noise: zero mean, constant finite variance, zero autocorrelation at all nonzero lags.",
-         "MDS: E[εₜ | ℱₜ₋₁] = 0 — unpredictable in mean from the past.",
-         "An MDS with finite variance is uncorrelated; but white noise need not be an MDS (it can be nonlinearly predictable).",
-         "Example: ARCH errors are an MDS but not i.i.d. — returns unpredictable, volatility predictable."],
-    pit:"Uncorrelated ≠ independent." },
-  { id:"TS-08", cat:"Time Series", q:"What is look-ahead bias in a trading backtest?",
-    pts:["The strategy uses information that was not available at the decision time.",
-         "Examples: revised macro data, restated fundamentals, trading at the same close used to compute the signal, today’s index constituents.",
-         "Fix: point-in-time data, align features by publication / availability timestamps, lag signals."],
-    pit:"Using today’s index membership also creates survivorship bias." },
-
-  // ---------- Portfolio ----------
-  { id:"PF-01", cat:"Portfolio", q:"What is the main limitation of mean–variance optimization?",
-    pts:["Weights are very sensitive to errors in expected returns μ — small changes cause large weight swings ('error maximization').",
-         "Covariance estimation error, especially in Σ⁻¹ when assets are highly correlated or N is large relative to T.",
-         "Result: extreme, concentrated, unstable portfolios.",
-         "Remedies: shrinkage (Ledoit–Wolf), Black–Litterman, constraints, robust optimization, risk-based allocation."],
-    pit:"Chopra & Ziemba (1993): errors in means matter roughly an order of magnitude more than errors in variances." },
-  { id:"PF-02", cat:"Portfolio", q:"What changes when you add transaction costs to portfolio optimization?",
-    pts:["The objective adds a cost on trades, e.g. Σ cᵢ|wᵢ − wᵢ⁰| (proportional) or a quadratic market-impact term.",
-         "Current holdings w⁰ become an input — the optimum depends on where you start.",
-         "It creates a no-trade region: you move only partway toward the target.",
-         "Multi-period: trade gradually toward a moving target (Gârleanu–Pedersen)."],
-    pit:"Costs depend on the change in holdings, not on the target weights alone." },
-  { id:"PF-03", cat:"Portfolio", q:"Risk parity vs minimum variance portfolio?",
-    pts:["Risk contribution of asset i: RCᵢ = wᵢ(Σw)ᵢ; the contributions sum to portfolio variance wᵀΣw.",
-         "Risk parity: equal (or target) risk contributions across assets.",
-         "Minimum variance: minimize wᵀΣw; ignores how risk is distributed and often concentrates in low-volatility assets.",
-         "If all pairwise correlations are equal, risk parity = inverse-volatility weights."],
-    pit:"Equal risk contributions do not mean equal weights or minimum variance." },
-  { id:"PF-04", cat:"Portfolio", q:"What is Black–Litterman designed to address?",
-    pts:["Start from equilibrium implied returns π = δΣw_mkt (reverse optimization).",
-         "Combine with investor views Pμ = q + ε, ε ~ N(0, Ω), via Bayesian updating.",
-         "The posterior returns are more stable and give diversified portfolios that tilt toward views in proportion to confidence."],
-    pit:"Results depend on calibrating τ, Ω and δ." },
-  { id:"PF-05", cat:"Portfolio", q:"What is tracking error?",
-    pts:["Active return = r_portfolio − r_benchmark.",
-         "Tracking error = standard deviation of active returns (annualize by × √periods per year).",
-         "Information ratio = mean active return / tracking error."],
-    pit:"TE is symmetric — it measures active volatility, not downside risk or expected underperformance." },
-  { id:"PF-06", cat:"Portfolio", q:"What is CVaR / expected shortfall?",
-    pts:["VaR_α: the α-quantile of the loss distribution.",
-         "ES / CVaR_α: the expected loss in the worst (1 − α) tail, i.e. beyond VaR (defined via an integral of quantiles for general distributions).",
-         "ES is coherent (subadditive) while VaR is not; ES can be optimized as an LP (Rockafellar–Uryasev)."],
-    pit:"Watch the sign convention (loss vs return) and the large estimation error in the tail." },
-  { id:"PF-07", cat:"Portfolio", q:"Why is Monte Carlo useful for multi-period asset allocation?",
-    pts:["Simulate joint return paths from an explicit stochastic model (e.g. regime-switching, block bootstrap).",
-         "Apply each dynamic policy along every path, including rebalancing and cash flows.",
-         "Compare the distributions: terminal wealth, probability of reaching the goal, drawdowns, shortfall."],
-    pit:"Randomly generating portfolio weights is not the same as simulating return paths and evaluating a policy." },
-  { id:"PF-08", cat:"Portfolio", q:"What is robust optimization trying to protect against?",
-    pts:["Inputs (e.g. μ) are treated as lying in an uncertainty set U rather than at a single point estimate.",
-         "Optimize the worst case: max_w min_{μ∈U} (wᵀμ − λ wᵀΣw).",
-         "Ellipsoidal U around μ̂ ⇒ the worst case is wᵀμ̂ − κ‖Σ_μ^{1/2} w‖, a penalty term that makes it an SOCP."],
-    pit:"A too-large uncertainty set is overly conservative; calibrating κ matters." },
-
-  // ---------- Python / SQL / ML ----------
-  { id:"CODE-01", cat:"Python / SQL / ML", q:"What is the time complexity of sorting a Python list?",
-    pts:["list.sort() and sorted() use Timsort.",
-         "Worst case O(n log n); close to O(n) on data that is already (partly) sorted.",
-         "It is stable: equal keys keep their original order, which enables multi-key sorting."],
-    pit:"list.sort() sorts in place and returns None; sorted() returns a new list." },
-  { id:"CODE-02", cat:"Python / SQL / ML", q:"Generator vs list in Python?",
-    pts:["A generator yields values lazily — constant memory, good for streaming large data.",
-         "A list materializes everything: supports indexing, len() and repeated passes.",
-         "A generator is exhausted after one pass."],
-    pit:"Wrapping a generator in list() brings the memory cost back." },
-  { id:"CODE-03", cat:"Python / SQL / ML", q:"What is the difference between a shallow and a deep copy?",
-    pts:["Shallow copy (copy.copy, list[:]): a new outer container that still references the same nested objects.",
-         "Deep copy (copy.deepcopy): recursively copies the nested objects too.",
-         "Classic bug: mutating a nested list inside a shallow copy also changes the original."],
-    pit:"In pandas, df.copy() is deep by default, while slicing may return a view (SettingWithCopyWarning)." },
-  { id:"CODE-04", cat:"Python / SQL / ML", q:"What is data leakage in machine learning?",
-    pts:["Training or model selection uses information that would not be available at prediction time.",
-         "Examples: scaling or feature selection fit on the full dataset, target-derived features, future data in time series.",
-         "Fix: fit every preprocessing step inside each training fold (e.g. a Pipeline)."],
-    pit:"Leakage shows up as unrealistically good validation scores that collapse live." },
-  { id:"CODE-05", cat:"Python / SQL / ML", q:"Why does L1 regularization create sparse coefficients?",
-    pts:["The L1 penalty λ‖β‖₁ is non-differentiable at 0; its subgradient lets coefficients sit exactly at zero.",
-         "Geometrically, the L1 ball has corners on the axes, and the loss contours often touch it at a corner.",
-         "L2 shrinks coefficients smoothly toward zero but rarely to exactly zero."],
-    pit:"With correlated predictors L1 picks one somewhat arbitrarily — unstable selection; elastic net helps." },
-  { id:"CODE-06", cat:"Python / SQL / ML", q:"What is the difference between SQL WHERE and HAVING?",
-    pts:["WHERE filters rows before grouping.",
-         "HAVING filters groups after aggregation.",
-         "Logical order: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY."],
-    pit:"Conditions on aggregates (SUM, COUNT…) belong in HAVING, not WHERE." },
-  { id:"CODE-07", cat:"Python / SQL / ML", q:"What is a window function in SQL?",
-    pts:["Computes over a window of rows: f(...) OVER (PARTITION BY … ORDER BY …).",
-         "Does not collapse rows — each row is kept, unlike GROUP BY.",
-         "Typical uses: ROW_NUMBER / RANK, running sums, LAG / LEAD (e.g. daily returns)."],
-    pit:"Ties: ROW_NUMBER, RANK and DENSE_RANK behave differently." },
-  { id:"CODE-08", cat:"Python / SQL / ML", q:"Why is ordinary K-fold CV unsuitable for many financial time series?",
-    pts:["Observations are serially dependent; random folds put the neighbors of test points into training.",
-         "Overlapping labels leak information across folds.",
-         "Use walk-forward or purged K-fold with an embargo (López de Prado)."],
-    pit:"Hyperparameter tuning and scaling must also respect each time split." }
-];
-
-const STORAGE_KEY = 'review-notes-v1';
+const STORAGE_KEY = 'review-notes-v2';
 const SYNC_KEY = 'review-notes-sync';
 const DIRTY_KEY = 'review-notes-dirty';
 const DAY = 86400000;
 const HIST_MAX = 200;
 const ALL = 'All';
+const GRADES = ['again', 'good', 'easy'];
 const $ = id => document.getElementById(id);
-const categories = [ALL, ...new Set(QUESTION_BANK.map(q => q.cat))];
-let category = ALL, view = 'practice', currentId = QUESTION_BANK[0].id, shown = false, missed = new Set(), status = {};
+
+let QUESTION_BANK = [];          // flat list of cards: {id, q, pts, pit, subj, topic}
+let SUBJECTS = [];               // [{name, topics:[title]}]
+let subject = ALL, topic = ALL, view = 'practice', currentId = null, shown = false, missed = new Set(), status = {};
 
 // ---------- local storage ----------
 const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (_) { return false; } };
-status = sanitizeProgress(lsGet(STORAGE_KEY, {}));
 function save() { if (!lsSet(STORAGE_KEY, status)) $('feedback').textContent = 'Could not save locally.'; }
 
 // ---------- data helpers ----------
@@ -452,20 +181,22 @@ const hasGaps = q => missOf(q).some(n => n > 0);
 const sameDay = t => new Date(t).toDateString() === new Date().toDateString();
 const nextInterval = (g, prev) => g === 'again' ? 0 : g === 'good' ? Math.max(3, Math.round((prev || 0) * 2)) : Math.max(7, Math.round((prev || 0) * 3));
 const fmtPts = arr => arr.map(i => i + 1).join(',');
+const label = q => `${q.subj} · ${q.topic}`;
 
 function sanitizeRecord(r) {
-  if (!r || typeof r !== 'object' || !['again', 'good', 'easy'].includes(r.grade) || !Number.isFinite(r.due)) return null;
-  const hist = Array.isArray(r.hist) ? r.hist.filter(h => h && Number.isFinite(h.t) && ['again', 'good', 'easy'].includes(h.g))
-    .map(h => ({ t: h.t, g: h.g, m: Array.isArray(h.m) ? h.m.filter(i => Number.isInteger(i) && i >= 0 && i < 8) : [] })) : [];
+  if (!r || typeof r !== 'object' || !GRADES.includes(r.grade) || !Number.isFinite(r.due)) return null;
+  const hist = Array.isArray(r.hist) ? r.hist.filter(h => h && Number.isFinite(h.t) && GRADES.includes(h.g))
+    .map(h => ({ t: h.t, g: h.g, m: Array.isArray(h.m) ? h.m.filter(i => Number.isInteger(i) && i >= 0 && i < 12) : [] })) : [];
   return { grade: r.grade, due: r.due, interval: Number(r.interval) || 0, reviewedAt: Number(r.reviewedAt) || 0, hist: hist.slice(-HIST_MAX) };
 }
+// Keeps records for every card ID, including cards from topic files that are not loaded right now,
+// so one page never deletes another topic's progress when it syncs.
 function sanitizeProgress(p) {
   const out = {};
   if (!p || typeof p !== 'object' || Array.isArray(p)) return out;
-  for (const q of QUESTION_BANK) { const r = sanitizeRecord(p[q.id]); if (r) out[q.id] = r; }
+  for (const [id, r] of Object.entries(p)) { if (typeof id === 'string' && id.length <= 64) { const s = sanitizeRecord(r); if (s) out[id] = s; } }
   return out;
 }
-// Merge two progress objects: union the review histories; scheduling comes from whichever side reviewed last.
 function mergeProgress(a, b) {
   const out = {};
   for (const id of new Set([...Object.keys(a), ...Object.keys(b)])) {
@@ -474,40 +205,76 @@ function mergeProgress(a, b) {
     const latest = (y.reviewedAt > x.reviewedAt) ? y : x;
     const seen = new Map();
     for (const h of [...x.hist, ...y.hist]) seen.set(h.t + '|' + h.g, h);
-    const hist = [...seen.values()].sort((p, q) => p.t - q.t).slice(-HIST_MAX);
-    out[id] = { ...latest, hist };
+    out[id] = { ...latest, hist: [...seen.values()].sort((p, q) => p.t - q.t).slice(-HIST_MAX) };
   }
   return out;
 }
+const sortKeys = o => { const r = {}; for (const k of Object.keys(o).sort()) r[k] = o[k]; return r; };
 const sameProgress = (a, b) => JSON.stringify(sortKeys(a)) === JSON.stringify(sortKeys(b));
-function sortKeys(o) { const r = {}; for (const k of Object.keys(o).sort()) r[k] = o[k]; return r; }
+
+// ---------- loading topic files ----------
+function validCard(c) {
+  return c && typeof c.id === 'string' && typeof c.q === 'string' && Array.isArray(c.pts) && c.pts.length > 0 && c.pts.every(p => typeof p === 'string');
+}
+async function loadTopics() {
+  const getJson = async path => { const r = await fetch(path, { cache: 'no-cache' }); if (!r.ok) throw Error(path + ' (' + r.status + ')'); return r.json(); };
+  const manifest = await getJson('topics/manifest.json');
+  const bank = [], subjects = [], seen = new Set(), problems = [];
+  const jobs = [];
+  for (const s of manifest.subjects || []) {
+    const subj = { name: String(s.name), topics: [] };
+    subjects.push(subj);
+    for (const t of s.topics || []) {
+      subj.topics.push(String(t.title));
+      jobs.push(getJson('topics/' + t.file).then(data => ({ subj: subj.name, title: String(t.title), data })).catch(e => { problems.push(e.message); return null; }));
+    }
+  }
+  for (const res of await Promise.all(jobs)) {
+    if (!res) continue;
+    for (const c of res.data.cards || []) {
+      if (!validCard(c)) { problems.push('bad card in ' + res.title); continue; }
+      if (seen.has(c.id)) { problems.push('duplicate id ' + c.id); continue; }
+      seen.add(c.id);
+      bank.push({ id: c.id, q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', subj: res.subj, topic: res.title });
+    }
+  }
+  // keep manifest order
+  const order = new Map(); subjects.forEach((s, i) => s.topics.forEach((t, j) => order.set(s.name + '|' + t, i * 1000 + j)));
+  bank.sort((a, b) => (order.get(a.subj + '|' + a.topic) - order.get(b.subj + '|' + b.topic)) || 0);
+  return { bank, subjects, problems };
+}
 
 // ---------- sync (GitHub contents API) ----------
 let syncCfg = lsGet(SYNC_KEY, null), syncTimer = null, syncing = false, syncAgain = false;
 const configured = () => !!(syncCfg && syncCfg.owner && syncCfg.repo && syncCfg.token);
 const b64encode = s => btoa(unescape(encodeURIComponent(s)));
 const b64decode = s => decodeURIComponent(escape(atob(s.replace(/\s/g, ''))));
-function setSyncStatus(t) { $('syncStatus').textContent = t; }
-function apiUrl() { const c = syncCfg; return `https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${(c.path || 'progress.json').split('/').map(encodeURIComponent).join('/')}`; }
-function apiHeaders() { return { 'Authorization': `Bearer ${syncCfg.token}`, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }; }
+const setSyncStatus = t => { $('syncStatus').textContent = t; };
+const apiUrl = () => { const c = syncCfg; return `https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${(c.path || 'progress.json').split('/').map(encodeURIComponent).join('/')}`; };
+const apiHeaders = () => ({ 'Authorization': `Bearer ${syncCfg.token}`, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' });
+const httpError = s => Error(s === 401 ? 'token rejected' : s === 403 ? 'no permission' : s === 404 ? 'repository not found' : 'HTTP ' + s);
 
 async function pullRemote() {
   const res = await fetch(apiUrl() + '?t=' + Date.now(), { headers: apiHeaders(), cache: 'no-store' });
-  if (res.status === 404) return { progress: {}, sha: null };
-  if (!res.ok) throw Error(res.status === 401 ? 'token rejected' : res.status === 403 ? 'no permission' : 'HTTP ' + res.status);
+  if (res.status === 404) {
+    // distinguish "file not created yet" from "repo not reachable"
+    const repo = await fetch(`https://api.github.com/repos/${encodeURIComponent(syncCfg.owner)}/${encodeURIComponent(syncCfg.repo)}`, { headers: apiHeaders(), cache: 'no-store' });
+    if (!repo.ok) throw httpError(repo.status);
+    return { progress: {}, sha: null };
+  }
+  if (!res.ok) throw httpError(res.status);
   const j = await res.json();
   let data = {};
   try { data = JSON.parse(b64decode(j.content || '')); } catch (_) { data = {}; }
   return { progress: sanitizeProgress(data.progress), sha: j.sha };
 }
 async function pushRemote(progress, sha) {
-  const body = { message: 'Update progress', content: b64encode(JSON.stringify({ app: 'review-notes', version: 2, updatedAt: new Date().toISOString(), progress }, null, 1)) };
+  const body = { message: 'Update progress', content: b64encode(JSON.stringify({ app: 'review-notes', version: 3, updatedAt: new Date().toISOString(), progress }, null, 1)) };
   if (sha) body.sha = sha;
   const res = await fetch(apiUrl(), { method: 'PUT', headers: { ...apiHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   if (res.status === 409 || res.status === 422) { const e = Error('conflict'); e.conflict = true; throw e; }
-  if (!res.ok) throw Error(res.status === 401 ? 'token rejected' : res.status === 403 ? 'no permission' : 'HTTP ' + res.status);
+  if (!res.ok) throw httpError(res.status);
 }
-
 async function syncNow() {
   if (!configured()) { setSyncStatus(''); return; }
   if (syncing) { syncAgain = true; return; }
@@ -519,7 +286,7 @@ async function syncNow() {
       const localChanged = !sameProgress(merged, status);
       status = merged; save();
       if (localChanged) refresh();
-      if (sameProgress(merged, remote) && sha) { lsSet(DIRTY_KEY, false); break; }
+      if (sha && sameProgress(merged, remote)) { lsSet(DIRTY_KEY, false); break; }
       try { await pushRemote(merged, sha); lsSet(DIRTY_KEY, false); break; }
       catch (e) { if (!e.conflict || attempt === 2) throw e; }
     }
@@ -533,43 +300,34 @@ async function syncNow() {
   }
 }
 function scheduleSync() { lsSet(DIRTY_KEY, true); if (!configured()) return; clearTimeout(syncTimer); syncTimer = setTimeout(syncNow, 1500); }
-
-function fillSyncForm() {
-  const c = syncCfg || {};
-  $('sOwner').value = c.owner || ''; $('sRepo').value = c.repo || ''; $('sPath').value = c.path || 'progress.json'; $('sToken').value = c.token || '';
-}
-$('syncToggle').addEventListener('click', () => { fillSyncForm(); $('syncPanel').classList.toggle('hidden'); });
-$('sSave').addEventListener('click', () => {
-  const owner = $('sOwner').value.trim(), repo = $('sRepo').value.trim(), path = $('sPath').value.trim() || 'progress.json', token = $('sToken').value.trim();
-  if (!owner || !repo || !token) { setSyncStatus('Owner, repository and token are required.'); return; }
-  syncCfg = { owner, repo, path, token }; lsSet(SYNC_KEY, syncCfg); $('syncPanel').classList.add('hidden'); syncNow();
-});
-$('sNow').addEventListener('click', syncNow);
-$('sOff').addEventListener('click', () => { syncCfg = null; try { localStorage.removeItem(SYNC_KEY); } catch (_) {} fillSyncForm(); setSyncStatus('Sync off — local only'); });
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && configured()) syncNow(); });
+function fillSyncForm() { const c = syncCfg || {}; $('sOwner').value = c.owner || ''; $('sRepo').value = c.repo || ''; $('sPath').value = c.path || 'progress.json'; $('sToken').value = c.token || ''; }
 
 // ---------- rendering ----------
+function inScope(q) { return (subject === ALL || q.subj === subject) && (topic === ALL || q.topic === topic); }
 function visible() {
   const term = $('search').value.trim().toLowerCase(), mode = $('mode').value;
-  return QUESTION_BANK.filter(q =>
-    (category === ALL || q.cat === category) &&
-    (!term || [q.id, q.cat, q.q, q.pit, ...q.pts].some(v => v.toLowerCase().includes(term))) &&
+  return QUESTION_BANK.filter(q => inScope(q) &&
+    (!term || [q.id, q.subj, q.topic, q.q, q.pit, ...q.pts].some(v => v.toLowerCase().includes(term))) &&
     (mode === 'all' || (mode === 'due' && isDue(q)) || (mode === 'weak' && status[q.id]?.grade === 'again') || (mode === 'gaps' && hasGaps(q))));
 }
-
-function renderCategories() {
-  const parent = $('categories'); parent.replaceChildren();
-  for (const cat of categories) {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'cat' + (category === cat ? ' active' : '');
-    b.textContent = cat;
-    const n = document.createElement('span'); n.className = 'n';
-    n.textContent = cat === ALL ? QUESTION_BANK.length : QUESTION_BANK.filter(q => q.cat === cat).length;
-    b.append(n);
-    b.addEventListener('click', () => { category = cat; currentId = null; renderCategories(); render(); });
-    parent.append(b);
+function navButton(text, count, active, onClick) {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'cat' + (active ? ' active' : '');
+  b.textContent = text;
+  const n = document.createElement('span'); n.className = 'n'; n.textContent = count; b.append(n);
+  b.addEventListener('click', onClick); return b;
+}
+function renderNav() {
+  const sp = $('subjects'); sp.replaceChildren();
+  sp.append(navButton(ALL, QUESTION_BANK.length, subject === ALL, () => { subject = ALL; topic = ALL; currentId = null; renderNav(); render(); }));
+  for (const s of SUBJECTS) sp.append(navButton(s.name, QUESTION_BANK.filter(q => q.subj === s.name).length, subject === s.name, () => { subject = s.name; topic = ALL; currentId = null; renderNav(); render(); }));
+  const tp = $('topics'); tp.replaceChildren();
+  const s = SUBJECTS.find(x => x.name === subject);
+  tp.classList.toggle('hidden', !s || s.topics.length < 2);
+  if (s && s.topics.length >= 2) {
+    tp.append(navButton('All topics', QUESTION_BANK.filter(q => q.subj === s.name).length, topic === ALL, () => { topic = ALL; currentId = null; renderNav(); render(); }));
+    for (const t of s.topics) tp.append(navButton(t, QUESTION_BANK.filter(q => q.subj === s.name && q.topic === t).length, topic === t, () => { topic = t; currentId = null; renderNav(); render(); }));
   }
 }
-
 function renderMeta() {
   $('reviewed').textContent = QUESTION_BANK.filter(q => status[q.id]?.grade).length;
   $('dueCount').textContent = QUESTION_BANK.filter(isDue).length;
@@ -585,7 +343,6 @@ function renderMeta() {
   }
   $('todayCodes').textContent = items.length ? items.join('  ·  ') : '–';
 }
-
 function renderPoints(q) {
   const ol = $('points'); ol.replaceChildren();
   q.pts.forEach((p, i) => {
@@ -600,9 +357,7 @@ function renderPoints(q) {
     li.append(b); ol.append(li);
   });
 }
-
 function suggestion(q) { const k = missed.size; return k === 0 ? 'easy' : (k === 1 && q.pts.length >= 3) ? 'good' : 'again'; }
-
 function renderGradeButtons(q) {
   const prev = status[q.id]?.interval || 0;
   $('gAgain').textContent = 'Again · today';
@@ -613,7 +368,6 @@ function renderGradeButtons(q) {
   $({ again: 'gAgain', good: 'gGood', easy: 'gEasy' }[s]).classList.add('strong');
   $('suggestText').textContent = `${missed.size} missed`;
 }
-
 function render() {
   renderMeta();
   const list = visible();
@@ -621,9 +375,10 @@ function render() {
   $('cardContent').classList.remove('hidden'); $('empty').classList.add('hidden');
   if (!list.some(q => q.id === currentId)) { currentId = list[0].id; shown = false; missed = new Set(); $('draft').value = ''; }
   const index = list.findIndex(q => q.id === currentId), q = list[index];
-  $('cardId').textContent = `${q.id} · ${q.cat}`;
+  $('cardId').textContent = `${q.id} · ${label(q)}`;
   $('counter').textContent = `${index + 1} / ${list.length}`;
-  $('question').textContent = q.q; $('pitfall').textContent = q.pit;
+  $('question').textContent = q.q;
+  $('pitfall').textContent = q.pit; $('pitfall').parentElement.classList.toggle('hidden', !q.pit);
   $('answerCol').classList.toggle('hidden', !shown);
   $('work').classList.toggle('split', shown);
   $('reveal').classList.toggle('hidden', shown);
@@ -631,19 +386,15 @@ function render() {
   if (shown) { renderPoints(q); renderGradeButtons(q); }
   $('previous').disabled = index === 0; $('next').disabled = index === list.length - 1;
 }
-// Re-render after remote data arrives without disturbing a card in progress.
 function refresh() { if (view === 'gaps') { renderMeta(); renderGaps(); } else if (shown) renderMeta(); else render(); }
-
 function toggleMiss(i) {
   const q = byId(currentId); if (!q || i >= q.pts.length) return;
   missed.has(i) ? missed.delete(i) : missed.add(i);
   renderPoints(q); renderGradeButtons(q);
 }
-
 function switchTo(id) { currentId = id; shown = false; missed = new Set(); $('draft').value = ''; render(); window.scrollTo({ top: 0 }); }
 function next() { const l = visible(), i = l.findIndex(q => q.id === currentId); if (i >= 0 && i < l.length - 1) switchTo(l[i + 1].id); }
 function previous() { const l = visible(), i = l.findIndex(q => q.id === currentId); if (i > 0) switchTo(l[i - 1].id); }
-
 function grade(g) {
   const q = byId(currentId); if (!q) return;
   const oldList = visible(), i = oldList.findIndex(x => x.id === currentId);
@@ -658,32 +409,30 @@ function grade(g) {
   if (!target) target = newList.find(x => x.id !== currentId);
   if (target) switchTo(target.id); else { shown = false; missed = new Set(); $('draft').value = ''; render(); }
 }
-
 function renderGaps() {
   const root = $('gapList'); root.replaceChildren();
   let any = false;
-  for (const cat of categories.slice(1)) {
+  for (const s of SUBJECTS) for (const t of s.topics) {
     const rows = [];
-    for (const q of QUESTION_BANK.filter(x => x.cat === cat)) missOf(q).forEach((n, k) => { if (n > 0) rows.push({ q, k, n }); });
+    for (const q of QUESTION_BANK.filter(x => x.subj === s.name && x.topic === t)) missOf(q).forEach((n, k) => { if (n > 0) rows.push({ q, k, n }); });
     if (!rows.length) continue;
     any = true;
     rows.sort((a, b) => b.n - a.n || a.q.id.localeCompare(b.q.id));
     const g = document.createElement('div'); g.className = 'gap-group';
-    const h = document.createElement('h3'); h.textContent = cat; g.append(h);
+    const h = document.createElement('h3'); h.textContent = `${s.name} · ${t}`; g.append(h);
     for (const { q, k, n } of rows) {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'gap-row';
       const c = document.createElement('span'); c.className = 'id'; c.textContent = `${q.id} (${k + 1})`;
-      const t = document.createElement('span'); t.textContent = q.pts[k];
+      const tx = document.createElement('span'); tx.textContent = q.pts[k];
       const m = document.createElement('span'); m.className = 'times'; m.textContent = `${n}×`;
-      b.append(c, t, m);
-      b.addEventListener('click', () => { category = ALL; $('mode').value = 'all'; $('search').value = ''; renderCategories(); setView('practice'); switchTo(q.id); });
+      b.append(c, tx, m);
+      b.addEventListener('click', () => { subject = ALL; topic = ALL; $('mode').value = 'all'; $('search').value = ''; renderNav(); setView('practice'); switchTo(q.id); });
       g.append(b);
     }
     root.append(g);
   }
   if (!any) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Nothing yet. Mark missed key points while practicing and they will be listed here.'; root.append(p); }
 }
-
 function setView(v) {
   view = v;
   $('practiceView').classList.toggle('hidden', v !== 'practice');
@@ -693,6 +442,7 @@ function setView(v) {
   if (v === 'gaps') { renderMeta(); renderGaps(); }
 }
 
+// ---------- events ----------
 $('tabPractice').addEventListener('click', () => { setView('practice'); render(); });
 $('tabGaps').addEventListener('click', () => setView('gaps'));
 $('mode').addEventListener('change', () => { currentId = null; shown = false; missed = new Set(); $('draft').value = ''; render(); });
@@ -701,17 +451,24 @@ $('reveal').addEventListener('click', () => { shown = true; render(); });
 $('next').addEventListener('click', next); $('previous').addEventListener('click', previous);
 $('shuffle').addEventListener('click', () => { const l = visible(); if (!l.length) return; const o = l.filter(q => q.id !== currentId); const pool = o.length ? o : l; switchTo(pool[Math.floor(Math.random() * pool.length)].id); });
 document.querySelectorAll('[data-grade]').forEach(b => b.addEventListener('click', () => grade(b.dataset.grade)));
-$('resetFilters').addEventListener('click', () => { $('mode').value = 'all'; $('search').value = ''; category = ALL; currentId = null; shown = false; missed = new Set(); renderCategories(); render(); });
+$('resetFilters').addEventListener('click', () => { $('mode').value = 'all'; $('search').value = ''; subject = ALL; topic = ALL; currentId = null; shown = false; missed = new Set(); renderNav(); render(); });
 document.addEventListener('keydown', e => {
-  if (view !== 'practice') return;
+  if (view !== 'practice' || !QUESTION_BANK.length) return;
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !shown && visible().length) { e.preventDefault(); shown = true; render(); return; }
   const tag = document.activeElement?.tagName;
-  if (shown && tag !== 'TEXTAREA' && tag !== 'INPUT' && tag !== 'SELECT' && /^[1-8]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) toggleMiss(Number(e.key) - 1);
+  if (shown && tag !== 'TEXTAREA' && tag !== 'INPUT' && tag !== 'SELECT' && /^[1-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) toggleMiss(Number(e.key) - 1);
 });
-
-// ---------- export / import / reset ----------
+$('syncToggle').addEventListener('click', () => { fillSyncForm(); $('syncPanel').classList.toggle('hidden'); });
+$('sSave').addEventListener('click', () => {
+  const owner = $('sOwner').value.trim(), repo = $('sRepo').value.trim(), path = $('sPath').value.trim() || 'progress.json', token = $('sToken').value.trim();
+  if (!owner || !repo || !token) { setSyncStatus('Owner, repository and token are required.'); return; }
+  syncCfg = { owner, repo, path, token }; lsSet(SYNC_KEY, syncCfg); $('syncPanel').classList.add('hidden'); syncNow();
+});
+$('sNow').addEventListener('click', syncNow);
+$('sOff').addEventListener('click', () => { syncCfg = null; try { localStorage.removeItem(SYNC_KEY); } catch (_) {} fillSyncForm(); setSyncStatus('Sync off — local only'); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && configured()) syncNow(); });
 $('export').addEventListener('click', () => {
-  const data = { app: 'review-notes', version: 2, exportedAt: new Date().toISOString(), progress: status };
+  const data = { app: 'review-notes', version: 3, exportedAt: new Date().toISOString(), progress: status };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = 'review-progress.json'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
   $('feedback').textContent = 'Exported.';
@@ -730,12 +487,28 @@ $('filePicker').addEventListener('change', async e => {
   } catch (err) { $('feedback').textContent = 'Import failed: ' + err.message; } finally { e.target.value = ''; }
 });
 $('clear').addEventListener('click', () => {
-  const msg = configured() ? 'Clear progress in this browser? (The synced copy in your repository is kept and will be pulled back on next sync. Disconnect sync first to start fresh here.)' : 'Clear all local progress?';
+  const msg = configured() ? 'Clear progress in this browser? The synced copy in your repository is kept and will come back on the next sync. Disconnect sync first to start fresh here.' : 'Clear all local progress?';
   if (confirm(msg)) { status = {}; save(); currentId = null; shown = false; missed = new Set(); $('draft').value = ''; render(); if (view === 'gaps') renderGaps(); $('feedback').textContent = 'Cleared.'; }
 });
 
-renderCategories(); render();
-if (configured()) syncNow(); else setSyncStatus(lsGet(DIRTY_KEY, false) ? 'Local only' : '');
+// ---------- start ----------
+(async function start() {
+  status = sanitizeProgress(lsGet(STORAGE_KEY, {}));
+  try {
+    const { bank, subjects, problems } = await loadTopics();
+    QUESTION_BANK = bank; SUBJECTS = subjects;
+    if (problems.length) $('feedback').textContent = 'Some topic files could not be read: ' + problems.slice(0, 3).join('; ');
+    if (!bank.length) throw Error('no cards found');
+  } catch (e) {
+    $('loading').textContent = location.protocol === 'file:'
+      ? 'Topics load only when this page is opened from its web address.'
+      : 'Could not load topics (' + e.message + ').';
+    return;
+  }
+  $('loading').classList.add('hidden'); $('practiceView').classList.remove('hidden');
+  renderNav(); render();
+  if (configured()) syncNow(); else setSyncStatus(lsGet(DIRTY_KEY, false) ? 'Local only' : '');
+})();
 </script>
 </body>
 </html>

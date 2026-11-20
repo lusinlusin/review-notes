@@ -1,0 +1,86 @@
+{
+  "title": "Statistics",
+  "cards": [
+    {
+      "id": "STA-01",
+      "q": "Why is an estimator being unbiased not enough to make it good?",
+      "pts": [
+        "Unbiased only means E[θ̂] = θ — it says nothing about how spread out θ̂ is.",
+        "MSE = Var(θ̂) + Bias(θ̂)².",
+        "A slightly biased estimator (shrinkage, ridge, Ledoit–Wolf covariance) can have much lower MSE."
+      ],
+      "pit": "Also judge consistency, efficiency and robustness, not just bias."
+    },
+    {
+      "id": "STA-02",
+      "q": "What is the central limit theorem in its basic i.i.d. form?",
+      "pts": [
+        "X₁, …, Xₙ i.i.d. with mean μ and finite variance σ² > 0.",
+        "√n (X̄ₙ − μ) / σ converges in distribution to N(0, 1).",
+        "It describes the sample mean’s distribution, not the individual observations."
+      ],
+      "pit": "Infinite variance breaks this form; with fat tails the finite-sample approximation can be poor."
+    },
+    {
+      "id": "STA-03",
+      "q": "What is the difference between bootstrap and cross-validation?",
+      "pts": [
+        "Bootstrap: resample with replacement to approximate an estimator’s sampling distribution (standard errors, confidence intervals).",
+        "Cross-validation: split data into folds to estimate out-of-sample prediction error and tune hyperparameters.",
+        "Different goals: uncertainty of an estimate vs. generalization error of a model."
+      ],
+      "pit": "For time series use a block bootstrap and chronological / purged CV; i.i.d. resampling breaks the dependence."
+    },
+    {
+      "id": "STA-04",
+      "q": "MLE vs MAP estimation?",
+      "pts": [
+        "MLE: θ̂ = argmax p(data | θ).",
+        "MAP: θ̂ = argmax p(θ | data) = argmax p(data | θ) p(θ) — adds a prior.",
+        "Gaussian prior ⇒ MAP = L2 (ridge) penalty; Laplace prior ⇒ L1 (lasso) penalty.",
+        "As n → ∞ the likelihood dominates and MAP approaches MLE (under regularity)."
+      ],
+      "pit": "MAP is not invariant to reparameterization, and neither estimator is unbiased in general."
+    },
+    {
+      "id": "STA-05",
+      "q": "What is a p-value, and what is it not?",
+      "pts": [
+        "The probability, assuming H₀ is true, of a test statistic at least as extreme as the one observed.",
+        "It is NOT P(H₀ is true | data).",
+        "A small p-value is not a large effect: statistical significance ≠ economic significance."
+      ],
+      "pit": "Testing many strategies inflates false positives — adjust for multiple testing (e.g. Harvey–Liu–Zhu suggest t > 3)."
+    },
+    {
+      "id": "STA-06",
+      "q": "Why can heteroskedasticity cause problems in OLS inference?",
+      "pts": [
+        "Under exogeneity, OLS coefficients stay unbiased and consistent.",
+        "But conventional standard errors are wrong ⇒ t-tests and confidence intervals are invalid, and OLS is no longer BLUE.",
+        "Fixes: White (HC) robust SEs; Newey–West (HAC) if errors are also autocorrelated; WLS/GLS for efficiency."
+      ],
+      "pit": "Robust standard errors fix inference only — not omitted-variable bias or endogeneity."
+    },
+    {
+      "id": "STA-07",
+      "q": "What is the difference between confidence and prediction intervals?",
+      "pts": [
+        "Confidence interval: for a parameter or the conditional mean E[y | x].",
+        "Prediction interval: for a new individual observation y — it adds the irreducible noise σ².",
+        "So the PI is wider; as n → ∞ the CI shrinks toward zero width but the PI does not."
+      ],
+      "pit": "Reporting a CI when someone asks about the next observation understates uncertainty."
+    },
+    {
+      "id": "STA-08",
+      "q": "What is the bias–variance tradeoff?",
+      "pts": [
+        "Expected squared prediction error = Bias² + Variance + irreducible noise σ².",
+        "More flexible models: bias goes down, variance goes up.",
+        "Regularization or ensembling trades a little bias for less variance ⇒ better out-of-sample error."
+      ],
+      "pit": "Training error keeps falling with complexity; only out-of-sample error shows the U-shape."
+    }
+  ]
+}

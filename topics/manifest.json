@@ -1,0 +1,43 @@
+{
+  "subjects": [
+    {
+      "name": "NLO",
+      "topics": [
+        {
+          "title": "Core concepts",
+          "file": "nlo/core-concepts.json"
+        }
+      ]
+    },
+    {
+      "name": "MDP",
+      "topics": [
+        {
+          "title": "Core concepts",
+          "file": "mdp/core-concepts.json"
+        }
+      ]
+    },
+    {
+      "name": "Quant",
+      "topics": [
+        {
+          "title": "Statistics",
+          "file": "quant/statistics.json"
+        },
+        {
+          "title": "Time series",
+          "file": "quant/time-series.json"
+        },
+        {
+          "title": "Portfolio",
+          "file": "quant/portfolio.json"
+        },
+        {
+          "title": "Python / SQL / ML",
+          "file": "quant/coding.json"
+        }
+      ]
+    }
+  ]
+}

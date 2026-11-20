@@ -1,0 +1,111 @@
+{
+  "title": "Core concepts",
+  "cards": [
+    {
+      "id": "NLO-01",
+      "q": "When are the KKT conditions sufficient for global optimality?",
+      "pts": [
+        "The problem is convex: convex objective f, convex inequality constraints gᵢ(x) ≤ 0, affine equality constraints.",
+        "x* is feasible and there exist multipliers λ ≥ 0 (and μ) with stationarity: ∇f(x*) + Σλᵢ∇gᵢ(x*) + Σμⱼ∇hⱼ(x*) = 0.",
+        "Complementary slackness holds: λᵢ gᵢ(x*) = 0 for all i.",
+        "Then x* is a global minimizer — no constraint qualification is needed for this direction."
+      ],
+      "pit": "Slater / a constraint qualification is what makes KKT necessary; it is not needed for sufficiency."
+    },
+    {
+      "id": "NLO-02",
+      "q": "What role does Slater’s condition play in convex optimization?",
+      "pts": [
+        "Definition: there is a strictly feasible point — gᵢ(x) < 0 for the non-affine inequality constraints, with affine constraints satisfied.",
+        "It is a constraint qualification: for a convex problem it guarantees strong duality (zero duality gap).",
+        "If the optimal value is finite, the dual optimum is attained, so KKT multipliers exist — KKT becomes necessary for optimality."
+      ],
+      "pit": "Slater does not imply that a primal optimum exists or is unique, and it is a statement about convex problems."
+    },
+    {
+      "id": "NLO-03",
+      "q": "What distinguishes convexity from strong convexity?",
+      "pts": [
+        "Convex (differentiable f): f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) — f lies above every tangent plane.",
+        "m-strongly convex (m > 0): f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) + (m/2)‖y − x‖² — a uniform quadratic lower bound on curvature.",
+        "For twice differentiable f: ∇²f(x) ⪰ mI for all x.",
+        "Consequences: at most one minimizer; with L-smoothness, gradient descent converges linearly."
+      ],
+      "pit": "Strictly convex ≠ strongly convex: eˣ is strictly convex on ℝ but not strongly convex (f″ = eˣ → 0)."
+    },
+    {
+      "id": "NLO-04",
+      "q": "When is a stationary point globally optimal?",
+      "pts": [
+        "Unconstrained, differentiable convex f: ∇f(x*) = 0 ⇔ x* is a global minimizer.",
+        "Constrained convex problem: the condition becomes ∇f(x*)ᵀ(x − x*) ≥ 0 for all feasible x (−∇f(x*) lies in the normal cone).",
+        "Nonconvex f: ∇f(x*) = 0 can be a local min, a local max or a saddle point."
+      ],
+      "pit": "At a constrained optimum ∇f(x*) is usually not zero — don't set the gradient to zero when constraints are active."
+    },
+    {
+      "id": "NLO-05",
+      "q": "Why is a positive semidefinite Hessian useful?",
+      "pts": [
+        "On an open convex set, for f ∈ C²: ∇²f(x) ⪰ 0 for all x ⇔ f is convex.",
+        "∇²f(x) ≻ 0 for all x ⇒ strictly convex (the converse fails: x⁴ is strictly convex but f″(0) = 0).",
+        "∇²f(x) ⪰ mI for all x ⇒ m-strongly convex.",
+        "Locally: ∇f(x*) = 0 and ∇²f(x*) ≻ 0 ⇒ strict local minimum (second-order sufficient condition)."
+      ],
+      "pit": "A PSD Hessian at a single point says nothing about global convexity."
+    },
+    {
+      "id": "NLO-06",
+      "q": "What is the difference between a local minimum and a strict local minimum?",
+      "pts": [
+        "Local minimum: f(x*) ≤ f(x) for all feasible x in some neighborhood of x*.",
+        "Strict local minimum: f(x*) < f(x) for all feasible x ≠ x* in some neighborhood.",
+        "Example: for a constant function every point is a local minimum, but none is strict."
+      ],
+      "pit": "∇f(x*) = 0 and ∇²f(x*) ⪰ 0 are only necessary at an interior local minimum, not sufficient."
+    },
+    {
+      "id": "NLO-07",
+      "q": "What is the duality gap and when is it zero?",
+      "pts": [
+        "Weak duality (minimization): the dual optimum d* ≤ primal optimum p*, always — even for nonconvex problems.",
+        "Duality gap = p* − d* ≥ 0.",
+        "The gap is zero (strong duality) for convex problems under a constraint qualification such as Slater; for LP whenever an optimum exists."
+      ],
+      "pit": "Nonconvex problems (e.g. integer programs) typically have a positive gap; the dual still gives a valid lower bound."
+    },
+    {
+      "id": "NLO-08",
+      "q": "Why can Newton’s method converge faster than gradient descent?",
+      "pts": [
+        "The Newton step solves ∇²f(x)d = −∇f(x): it minimizes the local quadratic model, using curvature.",
+        "Near a minimizer with ∇²f(x*) ≻ 0 (and a Lipschitz Hessian) it converges quadratically.",
+        "Gradient descent converges linearly at best, with a rate that worsens with the condition number κ.",
+        "Newton is affine-invariant, so it is insensitive to bad scaling of the variables."
+      ],
+      "pit": "Far from the optimum or with an indefinite Hessian Newton can diverge — use line search / damping; each step costs about O(n³)."
+    },
+    {
+      "id": "NLO-09",
+      "q": "What is complementary slackness?",
+      "pts": [
+        "For gᵢ(x) ≤ 0 with multipliers λᵢ ≥ 0, KKT requires λᵢ gᵢ(x*) = 0 for every i.",
+        "Inactive constraint (gᵢ(x*) < 0) ⇒ λᵢ = 0.",
+        "λᵢ > 0 ⇒ the constraint is active (gᵢ(x*) = 0).",
+        "λᵢ is the shadow price: the marginal improvement in the objective from relaxing constraint i."
+      ],
+      "pit": "Active does NOT imply λᵢ > 0: an active constraint can have λᵢ = 0 (degenerate case). The reverse direction, λᵢ > 0 ⇒ active, always holds."
+    },
+    {
+      "id": "NLO-10",
+      "q": "When is projected gradient descent useful?",
+      "pts": [
+        "Update: xₖ₊₁ = Proj_C(xₖ − αₖ∇f(xₖ)) — take a gradient step, then project back onto the feasible set C.",
+        "Useful when C is closed and convex with a cheap projection: box, ball, simplex.",
+        "A fixed point x* = Proj_C(x* − α∇f(x*)) is exactly the first-order optimality condition on C.",
+        "Portfolio example: long-only, fully invested weights = projection onto the probability simplex."
+      ],
+      "pit": "If projecting onto C is itself a hard optimization problem, prefer other methods (Frank–Wolfe, ADMM)."
+    }
+  ]
+}

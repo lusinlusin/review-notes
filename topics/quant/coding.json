@@ -1,0 +1,85 @@
+{
+  "title": "Python / SQL / ML",
+  "cards": [
+    {
+      "id": "CODE-01",
+      "q": "What is the time complexity of sorting a Python list?",
+      "pts": [
+        "list.sort() and sorted() use Timsort.",
+        "Worst case O(n log n); close to O(n) on data that is already (partly) sorted.",
+        "It is stable: equal keys keep their original order, which enables multi-key sorting."
+      ],
+      "pit": "list.sort() sorts in place and returns None; sorted() returns a new list."
+    },
+    {
+      "id": "CODE-02",
+      "q": "Generator vs list in Python?",
+      "pts": [
+        "A generator yields values lazily — constant memory, good for streaming large data.",
+        "A list materializes everything: supports indexing, len() and repeated passes.",
+        "A generator is exhausted after one pass."
+      ],
+      "pit": "Wrapping a generator in list() brings the memory cost back."
+    },
+    {
+      "id": "CODE-03",
+      "q": "What is the difference between a shallow and a deep copy?",
+      "pts": [
+        "Shallow copy (copy.copy, list[:]): a new outer container that still references the same nested objects.",
+        "Deep copy (copy.deepcopy): recursively copies the nested objects too.",
+        "Classic bug: mutating a nested list inside a shallow copy also changes the original."
+      ],
+      "pit": "In pandas, df.copy() is deep by default, while slicing may return a view (SettingWithCopyWarning)."
+    },
+    {
+      "id": "CODE-04",
+      "q": "What is data leakage in machine learning?",
+      "pts": [
+        "Training or model selection uses information that would not be available at prediction time.",
+        "Examples: scaling or feature selection fit on the full dataset, target-derived features, future data in time series.",
+        "Fix: fit every preprocessing step inside each training fold (e.g. a Pipeline)."
+      ],
+      "pit": "Leakage shows up as unrealistically good validation scores that collapse live."
+    },
+    {
+      "id": "CODE-05",
+      "q": "Why does L1 regularization create sparse coefficients?",
+      "pts": [
+        "The L1 penalty λ‖β‖₁ is non-differentiable at 0; its subgradient lets coefficients sit exactly at zero.",
+        "Geometrically, the L1 ball has corners on the axes, and the loss contours often touch it at a corner.",
+        "L2 shrinks coefficients smoothly toward zero but rarely to exactly zero."
+      ],
+      "pit": "With correlated predictors L1 picks one somewhat arbitrarily — unstable selection; elastic net helps."
+    },
+    {
+      "id": "CODE-06",
+      "q": "What is the difference between SQL WHERE and HAVING?",
+      "pts": [
+        "WHERE filters rows before grouping.",
+        "HAVING filters groups after aggregation.",
+        "Logical order: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY."
+      ],
+      "pit": "Conditions on aggregates (SUM, COUNT…) belong in HAVING, not WHERE."
+    },
+    {
+      "id": "CODE-07",
+      "q": "What is a window function in SQL?",
+      "pts": [
+        "Computes over a window of rows: f(...) OVER (PARTITION BY … ORDER BY …).",
+        "Does not collapse rows — each row is kept, unlike GROUP BY.",
+        "Typical uses: ROW_NUMBER / RANK, running sums, LAG / LEAD (e.g. daily returns)."
+      ],
+      "pit": "Ties: ROW_NUMBER, RANK and DENSE_RANK behave differently."
+    },
+    {
+      "id": "CODE-08",
+      "q": "Why is ordinary K-fold CV unsuitable for many financial time series?",
+      "pts": [
+        "Observations are serially dependent; random folds put the neighbors of test points into training.",
+        "Overlapping labels leak information across folds.",
+        "Use walk-forward or purged K-fold with an embargo (López de Prado)."
+      ],
+      "pit": "Hyperparameter tuning and scaling must also respect each time split."
+    }
+  ]
+}
