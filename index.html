@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
   <title>Review Notes</title>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
   <style>
     :root { font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif; color:#222; background:#fff; font-size:14px; line-height:1.55; }
     * { box-sizing:border-box; }
@@ -70,6 +71,9 @@
     .utilities .group button { color:#999; font-size:12px; }
     .utilities .group button:hover { color:#444; }
     #filePicker { display:none; }
+    .katex { font-size:1.12em; }
+    .katex-display { margin:.5em 0; text-align:left; overflow-x:auto; overflow-y:hidden; padding:1px 0; }
+    .katex-display > .katex { text-align:left; }
     .layout.with-side { display:grid; grid-template-columns:100px minmax(0,1fr); gap:28px; }
     .side { display:flex; flex-direction:column; font-size:12px; font-variant-numeric:tabular-nums; border-right:1px solid #f0f0f0; padding:12px 12px 0 0; align-self:start; position:sticky; top:12px; max-height:calc(100vh - 24px); overflow:auto; }
     .side-item { text-align:left; color:#777; padding:3px 0; white-space:nowrap; }
@@ -187,6 +191,7 @@
       <p class="sync-note">Progress (card IDs, grades, missed-point numbers, timestamps) is written to the file above in your private repository. The token is kept only in this browser. Use a fine-grained token limited to that one repository with Contents: read and write.</p>
     </div>
   </div>
+<script src="vendor/katex/katex.min.js"></script>
 <script>
 'use strict';
 const STORAGE_KEY = 'review-notes-v2';
@@ -210,6 +215,21 @@ function save() { if (!lsSet(STORAGE_KEY, status)) $('feedback').textContent = '
 
 // ---------- data helpers ----------
 const byId = id => QUESTION_BANK.find(q => q.id === id);
+// Render text that may contain $inline$ or $$display$$ LaTeX. Falls back to plain text if the math library is missing.
+function setMath(el, text) {
+  el.replaceChildren();
+  for (const part of String(text == null ? '' : text).split(/(\$\$[\s\S]+?\$\$|\$[^$]+\$)/)) {
+    if (!part) continue;
+    const disp = part.length > 4 && part.startsWith('$$') && part.endsWith('$$');
+    const inl = !disp && part.length > 2 && part.startsWith('$') && part.endsWith('$');
+    if ((disp || inl) && window.katex) {
+      const span = document.createElement('span');
+      try { window.katex.render(disp ? part.slice(2, -2) : part.slice(1, -1), span, { displayMode: disp, throwOnError: false }); }
+      catch (_) { span.textContent = part; }
+      el.append(span);
+    } else el.append(disp ? part.slice(2, -2) : inl ? part.slice(1, -1) : part);
+  }
+}
 const isDue = q => { const r = status[q.id]; return !r || !r.due || r.due <= Date.now(); };
 const missOf = q => { const c = new Array(q.pts.length).fill(0); for (const h of status[q.id]?.hist || []) for (const i of h.m || []) if (i < c.length) c[i]++; return c; };
 const hasGaps = q => missOf(q).some(n => n > 0);
@@ -386,7 +406,7 @@ function renderPoints(q) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'point';
     b.setAttribute('aria-pressed', missed.has(i) ? 'true' : 'false');
     const n = document.createElement('span'); n.className = 'num'; n.textContent = i + 1;
-    const t = document.createElement('span'); t.textContent = p;
+    const t = document.createElement('span'); setMath(t, p);
     const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = 'missed';
     b.append(n, t, tag);
     b.addEventListener('click', () => toggleMiss(i));
@@ -414,10 +434,10 @@ function render() {
   $('cardId').textContent = `${q.id} · ${label(q)}`;
   $('counter').textContent = `${index + 1} / ${list.length}`;
   const chunks = q.q.split(/\s(?=\(\d+\)\s)/), stem = /^\(\d+\)\s/.test(chunks[0]) ? '' : chunks.shift();
-  $('question').textContent = stem; $('question').classList.toggle('hidden', !stem);
+  setMath($('question'), stem); $('question').classList.toggle('hidden', !stem);
   const pl = $('parts'); pl.replaceChildren(); pl.classList.toggle('hidden', !chunks.length);
-  for (const c of chunks) { const li = document.createElement('li'); li.textContent = c; pl.append(li); }
-  $('pitfall').textContent = q.pit; $('pitfall').parentElement.classList.toggle('hidden', !q.pit);
+  for (const c of chunks) { const li = document.createElement('li'); setMath(li, c); pl.append(li); }
+  setMath($('pitfall'), q.pit); $('pitfall').parentElement.classList.toggle('hidden', !q.pit);
   $('ref').textContent = q.src ? 'Ref — ' + q.src : ''; $('ref').classList.toggle('hidden', !q.src);
   $('answerCol').classList.toggle('hidden', !shown);
   $('work').classList.toggle('split', shown);
@@ -464,7 +484,7 @@ function renderGaps() {
     for (const { q, k, n } of rows) {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'gap-row';
       const c = document.createElement('span'); c.className = 'id'; c.textContent = `${q.id} (${k + 1})`;
-      const tx = document.createElement('span'); tx.textContent = q.pts[k];
+      const tx = document.createElement('span'); setMath(tx, q.pts[k]);
       const m = document.createElement('span'); m.className = 'times'; m.textContent = `${n}×`;
       b.append(c, tx, m);
       b.addEventListener('click', () => { subject = ALL; topic = ALL; $('mode').value = 'all'; $('search').value = ''; renderNav(); setView('practice'); switchTo(q.id); });
@@ -499,7 +519,7 @@ function renderSide(list) {
   side.classList.toggle('hidden', !show); $('layout').classList.toggle('with-side', show);
   side.replaceChildren(); if (!show) return;
   for (const q of list) {
-    const b = document.createElement('button'); b.type = 'button'; b.textContent = q.id; b.title = q.q;
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = q.id; b.title = q.q.replace(/\$/g, '');
     const g = status[q.id]?.grade;
     b.className = 'side-item' + (q.id === currentId ? ' current' : '') + (g === 'again' ? ' again' : g ? ' done' : '');
     b.addEventListener('click', () => switchTo(q.id));
@@ -523,7 +543,7 @@ function renderNotes() {
         const row = document.createElement('div'); row.className = 'note-row';
         const term = document.createElement('div'); term.className = 'term'; term.textContent = String(it.t || '');
         const def = document.createElement('div');
-        for (const line of (Array.isArray(it.d) ? it.d : [it.d])) { const p = document.createElement('p'); p.textContent = String(line || ''); def.append(p); }
+        for (const line of (Array.isArray(it.d) ? it.d : [it.d])) { const p = document.createElement('p'); setMath(p, line); def.append(p); }
         const ids = (Array.isArray(it.cards) ? it.cards : []).filter(id => byId(id));
         if (ids.length) {
           const c = document.createElement('div'); c.className = 'note-cards'; c.append('Cards ');

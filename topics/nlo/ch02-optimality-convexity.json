@@ -7,8 +7,9 @@
         {
           "t": "Gradients",
           "d": [
-            "∇(bᵀx) = b.  ∇(xᵀBx) = (B + Bᵀ)x, Hessian B + Bᵀ (equal to 2Bx and 2B only when B is symmetric).",
-            "For f(x) = ½xᵀAx + bᵀx + c with A symmetric: ∇f = Ax + b, Hessian H = A."
+            "$\\nabla(b^\\top x) = b$",
+            "$\\nabla(x^\\top B x) = (B + B^\\top)x$ with Hessian $B + B^\\top$. These equal $2Bx$ and $2B$ only when $B$ is symmetric.",
+            "For $f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ with $A$ symmetric: $\\nabla f = Ax + b$ and $H = A$."
           ],
           "cards": [
             "NLO-02-02"
@@ -17,7 +18,8 @@
         {
           "t": "Taylor, first order",
           "d": [
-            "f(x̄ + d) = f(x̄) + ∇f(x̄)ᵀd + o(‖d‖). Used to prove FONC."
+            "$$f(\\bar{x} + d) = f(\\bar{x}) + \\nabla f(\\bar{x})^\\top d + o(\\lVert d \\rVert)$$",
+            "Used to prove FONC."
           ],
           "cards": [
             "NLO-02-04"
@@ -26,7 +28,8 @@
         {
           "t": "Taylor, second order",
           "d": [
-            "f(x̄ + d) = f(x̄) + ∇f(x̄)ᵀd + ½dᵀH(x̄)d + o(‖d‖²). Used for SONC and SOSC."
+            "$$f(\\bar{x} + d) = f(\\bar{x}) + \\nabla f(\\bar{x})^\\top d + \\tfrac12\\, d^\\top H(\\bar{x})\\, d + o(\\lVert d \\rVert^2)$$",
+            "Used for SONC and SOSC."
           ],
           "cards": [
             "NLO-02-17"
@@ -40,7 +43,7 @@
         {
           "t": "Global minimizer",
           "d": [
-            "x* ∈ S with f(x) ≥ f(x*) for all x ∈ S."
+            "$x^* \\in S$ with $f(x) \\ge f(x^*)$ for all $x \\in S$."
           ],
           "cards": [
             "NLO-02-01"
@@ -49,7 +52,7 @@
         {
           "t": "Local minimizer",
           "d": [
-            "There is ε > 0 with f(x) ≥ f(x*) for all x ∈ B(x*, ε) ∩ S."
+            "There is $\\varepsilon > 0$ with $f(x) \\ge f(x^*)$ for all $x \\in B(x^*, \\varepsilon) \\cap S$."
           ],
           "cards": [
             "NLO-02-01"
@@ -58,7 +61,7 @@
         {
           "t": "Strict",
           "d": [
-            "Replace ≥ with > for all x ≠ x*. A strict global minimizer is unique.",
+            "Replace $\\ge$ with $>$ for all $x \\ne x^*$. A strict global minimizer is unique.",
             "Strict global ⇒ global ⇒ local, and strict global ⇒ strict local ⇒ local."
           ],
           "cards": [
@@ -68,7 +71,7 @@
         {
           "t": "Stationary point",
           "d": [
-            "A point x̄ with ∇f(x̄) = 0. It can be a local min, a local max or a saddle point."
+            "A point $\\bar{x}$ with $\\nabla f(\\bar{x}) = 0$. It can be a local min, a local max or a saddle point."
           ],
           "cards": [
             "NLO-02-03",
@@ -92,8 +95,9 @@
         {
           "t": "FONC",
           "d": [
-            "If f is differentiable at x* and x* is a local minimizer of min f(x) over ℝⁿ, then ∇f(x*) = 0.",
-            "Necessary only: f = x³ has f′(0) = 0 but no min at 0."
+            "If $f$ is differentiable at $x^*$ and $x^*$ is a local minimizer of $\\min f(x)$ over $\\mathbb{R}^n$, then",
+            "$$\\nabla f(x^*) = 0$$",
+            "Necessary only: $f(x) = x^3$ has $f'(0) = 0$ but no min at $0$."
           ],
           "cards": [
             "NLO-02-03"
@@ -102,9 +106,9 @@
         {
           "t": "Proof of FONC",
           "d": [
-            "1. For any d and small t > 0: f(x* + td) − f(x*) ≥ 0.",
-            "2. Divide by t, let t ↓ 0 (first-order Taylor): ∇f(x*)ᵀd ≥ 0 for every d.",
-            "3. Take d = −∇f(x*): −‖∇f(x*)‖² ≥ 0, so ∇f(x*) = 0."
+            "1. For any $d$ and small $t > 0$: $f(x^* + td) - f(x^*) \\ge 0$.",
+            "2. Divide by $t$ and let $t \\downarrow 0$ (first-order Taylor): $\\nabla f(x^*)^\\top d \\ge 0$ for every $d$.",
+            "3. Take $d = -\\nabla f(x^*)$: $-\\lVert \\nabla f(x^*) \\rVert^2 \\ge 0$, so $\\nabla f(x^*) = 0$."
           ],
           "cards": [
             "NLO-02-04"
@@ -113,7 +117,7 @@
         {
           "t": "What FONC cannot do",
           "d": [
-            "Tell a min from a max (f and −f share stationary points); rule out saddle points; guarantee that a stationary point or a minimizer exists."
+            "Tell a min from a max ($f$ and $-f$ share stationary points); rule out saddle points; guarantee that a stationary point or a minimizer exists."
           ],
           "cards": [
             "NLO-02-05"
@@ -122,8 +126,8 @@
         {
           "t": "Where FONC does not apply",
           "d": [
-            "Boundary points of a constraint set: only ∇f(x*)ᵀd ≥ 0 for feasible d holds (leads to KKT).",
-            "Points where f is not differentiable, e.g. |x| at 0."
+            "Boundary points of a constraint set: only $\\nabla f(x^*)^\\top d \\ge 0$ for feasible $d$ holds (this leads to KKT).",
+            "Points where $f$ is not differentiable, e.g. $|x|$ at $0$."
           ],
           "cards": [
             "NLO-02-06"
@@ -137,7 +141,7 @@
         {
           "t": "Convex set",
           "d": [
-            "x, y ∈ C and λ ∈ [0, 1] ⇒ λx + (1 − λ)y ∈ C."
+            "$x, y \\in C$ and $\\lambda \\in [0, 1]$ imply $\\lambda x + (1 - \\lambda) y \\in C$."
           ],
           "cards": [
             "NLO-02-07"
@@ -146,7 +150,7 @@
         {
           "t": "Examples",
           "d": [
-            "ℝⁿ, ∅, half-spaces {aᵀx ≥ β}, balls, affine sets {Ax = b}, the PSD cone, polyhedra {Ax ≤ b}."
+            "$\\mathbb{R}^n$, $\\emptyset$, half-spaces $\\{a^\\top x \\ge \\beta\\}$, balls, affine sets $\\{Ax = b\\}$, the PSD cone, polyhedra $\\{Ax \\le b\\}$."
           ],
           "cards": [
             "NLO-02-07",
@@ -156,8 +160,8 @@
         {
           "t": "Operations that preserve convexity",
           "d": [
-            "Intersection (any number of sets), scaling βC, Minkowski sum C₁ + C₂. Not unions.",
-            "Sublevel sets {g(x) ≤ 0} of a convex g are convex."
+            "Intersection (any number of sets), scaling $\\beta C$, Minkowski sum $C_1 + C_2$. Not unions.",
+            "Sublevel sets $\\{x : g(x) \\le 0\\}$ of a convex $g$ are convex."
           ],
           "cards": [
             "NLO-02-08"
@@ -171,8 +175,9 @@
         {
           "t": "Convex function",
           "d": [
-            "On a convex set S: f(λx + (1 − λ)y) ≤ λf(x) + (1 − λ)f(y) for all x, y ∈ S, λ ∈ [0, 1].",
-            "Strictly convex: strict inequality for x ≠ y, λ ∈ (0, 1). Concave: −f is convex."
+            "On a convex set $S$, for all $x, y \\in S$ and $\\lambda \\in [0, 1]$:",
+            "$$f(\\lambda x + (1 - \\lambda) y) \\le \\lambda f(x) + (1 - \\lambda) f(y)$$",
+            "Strictly convex: strict inequality for $x \\ne y$ and $\\lambda \\in (0, 1)$. Concave: $-f$ is convex."
           ],
           "cards": [
             "NLO-02-09"
@@ -181,8 +186,8 @@
         {
           "t": "Quadratics",
           "d": [
-            "f = ½xᵀAx + bᵀx + c (A symmetric) is convex ⇔ A ⪰ 0, strictly convex ⇔ A ≻ 0.",
-            "Identity: λf(x) + (1 − λ)f(y) − f(λx + (1 − λ)y) = ½λ(1 − λ)(x − y)ᵀA(x − y)."
+            "$f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ with $A$ symmetric is convex ⇔ $A \\succeq 0$, and strictly convex ⇔ $A \\succ 0$. This follows from",
+            "$$\\lambda f(x) + (1 - \\lambda) f(y) - f(\\lambda x + (1 - \\lambda) y) = \\tfrac12 \\lambda (1 - \\lambda)\\,(x - y)^\\top A\\,(x - y)$$"
           ],
           "cards": [
             "NLO-02-10"
@@ -191,7 +196,7 @@
         {
           "t": "Operations that preserve convexity",
           "d": [
-            "f₁ + f₂;  αf with α > 0;  g(f(x)) with g convex and nondecreasing;  f(Ax + b);  max{f₁, f₂}."
+            "$f_1 + f_2$;  $\\alpha f$ with $\\alpha > 0$;  $g(f(x))$ with $g$ convex and nondecreasing;  $f(Ax + b)$;  $\\max\\{f_1, f_2\\}$."
           ],
           "cards": [
             "NLO-02-11"
@@ -200,8 +205,8 @@
         {
           "t": "Hessian test",
           "d": [
-            "C open and convex, f twice continuously differentiable. f convex on C ⇔ H(x) ⪰ 0 for all x ∈ C.",
-            "H(x) ≻ 0 for all x ∈ C ⇒ strictly convex. The converse fails (x⁴)."
+            "$C$ open and convex, $f$ twice continuously differentiable. $f$ is convex on $C$ ⇔ $H(x) \\succeq 0$ for all $x \\in C$.",
+            "$H(x) \\succ 0$ for all $x \\in C$ ⇒ strictly convex. The converse fails ($x^4$)."
           ],
           "cards": [
             "NLO-02-12"
@@ -210,9 +215,9 @@
         {
           "t": "Checking PD / PSD",
           "d": [
-            "PD: all leading principal minors > 0, or all eigenvalues > 0.",
-            "PSD: all principal minors ≥ 0 (not only leading), or all eigenvalues ≥ 0.",
-            "2×2 with rows (a, b), (b, c): PSD ⇔ a ≥ 0, c ≥ 0, ac − b² ≥ 0."
+            "PD: all leading principal minors $> 0$, or all eigenvalues $> 0$.",
+            "PSD: all principal minors $\\ge 0$ (not only the leading ones), or all eigenvalues $\\ge 0$.",
+            "$\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$ is PSD ⇔ $a \\ge 0$, $c \\ge 0$ and $ac - b^2 \\ge 0$."
           ],
           "cards": [
             "NLO-02-13"
@@ -221,8 +226,8 @@
         {
           "t": "Common cases",
           "d": [
-            "Convex: affine functions, e^(ax), −log x on (0, ∞), xᵀQx with Q a covariance matrix, ½‖Xw − y‖², hinge loss, logistic loss.",
-            "Not convex: e^(−x²), x³ on ℝ."
+            "Convex: affine functions, $e^{ax}$, $-\\log x$ on $(0, \\infty)$, $x^\\top Q x$ with $Q$ a covariance matrix, $\\tfrac12 \\lVert Xw - y \\rVert^2$, hinge loss, logistic loss.",
+            "Not convex: $e^{-x^2}$, and $x^3$ on $\\mathbb{R}$."
           ],
           "cards": [
             "NLO-02-20"
@@ -236,7 +241,7 @@
         {
           "t": "Convex problem",
           "d": [
-            "min f(x) over x ∈ S, with S a convex set and f convex on S."
+            "$\\min f(x)$ over $x \\in S$, with $S$ a convex set and $f$ convex on $S$."
           ],
           "cards": [
             "NLO-02-14"
@@ -245,8 +250,9 @@
         {
           "t": "Local = global",
           "d": [
-            "In a convex problem every local minimizer is a global minimizer. If f is strictly convex the minimizer is unique.",
-            "Proof idea: for y outside the ball take z = λ′x* + (1 − λ′)y with 1 − λ′ = ε/‖y − x*‖; then f(x*) ≤ f(z) ≤ λ′f(x*) + (1 − λ′)f(y)."
+            "In a convex problem every local minimizer is a global minimizer. If $f$ is strictly convex the minimizer is unique.",
+            "Proof idea: for $y$ outside the ball take $z = \\lambda' x^* + (1 - \\lambda') y$ with $1 - \\lambda' = \\varepsilon / \\lVert y - x^* \\rVert$. Then",
+            "$$f(x^*) \\le f(z) \\le \\lambda' f(x^*) + (1 - \\lambda') f(y)$$"
           ],
           "cards": [
             "NLO-02-14"
@@ -255,7 +261,8 @@
         {
           "t": "Gradient inequality",
           "d": [
-            "f differentiable on an open convex C. f convex ⇔ f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) for all x, y ∈ C.",
+            "$f$ differentiable on an open convex $C$. $f$ is convex ⇔ for all $x, y \\in C$:",
+            "$$f(y) \\ge f(x) + \\nabla f(x)^\\top (y - x)$$",
             "The tangent plane lies below the graph everywhere."
           ],
           "cards": [
@@ -265,8 +272,8 @@
         {
           "t": "Stationary ⇒ global",
           "d": [
-            "If f is convex and differentiable and ∇f(x*) = 0, then x* is a global minimizer. On ℝⁿ, FONC is necessary and sufficient for convex f.",
-            "Constrained convex S: x* is optimal ⇔ ∇f(x*)ᵀ(y − x*) ≥ 0 for all y ∈ S."
+            "If $f$ is convex and differentiable and $\\nabla f(x^*) = 0$, then $x^*$ is a global minimizer. On $\\mathbb{R}^n$, FONC is necessary and sufficient for convex $f$.",
+            "On a constrained convex set $S$: $x^*$ is optimal ⇔ $\\nabla f(x^*)^\\top (y - x^*) \\ge 0$ for all $y \\in S$."
           ],
           "cards": [
             "NLO-02-15"
@@ -275,8 +282,10 @@
         {
           "t": "Least squares",
           "d": [
-            "f(w) = ½‖Xw − y‖²: ∇f = Xᵀ(Xw − y), H = XᵀX ⪰ 0, always convex.",
-            "X full column rank ⇒ unique minimizer w* = (XᵀX)⁻¹Xᵀy, and the residual satisfies Xᵀr = 0."
+            "$f(w) = \\tfrac12 \\lVert Xw - y \\rVert^2$ has $\\nabla f = X^\\top (Xw - y)$ and $H = X^\\top X \\succeq 0$, so it is always convex.",
+            "If $X$ has full column rank, the minimizer is unique:",
+            "$$w^* = (X^\\top X)^{-1} X^\\top y$$",
+            "The residual $r = Xw^* - y$ satisfies $X^\\top r = 0$."
           ],
           "cards": [
             "NLO-02-16"
@@ -290,7 +299,7 @@
         {
           "t": "SONC",
           "d": [
-            "If x* is a local minimizer, then ∇f(x*) = 0 and H(x*) ⪰ 0."
+            "If $x^*$ is a local minimizer, then $\\nabla f(x^*) = 0$ and $H(x^*) \\succeq 0$."
           ],
           "cards": [
             "NLO-02-17"
@@ -299,7 +308,7 @@
         {
           "t": "SOSC",
           "d": [
-            "If ∇f(x*) = 0 and H(x*) ≻ 0, then x* is a strict local minimizer. Local only."
+            "If $\\nabla f(x^*) = 0$ and $H(x^*) \\succ 0$, then $x^*$ is a strict local minimizer. Local only."
           ],
           "cards": [
             "NLO-02-17",
@@ -309,7 +318,7 @@
         {
           "t": "Undecided case",
           "d": [
-            "∇f(x*) = 0 and H(x*) PSD but singular: no conclusion. x⁴ (min), x³ (neither), x₁² − x₂⁴ (saddle) all have this at 0."
+            "$\\nabla f(x^*) = 0$ and $H(x^*)$ PSD but singular: no conclusion. $x^4$ (min), $x^3$ (neither) and $x_1^2 - x_2^4$ (saddle) all have this at $0$."
           ],
           "cards": [
             "NLO-02-17"
@@ -318,7 +327,7 @@
         {
           "t": "Saddle test",
           "d": [
-            "∇f(x*) = 0 and H(x*) indefinite (a positive and a negative eigenvalue) ⇒ saddle point."
+            "$\\nabla f(x^*) = 0$ and $H(x^*)$ indefinite (a positive and a negative eigenvalue) ⇒ saddle point."
           ],
           "cards": [
             "NLO-02-18"
@@ -327,7 +336,7 @@
         {
           "t": "Classifying a stationary point",
           "d": [
-            "H ≻ 0: strict local min.  H ≺ 0: strict local max.  H indefinite: saddle.  H singular and semidefinite: look along the null directions."
+            "$H \\succ 0$: strict local min.  $H \\prec 0$: strict local max.  $H$ indefinite: saddle.  $H$ singular and semidefinite: look along the null directions."
           ],
           "cards": [
             "NLO-02-19"
@@ -341,7 +350,7 @@
         {
           "t": "Derivative table",
           "d": [
-            "∇(xᵀBx) = 2Bx needs B symmetric."
+            "$\\nabla(x^\\top B x) = 2Bx$ needs $B$ symmetric."
           ],
           "cards": [
             "NLO-02-02"
@@ -350,7 +359,7 @@
         {
           "t": "FONC proof, last step",
           "d": [
-            "“∇f(x*)ᵀd = 0 for some d ≠ 0” does not give ∇f(x*) = 0. It must hold for all d."
+            "“$\\nabla f(x^*)^\\top d = 0$ for some $d \\ne 0$” does not give $\\nabla f(x^*) = 0$. It must hold for all $d$."
           ],
           "cards": [
             "NLO-02-04"
@@ -359,7 +368,7 @@
         {
           "t": "Hessian test",
           "d": [
-            "“Strictly convex iff H is PD” is wrong: only PD ⇒ strictly convex."
+            "“Strictly convex iff $H$ is PD” is wrong: only PD ⇒ strictly convex."
           ],
           "cards": [
             "NLO-02-12"
@@ -377,7 +386,7 @@
         {
           "t": "Cubic example",
           "d": [
-            "The derivative of x³ − x² − 4x − 6 is 3x² − 2x − 4, not 3x² − 2x − 2."
+            "The derivative of $x^3 - x^2 - 4x - 6$ is $3x^2 - 2x - 4$, not $3x^2 - 2x - 2$."
           ],
           "cards": [
             "NLO-02-19"
@@ -389,11 +398,11 @@
   "cards": [
     {
       "id": "NLO-02-01",
-      "q": "Consider min f(x) over a set S ⊆ ℝⁿ, and let B(x*, ε) be the ball of radius ε around x*. Define (1) a global minimizer, (2) a local minimizer, (3) the strict version of each. (4) How do these notions imply one another?",
+      "q": "Consider $\\min f(x)$ over a set $S \\subseteq \\mathbb{R}^n$, and let $B(x^*, \\varepsilon)$ be the ball of radius $\\varepsilon$ around $x^*$. Define (1) a global minimizer, (2) a local minimizer, (3) the strict version of each. (4) How do these notions imply one another?",
       "pts": [
-        "(1) Global: f(x) ≥ f(x*) for all x ∈ S.",
-        "(2) Local: there is ε > 0 with f(x) ≥ f(x*) for all x ∈ B(x*, ε) ∩ S.",
-        "(3) Strict: replace ≥ with > for every x ≠ x* (in S, or in the ball).",
+        "(1) Global: $f(x) \\ge f(x^*)$ for all $x \\in S$.",
+        "(2) Local: there is $\\varepsilon > 0$ with $f(x) \\ge f(x^*)$ for all $x \\in B(x^*, \\varepsilon) \\cap S$.",
+        "(3) Strict: replace $\\ge$ with $>$ for every $x \\ne x^*$ (in $S$, or in the ball).",
         "(4) Strict global ⇒ global ⇒ local, and strict global ⇒ strict local ⇒ local. A strict global minimizer is unique."
       ],
       "pit": "Global does not imply strict: for a constant function every point is a global min and none is strict.",
@@ -401,211 +410,211 @@
     },
     {
       "id": "NLO-02-02",
-      "q": "Let b ∈ ℝⁿ, and let B be an n×n matrix that is not necessarily symmetric. Gradients are column vectors. Give the gradient and Hessian of (1) bᵀx, (2) xᵀBx, (3) f(x) = ½xᵀAx + bᵀx + c where A is symmetric.",
+      "q": "Let $b \\in \\mathbb{R}^n$, and let $B$ be an $n \\times n$ matrix that is not necessarily symmetric. Gradients are column vectors. Give the gradient and Hessian of (1) $b^\\top x$, (2) $x^\\top B x$, (3) $f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ where $A$ is symmetric.",
       "pts": [
-        "(1) Gradient b, Hessian 0.",
-        "(2) Gradient (B + Bᵀ)x, Hessian B + Bᵀ.",
-        "(3) Gradient Ax + b, Hessian A."
+        "(1) Gradient $b$, Hessian $0$.",
+        "(2) Gradient $(B + B^\\top)x$, Hessian $B + B^\\top$.",
+        "(3) Gradient $Ax + b$, Hessian $A$."
       ],
-      "pit": "∇(xᵀBx) = 2Bx only when B is symmetric. The slide's derivative table drops this condition.",
+      "pit": "$\\nabla(x^\\top B x) = 2Bx$ only when $B$ is symmetric. The slide's derivative table drops this condition.",
       "src": "L2-1 s.2; L2-2 s.17"
     },
     {
       "id": "NLO-02-03",
-      "q": "Consider the unconstrained problem min f(x) over x ∈ ℝⁿ. State the first-order necessary condition (FONC): (1) what is assumed about f and about the point x*, (2) what is concluded, (3) is the converse true?",
+      "q": "Consider the unconstrained problem $\\min f(x)$ over $x \\in \\mathbb{R}^n$. State the first-order necessary condition (FONC): (1) what is assumed about $f$ and about the point $x^*$, (2) what is concluded, (3) is the converse true?",
       "pts": [
-        "(1) f is differentiable at x*, and x* is a local minimizer over ℝⁿ.",
-        "(2) ∇f(x*) = 0. A point with zero gradient is called a stationary point.",
-        "(3) No. f(x) = x³ has f′(0) = 0, but 0 is neither a min nor a max."
+        "(1) $f$ is differentiable at $x^*$, and $x^*$ is a local minimizer over $\\mathbb{R}^n$.",
+        "(2) $\\nabla f(x^*) = 0$. A point with zero gradient is called a stationary point.",
+        "(3) No. $f(x) = x^3$ has $f'(0) = 0$, but $0$ is neither a min nor a max."
       ],
       "pit": "FONC is only a filter: it removes non-stationary points, it never certifies a minimizer by itself.",
       "src": "L2-1 s.23, 26"
     },
     {
       "id": "NLO-02-04",
-      "q": "FONC: if x* is a local minimizer of a differentiable f on ℝⁿ, then ∇f(x*) = 0. Outline a rigorous proof. (1) What inequality do you start from? (2) How do you turn it into a statement about ∇f(x*)ᵀd? (3) How do you conclude ∇f(x*) = 0?",
+      "q": "FONC: if $x^*$ is a local minimizer of a differentiable $f$ on $\\mathbb{R}^n$, then $\\nabla f(x^*) = 0$. Outline a rigorous proof. (1) What inequality do you start from? (2) How do you turn it into a statement about $\\nabla f(x^*)^\\top d$? (3) How do you conclude $\\nabla f(x^*) = 0$?",
       "pts": [
-        "(1) Fix any direction d. For small t > 0 the point x* + td is inside the ball of local optimality, so f(x* + td) − f(x*) ≥ 0.",
-        "(2) Divide by t > 0 and let t ↓ 0. By first-order Taylor, f(x* + td) − f(x*) = t∇f(x*)ᵀd + o(t), so ∇f(x*)ᵀd ≥ 0 for every d.",
-        "(3) Choose d = −∇f(x*). This gives −‖∇f(x*)‖² ≥ 0, so ∇f(x*) = 0."
+        "(1) Fix any direction $d$. For small $t > 0$ the point $x^* + td$ is inside the ball of local optimality, so $f(x^* + td) - f(x^*) \\ge 0$.",
+        "(2) Divide by $t > 0$ and let $t \\downarrow 0$. By first-order Taylor, $f(x^* + td) - f(x^*) = t\\,\\nabla f(x^*)^\\top d + o(t)$, so $\\nabla f(x^*)^\\top d \\ge 0$ for every $d$.",
+        "(3) Choose $d = -\\nabla f(x^*)$. This gives $-\\lVert \\nabla f(x^*) \\rVert^2 \\ge 0$, so $\\nabla f(x^*) = 0$."
       ],
-      "pit": "The slide ends with “∇f(x*)ᵀd = 0 and d ≠ 0, so ∇f(x*) = 0”. That is false for a single d (g = (1,0), d = (0,1)). The inequality must hold for all d.",
+      "pit": "The slide ends with “$\\nabla f(x^*)^\\top d = 0$ and $d \\ne 0$, so $\\nabla f(x^*) = 0$”. That is false for a single $d$ (take $g = (1, 0)$ and $d = (0, 1)$). The inequality must hold for all $d$.",
       "src": "L2-1 s.37–41"
     },
     {
       "id": "NLO-02-05",
-      "q": "FONC reduces min f(x) over ℝⁿ to finding points with ∇f(x) = 0. (1) What does this achieve? (2) What three things can it not do? Give an example for each.",
+      "q": "FONC reduces $\\min f(x)$ over $\\mathbb{R}^n$ to finding points with $\\nabla f(x) = 0$. (1) What does this achieve? (2) What three things can it not do? Give an example for each.",
       "pts": [
-        "(1) It rules out every non-stationary point, leaving a square system ∇f(x) = 0 (n equations, n unknowns).",
-        "(2a) It cannot tell a min from a max: f and −f have the same stationary points (x³ − x² − 4x − 6 has one of each).",
+        "(1) It rules out every non-stationary point, leaving a square system $\\nabla f(x) = 0$ ($n$ equations, $n$ unknowns).",
+        "(2a) It cannot tell a min from a max: $f$ and $-f$ have the same stationary points ($x^3 - x^2 - 4x - 6$ has one of each).",
         "(2b) It cannot rule out saddle points.",
-        "(2c) It may find nothing: f(x) = x₁ − 2x₂ has ∇f = (1, −2) ≠ 0 everywhere, and the problem is unbounded below."
+        "(2c) It may find nothing: $f(x) = x_1 - 2x_2$ has $\\nabla f = (1, -2)^\\top \\ne 0$ everywhere, and the problem is unbounded below."
       ],
-      "pit": "Existence is a separate question. eˣ is strictly convex with infimum 0, yet has no minimizer and no stationary point.",
+      "pit": "Existence is a separate question. $e^x$ is strictly convex with infimum $0$, yet has no minimizer and no stationary point.",
       "src": "L2-1 s.26–36, 42"
     },
     {
       "id": "NLO-02-06",
-      "q": "FONC assumes x* is an interior point and f is differentiable there. Explain what goes wrong in (1) minimizing f(x) = x over x ∈ [0, 1], whose minimizer is x* = 0, and (2) minimizing f(x) = |x|, whose minimizer is x* = 0.",
+      "q": "FONC assumes $x^*$ is an interior point and $f$ is differentiable there. Explain what goes wrong in (1) minimizing $f(x) = x$ over $x \\in [0, 1]$, whose minimizer is $x^* = 0$, and (2) minimizing $f(x) = |x|$, whose minimizer is $x^* = 0$.",
       "pts": [
-        "(1) x* = 0 is a boundary point, so only directions d ≥ 0 are feasible. The proof then gives ∇f(x*)ᵀd ≥ 0 only for feasible d, not ∇f(x*) = 0. Here f′(0) = 1 ≠ 0. This “no feasible descent direction” condition is the seed of KKT.",
-        "(2) |x| is not differentiable at 0 (one-sided derivatives are −1 and +1), so the hypothesis of FONC fails."
+        "(1) $x^* = 0$ is a boundary point, so only directions $d \\ge 0$ are feasible. The proof then gives $\\nabla f(x^*)^\\top d \\ge 0$ only for feasible $d$, not $\\nabla f(x^*) = 0$. Here $f'(0) = 1 \\ne 0$. This “no feasible descent direction” condition is the seed of KKT.",
+        "(2) $|x|$ is not differentiable at $0$ (one-sided derivatives are $-1$ and $+1$), so the hypothesis of FONC fails."
       ],
       "pit": "Non-smooth losses such as the hinge loss have the same issue at the kink. That is why subgradients exist.",
       "src": "Notes §2.3, CX 2.1–2.2"
     },
     {
       "id": "NLO-02-07",
-      "q": "(1) Define a convex set C ⊆ ℝⁿ. (2) Name four standard examples. (3) An affine set {x : Ax = b} is convex. What stronger property does it have?",
+      "q": "(1) Define a convex set $C \\subseteq \\mathbb{R}^n$. (2) Name four standard examples. (3) An affine set $\\{x : Ax = b\\}$ is convex. What stronger property does it have?",
       "pts": [
-        "(1) For all x, y ∈ C and λ ∈ [0, 1], the point λx + (1 − λ)y is in C: the segment between two points of C stays in C.",
-        "(2) Any four of: ℝⁿ, the empty set, half-spaces {aᵀx ≥ β}, balls, affine sets, the cone of PSD matrices.",
-        "(3) It contains the whole line through any two of its points: λx + (1 − λ)y is in the set for every real λ, not only λ ∈ [0, 1]."
+        "(1) For all $x, y \\in C$ and $\\lambda \\in [0, 1]$, the point $\\lambda x + (1 - \\lambda) y$ is in $C$: the segment between two points of $C$ stays in $C$.",
+        "(2) Any four of: $\\mathbb{R}^n$, the empty set, half-spaces $\\{a^\\top x \\ge \\beta\\}$, balls, affine sets, the cone of PSD matrices.",
+        "(3) It contains the whole line through any two of its points: $\\lambda x + (1 - \\lambda) y$ is in the set for every real $\\lambda$, not only $\\lambda \\in [0, 1]$."
       ],
-      "pit": "A union of convex sets is generally not convex: [0, 1] ∪ [2, 3] misses the midpoint 1.5.",
+      "pit": "A union of convex sets is generally not convex: $[0, 1] \\cup [2, 3]$ misses the midpoint $1.5$.",
       "src": "L2-2 s.7–10"
     },
     {
       "id": "NLO-02-08",
-      "q": "(1) Which three operations on convex sets give a convex set again? (2) Let g be a convex function. Why is {x : g(x) ≤ 0} convex? (3) Why is the LP feasible set {x : Ax ≤ b} convex?",
+      "q": "(1) Which three operations on convex sets give a convex set again? (2) Let $g$ be a convex function. Why is $\\{x : g(x) \\le 0\\}$ convex? (3) Why is the LP feasible set $\\{x : Ax \\le b\\}$ convex?",
       "pts": [
-        "(1) Intersection (of any number of sets), scaling βC, and the Minkowski sum C₁ + C₂.",
-        "(2) If g(x) ≤ 0 and g(y) ≤ 0, then g(λx + (1 − λ)y) ≤ λg(x) + (1 − λ)g(y) ≤ 0.",
-        "(3) Each row aᵢᵀx ≤ bᵢ is a half-space, and the set is the intersection of these half-spaces."
+        "(1) Intersection (of any number of sets), scaling $\\beta C$, and the Minkowski sum $C_1 + C_2$.",
+        "(2) If $g(x) \\le 0$ and $g(y) \\le 0$, then $g(\\lambda x + (1 - \\lambda) y) \\le \\lambda g(x) + (1 - \\lambda) g(y) \\le 0$.",
+        "(3) Each row $a_i^\\top x \\le b_i$ is a half-space, and the set is the intersection of these half-spaces."
       ],
       "pit": "Unions do not preserve convexity.",
       "src": "L2-2 s.12–13"
     },
     {
       "id": "NLO-02-09",
-      "q": "Let f be a real-valued function on a set S ⊆ ℝⁿ. (1) Define “f is convex” and give the geometric picture. (2) Define “strictly convex” and “concave”. (3) Why must S be a convex set?",
+      "q": "Let $f$ be a real-valued function on a set $S \\subseteq \\mathbb{R}^n$. (1) Define “$f$ is convex” and give the geometric picture. (2) Define “strictly convex” and “concave”. (3) Why must $S$ be a convex set?",
       "pts": [
-        "(1) f(λx + (1 − λ)y) ≤ λf(x) + (1 − λ)f(y) for all x, y ∈ S and λ ∈ [0, 1]. The chord between two points of the graph lies on or above the graph.",
-        "(2) Strictly convex: the inequality is strict whenever x ≠ y and λ ∈ (0, 1). Concave: −f is convex.",
-        "(3) The definition evaluates f at λx + (1 − λ)y, so that point has to lie in S."
+        "(1) For all $x, y \\in S$ and $\\lambda \\in [0, 1]$: $$f(\\lambda x + (1 - \\lambda) y) \\le \\lambda f(x) + (1 - \\lambda) f(y)$$ The chord between two points of the graph lies on or above the graph.",
+        "(2) Strictly convex: the inequality is strict whenever $x \\ne y$ and $\\lambda \\in (0, 1)$. Concave: $-f$ is convex.",
+        "(3) The definition evaluates $f$ at $\\lambda x + (1 - \\lambda) y$, so that point has to lie in $S$."
       ],
-      "pit": "“Is 1/x convex?” is ill-posed on ℝ∖{0}, which is not a convex set. On (0, ∞) it is convex.",
+      "pit": "“Is $1/x$ convex?” is ill-posed on $\\mathbb{R} \\setminus \\{0\\}$, which is not a convex set. On $(0, \\infty)$ it is convex.",
       "src": "L2-2 s.14–15"
     },
     {
       "id": "NLO-02-10",
-      "q": "Let f(x) = ½xᵀAx + bᵀx + c with A symmetric. (1) When is f convex, and when strictly convex? (2) Which identity proves this directly from the definition of convexity? (3) Apply the result to portfolio variance xᵀQx, where Q is the covariance matrix of asset returns r and x the weights.",
+      "q": "Let $f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ with $A$ symmetric. (1) When is $f$ convex, and when strictly convex? (2) Which identity proves this directly from the definition of convexity? (3) Apply the result to portfolio variance $x^\\top Q x$, where $Q$ is the covariance matrix of asset returns $r$ and $x$ the weights.",
       "pts": [
-        "(1) Convex ⇔ A ⪰ 0 (PSD). Strictly convex ⇔ A ≻ 0 (PD).",
-        "(2) λf(x) + (1 − λ)f(y) − f(λx + (1 − λ)y) = ½λ(1 − λ)(x − y)ᵀA(x − y). The gap is ≥ 0 for all x, y exactly when A ⪰ 0.",
-        "(3) xᵀQx = Var(xᵀr) ≥ 0, so Q is PSD and variance is convex in x. It is strictly convex iff Q ≻ 0, i.e. no combination of the assets is riskless."
+        "(1) Convex ⇔ $A \\succeq 0$ (PSD). Strictly convex ⇔ $A \\succ 0$ (PD).",
+        "(2) $$\\lambda f(x) + (1 - \\lambda) f(y) - f(\\lambda x + (1 - \\lambda) y) = \\tfrac12 \\lambda (1 - \\lambda)\\,(x - y)^\\top A\\,(x - y)$$ The gap is $\\ge 0$ for all $x, y$ exactly when $A \\succeq 0$.",
+        "(3) $x^\\top Q x = \\operatorname{Var}(x^\\top r) \\ge 0$, so $Q$ is PSD and variance is convex in $x$. It is strictly convex iff $Q \\succ 0$, i.e. no combination of the assets is riskless."
       ],
-      "pit": "The condition is also necessary: if vᵀAv < 0 for some v, take x − y = v and the gap becomes negative.",
+      "pit": "The condition is also necessary: if $v^\\top A v < 0$ for some $v$, take $x - y = v$ and the gap becomes negative.",
       "src": "L2-2 s.17–18"
     },
     {
       "id": "NLO-02-11",
-      "q": "Let f, f₁, f₂ be convex functions on a convex set. Under what conditions are the following convex: (1) f₁ + f₂ and αf, (2) the composition g(f(x)) with g: ℝ → ℝ, (3) f(Ax + b) and max{f₁(x), f₂(x)}?",
+      "q": "Let $f, f_1, f_2$ be convex functions on a convex set. Under what conditions are the following convex: (1) $f_1 + f_2$ and $\\alpha f$, (2) the composition $g(f(x))$ with $g: \\mathbb{R} \\to \\mathbb{R}$, (3) $f(Ax + b)$ and $\\max\\{f_1(x), f_2(x)\\}$?",
       "pts": [
-        "(1) f₁ + f₂ always (strictly convex if one of them is). αf when α > 0.",
-        "(2) When g is convex and nondecreasing on the range of f.",
+        "(1) $f_1 + f_2$ always (strictly convex if one of them is). $\\alpha f$ when $\\alpha > 0$.",
+        "(2) When $g$ is convex and nondecreasing on the range of $f$.",
         "(3) Both always. These two rules are not on the slides, but they are what makes the hinge loss (a max of affine functions) and the logistic loss (a convex function of an affine map) convex."
       ],
-      "pit": "Rule (2) needs “nondecreasing”: g(y) = e^(−y) is convex and x² is convex, but e^(−x²) has second derivative −2 at 0.",
+      "pit": "Rule (2) needs “nondecreasing”: $g(y) = e^{-y}$ is convex and $x^2$ is convex, but $e^{-x^2}$ has second derivative $-2$ at $0$.",
       "src": "L2-2 s.20–23"
     },
     {
       "id": "NLO-02-12",
-      "q": "Let H(x) be the Hessian of f. State the Hessian test for convexity of f on a set C: (1) what is assumed about C and f, (2) the test for convexity, (3) the test for strict convexity, and whether it works in both directions.",
+      "q": "Let $H(x)$ be the Hessian of $f$. State the Hessian test for convexity of $f$ on a set $C$: (1) what is assumed about $C$ and $f$, (2) the test for convexity, (3) the test for strict convexity, and whether it works in both directions.",
       "pts": [
-        "(1) C is non-empty, open and convex, and f is twice continuously differentiable on C.",
-        "(2) f is convex on C ⇔ H(x) ⪰ 0 at every x ∈ C.",
-        "(3) H(x) ≻ 0 at every x ∈ C ⇒ f is strictly convex. One direction only: x⁴ is strictly convex, yet its second derivative is 0 at x = 0."
+        "(1) $C$ is non-empty, open and convex, and $f$ is twice continuously differentiable on $C$.",
+        "(2) $f$ is convex on $C$ ⇔ $H(x) \\succeq 0$ at every $x \\in C$.",
+        "(3) $H(x) \\succ 0$ at every $x \\in C$ ⇒ $f$ is strictly convex. One direction only: $x^4$ is strictly convex, yet its second derivative is $0$ at $x = 0$."
       ],
-      "pit": "The slide says “strictly convex iff PD”, which is wrong in the ⇒ direction. Also, H ⪰ 0 at one point proves nothing: it must hold on all of C.",
+      "pit": "The slide says “strictly convex iff PD”, which is wrong in the ⇒ direction. Also, $H \\succeq 0$ at one point proves nothing: it must hold on all of $C$.",
       "src": "L2-2 s.24–28"
     },
     {
       "id": "NLO-02-13",
-      "q": "Let A be a symmetric matrix. How do you check (1) that A is positive definite (PD), (2) that A is positive semidefinite (PSD)? (3) Write the PSD conditions for the 2×2 matrix with rows (a, b) and (b, c).",
+      "q": "Let $A$ be a symmetric matrix. How do you check (1) that $A$ is positive definite (PD), (2) that $A$ is positive semidefinite (PSD)? (3) Write the PSD conditions for the $2 \\times 2$ matrix $\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$.",
       "pts": [
-        "(1) All leading principal minors > 0 (determinants of the upper-left k×k blocks), or all eigenvalues > 0.",
-        "(2) All principal minors ≥ 0, not only the leading ones, or all eigenvalues ≥ 0.",
-        "(3) a ≥ 0, c ≥ 0 and ac − b² ≥ 0."
+        "(1) All leading principal minors $> 0$ (determinants of the upper-left $k \\times k$ blocks), or all eigenvalues $> 0$.",
+        "(2) All principal minors $\\ge 0$, not only the leading ones, or all eigenvalues $\\ge 0$.",
+        "(3) $a \\ge 0$, $c \\ge 0$ and $ac - b^2 \\ge 0$."
       ],
-      "pit": "Leading minors ≥ 0 does not give PSD: diag(0, −1) has leading minors 0 and 0, but it is not PSD.",
+      "pit": "Leading minors $\\ge 0$ does not give PSD: $\\operatorname{diag}(0, -1)$ has leading minors $0$ and $0$, but it is not PSD.",
       "src": "L1 s.61–62"
     },
     {
       "id": "NLO-02-14",
-      "q": "A convex problem is min f(x) over x ∈ S where S is a convex set and f is convex on S. (1) State the “local = global” theorem, including what strict convexity adds. (2) Outline the proof: x* is a local minimizer with radius ε and y ∈ S is any point outside the ball B(x*, ε). Which point z do you construct, and how do you finish?",
+      "q": "A convex problem is $\\min f(x)$ over $x \\in S$ where $S$ is a convex set and $f$ is convex on $S$. (1) State the “local = global” theorem, including what strict convexity adds. (2) Outline the proof: $x^*$ is a local minimizer with radius $\\varepsilon$ and $y \\in S$ is any point outside the ball $B(x^*, \\varepsilon)$. Which point $z$ do you construct, and how do you finish?",
       "pts": [
-        "(1) Every local minimizer is a global minimizer. If f is strictly convex, the minimizer is also unique (and strict).",
-        "(2) Take z = λ′x* + (1 − λ′)y with 1 − λ′ = ε/‖y − x*‖. Then z ∈ S because S is convex, and z lies on the ball. So f(x*) ≤ f(z) ≤ λ′f(x*) + (1 − λ′)f(y), using local optimality then convexity of f. Divide by 1 − λ′ > 0 to get f(x*) ≤ f(y)."
+        "(1) Every local minimizer is a global minimizer. If $f$ is strictly convex, the minimizer is also unique (and strict).",
+        "(2) Take $z = \\lambda' x^* + (1 - \\lambda') y$ with $1 - \\lambda' = \\varepsilon / \\lVert y - x^* \\rVert$. Then $z \\in S$ because $S$ is convex, and $z$ lies on the ball. Local optimality, then convexity of $f$, give $$f(x^*) \\le f(z) \\le \\lambda' f(x^*) + (1 - \\lambda') f(y)$$ Divide by $1 - \\lambda' > 0$ to get $f(x^*) \\le f(y)$."
       ],
-      "pit": "Both convexities are needed. (x − 2)² on S = [−1, 0] ∪ [1, 3] has a local min at 0 that is not global, because S is not convex.",
+      "pit": "Both convexities are needed. $(x - 2)^2$ on $S = [-1, 0] \\cup [1, 3]$ has a local min at $0$ that is not global, because $S$ is not convex.",
       "src": "L2-2 s.29–36"
     },
     {
       "id": "NLO-02-15",
-      "q": "Let f be differentiable on an open convex set C. (1) State the gradient inequality that is equivalent to convexity of f, and give its geometric meaning. (2) Suppose f is convex and ∇f(x*) = 0. What follows, and why? (3) What does this mean for FONC when f is convex on ℝⁿ?",
+      "q": "Let $f$ be differentiable on an open convex set $C$. (1) State the gradient inequality that is equivalent to convexity of $f$, and give its geometric meaning. (2) Suppose $f$ is convex and $\\nabla f(x^*) = 0$. What follows, and why? (3) What does this mean for FONC when $f$ is convex on $\\mathbb{R}^n$?",
       "pts": [
-        "(1) f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) for all x, y ∈ C. The tangent plane at any point lies below the graph everywhere.",
-        "(2) x* is a global minimizer: put x = x* in the inequality to get f(y) ≥ f(x*) for all y.",
-        "(3) FONC becomes necessary and sufficient: x* is a global minimizer ⇔ ∇f(x*) = 0."
+        "(1) For all $x, y \\in C$: $$f(y) \\ge f(x) + \\nabla f(x)^\\top (y - x)$$ The tangent plane at any point lies below the graph everywhere.",
+        "(2) $x^*$ is a global minimizer: put $x = x^*$ in the inequality to get $f(y) \\ge f(x^*)$ for all $y$.",
+        "(3) FONC becomes necessary and sufficient: $x^*$ is a global minimizer ⇔ $\\nabla f(x^*) = 0$."
       ],
-      "pit": "On a constrained convex set S the minimizer need not be stationary. The right condition is ∇f(x*)ᵀ(y − x*) ≥ 0 for all y ∈ S.",
+      "pit": "On a constrained convex set $S$ the minimizer need not be stationary. The right condition is $\\nabla f(x^*)^\\top (y - x^*) \\ge 0$ for all $y \\in S$.",
       "src": "L2-2 s.37–39"
     },
     {
       "id": "NLO-02-16",
-      "q": "Least squares: X is the data matrix (n samples × d features), y ∈ ℝⁿ the targets, and we choose weights w ∈ ℝᵈ to minimize f(w) = ½‖Xw − y‖². (1) Give ∇f and the Hessian, and explain why f is always convex. (2) When is the minimizer unique, and what is it? (3) What does the optimality condition say about the residual r = Xw* − y? (4) What happens when the uniqueness condition fails?",
+      "q": "Least squares: $X$ is the data matrix ($n$ samples $\\times$ $d$ features), $y \\in \\mathbb{R}^n$ the targets, and we choose weights $w \\in \\mathbb{R}^d$ to minimize $f(w) = \\tfrac12 \\lVert Xw - y \\rVert^2$. (1) Give $\\nabla f$ and the Hessian, and explain why $f$ is always convex. (2) When is the minimizer unique, and what is it? (3) What does the optimality condition say about the residual $r = Xw^* - y$? (4) What happens when the uniqueness condition fails?",
       "pts": [
-        "(1) ∇f(w) = Xᵀ(Xw − y), Hessian XᵀX. The Hessian is PSD because wᵀXᵀXw = ‖Xw‖² ≥ 0, so f is convex for any X.",
-        "(2) Unique iff X has full column rank (no redundant features). Then XᵀX is PD, and ∇f = 0 gives w* = (XᵀX)⁻¹Xᵀy.",
-        "(3) Xᵀr = 0: the residual is orthogonal to every column of X.",
-        "(4) XᵀX is singular. f is still convex, so every local min is global, but there are infinitely many minimizers. Ridge (XᵀX + γI) restores uniqueness."
+        "(1) $\\nabla f(w) = X^\\top (Xw - y)$, Hessian $X^\\top X$. The Hessian is PSD because $w^\\top X^\\top X w = \\lVert Xw \\rVert^2 \\ge 0$, so $f$ is convex for any $X$.",
+        "(2) Unique iff $X$ has full column rank (no redundant features). Then $X^\\top X \\succ 0$, and $\\nabla f = 0$ gives $$w^* = (X^\\top X)^{-1} X^\\top y$$",
+        "(3) $X^\\top r = 0$: the residual is orthogonal to every column of $X$.",
+        "(4) $X^\\top X$ is singular. $f$ is still convex, so every local min is global, but there are infinitely many minimizers. Ridge ($X^\\top X + \\gamma I$) restores uniqueness."
       ],
-      "pit": "The slides say “full row rank”, which is backwards. A tall regression matrix (n > d) can never have full row rank. What is needed is full column rank.",
+      "pit": "The slides say “full row rank”, which is backwards. A tall regression matrix ($n > d$) can never have full row rank. What is needed is full column rank.",
       "src": "L2-2 s.19, 40"
     },
     {
       "id": "NLO-02-17",
-      "q": "Let f be twice differentiable on ℝⁿ with Hessian H(x), and suppose f is not known to be convex. State (1) the second-order necessary condition (SONC), (2) the second-order sufficient condition (SOSC). (3) Which case can neither condition decide? Give examples.",
+      "q": "Let $f$ be twice differentiable on $\\mathbb{R}^n$ with Hessian $H(x)$, and suppose $f$ is not known to be convex. State (1) the second-order necessary condition (SONC), (2) the second-order sufficient condition (SOSC). (3) Which case can neither condition decide? Give examples.",
       "pts": [
-        "(1) SONC: if x* is a local min, then ∇f(x*) = 0 and H(x*) ⪰ 0.",
-        "(2) SOSC: if ∇f(x*) = 0 and H(x*) ≻ 0, then x* is a strict local min.",
-        "(3) ∇f(x*) = 0 with H(x*) PSD but singular. x⁴ has a minimum at 0 while x³ has neither a min nor a max there, and both have second derivative 0."
+        "(1) SONC: if $x^*$ is a local min, then $\\nabla f(x^*) = 0$ and $H(x^*) \\succeq 0$.",
+        "(2) SOSC: if $\\nabla f(x^*) = 0$ and $H(x^*) \\succ 0$, then $x^*$ is a strict local min.",
+        "(3) $\\nabla f(x^*) = 0$ with $H(x^*)$ PSD but singular. $x^4$ has a minimum at $0$ while $x^3$ has neither a min nor a max there, and both have second derivative $0$."
       ],
-      "pit": "SOSC is local only. x³ − x² − 4x − 6 has a strict local min, yet it is unbounded below. A global conclusion needs H ⪰ 0 everywhere (convexity).",
+      "pit": "SOSC is local only. $x^3 - x^2 - 4x - 6$ has a strict local min, yet it is unbounded below. A global conclusion needs $H \\succeq 0$ everywhere (convexity).",
       "src": "L2-2 s.41–47"
     },
     {
       "id": "NLO-02-18",
-      "q": "Let x* be a stationary point of f, i.e. ∇f(x*) = 0. (1) What does it mean for x* to be a saddle point? (2) Which condition on the Hessian H(x*) guarantees a saddle point, and how do you check it?",
+      "q": "Let $x^*$ be a stationary point of $f$, i.e. $\\nabla f(x^*) = 0$. (1) What does it mean for $x^*$ to be a saddle point? (2) Which condition on the Hessian $H(x^*)$ guarantees a saddle point, and how do you check it?",
       "pts": [
-        "(1) x* is neither a local min nor a local max: every neighbourhood contains points with f larger and points with f smaller than f(x*).",
-        "(2) H(x*) is indefinite, i.e. it has at least one positive and at least one negative eigenvalue."
+        "(1) $x^*$ is neither a local min nor a local max: every neighbourhood contains points with $f$ larger and points with $f$ smaller than $f(x^*)$.",
+        "(2) $H(x^*)$ is indefinite, i.e. it has at least one positive and at least one negative eigenvalue."
       ],
-      "pit": "Indefinite is sufficient, not necessary. x₁² − x₂⁴ has H(0) = diag(2, 0), which is PSD, yet 0 is a saddle. x₁² + x₂⁴ has the same Hessian and a strict min.",
+      "pit": "Indefinite is sufficient, not necessary. $x_1^2 - x_2^4$ has $H(0) = \\operatorname{diag}(2, 0)$, which is PSD, yet $0$ is a saddle. $x_1^2 + x_2^4$ has the same Hessian and a strict min.",
       "src": "L2-2 s.48–50"
     },
     {
       "id": "NLO-02-19",
-      "q": "Let f(x) = x³ − x² − 4x − 6 on ℝ. (1) Find the stationary points. (2) Classify each with the second derivative. (3) Does f have a global minimum?",
+      "q": "Let $f(x) = x^3 - x^2 - 4x - 6$ on $\\mathbb{R}$. (1) Find the stationary points. (2) Classify each with the second derivative. (3) Does $f$ have a global minimum?",
       "pts": [
-        "(1) f′(x) = 3x² − 2x − 4 = 0 gives x = (1 ± √13)/3, about 1.535 and −0.869.",
-        "(2) f″(x) = 6x − 2. At (1 + √13)/3 it equals 2√13 > 0: strict local min. At (1 − √13)/3 it equals −2√13 < 0: strict local max.",
-        "(3) No. f → −∞ as x → −∞."
+        "(1) $f'(x) = 3x^2 - 2x - 4 = 0$ gives $x = \\dfrac{1 \\pm \\sqrt{13}}{3}$, about $1.535$ and $-0.869$.",
+        "(2) $f''(x) = 6x - 2$. At $x = \\tfrac{1 + \\sqrt{13}}{3}$ it equals $2\\sqrt{13} > 0$: strict local min. At $x = \\tfrac{1 - \\sqrt{13}}{3}$ it equals $-2\\sqrt{13} < 0$: strict local max.",
+        "(3) No. $f(x) \\to -\\infty$ as $x \\to -\\infty$."
       ],
-      "pit": "The slide prints the derivative as 3x² − 2x − 2, which does not match the stationary points it quotes. The correct one is 3x² − 2x − 4.",
+      "pit": "The slide prints the derivative as $3x^2 - 2x - 2$, which does not match the stationary points it quotes. The correct one is $3x^2 - 2x - 4$.",
       "src": "L2-1 s.16, 31–33; L2-2 s.42"
     },
     {
       "id": "NLO-02-20",
-      "q": "For each function, say whether it is convex on the stated domain and give a one-line reason: (1) e^(ax) on ℝ, (2) −log x on (0, ∞), (3) the hinge loss max(0, 1 − z) on ℝ, (4) e^(−x²) on ℝ.",
+      "q": "For each function, say whether it is convex on the stated domain and give a one-line reason: (1) $e^{ax}$ on $\\mathbb{R}$, (2) $-\\log x$ on $(0, \\infty)$, (3) the hinge loss $\\max(0, 1 - z)$ on $\\mathbb{R}$, (4) $e^{-x^2}$ on $\\mathbb{R}$.",
       "pts": [
-        "(1) Convex: second derivative a²e^(ax) ≥ 0.",
-        "(2) Convex (strictly): second derivative 1/x² > 0.",
-        "(3) Convex: it is the maximum of two affine functions, 0 and 1 − z.",
-        "(4) Not convex: the second derivative is (4x² − 2)e^(−x²), which is −2 at x = 0."
+        "(1) Convex: second derivative $a^2 e^{ax} \\ge 0$.",
+        "(2) Convex (strictly): second derivative $1/x^2 > 0$.",
+        "(3) Convex: it is the maximum of two affine functions, $0$ and $1 - z$.",
+        "(4) Not convex: the second derivative is $(4x^2 - 2)\\,e^{-x^2}$, which is $-2$ at $x = 0$."
       ],
-      "pit": "The hinge loss is convex but not differentiable at z = 1, and not strictly convex (it is piecewise linear).",
+      "pit": "The hinge loss is convex but not differentiable at $z = 1$, and not strictly convex (it is piecewise linear).",
       "src": "L2-2 s.16, 20"
     }
   ]
