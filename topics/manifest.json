@@ -27,6 +27,19 @@
       ]
     },
     {
+      "name": "Models",
+      "topics": [
+        {
+          "title": "OLS",
+          "file": "models/sr01-ols.json"
+        },
+        {
+          "title": "Ridge",
+          "file": "models/sr02-ridge.json"
+        }
+      ]
+    },
+    {
       "name": "Quant",
       "topics": [
         {

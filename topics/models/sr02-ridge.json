@@ -1,0 +1,473 @@
+{
+  "title": "Ridge",
+  "notes": [
+    {
+      "h": "Setting",
+      "items": [
+        {
+          "t": "Objective and solution",
+          "d": [
+            "$$\\hat\\beta_{\\text{ridge}} = \\arg\\min_\\beta \\lVert y - X\\beta\\rVert^2 + \\lambda\\lVert\\beta\\rVert_2^2 = (X^\\top X + \\lambda I)^{-1}X^\\top y$$",
+            "Eigenvalues $d_j^2 + \\lambda \\ge \\lambda > 0$ ⇒ always invertible; works for perfect collinearity and $p > n$."
+          ],
+          "cards": [
+            "MOD-SR02-01"
+          ]
+        },
+        {
+          "t": "SVD shrinkage",
+          "d": [
+            "$X = UDV^\\top$. $$\\hat\\beta_{OLS} = \\sum_j \\frac{1}{d_j} v_j u_j^\\top y,\\quad \\hat\\beta_{\\text{ridge}} = \\sum_j \\frac{d_j}{d_j^2+\\lambda} v_j u_j^\\top y$$",
+            "Fitted values scaled by $d_j^2/(d_j^2 + \\lambda)$ per direction: small-$d_j$ (collinear) directions are crushed."
+          ],
+          "cards": [
+            "MOD-SR02-02"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Properties",
+      "items": [
+        {
+          "t": "Condition number",
+          "d": [
+            "$d_{\\max}^2/d_{\\min}^2 \\to (d_{\\max}^2+\\lambda)/(d_{\\min}^2+\\lambda)$. Example: 18.2 → 6.49 at $\\lambda = 2$."
+          ],
+          "cards": [
+            "MOD-SR02-03"
+          ]
+        },
+        {
+          "t": "Limits",
+          "d": [
+            "$\\lambda \\to 0$: OLS.  $\\lambda \\to \\infty$: $\\hat\\beta \\approx X^\\top y/\\lambda$ (univariate composite), direction preserved."
+          ],
+          "cards": [
+            "MOD-SR02-04"
+          ]
+        },
+        {
+          "t": "Bias and variance",
+          "d": [
+            "$A = X^\\top X + \\lambda I$:  $E[\\hat\\beta] = A^{-1}X^\\top X\\beta$ (biased),  $\\mathrm{Var}(\\hat\\beta) = \\sigma^2 A^{-1}X^\\top X A^{-1}$ (smaller than OLS).",
+            "Some $\\lambda > 0$ always beats OLS in MSE."
+          ],
+          "cards": [
+            "MOD-SR02-05"
+          ]
+        },
+        {
+          "t": "Bayesian view",
+          "d": [
+            "Prior $\\beta \\sim N(0, \\tau^2 I)$, noise $\\sigma^2$ ⇒ Ridge = posterior mean = mode, with $\\lambda = \\sigma^2/\\tau^2$. Laplace prior ⇒ Lasso (mode only)."
+          ],
+          "cards": [
+            "MOD-SR02-06"
+          ]
+        },
+        {
+          "t": "Effective df",
+          "d": [
+            "$\\mathrm{df}(\\lambda) = \\sum_j d_j^2/(d_j^2+\\lambda)$, from $p$ down to 0. Example: 1.21 at $\\lambda = 2$."
+          ],
+          "cards": [
+            "MOD-SR02-07"
+          ]
+        },
+        {
+          "t": "Uncorrelated features",
+          "d": [
+            "$X^\\top X \\approx nI$ ⇒ $\\hat\\beta_{\\text{ridge}} \\approx \\frac{n}{n+\\lambda}\\hat\\beta_{OLS}$: same ranking, smaller size. Fixes $R^2_{OS}$, not RankIC; cannot drop noise features."
+          ],
+          "cards": [
+            "MOD-SR02-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Assumptions",
+      "items": [
+        {
+          "t": "Implicit assumptions",
+          "d": [
+            "Linear model; dense signal; signal in high-variance directions; comparable feature scales.",
+            "Fails when the signal is a difference of correlated features (small $d_j$)."
+          ],
+          "cards": [
+            "MOD-SR02-09"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Use",
+      "items": [
+        {
+          "t": "Strengths",
+          "d": [
+            "Unique stable solution; lower out-of-sample MSE when variance dominates; grouping effect; closed form, one hyper-parameter."
+          ],
+          "cards": [
+            "MOD-SR02-10"
+          ]
+        },
+        {
+          "t": "Weaknesses",
+          "d": [
+            "No selection; = scaled OLS when features are uncorrelated; biased; scale-sensitive and still squared loss."
+          ],
+          "cards": [
+            "MOD-SR02-11"
+          ]
+        },
+        {
+          "t": "When to use",
+          "d": [
+            "Default for many correlated weak predictors; the baseline every new model must beat on the same periods and costs."
+          ],
+          "cards": [
+            "MOD-SR02-12"
+          ]
+        },
+        {
+          "t": "Implementation",
+          "d": [
+            "scikit-learn `alpha` = $\\lambda$; intercept not penalised; standardise features, optionally $y$ (then $\\lambda \\approx 1/\\tau^2$, typically $10^3$–$10^6$). No random/LOO CV on panels. $p > n$: dual form $X^\\top(XX^\\top + \\lambda I)^{-1}y$."
+          ],
+          "cards": [
+            "MOD-SR02-13"
+          ]
+        },
+        {
+          "t": "Tuning λ",
+          "d": [
+            "Log grid, time-ordered validation. Argmax is noisy at low signal-to-noise; one-SE + RankIC drifts to the largest λ. Tune on MSE when forecast size matters."
+          ],
+          "cards": [
+            "MOD-SR02-14"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked example",
+      "items": [
+        {
+          "t": "Six stocks, λ = 2",
+          "d": [
+            "$$X^\\top X + 2I = \\begin{pmatrix}12 & 8\\\\ 8 & 10\\end{pmatrix},\\ \\det = 56$$",
+            "$\\hat\\beta = (0.2036,\\ 0.2071)$; after F +0.2: $(0.2464,\\ 0.1929)$.",
+            "Shrinkage factors 0.895 (strong) and 0.319 (weak)."
+          ],
+          "cards": [
+            "MOD-SR02-15",
+            "MOD-SR02-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "OLS vs Ridge",
+      "items": [
+        {
+          "t": "Same six stocks",
+          "d": [
+            "$\\hat\\beta$:  OLS $(0.200,\\ 0.2625)$  |  Ridge $(0.2036,\\ 0.2071)$",
+            "After F +0.2:  OLS $(0.300,\\ 0.1875)$  |  Ridge $(0.2464,\\ 0.1929)$",
+            "Change:  OLS $+50\\% / -29\\%$  |  Ridge $+21\\% / -7\\%$",
+            "Condition number:  OLS 18.2  |  Ridge 6.49",
+            "Ridge trades a little bias for much less variance."
+          ],
+          "cards": [
+            "MOD-SR02-15",
+            "MOD-SR02-16",
+            "MOD-SR02-03"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "Singular values vs eigenvalues",
+          "d": [
+            "$d_j$ = singular values of $X$; $d_j^2$ = eigenvalues of $X^\\top X$. The shrinkage factor uses $d_j^2$."
+          ],
+          "cards": [
+            "MOD-SR02-02"
+          ]
+        },
+        {
+          "t": "alpha vs λ",
+          "d": [
+            "scikit-learn calls $\\lambda$ `alpha`. Ridge has no $1/n$ in its objective; Lasso uses $\\tfrac{1}{2n}$, so the same number is a different penalty."
+          ],
+          "cards": [
+            "MOD-SR02-13"
+          ]
+        },
+        {
+          "t": "Scale of λ",
+          "d": [
+            "Its meaning depends on whether $y$ is standardised. With standardised $y$, $\\lambda \\approx 1/\\tau^2$."
+          ],
+          "cards": [
+            "MOD-SR02-13"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MOD-SR02-01",
+      "g": "Setting",
+      "k": "Objective and solution",
+      "q": "Ridge adds a penalty to OLS. $\\lambda \\ge 0$ is the penalty strength (a hyper-parameter), $I$ the $p \\times p$ identity, $\\lVert\\beta\\rVert_2^2 = \\sum_j \\beta_j^2$. (1) Write the objective. (2) Derive the closed form. (3) Why is the solution always unique for $\\lambda > 0$? (4) Name two cases where OLS has no unique solution but Ridge does.",
+      "pts": [
+        "(1) $$\\min_\\beta\\ \\lVert y - X\\beta\\rVert^2 + \\lambda\\lVert\\beta\\rVert_2^2$$",
+        "(2) Gradient $-2X^\\top y + 2X^\\top X\\beta + 2\\lambda\\beta = 0$, so $$\\hat\\beta_{\\text{ridge}} = (X^\\top X + \\lambda I)^{-1}X^\\top y$$",
+        "(3) $X^\\top X$ has eigenvalues $d_j^2 \\ge 0$; adding $\\lambda I$ makes them $d_j^2 + \\lambda \\ge \\lambda > 0$. The matrix is positive definite, hence invertible, and the objective is strictly convex.",
+        "(4) Perfect collinearity (one feature an exact combination of others) and $p > n$."
+      ],
+      "pit": "",
+      "src": "Ridge §3; Guide 2.2, B2",
+      "seen": [
+        "B2"
+      ]
+    },
+    {
+      "id": "MOD-SR02-02",
+      "g": "Setting",
+      "k": "SVD shrinkage",
+      "q": "Write $X = UDV^\\top$ with singular values $d_j \\ge 0$, left vectors $u_j$ (directions in the data) and right vectors $v_j$. (1) Write $\\hat\\beta_{OLS}$ and $\\hat\\beta_{\\text{ridge}}$ as sums over $j$. (2) Write the Ridge fitted values and name the shrinkage factor. (3) Which directions are shrunk most, and why does that target collinearity?",
+      "pts": [
+        "(1) $$\\hat\\beta_{OLS} = \\sum_j \\frac{1}{d_j}\\,v_j u_j^\\top y$$ $$\\hat\\beta_{\\text{ridge}} = \\sum_j \\frac{d_j}{d_j^2 + \\lambda}\\,v_j u_j^\\top y$$",
+        "(2) $$X\\hat\\beta_{\\text{ridge}} = \\sum_j u_j\\,\\frac{d_j^2}{d_j^2 + \\lambda}\\,u_j^\\top y$$ Shrinkage factor $d_j^2/(d_j^2 + \\lambda) \\in (0, 1]$; OLS has factor 1.",
+        "(3) Small $d_j$. OLS multiplies by $1/d_j$, which blows the noise up; Ridge's $d_j/(d_j^2 + \\lambda) \\to 0$ as $d_j \\to 0$. Collinearity is exactly a small singular value, so Ridge acts where the noise sits."
+      ],
+      "pit": "$d_j$ are singular values of $X$; $d_j^2$ are the eigenvalues of $X^\\top X$. Plugging eigenvalues in for $d_j$ gives the wrong factor.",
+      "src": "Ridge §3; Guide 2.2, B2",
+      "seen": [
+        "B2"
+      ]
+    },
+    {
+      "id": "MOD-SR02-03",
+      "g": "Properties",
+      "k": "Condition number",
+      "q": "(1) How does Ridge change the condition number of the matrix being inverted? (2) The eigenvalues of $X^\\top X$ are 17.06 and 0.94. Compute the condition number for OLS and for Ridge with $\\lambda = 2$.",
+      "pts": [
+        "(1) From $d_{\\max}^2/d_{\\min}^2$ to $(d_{\\max}^2 + \\lambda)/(d_{\\min}^2 + \\lambda)$.",
+        "(2) OLS: $17.06/0.94 = 18.2$. Ridge: $19.06/2.94 = 6.49$."
+      ],
+      "pit": "",
+      "src": "Guide B2",
+      "seen": [
+        "B2"
+      ]
+    },
+    {
+      "id": "MOD-SR02-04",
+      "g": "Properties",
+      "k": "Limits in λ",
+      "q": "(1) What does Ridge become as $\\lambda \\to 0$? (2) As $\\lambda \\to \\infty$, what is $\\hat\\beta$ approximately, and what is each coefficient proportional to? (3) What is preserved in that limit, and why does it matter when $\\lambda$ is tuned on a ranking score?",
+      "pts": [
+        "(1) OLS (when $X^\\top X$ is invertible).",
+        "(2) $\\hat\\beta \\approx X^\\top y/\\lambda$: coefficient $j$ is proportional to feature $j$'s covariance with the label, as if each feature were used on its own (the univariate composite).",
+        "(3) The direction: all coefficients shrink to 0 together but keep their relative sizes. A scale-free score such as RankIC does not penalise a huge $\\lambda$, so tuning on it can drift to the univariate composite."
+      ],
+      "pit": "",
+      "src": "Ridge §3",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-05",
+      "g": "Properties",
+      "k": "Bias and variance",
+      "q": "Assume $y = X\\beta + \\varepsilon$, $E[\\varepsilon\\mid X] = 0$, $\\mathrm{Var}(\\varepsilon\\mid X) = \\sigma^2 I$, and write $A = X^\\top X + \\lambda I$. (1) Find $E[\\hat\\beta_{\\text{ridge}}]$. Is it biased? (2) Find $\\mathrm{Var}(\\hat\\beta_{\\text{ridge}})$. (3) Compare with OLS and state the MSE result.",
+      "pts": [
+        "(1) $E[\\hat\\beta] = A^{-1}X^\\top X\\beta \\ne \\beta$ for $\\lambda > 0$ (unless $\\beta = 0$): biased towards 0.",
+        "(2) $$\\mathrm{Var}(\\hat\\beta) = \\sigma^2 A^{-1}X^\\top X A^{-1}$$",
+        "(3) Smaller than OLS's $\\sigma^2 (X^\\top X)^{-1}$: per eigen-direction $d_j^2/(d_j^2+\\lambda)^2 < 1/d_j^2$. There always exists some $\\lambda > 0$ whose MSE is below OLS's."
+      ],
+      "pit": "",
+      "src": "Guide B2",
+      "seen": [
+        "B2"
+      ]
+    },
+    {
+      "id": "MOD-SR02-06",
+      "g": "Properties",
+      "k": "Bayesian view",
+      "q": "Let $y\\mid\\beta \\sim N(X\\beta,\\ \\sigma^2 I)$ and prior $\\beta \\sim N(0,\\ \\tau^2 I)$. (1) Write the log posterior up to a constant. (2) Show that its maximiser is Ridge and give $\\lambda$. (3) Why is the Ridge estimate both the posterior mode and the posterior mean? (4) What does a large $\\lambda$ say about your beliefs?",
+      "pts": [
+        "(1) $$\\log p(\\beta\\mid y) = -\\frac{\\lVert y - X\\beta\\rVert^2}{2\\sigma^2} - \\frac{\\lVert\\beta\\rVert^2}{2\\tau^2} + c$$",
+        "(2) Multiply by $-2\\sigma^2$: minimise $\\lVert y - X\\beta\\rVert^2 + (\\sigma^2/\\tau^2)\\lVert\\beta\\rVert^2$, which is Ridge with $\\lambda = \\sigma^2/\\tau^2$.",
+        "(3) The log posterior is quadratic in $\\beta$, so the posterior is Gaussian and its mode equals its mean.",
+        "(4) A small prior variance $\\tau^2$: every coefficient is expected to be small, a sensible belief for weak return predictors."
+      ],
+      "pit": "A Laplace prior gives Lasso, but that posterior is not Gaussian, so Lasso is only the posterior mode (MAP), not the mean. The guide's B3 title calls Ridge “posterior mean (MAP)”: both are true only because the posterior is Gaussian.",
+      "src": "Ridge §3; Guide 2.2, B3",
+      "seen": [
+        "B3",
+        "A7"
+      ]
+    },
+    {
+      "id": "MOD-SR02-07",
+      "g": "Properties",
+      "k": "Effective df",
+      "q": "(1) Define the effective degrees of freedom $\\mathrm{df}(\\lambda)$ of Ridge. (2) What are its limits? (3) Compute it for eigenvalues 17.06 and 0.94 with $\\lambda = 2$.",
+      "pts": [
+        "(1) $$\\mathrm{df}(\\lambda) = \\sum_j \\frac{d_j^2}{d_j^2 + \\lambda}$$ the trace of the hat matrix $X(X^\\top X + \\lambda I)^{-1}X^\\top$: roughly how many coefficients the model is free to fit.",
+        "(2) $p$ at $\\lambda = 0$ (OLS), falling towards 0 as $\\lambda \\to \\infty$.",
+        "(3) $0.895 + 0.319 = 1.21$ (out of 2)."
+      ],
+      "pit": "",
+      "src": "Ridge §3",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-08",
+      "g": "Properties",
+      "k": "Uncorrelated features",
+      "q": "Features are standardised and uncorrelated, so $X^\\top X \\approx nI$. (1) Express $\\hat\\beta_{\\text{ridge}}$ in terms of $\\hat\\beta_{OLS}$. (2) Does Ridge change the ranking of stocks (RankIC)? (3) What does it fix, and when does that matter? (4) Can it separate 10 real features from 190 noise features?",
+      "pts": [
+        "(1) $\\hat\\beta_{\\text{ridge}} \\approx \\frac{n}{n + \\lambda}\\,\\hat\\beta_{OLS}$: the same vector, scaled down.",
+        "(2) No. Scaling preserves every rank, so RankIC and the correlation with the true signal are unchanged.",
+        "(3) The size of the forecasts. OLS forecasts include fitted noise and are too large, which drives $R^2_{OS}$ negative; shrinking pulls it back towards 0. Matters when forecasts are used as expected returns, e.g. to size positions in an optimiser.",
+        "(4) No. Every uncorrelated feature gets the same proportional shrinkage; zeroing useless features needs an L1 penalty (Lasso)."
+      ],
+      "pit": "",
+      "src": "Ridge §6, §11",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-09",
+      "g": "Assumptions",
+      "k": "Implicit assumptions",
+      "q": "(1) What model does Ridge assume? Beyond that, what does it implicitly assume about (2) how the signal is spread across coefficients, (3) which directions of feature space carry the signal, (4) feature scale? (5) Give a case where the third assumption fails.",
+      "pts": [
+        "(1) The same linear model as OLS: $E[y\\mid X] = X\\beta$.",
+        "(2) Dense: many small coefficients rather than a few big ones (the Gaussian prior).",
+        "(3) High-variance directions (large $d_j$), which Ridge barely shrinks.",
+        "(4) Comparable scales, e.g. all standardised: the penalty treats one unit of every coefficient the same.",
+        "(5) The signal is a difference of two highly correlated features (long value variant A, short variant B). It lies in a small-$d_j$ direction and Ridge shrinks it away."
+      ],
+      "pit": "",
+      "src": "Ridge §4; Guide 2.2",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-10",
+      "g": "Use",
+      "k": "Strengths",
+      "q": "Give four strengths of Ridge: (1) the solution, (2) out-of-sample error, (3) correlated features, (4) cost.",
+      "pts": [
+        "(1) Always a unique, stable solution; coefficients barely move from one training window to the next.",
+        "(2) Lower out-of-sample MSE than OLS whenever variance dominates, which is almost always true for returns.",
+        "(3) Grouping effect: correlated features share the weight instead of one taking all of it.",
+        "(4) Closed form, as fast as OLS, one hyper-parameter $\\lambda$."
+      ],
+      "pit": "",
+      "src": "Ridge §5; Guide 2.2",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-11",
+      "g": "Use",
+      "k": "Weaknesses",
+      "q": "Give four weaknesses of Ridge: (1) feature selection, (2) uncorrelated features, (3) bias, (4) scaling and outliers.",
+      "pts": [
+        "(1) No variable selection: every coefficient stays non-zero, so you cannot read off which features matter.",
+        "(2) With uncorrelated features it is just OLS scaled down: the ranking does not change.",
+        "(3) Biased: coefficients are systematically too small; heavy shrinkage hurts $R^2$ even when it helps ranking.",
+        "(4) Sensitive to feature scaling, so standardise first. Still squared loss, so extreme labels still pull the fit."
+      ],
+      "pit": "",
+      "src": "Ridge §6; Guide 2.2",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-12",
+      "g": "Use",
+      "k": "When to use",
+      "q": "(1) For what kind of feature set is Ridge the default? (2) What is its role when evaluating a new model? (3) A deep model cannot beat Ridge. What do you (3a) check and (3b) try?",
+      "pts": [
+        "(1) Tens to hundreds of correlated, weak predictors: most return-prediction problems.",
+        "(2) The mandatory baseline: a new model must beat a well-tuned Ridge on the same training and test periods (and the same costs).",
+        "(3a) Accept it may be the true answer at low signal-to-noise. Check whether hand-made features already do the nonlinear work, sample size, regularisation and early stopping, seed-to-seed variance, and whether the training loss (MSE) matches the metric (IC).",
+        "(3b) An IC or ranking loss; multi-seed ensembles; blending with Ridge (judge the gain from low correlation); or use the network on data Ridge cannot handle (text, raw sequences, stock graphs)."
+      ],
+      "pit": "",
+      "src": "Ridge §7; Guide 2.2, D6",
+      "seen": [
+        "D6"
+      ]
+    },
+    {
+      "id": "MOD-SR02-13",
+      "g": "Use",
+      "k": "Implementation",
+      "q": "Implementing Ridge in scikit-learn on a stock panel. (1) What is `alpha`, and is the intercept penalised? (2) How are features prepared, and why standardise $y$ too? (3) Why not use `RidgeCV`'s default leave-one-out? (4) Complexity, and what to do when $p > n$?",
+      "pts": [
+        "(1) `alpha` $= \\lambda$. The intercept is not penalised.",
+        "(2) Standardise features cross-sectionally each date, since the penalty is scale-dependent. Dividing $y$ by its training sd makes $\\lambda$ scale-free: then $\\lambda \\approx 1/\\tau^2$ in label-sd units, so weak return signals need large values ($10^3$ to $10^6$).",
+        "(3) It drops one row at a time, ignoring time order and the many rows that share a date: leakage and over-optimistic scores. Use time-ordered validation periods.",
+        "(4) $O(np^2 + p^3)$. For $p > n$ use the dual form $X^\\top(XX^\\top + \\lambda I)^{-1}y$, cost $O(n^2p + n^3)$."
+      ],
+      "pit": "scikit-learn's Ridge objective has no $1/n$ factor, while its Lasso uses $\\tfrac{1}{2n}$. The same `alpha` means a different penalty in the two.",
+      "src": "Ridge §8; Guide 2.2",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-14",
+      "g": "Use",
+      "k": "Tuning λ",
+      "q": "Choosing $\\lambda$. (1) What grid and what validation scheme? (2) Define the argmax rule and the one-standard-error rule. (3) Why is the argmax choice noisy at return signal-to-noise? (4) With RankIC as the score, which $\\lambda$ does the one-SE rule tend to pick, and why? (5) How should the tuning metric be chosen?",
+      "pts": [
+        "(1) A log grid (e.g. 1 to $10^6$). Fit on the training period, score on a later validation period (dates, not random rows), refit on train + validation, roll forward.",
+        "(2) Argmax: the best validation score. One-SE: the largest $\\lambda$ whose score is within one standard error of the best, i.e. the most penalised model that is statistically as good.",
+        "(3) Validation RankIC differs across $\\lambda$ by a few thousandths while its standard error is around 0.01, so the chosen $\\lambda$ is mostly noise and jumps between windows.",
+        "(4) The largest. RankIC ignores scale, so heavy shrinkage costs nothing on validation and Ridge drifts to the univariate composite $X^\\top y$.",
+        "(5) The metric decides what you optimise: RankIC if you only rank; MSE or $R^2$ if the forecast size feeds position sizing."
+      ],
+      "pit": "",
+      "src": "Ridge §8, §11; Guide 2.2",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-15",
+      "g": "Worked example",
+      "k": "Hand solve, λ = 2",
+      "q": "Same six stocks as for OLS: $X^\\top X = \\begin{pmatrix}10 & 8\\\\ 8 & 8\\end{pmatrix}$, $X^\\top y = (4.1,\\ 3.7)$, $\\hat\\beta_{OLS} = (0.200,\\ 0.2625)$. Take $\\lambda = 2$. (1) Write $X^\\top X + 2I$ and its inverse. (2) Compute $\\hat\\beta_{\\text{ridge}}$. (3) Compare with OLS.",
+      "pts": [
+        "(1) $$X^\\top X + 2I = \\begin{pmatrix}12 & 8\\\\ 8 & 10\\end{pmatrix}$$ $\\det = 120 - 64 = 56$, inverse $\\frac{1}{56}\\begin{pmatrix}10 & -8\\\\ -8 & 12\\end{pmatrix}$.",
+        "(2) $\\frac{1}{56}(41 - 29.6,\\ -32.8 + 44.4) = \\frac{1}{56}(11.4,\\ 11.6) = (0.2036,\\ 0.2071)$.",
+        "(3) The two correlated coefficients are pulled towards each other: $(0.200, 0.2625) \\to (0.204, 0.207)$."
+      ],
+      "pit": "",
+      "src": "Ridge §9; Ex 2.2",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR02-16",
+      "g": "Worked example",
+      "k": "Perturb + shrinkage",
+      "q": "Same data, $\\lambda = 2$. Raise stock F's return by 0.2 (F has $(x_1, x_2) = (2, 1)$), so $X^\\top y = (4.5,\\ 3.9)$. (1) New $\\hat\\beta_{\\text{ridge}}$ and the % changes, against OLS's $+50\\%$ / $-29\\%$. (2) Shrinkage factors for the eigenvalues 17.06 and 0.94. (3) What is the price?",
+      "pts": [
+        "(1) $\\frac{1}{56}(45 - 31.2,\\ -36 + 46.8) = (0.2464,\\ 0.1929)$: $+21\\%$ / $-7\\%$, against OLS $+50\\%$ / $-29\\%$.",
+        "(2) $17.06/19.06 = 0.895$ for the strong direction; $0.94/2.94 = 0.319$ for the weak $x_1 - x_2$ direction, which loses about 70%.",
+        "(3) Bias: even the true coefficients come out too small and are pulled towards each other."
+      ],
+      "pit": "",
+      "src": "Ridge §9; Ex 2.2",
+      "seen": []
+    }
+  ]
+}

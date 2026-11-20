@@ -1,0 +1,429 @@
+{
+  "title": "OLS",
+  "notes": [
+    {
+      "h": "Setting",
+      "items": [
+        {
+          "t": "Model and estimator",
+          "d": [
+            "$n$ rows, $p$ features; $y$ labels, $X$ is $n \\times p$, $\\beta$ true coefficients, $\\varepsilon$ noise with variance $\\sigma^2$.",
+            "$$y = X\\beta + \\varepsilon,\\qquad \\hat\\beta_{OLS} = \\arg\\min_\\beta \\lVert y - X\\beta\\rVert^2 = (X^\\top X)^{-1}X^\\top y$$",
+            "No penalty, no outlier protection: OLS trusts the sample completely."
+          ],
+          "cards": [
+            "MOD-SR01-01"
+          ]
+        },
+        {
+          "t": "Normal equations",
+          "d": [
+            "1. $S(\\beta) = y^\\top y - 2\\beta^\\top X^\\top y + \\beta^\\top X^\\top X\\beta$.",
+            "2. $\\nabla S = 0 \\Rightarrow X^\\top X\\hat\\beta = X^\\top y$.",
+            "3. Hessian $2X^\\top X \\succeq 0$ ⇒ global minimum. Residuals ⟂ every feature column."
+          ],
+          "cards": [
+            "MOD-SR01-02"
+          ]
+        },
+        {
+          "t": "Mean and variance",
+          "d": [
+            "$$\\hat\\beta = \\beta + (X^\\top X)^{-1}X^\\top\\varepsilon$$",
+            "$E[\\varepsilon\\mid X] = 0 \\Rightarrow$ unbiased.  $\\mathrm{Var}(\\varepsilon\\mid X) = \\sigma^2 I \\Rightarrow \\mathrm{Var}(\\hat\\beta) = \\sigma^2(X^\\top X)^{-1}$."
+          ],
+          "cards": [
+            "MOD-SR01-03"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Assumptions",
+      "items": [
+        {
+          "t": "Four assumptions",
+          "d": [
+            "1. Linearity $E[y\\mid X] = X\\beta$.  2. Exogeneity $E[\\varepsilon\\mid X] = 0$ (no look-ahead).  3. $X^\\top X$ invertible.  4. $\\mathrm{Var}(\\varepsilon\\mid X) = \\sigma^2 I$.",
+            "Only 4 is about standard errors; 1–2 give unbiasedness."
+          ],
+          "cards": [
+            "MOD-SR01-04"
+          ]
+        },
+        {
+          "t": "Violations in finance",
+          "d": [
+            "Fat tails, same-date clustering, overlapping labels ⇒ use Newey–West (HAC) or clustered SEs. These change the SEs, not $\\hat\\beta$."
+          ],
+          "cards": [
+            "MOD-SR01-05"
+          ]
+        },
+        {
+          "t": "Gauss–Markov",
+          "d": [
+            "Under 1–4, OLS is BLUE (minimum variance among linear unbiased estimators). No normality needed. Shrinkage drops “unbiased” to cut MSE = Var + Bias²."
+          ],
+          "cards": [
+            "MOD-SR01-06"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Variance problems",
+      "items": [
+        {
+          "t": "VIF",
+          "d": [
+            "Standardised features: $$\\mathrm{Var}(\\hat\\beta_j) = \\frac{\\sigma^2}{n}\\cdot\\frac{1}{1-R_j^2}$$",
+            "Two features: VIF $= 1/(1-\\rho^2)$: 5.26 at $\\rho = 0.9$, 50.3 at $\\rho = 0.99$ (SE ×2.29, ×7.09).",
+            "Same thing in eigen terms: a tiny eigenvalue of $X^\\top X$."
+          ],
+          "cards": [
+            "MOD-SR01-07"
+          ]
+        },
+        {
+          "t": "Cost of extra features",
+          "d": [
+            "$$R^2_{OS} \\approx R^2_{\\text{true}} - \\frac{p}{n},\\qquad \\mathrm{corr}(\\hat y,\\mu) \\approx \\sqrt{\\frac{R^2_{\\text{true}}}{R^2_{\\text{true}} + p/n}}$$",
+            "Returns: $R^2 = IC^2 = 0.05^2 = 0.0025$ ⇒ negative $R^2_{OS}$ beyond 25 features per 10,000 rows. Independent of correlation structure."
+          ],
+          "cards": [
+            "MOD-SR01-08"
+          ]
+        },
+        {
+          "t": "Coefficients vs predictions",
+          "d": [
+            "Collinearity scrambles coefficients (wrong signs) but not predictions, because the error lies in directions like $x_1 - x_2$ where features keep moving together. Breaks if the correlation structure changes."
+          ],
+          "cards": [
+            "MOD-SR01-09"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Use",
+      "items": [
+        {
+          "t": "Strengths",
+          "d": [
+            "Closed form, no hyper-parameters; unbiased; interpretable (Fama–MacBeth, betas, incremental tests); BLUE."
+          ],
+          "cards": [
+            "MOD-SR01-10"
+          ]
+        },
+        {
+          "t": "Weaknesses",
+          "d": [
+            "Variance explodes under collinearity; costs $p/n$ of $R^2$; squared loss is outlier-sensitive; linear only."
+          ],
+          "cards": [
+            "MOD-SR01-11"
+          ]
+        },
+        {
+          "t": "When to use",
+          "d": [
+            "Few low-correlated features + large sample; incremental-value tests with HAC SEs; beta estimation; always as the baseline."
+          ],
+          "cards": [
+            "MOD-SR01-12"
+          ]
+        },
+        {
+          "t": "Implementation",
+          "d": [
+            "QR/SVD solver, never explicit $(X^\\top X)^{-1}$. Per-date winsorise + z-score features, demean label. Optional WLS with $\\sqrt{\\text{cap}}$ weights. $O(np^2 + p^3)$, needs $n \\gg p$."
+          ],
+          "cards": [
+            "MOD-SR01-13"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked example",
+      "items": [
+        {
+          "t": "Six stocks",
+          "d": [
+            "$x_1 = (-2,-1,0,0,1,2)$, $x_2 = (-2,-1,0,1,1,1)$, $y = (-1.0,-0.2,0.1,0.4,0.3,0.8)$.",
+            "$$X^\\top X = \\begin{pmatrix}10 & 8\\\\ 8 & 8\\end{pmatrix},\\quad X^\\top y = (4.1,\\ 3.7)$$",
+            "$\\hat\\beta = (0.200,\\ 0.2625)$. F's return +0.2 ⇒ $(0.300,\\ 0.1875)$: +50% / −29%.",
+            "Eigenvalues $9 \\pm \\sqrt{65} = 17.06,\\ 0.94$; condition number 18.2."
+          ],
+          "cards": [
+            "MOD-SR01-14",
+            "MOD-SR01-15"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "Three different R²",
+          "d": [
+            "$R_j^2$: feature $j$ on the other features (VIF).  $R^2_{\\text{true}}$: best possible, from the true $\\mu$.  $R^2_{OS}$: out of sample, can be negative."
+          ],
+          "cards": [
+            "MOD-SR01-07",
+            "MOD-SR01-08"
+          ]
+        },
+        {
+          "t": "Transpose",
+          "d": [
+            "The guide writes $X'$ for $X^\\top$. Same object."
+          ],
+          "cards": []
+        },
+        {
+          "t": "“Beta”",
+          "d": [
+            "$\\beta$ = regression coefficients; a stock's market beta (exposure) is a different quantity."
+          ],
+          "cards": [
+            "MOD-SR01-12"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MOD-SR01-01",
+      "g": "Setting",
+      "k": "Model and estimator",
+      "q": "Setting: $n$ observations, $p$ features. $y$ is the $n$-vector of labels (next-period returns), $X$ the $n \\times p$ feature matrix, $\\beta$ the $p$ true coefficients, $\\varepsilon$ the noise with variance $\\sigma^2$. (1) Write the linear model. (2) Write the OLS objective. (3) Give the closed-form estimate and the condition it needs. (4) What does the objective leave out, and why does that matter for stock returns?",
+      "pts": [
+        "(1) $y = X\\beta + \\varepsilon$.",
+        "(2) $\\hat\\beta = \\arg\\min_\\beta \\lVert y - X\\beta \\rVert^2$: the sum of squared errors on the training data, nothing else.",
+        "(3) $$\\hat\\beta_{OLS} = (X^\\top X)^{-1} X^\\top y$$ Needs $X^\\top X$ invertible (rank $p$).",
+        "(4) No penalty on coefficient size and no protection against outliers: OLS trusts the sample completely. In returns the signal is tiny relative to the noise, so OLS fits the noise as faithfully as the signal."
+      ],
+      "pit": "",
+      "src": "OLS §2–3; Guide 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-02",
+      "g": "Setting",
+      "k": "Normal equations",
+      "q": "Derive the OLS estimate from $S(\\beta) = (y - X\\beta)^\\top (y - X\\beta)$. (1) Expand $S(\\beta)$. (2) Set the gradient to zero and solve. (3) Why is the stationary point a minimum? (4) What do the normal equations say about the residuals?",
+      "pts": [
+        "(1) $S(\\beta) = y^\\top y - 2\\beta^\\top X^\\top y + \\beta^\\top X^\\top X \\beta$.",
+        "(2) $\\nabla S = -2X^\\top y + 2X^\\top X\\beta = 0$, so $X^\\top X\\hat\\beta = X^\\top y$ (the normal equations) and $\\hat\\beta = (X^\\top X)^{-1}X^\\top y$.",
+        "(3) The Hessian $2X^\\top X$ is PSD because $w^\\top X^\\top X w = \\lVert Xw\\rVert^2 \\ge 0$. So $S$ is convex and the stationary point is a global minimum (unique if $X^\\top X \\succ 0$).",
+        "(4) $X^\\top (y - X\\hat\\beta) = 0$: the residuals are orthogonal to every feature column."
+      ],
+      "pit": "The gradient of $\\beta^\\top X^\\top X\\beta$ is $2X^\\top X\\beta$, not $X^\\top X\\beta$; the factor 2 cancels against the $-2X^\\top y$ term.",
+      "src": "Guide B1",
+      "seen": [
+        "B1"
+      ]
+    },
+    {
+      "id": "MOD-SR01-03",
+      "g": "Setting",
+      "k": "Mean and variance",
+      "q": "Substitute $y = X\\beta + \\varepsilon$ into $\\hat\\beta = (X^\\top X)^{-1}X^\\top y$. (1) What is $\\hat\\beta$ made of? (2) Under which assumption is $\\hat\\beta$ unbiased? (3) Under which assumption is $\\mathrm{Var}(\\hat\\beta) = \\sigma^2 (X^\\top X)^{-1}$? Show the step. (4) In which directions of feature space is this variance large?",
+      "pts": [
+        "(1) $$\\hat\\beta = \\beta + (X^\\top X)^{-1}X^\\top \\varepsilon$$ the truth plus a noise term.",
+        "(2) Exogeneity $E[\\varepsilon\\mid X]=0$: then $E[\\hat\\beta\\mid X] = \\beta$.",
+        "(3) $\\mathrm{Var}(\\varepsilon\\mid X) = \\sigma^2 I$: $$\\mathrm{Var}(\\hat\\beta) = (X^\\top X)^{-1}X^\\top (\\sigma^2 I) X (X^\\top X)^{-1} = \\sigma^2(X^\\top X)^{-1}$$",
+        "(4) Along eigenvectors of $X^\\top X$ with small eigenvalues (directions in which the features barely vary): $(X^\\top X)^{-1}$ divides by them."
+      ],
+      "pit": "",
+      "src": "OLS §3; Guide B1",
+      "seen": [
+        "B1"
+      ]
+    },
+    {
+      "id": "MOD-SR01-04",
+      "g": "Assumptions",
+      "k": "Four assumptions",
+      "q": "OLS rests on four assumptions. State each formally and say what it means in a return-forecasting setup: (1) linearity, (2) exogeneity, (3) no perfect collinearity, (4) the error structure.",
+      "pts": [
+        "(1) $E[y\\mid X] = X\\beta$: on average the label is linear in the features.",
+        "(2) $E[\\varepsilon\\mid X] = 0$. In prediction: features use only information known at the forecast date $t$ (no look-ahead).",
+        "(3) $X^\\top X$ invertible: no feature is an exact linear combination of others, and $n \\ge p$.",
+        "(4) $\\mathrm{Var}(\\varepsilon\\mid X) = \\sigma^2 I$: the same noise variance for every row and no correlation across rows."
+      ],
+      "pit": "",
+      "src": "OLS §4; Guide 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-05",
+      "g": "Assumptions",
+      "k": "Violations in finance",
+      "q": "Assumption (4), homoskedastic and uncorrelated errors, routinely fails on a stock panel. (1) Does the failure bias $\\hat\\beta$? (2) Name three ways financial data violates it. (3) What do you use for inference instead? (4) Do Newey–West standard errors change $\\hat\\beta$?",
+      "pts": [
+        "(1) No. Unbiasedness needs only linearity and exogeneity; the failure affects the standard errors (and efficiency).",
+        "(2) Fat tails (extreme returns far more frequent than normal); clustering (stocks on the same date share common shocks); overlapping labels (multi-month returns that share months, so errors are serially correlated).",
+        "(3) Newey–West (HAC) standard errors for serial correlation; standard errors clustered by date and/or firm for common shocks.",
+        "(4) No. They replace $\\sigma^2 (X^\\top X)^{-1}$ by a robust covariance; the point estimate is unchanged."
+      ],
+      "pit": "Robust standard errors fix inference only. Outliers still pull the point estimate through the squared loss; that needs a robust loss (Huber) or a winsorised label.",
+      "src": "OLS §4, §12 Q3; Guide 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-06",
+      "g": "Assumptions",
+      "k": "Gauss–Markov",
+      "q": "(1) State the Gauss–Markov theorem with its conditions. (2) Which word in it do Ridge and the other shrinkage models give up? (3) Why can giving it up pay off for returns?",
+      "pts": [
+        "(1) Under linearity, exogeneity, full rank and $\\mathrm{Var}(\\varepsilon\\mid X) = \\sigma^2 I$, OLS is BLUE: among all linear unbiased estimators it has the smallest variance. Normality is not needed.",
+        "(2) “Unbiased”. Ridge is linear but biased, so the theorem says nothing against it.",
+        "(3) $\\text{MSE} = \\text{Var} + \\text{Bias}^2$. At return signal-to-noise the variance dominates, so a little bias can buy a large variance cut and a lower out-of-sample error."
+      ],
+      "pit": "BLUE does not mean lowest MSE: the comparison is only within linear unbiased estimators.",
+      "src": "OLS §5; Guide B1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-07",
+      "g": "Variance problems",
+      "k": "VIF",
+      "q": "Features are standardised (mean 0, sd 1). $R_j^2$ is the $R^2$ of regressing feature $j$ on all the other features. (1) Write $\\mathrm{Var}(\\hat\\beta_j)$ in terms of $\\sigma^2$, $n$ and $R_j^2$. (2) Define the VIF and say what sends it to infinity. (3) With two features of correlation $\\rho$, compute the VIF and the standard-error inflation for $\\rho = 0.9$ and $\\rho = 0.99$. (4) Restate collinearity in eigenvalue terms.",
+      "pts": [
+        "(1) $$\\mathrm{Var}(\\hat\\beta_j) = \\frac{\\sigma^2}{n}\\cdot\\frac{1}{1 - R_j^2}$$",
+        "(2) $\\mathrm{VIF}_j = 1/(1 - R_j^2)$. It goes to $\\infty$ as feature $j$ becomes an exact combination of the others ($R_j^2 \\to 1$).",
+        "(3) Two features: $R_j^2 = \\rho^2$, so VIF $= 1/(1-\\rho^2)$. $\\rho = 0.9$: VIF $= 5.26$, SE $\\times 2.29$. $\\rho = 0.99$: VIF $= 50.3$, SE $\\times 7.09$.",
+        "(4) $X^\\top X$ has a tiny eigenvalue (a direction in which the features barely vary) and $(X^\\top X)^{-1}$ divides by it. Condition number = largest ÷ smallest eigenvalue."
+      ],
+      "pit": "A high VIF inflates variance but creates no bias: the estimate is still unbiased, just unreliable in any one sample.",
+      "src": "OLS §3; Ex 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-08",
+      "g": "Variance problems",
+      "k": "Cost of extra features",
+      "q": "Take $\\mathrm{Var}(y) = 1$. $R^2_{\\text{true}}$ is the share of $\\mathrm{Var}(y)$ explained by the true mean $\\mu = x^\\top\\beta$; $R^2_{OS}$ is the out-of-sample $R^2$ of OLS. (1) What is the average variance of the prediction error $x^\\top(\\hat\\beta - \\beta)$? (2) Give the approximations for $R^2_{OS}$ and $\\mathrm{corr}(\\hat y, \\mu)$. (3) Returns have IC $\\approx 0.05$. What is $R^2_{\\text{true}}$, and how many features per 10,000 observations make $R^2_{OS}$ negative? (4) Does this depend on collinearity?",
+      "pts": [
+        "(1) About $\\sigma^2 p/n$ ($\\approx p/n$ here): each feature carries a random coefficient error of size $\\sim\\sigma/\\sqrt n$.",
+        "(2) $$R^2_{OS} \\approx R^2_{\\text{true}} - \\frac{p}{n}$$ $$\\mathrm{corr}(\\hat y,\\mu) \\approx \\sqrt{\\frac{R^2_{\\text{true}}}{R^2_{\\text{true}} + p/n}}$$",
+        "(3) For one linear predictor $R^2 = IC^2 = 0.0025$. $R^2_{OS} < 0$ once $p/n > 0.0025$: only 25 features per 10,000 rows.",
+        "(4) No. The $p/n$ cost holds whatever the correlation structure."
+      ],
+      "pit": "“A useless feature just gets a coefficient near 0” is wrong at this signal-to-noise: it gets a random coefficient, and the random coefficients add up.",
+      "src": "OLS §3",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-09",
+      "g": "Variance problems",
+      "k": "Coefs vs predictions",
+      "q": "Features are highly correlated (say $\\rho = 0.99$), $p/n$ is small, and the true coefficients all have the same sign. (1) Are the OLS coefficients reliable? (2) Are the OLS predictions reliable? (3) Why the difference? (4) When does this stop protecting you?",
+      "pts": [
+        "(1) No. Their variance is huge and individual coefficients often have the wrong sign, so “which feature matters” cannot be read off.",
+        "(2) Largely yes: the correlation with the true signal barely drops.",
+        "(3) The coefficient error lies in small-eigenvalue directions such as $x_1 - x_2$. Out of sample the features still move together, so $x^\\top(\\hat\\beta - \\beta)$ stays small.",
+        "(4) When the correlation structure changes (regime change, new data vendor): the wild coefficients become wild predictions. Also, coefficients are what you explain to a portfolio manager."
+      ],
+      "pit": "If the true signal were itself a difference such as $x_1 - x_2$, it would sit in the poorly identified direction and the predictions would suffer too.",
+      "src": "OLS §3, §11",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-10",
+      "g": "Use",
+      "k": "Strengths",
+      "q": "Give four strengths of OLS, each with why it matters: (1) computation, (2) bias, (3) interpretability and where it is used, (4) the optimality result.",
+      "pts": [
+        "(1) Closed form, fast, deterministic, no hyper-parameters to tune.",
+        "(2) Unbiased under exogeneity: on average the coefficients are right.",
+        "(3) Coefficients are interpretable. Core of Fama–MacBeth regressions, factor-exposure (beta) estimation, and “does feature $j$ add information?” tests.",
+        "(4) Gauss–Markov: best linear unbiased estimator."
+      ],
+      "pit": "",
+      "src": "OLS §5; Guide 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-11",
+      "g": "Use",
+      "k": "Weaknesses",
+      "q": "Give four weaknesses of OLS for return prediction and why each happens: (1) under collinearity, (2) as $p/n$ grows, (3) with outliers, (4) in functional form.",
+      "pts": [
+        "(1) Coefficient variance explodes (factor $1/(1-R_j^2)$): coefficients swing and flip sign between training windows.",
+        "(2) Estimation noise costs about $p/n$ of $R^2$: at return signal-to-noise a few dozen features make forecasts worse than predicting zero.",
+        "(3) Squared loss: one extreme or wrong label can pull the whole fit.",
+        "(4) Linear only: no nonlinearities or interactions unless engineered as features."
+      ],
+      "pit": "",
+      "src": "OLS §6; Guide 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-12",
+      "g": "Use",
+      "k": "When to use",
+      "q": "(1) Name three situations where OLS is the right tool. (2) What is its role in every model comparison, and what is the rule?",
+      "pts": [
+        "(1a) A handful of low-correlated features with an economic story and a large sample.",
+        "(1b) Testing the incremental value of one feature, with Newey–West (HAC) standard errors.",
+        "(1c) Estimating factor exposures (betas), where unbiasedness matters more than prediction error.",
+        "(2) Always the baseline: if a fancier model cannot beat OLS on the same training and test periods, it is not learning anything useful."
+      ],
+      "pit": "",
+      "src": "OLS §7; Guide 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-13",
+      "g": "Use",
+      "k": "Implementation",
+      "q": "Implementing OLS on a stock panel. (1) How should the solver compute $\\hat\\beta$, and why? (2) How are features and the label preprocessed each date? (3) What weighting is common in cross-sectional regressions, and why? (4) Time complexity and data requirement?",
+      "pts": [
+        "(1) QR or SVD (e.g. a least-squares routine). Never form $(X^\\top X)^{-1}$ explicitly: it is numerically unstable when features are collinear.",
+        "(2) Per date, winsorise each feature and z-score it across stocks; label = return minus that date's cross-sectional mean. Scaling does not change predictions but makes coefficients comparable.",
+        "(3) WLS with weights $\\propto \\sqrt{\\text{market cap}}$, so micro caps do not dominate.",
+        "(4) $O(np^2 + p^3)$; needs $n \\gg p$."
+      ],
+      "pit": "",
+      "src": "OLS §8; Guide 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-14",
+      "g": "Worked example",
+      "k": "Hand solve 2×2",
+      "q": "Six stocks, two demeaned value characteristics (correlation 0.894), next-period returns in %: $x_1 = (-2,-1,0,0,1,2)$, $x_2 = (-2,-1,0,1,1,1)$, $y = (-1.0,-0.2,0.1,0.4,0.3,0.8)$. No intercept. (1) Compute $X^\\top X$ and $X^\\top y$. (2) Invert $X^\\top X$. (3) Compute $\\hat\\beta_{OLS}$.",
+      "pts": [
+        "(1) $$X^\\top X = \\begin{pmatrix}10 & 8\\\\ 8 & 8\\end{pmatrix}$$ $X^\\top y = (4.1,\\ 3.7)$.",
+        "(2) $\\det = 80 - 64 = 16$: $$(X^\\top X)^{-1} = \\frac{1}{16}\\begin{pmatrix}8 & -8\\\\ -8 & 10\\end{pmatrix}$$",
+        "(3) $\\hat\\beta = \\frac{1}{16}(32.8 - 29.6,\\ -32.8 + 37) = \\frac{1}{16}(3.2,\\ 4.2) = (0.200,\\ 0.2625)$."
+      ],
+      "pit": "",
+      "src": "OLS §9; Ex 2.1",
+      "seen": []
+    },
+    {
+      "id": "MOD-SR01-15",
+      "g": "Worked example",
+      "k": "Perturbation test",
+      "q": "Same data: $X^\\top X = \\begin{pmatrix}10 & 8\\\\ 8 & 8\\end{pmatrix}$, $X^\\top y = (4.1,\\ 3.7)$, $\\hat\\beta = (0.200,\\ 0.2625)$. Stock F has $(x_1, x_2) = (2, 1)$. Raise F's return from 0.8 to 1.0. (1) New $X^\\top y$ and $\\hat\\beta$. (2) Percentage change of each coefficient. (3) Eigenvalues and condition number of $X^\\top X$. (4) Explain the instability.",
+      "pts": [
+        "(1) $X^\\top y$ rises by $0.2\\cdot(2, 1) = (0.4,\\ 0.2)$ to $(4.5,\\ 3.9)$; $\\hat\\beta = \\frac{1}{16}(4.8,\\ 3.0) = (0.300,\\ 0.1875)$.",
+        "(2) $\\hat\\beta_1$ $+50\\%$, $\\hat\\beta_2$ $-29\\%$, from a 0.2-point change in one stock.",
+        "(3) Trace 18, det 16, so $\\lambda = 9 \\pm \\sqrt{65} = 17.06,\\ 0.94$. Condition number $= 18.2$.",
+        "(4) The small eigenvalue belongs to roughly the $x_1 - x_2$ direction. The data says almost nothing about it, so noise along it is amplified by $1/0.94$."
+      ],
+      "pit": "",
+      "src": "OLS §9; Ex 2.1",
+      "seen": []
+    }
+  ]
+}
