@@ -1,0 +1,1178 @@
+{
+  "title": "KKT conditions",
+  "notes": [
+    {
+      "h": "Formulation",
+      "items": [
+        {
+          "t": "Standard form",
+          "d": [
+            "$$\\min f(x) \\quad \\text{s.t.} \\quad g_i(x) \\le 0\\ (i = 1, \\dots, m), \\qquad h_j(x) = 0\\ (j = 1, \\dots, l)$$",
+            "$\\max f \\to \\min -f$;  $a(x) \\ge b \\to b - a(x) \\le 0$;  $x \\ge 0 \\to -x \\le 0$. The sign rule $u \\ge 0$ holds only after this conversion."
+          ],
+          "cards": [
+            "NLO-06-01"
+          ]
+        },
+        {
+          "t": "Quadratic program",
+          "d": [
+            "$\\min \\tfrac12 x^\\top Q x + c^\\top x$ s.t. $Ax \\le b_1$, $Dx = b_2$, with $Q$ symmetric. Convex iff $Q \\succeq 0$.",
+            "Reading off $Q$: $Q_{ii} = 2 \\times$ coefficient of $x_i^2$; $Q_{ij}$ = coefficient of $x_ix_j$."
+          ],
+          "cards": [
+            "NLO-06-02"
+          ]
+        },
+        {
+          "t": "MVO",
+          "d": [
+            "$\\min x^\\top \\Sigma x$ s.t. $\\mu^\\top x \\ge R$, $\\mathbf{1}^\\top x = 1$, $x \\ge 0$. A convex QP with $Q = 2\\Sigma$."
+          ],
+          "cards": [
+            "NLO-06-03"
+          ]
+        },
+        {
+          "t": "SVM",
+          "d": [
+            "$\\min \\lVert w \\rVert^2$ over $(w, b)$ s.t. $y_i(w^\\top x_i + b) \\ge 1$. Margin $= 2/\\lVert w \\rVert$. Support vectors are the points with multiplier $\\alpha_i > 0$."
+          ],
+          "cards": [
+            "NLO-06-03",
+            "NLO-06-21"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "KKT conditions",
+      "items": [
+        {
+          "t": "The four conditions",
+          "d": [
+            "Primal feasibility: $g(\\bar x) \\le 0$, $h(\\bar x) = 0$.",
+            "Stationarity:",
+            "$$\\nabla f(\\bar x) + \\sum_i u_i \\nabla g_i(\\bar x) + \\sum_j v_j \\nabla h_j(\\bar x) = 0$$",
+            "Dual feasibility: $u_i \\ge 0$, $v_j$ free.",
+            "Complementary slackness: $u_i\\,g_i(\\bar x) = 0$."
+          ],
+          "cards": [
+            "NLO-06-04"
+          ]
+        },
+        {
+          "t": "KKT necessary theorem",
+          "d": [
+            "If $\\bar x$ is a local minimum and LICQ holds at $\\bar x$, then multipliers $u, v$ satisfying the four conditions exist (and are unique)."
+          ],
+          "cards": [
+            "NLO-06-04",
+            "NLO-06-25"
+          ]
+        },
+        {
+          "t": "Why the signs",
+          "d": [
+            "$-\\nabla f(\\bar x)$ is a nonnegative combination of the outward normals $\\nabla g_i$ of the active inequalities plus any combination of the $\\nabla h_j$. An inequality can only push; an equality can push either way."
+          ],
+          "cards": [
+            "NLO-06-05"
+          ]
+        },
+        {
+          "t": "Active set rules",
+          "d": [
+            "$I(\\bar x) = \\{i : g_i(\\bar x) = 0\\}$.  $g_i < 0 \\Rightarrow u_i = 0$.  $u_i > 0 \\Rightarrow g_i = 0$.  An active constraint may still have $u_i = 0$."
+          ],
+          "cards": [
+            "NLO-06-06"
+          ]
+        },
+        {
+          "t": "Jacobian form",
+          "d": [
+            "$J_g$ is $m \\times n$ (rows $\\nabla g_i^\\top$), $J_h$ is $l \\times n$.",
+            "$$\\nabla f + J_g^\\top u + J_h^\\top v = 0$$"
+          ],
+          "cards": [
+            "NLO-06-07",
+            "NLO-06-08"
+          ]
+        },
+        {
+          "t": "Five-step skeleton",
+          "d": [
+            "1. Standard form.  2. Derivatives.  3. Active set (given point: evaluate $g_i$; otherwise case analysis).  4. Solve stationarity with the active constraints; keep feasible solutions with $u \\ge 0$.  5. Conclude with a CQ and convexity."
+          ],
+          "cards": [
+            "NLO-06-10",
+            "NLO-06-09",
+            "NLO-06-11"
+          ]
+        },
+        {
+          "t": "Fixing a wrong guess",
+          "d": [
+            "Guessed inactive but violated ⇒ make it active. Guessed active but $u_i < 0$ ⇒ drop it."
+          ],
+          "cards": [
+            "NLO-06-10"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Convex case",
+      "items": [
+        {
+          "t": "KKT is sufficient",
+          "d": [
+            "$f$, $g_i$ convex and $h_j$ affine: every KKT point is a global minimum. No CQ needed."
+          ],
+          "cards": [
+            "NLO-06-12"
+          ]
+        },
+        {
+          "t": "Proof",
+          "d": [
+            "For feasible $y$: gradient inequality for $f$, then stationarity, then $\\nabla g_i^\\top (y - \\bar x) \\le 0$ for active $i$ and $\\nabla h_j^\\top (y - \\bar x) = 0$:",
+            "$$f(y) \\ge f(\\bar x) - \\sum_{i \\in I} u_i \\nabla g_i^\\top (y - \\bar x) - \\sum_j v_j \\nabla h_j^\\top (y - \\bar x) \\ge f(\\bar x)$$"
+          ],
+          "cards": [
+            "NLO-06-13"
+          ]
+        },
+        {
+          "t": "Why affine equalities",
+          "d": [
+            "$\\{h = 0\\}$ is convex when $h$ is affine, but generally not when $h$ is only convex (a circle versus a disk). $\\min x$ s.t. $x^2 - 1 = 0$ has the KKT point $x = 1$, which is not optimal."
+          ],
+          "cards": [
+            "NLO-06-14"
+          ]
+        },
+        {
+          "t": "Without convexity",
+          "d": [
+            "KKT points are only candidates: $\\min -x^2$ on $[-1, 1]$ has the KKT point $x = 0$, the global maximum."
+          ],
+          "cards": [
+            "NLO-06-15"
+          ]
+        },
+        {
+          "t": "Uniqueness",
+          "d": [
+            "$f$ strictly convex ⇒ at most one global minimum. $f$ only convex ⇒ one or infinitely many (a convex set of minimizers)."
+          ],
+          "cards": [
+            "NLO-06-16"
+          ]
+        },
+        {
+          "t": "KKT for a QP",
+          "d": [
+            "For $\\min \\tfrac12 x^\\top Q x + c^\\top x$ s.t. $Ax = b$, $x \\ge 0$:",
+            "$$Qx + c - u + A^\\top v = 0, \\quad Ax = b, \\quad x \\ge 0, \\quad u \\ge 0, \\quad u_ix_i = 0$$",
+            "Linear except for complementarity."
+          ],
+          "cards": [
+            "NLO-06-20",
+            "NLO-06-22"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Constraint qualifications",
+      "items": [
+        {
+          "t": "What a CQ does",
+          "d": [
+            "A condition on the constraints that guarantees “local minimum ⇒ KKT point”. Used as: CQ holds and not KKT ⇒ not a local minimum."
+          ],
+          "cards": [
+            "NLO-06-23",
+            "NLO-06-28"
+          ]
+        },
+        {
+          "t": "LICQ (regular point)",
+          "d": [
+            "The gradients of the active inequalities and of all equalities at $\\bar x$ are linearly independent. Checked at the point. Gives unique multipliers."
+          ],
+          "cards": [
+            "NLO-06-24",
+            "NLO-06-25"
+          ]
+        },
+        {
+          "t": "Slater condition",
+          "d": [
+            "$g_i$ convex, $h_j$ affine, and a point $\\hat x$ with $g_i(\\hat x) < 0$ for all $i$ and $h(\\hat x) = 0$. Checked once for the whole problem."
+          ],
+          "cards": [
+            "NLO-06-24"
+          ]
+        },
+        {
+          "t": "Affine constraints",
+          "d": [
+            "If all constraints are affine, KKT is necessary with no further qualification (not on the slides). Multipliers may be non-unique."
+          ],
+          "cards": [
+            "NLO-06-22",
+            "NLO-06-27"
+          ]
+        },
+        {
+          "t": "When no CQ holds",
+          "d": [
+            "A minimum can fail to be a KKT point: $\\min x_1^2 - x_2$ s.t. $x_2^2 \\le 0$ at $(0,0)$, where $\\nabla g = 0$."
+          ],
+          "cards": [
+            "NLO-06-26",
+            "NLO-06-38"
+          ]
+        },
+        {
+          "t": "Four cases",
+          "d": [
+            "CQ and convex: minimum ⇔ KKT.",
+            "CQ only: minimum ⇒ KKT (candidates).",
+            "Convex only: KKT ⇒ global minimum.",
+            "Neither: only Fritz John is guaranteed."
+          ],
+          "cards": [
+            "NLO-06-29"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Proof of KKT",
+      "items": [
+        {
+          "t": "Chain",
+          "d": [
+            "Local minimum ⇒ (S) has no solution ⇒ Gordan ⇒ Fritz John ⇒ (LICQ) KKT."
+          ],
+          "cards": [
+            "NLO-06-30"
+          ]
+        },
+        {
+          "t": "Directional derivative",
+          "d": [
+            "$$f'(x; d) = \\lim_{t \\downarrow 0} \\frac{f(x + td) - f(x)}{t} = \\nabla f(x)^\\top d$$",
+            "If $\\nabla f(x)^\\top d < 0$ then $f(x + td) < f(x)$ for all small $t > 0$."
+          ],
+          "cards": [
+            "NLO-06-31",
+            "NLO-06-32"
+          ]
+        },
+        {
+          "t": "Lemma B",
+          "d": [
+            "At a local minimum no $d$ satisfies (S): $\\nabla f(x^*)^\\top d < 0$, $\\nabla g_i(x^*)^\\top d < 0$ for $i \\in I(x^*)$. Strict inequalities are essential."
+          ],
+          "cards": [
+            "NLO-06-33",
+            "NLO-06-34"
+          ]
+        },
+        {
+          "t": "Gordan's theorem",
+          "d": [
+            "Exactly one has a solution:",
+            "$$\\text{(I)}\\ \\ Ad < 0 \\qquad\\qquad \\text{(II)}\\ \\ \\eta \\ge 0,\\ \\eta \\ne 0,\\ A^\\top \\eta = 0$$"
+          ],
+          "cards": [
+            "NLO-06-35"
+          ]
+        },
+        {
+          "t": "Fritz John",
+          "d": [
+            "At a local minimum there are $\\lambda_0, \\dots, \\lambda_m \\ge 0$, not all zero, with",
+            "$$\\lambda_0 \\nabla f(x^*) + \\sum_i \\lambda_i \\nabla g_i(x^*) = 0, \\qquad \\lambda_i\\,g_i(x^*) = 0$$",
+            "No CQ needed, but $\\lambda_0$ may be $0$."
+          ],
+          "cards": [
+            "NLO-06-36",
+            "NLO-06-38"
+          ]
+        },
+        {
+          "t": "From Fritz John to KKT",
+          "d": [
+            "LICQ rules out $\\lambda_0 = 0$ (it would make the active gradients dependent). Divide by $\\lambda_0 > 0$."
+          ],
+          "cards": [
+            "NLO-06-37"
+          ]
+        },
+        {
+          "t": "Equalities",
+          "d": [
+            "Full theorem: at a regular point, local minimum ⇒ KKT point. The equality case uses the implicit function theorem (not proved)."
+          ],
+          "cards": [
+            "NLO-06-39"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "Running example",
+          "d": [
+            "$(2, 1)$: $u_1 = 5$, $u_2 = 0$, $v_1 = -\\tfrac38$. Convex, so the global minimum, $f = 65$."
+          ],
+          "cards": [
+            "NLO-06-09"
+          ]
+        },
+        {
+          "t": "Disk and half-plane",
+          "d": [
+            "$x^* = (1, 1)$, $u^* = (1, 1)$, $f^* = \\tfrac{13}{2}$. Unique."
+          ],
+          "cards": [
+            "NLO-06-17"
+          ]
+        },
+        {
+          "t": "Line and half-plane",
+          "d": [
+            "$x^* = (\\tfrac12, \\tfrac32)$, $u_1 = 1$, $v = 0$, $f^* = \\tfrac12$."
+          ],
+          "cards": [
+            "NLO-06-18"
+          ]
+        },
+        {
+          "t": "Rejected point",
+          "d": [
+            "$(1, 0)$ with $u_1 = -\\tfrac12$ under LICQ: not a local minimum. Descent direction $(-1, 0)$, $t \\in (0, 2]$."
+          ],
+          "cards": [
+            "NLO-06-28"
+          ]
+        },
+        {
+          "t": "Enumerated cases",
+          "d": [
+            "Unique KKT point $(0, 0)$ with $u = (0, 0)$; one constraint weakly active."
+          ],
+          "cards": [
+            "NLO-06-11"
+          ]
+        },
+        {
+          "t": "Maximum on a disk",
+          "d": [
+            "$\\max x_1 + x_2$ on the unit disk: $x = (1/\\sqrt{2}, 1/\\sqrt{2})$, $u = 1/\\sqrt{2}$, value $\\sqrt{2}$."
+          ],
+          "cards": [
+            "NLO-06-19"
+          ]
+        },
+        {
+          "t": "Two-point SVM",
+          "d": [
+            "$w = (\\tfrac12, \\tfrac12)$, $b = -1$, $\\alpha = (\\tfrac12, \\tfrac12)$, margin $2\\sqrt{2}$."
+          ],
+          "cards": [
+            "NLO-06-21"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "Write the KKT system",
+          "d": [
+            "Gradients or Jacobians, stationarity row by row, then feasibility, signs and complementary slackness."
+          ],
+          "cards": [
+            "NLO-06-08",
+            "NLO-06-07"
+          ]
+        },
+        {
+          "t": "Is this point a KKT point?",
+          "d": [
+            "Active set → gradients → solve for multipliers → check signs."
+          ],
+          "cards": [
+            "NLO-06-09",
+            "NLO-06-28"
+          ]
+        },
+        {
+          "t": "Find the optimum",
+          "d": [
+            "Convexity and a CQ first, then case analysis on the active set."
+          ],
+          "cards": [
+            "NLO-06-17",
+            "NLO-06-18",
+            "NLO-06-11",
+            "NLO-06-19"
+          ]
+        },
+        {
+          "t": "Optimal but not KKT",
+          "d": [
+            "Show optimality directly, show no multiplier exists, name the failed CQ."
+          ],
+          "cards": [
+            "NLO-06-26",
+            "NLO-06-38"
+          ]
+        },
+        {
+          "t": "Proof steps",
+          "d": [
+            "Lemma B; Gordan ⇒ Fritz John; Fritz John ⇒ KKT; sufficiency under convexity; uniqueness."
+          ],
+          "cards": [
+            "NLO-06-33",
+            "NLO-06-35",
+            "NLO-06-36",
+            "NLO-06-37",
+            "NLO-06-13",
+            "NLO-06-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "u, v versus λ, μ",
+          "d": [
+            "Part 1 and the computations use $u$ (inequalities) and $v$ (equalities). The proof part uses $\\lambda$ and $\\mu$. Same objects."
+          ],
+          "cards": [
+            "NLO-06-39"
+          ]
+        },
+        {
+          "t": "I(x)",
+          "d": [
+            "The active set, not the identity matrix."
+          ],
+          "cards": [
+            "NLO-06-06"
+          ]
+        },
+        {
+          "t": "λ₀",
+          "d": [
+            "The Fritz John multiplier on $\\nabla f$. KKT is the case $\\lambda_0 = 1$."
+          ],
+          "cards": [
+            "NLO-06-36"
+          ]
+        },
+        {
+          "t": "l versus p",
+          "d": [
+            "Both denote the number of equality constraints."
+          ],
+          "cards": []
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "QP definition",
+          "d": [
+            "“$Dx \\le b_2$ describes the equality constraints” should read $Dx = b_2$."
+          ],
+          "cards": [
+            "NLO-06-02"
+          ]
+        },
+        {
+          "t": "SVM",
+          "d": [
+            "“$\\min_w \\lVert w \\rVert^2$”: the minimization is over $(w, b)$."
+          ],
+          "cards": [
+            "NLO-06-03"
+          ]
+        },
+        {
+          "t": "KKT list",
+          "d": [
+            "Primal feasibility is missing from the list of conditions."
+          ],
+          "cards": [
+            "NLO-06-04"
+          ]
+        },
+        {
+          "t": "Jacobians",
+          "d": [
+            "Last row of $J_h$ is written $\\nabla h_m$ (should be $\\nabla h_l$); an entry $\\partial g_3/\\partial x_3$ should be $\\partial g_2/\\partial x_3$."
+          ],
+          "cards": [
+            "NLO-06-07"
+          ]
+        },
+        {
+          "t": "Running example",
+          "d": [
+            "“$4v_2$” in the second stationarity equation should be $4v_1$. The solution $u_1 = 5$, $v_1 = -0.375$ is correct."
+          ],
+          "cards": [
+            "NLO-06-09"
+          ]
+        },
+        {
+          "t": "Objective in Part 2",
+          "d": [
+            "Printed as $(x_1 - 12)^2 + (x_2 + 6)^2$, but the Hessian shown belongs to $(x_1 - 4)^4 + (x_2 + 6)^2$. Either way $(2, 1)$ is the global minimum."
+          ],
+          "cards": [
+            "NLO-06-09"
+          ]
+        },
+        {
+          "t": "Sufficiency",
+          "d": [
+            "“$g_i$, $h_i$ convex”: the equalities must be affine."
+          ],
+          "cards": [
+            "NLO-06-12",
+            "NLO-06-14"
+          ]
+        },
+        {
+          "t": "f written as h",
+          "d": [
+            "Some proof slides write the objective as $h$. Read $f$; $h$ is reserved for equalities."
+          ],
+          "cards": [
+            "NLO-06-31"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "NLO-06-01",
+      "g": "Formulation",
+      "k": "Standard form",
+      "q": "The KKT conditions are stated for the standard form $\\min f(x)$ s.t. $g_i(x) \\le 0$, $h_j(x) = 0$. Convert each of the following: (1) $\\max f(x)$, (2) a constraint $a(x) \\ge b$, (3) $x \\ge 0$. (4) Why does the conversion matter for KKT?",
+      "pts": [
+        "(1) $\\min -f(x)$. Same optimal points; the optimal value changes sign.",
+        "(2) $b - a(x) \\le 0$.",
+        "(3) $-x_i \\le 0$ for each $i$.",
+        "(4) The sign rule $u_i \\ge 0$ is valid only for “$\\le 0$” constraints of a min problem. In any other form the sign of the multiplier flips."
+      ],
+      "pit": "After converting $x_3 \\ge 0$ to $-x_3 \\le 0$, the constraint gradient is $(0, 0, -1)$, not $(0, 0, 1)$.",
+      "src": "K1 p2",
+      "seen": [
+        "HW3 P1"
+      ]
+    },
+    {
+      "id": "NLO-06-02",
+      "g": "Formulation",
+      "k": "QP form",
+      "q": "A quadratic program (QP) is $\\min \\tfrac12 x^\\top Q x + c^\\top x$ s.t. $Ax \\le b_1$, $Dx = b_2$, with $Q$ symmetric. (1) When is the QP convex? (2) Given a polynomial objective, how do you read off the diagonal and off-diagonal entries of $Q$? (3) Find $Q$ for $4x_1^2 + x_1x_2 + 3.5x_2^2$.",
+      "pts": [
+        "(1) Iff $Q \\succeq 0$. The constraints are linear, so the feasible set is always convex.",
+        "(2) $Q_{ii}$ is twice the coefficient of $x_i^2$. $Q_{ij}$ is the full coefficient of $x_ix_j$, because the term appears as $\\tfrac12 (Q_{ij} + Q_{ji})\\,x_ix_j$.",
+        "(3) $Q = \\begin{pmatrix} 8 & 1 \\\\ 1 & 7 \\end{pmatrix}$. Check: $\\tfrac12 (8x_1^2 + 2x_1x_2 + 7x_2^2)$ gives back the polynomial."
+      ],
+      "pit": "Forgetting the $\\tfrac12$ makes the diagonal of $Q$ half as large as it should be.",
+      "src": "K1 p3, p7",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-03",
+      "g": "Formulation",
+      "k": "MVO and SVM",
+      "q": "Two standard QPs. (1) Mean–variance optimization (MVO): weights $x$, covariance $\\Sigma$, expected returns $\\mu$, target return $R$, no short sales. Write it in standard form. (2) Hard-margin SVM: points $x_i$ with labels $y_i = \\pm 1$ and separating hyperplane $w^\\top x + b = 0$. Write it in standard form. (3) Why are both convex?",
+      "pts": [
+        "(1) $\\min x^\\top \\Sigma x$ s.t. $R - \\mu^\\top x \\le 0$, $-x \\le 0$, $\\mathbf{1}^\\top x = 1$. Here $Q = 2\\Sigma$ and $c = 0$.",
+        "(2) Maximizing the margin $2/\\lVert w \\rVert$ is the same as $\\min \\lVert w \\rVert^2$ over $(w, b)$ s.t. $1 - y_i(w^\\top x_i + b) \\le 0$ for every $i$.",
+        "(3) $\\Sigma \\succeq 0$ because it is a covariance matrix; $\\lVert w \\rVert^2$ is convex; all constraints are affine. So any KKT point is a global optimum."
+      ],
+      "pit": "The SVM minimizes over $(w, b)$, not over $w$ alone: $b$ appears in the constraints. The objective is strictly convex in $w$ but not in $b$.",
+      "src": "K1 p4–6",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-04",
+      "g": "KKT conditions",
+      "k": "KKT statement",
+      "q": "Consider $\\min f(x)$ s.t. $g_i(x) \\le 0$ ($i = 1, \\dots, m$) and $h_j(x) = 0$ ($j = 1, \\dots, l$), with multipliers $u_i$ for $g_i$ and $v_j$ for $h_j$. (1) State the four KKT conditions at a point $\\bar{x}$. (2) State the theorem that makes them necessary. (3) What do they reduce to when there are no constraints?",
+      "pts": [
+        "(1) Primal feasibility: $g(\\bar x) \\le 0$, $h(\\bar x) = 0$. Stationarity: $$\\nabla f(\\bar x) + \\sum_i u_i \\nabla g_i(\\bar x) + \\sum_j v_j \\nabla h_j(\\bar x) = 0$$ Dual feasibility: $u_i \\ge 0$ ($v_j$ free). Complementary slackness: $u_i\\,g_i(\\bar x) = 0$ for every $i$.",
+        "(2) If $\\bar x$ is a local minimum, the functions are continuously differentiable, and LICQ holds at $\\bar x$ (the gradients of the active inequalities and of all equalities are linearly independent), then such $u$ and $v$ exist.",
+        "(3) $\\nabla f(\\bar x) = 0$, the unconstrained first-order condition."
+      ],
+      "pit": "The slides list the conditions without primal feasibility. A KKT point is by definition a feasible point.",
+      "src": "K1 p8; K2 p29–30",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-05",
+      "g": "KKT conditions",
+      "k": "Multiplier signs",
+      "q": "In the KKT conditions: (1) why must the multiplier $u_i$ of an inequality $g_i(x) \\le 0$ be nonnegative, while the multiplier $v_j$ of an equality is free? (2) Give the geometric reading of stationarity. (3) What happens to the sign if a constraint is left as $g_i(x) \\ge 0$?",
+      "pts": [
+        "(1) An active inequality only blocks motion in the direction $+\\nabla g_i$ (leaving the feasible set); it cannot pull. An equality blocks both directions, so either sign can occur.",
+        "(2) $$-\\nabla f(\\bar x) = \\sum_{i \\in I(\\bar x)} u_i \\nabla g_i(\\bar x) + \\sum_j v_j \\nabla h_j(\\bar x), \\qquad u_i \\ge 0$$ The steepest-descent direction is a nonnegative combination of the outward normals of the active inequalities, plus any combination of the equality normals: it points out of the feasible set.",
+        "(3) Rewrite it as $-g_i(x) \\le 0$ first. Kept in the original form, its multiplier would be $\\le 0$."
+      ],
+      "pit": "A negative $v_j$ is fine: in the running example $v_1 = -\\tfrac38$. Only inequality multipliers carry a sign condition.",
+      "src": "K1 p8",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-06",
+      "g": "KKT conditions",
+      "k": "Compl. slackness",
+      "q": "Let $I(\\bar{x}) = \\{i : g_i(\\bar{x}) = 0\\}$ be the active set at a feasible point $\\bar{x}$. (1) What does $u_i\\,g_i(\\bar{x}) = 0$ say about an inactive constraint? (2) What does $u_i > 0$ imply? (3) Can an active constraint have $u_i = 0$? (4) How does this let you write stationarity without knowing the active set in advance?",
+      "pts": [
+        "(1) $g_i(\\bar x) < 0$ forces $u_i = 0$: inactive constraints drop out of stationarity.",
+        "(2) The constraint is active, $g_i(\\bar x) = 0$.",
+        "(3) Yes (a weakly active constraint). Example: $\\min x_1^2 - 2x_1x_2 + 3x_2^2$ s.t. $x_1 + x_2 \\le 1$, $-x_1 \\le 0$ has the KKT point $(0,0)$, where $-x_1 \\le 0$ is active with multiplier $0$.",
+        "(4) Write stationarity with all constraints. Each constraint is then in one of two cases: $g_i = 0$ (then require $u_i \\ge 0$) or $u_i = 0$ (then require $g_i \\le 0$)."
+      ],
+      "pit": "$u_i = 0$ does not mean the constraint is inactive, and “active” does not mean $u_i > 0$.",
+      "src": "K1 p8",
+      "seen": [
+        "HW3 P2"
+      ]
+    },
+    {
+      "id": "NLO-06-07",
+      "g": "KKT conditions",
+      "k": "Jacobian form",
+      "q": "Let $x \\in \\mathbb{R}^n$, with $m$ inequality constraints $g$ and $l$ equality constraints $h$. (1) What are the sizes and rows of the Jacobians $J_g(x)$ and $J_h(x)$? (2) Write stationarity in Jacobian form. (3) How many scalar equations is that?",
+      "pts": [
+        "(1) $J_g$ is $m \\times n$ with row $i$ equal to $\\nabla g_i(x)^\\top$. $J_h$ is $l \\times n$ with row $j$ equal to $\\nabla h_j(x)^\\top$.",
+        "(2) $$\\nabla f(x) + J_g(x)^\\top u + J_h(x)^\\top v = 0$$ since $J_g^\\top u = \\sum_i u_i \\nabla g_i$.",
+        "(3) $n$ equations, one per variable."
+      ],
+      "pit": "Stationarity uses $J_g^\\top$ ($n \\times m$), not $J_g$.",
+      "src": "K1 p9–11",
+      "seen": [
+        "T6 P1"
+      ]
+    },
+    {
+      "id": "NLO-06-08",
+      "g": "KKT conditions",
+      "k": "Writing a KKT system",
+      "q": "Let $f = x_1^2 + x_1x_2 + 2x_2^2 + x_3^2$ with $g_1 = x_1^2 + x_2^2 - 4 \\le 0$, $g_2 = -x_3 \\le 0$ and $h_1 = x_1 + x_3^2 - 1 = 0$. (1) Compute $\\nabla f$, $J_g$ and $J_h$. (2) Write stationarity as three scalar equations. (3) List the remaining KKT conditions.",
+      "pts": [
+        "(1) $$\\nabla f = \\begin{pmatrix} 2x_1 + x_2 \\\\ x_1 + 4x_2 \\\\ 2x_3 \\end{pmatrix}$$ $$J_g = \\begin{pmatrix} 2x_1 & 2x_2 & 0 \\\\ 0 & 0 & -1 \\end{pmatrix}, \\quad J_h = \\begin{pmatrix} 1 & 0 & 2x_3 \\end{pmatrix}$$",
+        "(2) $$\\begin{aligned} 2x_1 + x_2 + 2u_1x_1 + v_1 &= 0 \\\\ x_1 + 4x_2 + 2u_1x_2 &= 0 \\\\ 2x_3 - u_2 + 2v_1x_3 &= 0 \\end{aligned}$$",
+        "(3) Feasibility: $x_1^2 + x_2^2 \\le 4$, $x_3 \\ge 0$, $x_1 + x_3^2 = 1$. Signs: $u_1, u_2 \\ge 0$, $v_1$ free. Complementary slackness: $u_1(x_1^2 + x_2^2 - 4) = 0$ and $u_2x_3 = 0$."
+      ],
+      "pit": "$\\nabla g_2 = (0, 0, -1)$, not $(0, 0, 1)$: the constraint is $-x_3 \\le 0$. And $v_1$ has no sign condition.",
+      "src": "",
+      "seen": [
+        "T6 P1"
+      ]
+    },
+    {
+      "id": "NLO-06-09",
+      "g": "KKT conditions",
+      "k": "Checking a point",
+      "q": "Running example: $\\min f = (x_1 - 4)^4 + (x_2 + 6)^2$ s.t. $g_1 = x_1^2 + 3x_1 + x_2^2 - 4.5x_2 - 6.5 \\le 0$, $g_2 = (x_1 - 9)^2 + x_2^2 - 64 \\le 0$, $h = 8x_1 + 4x_2 - 20 = 0$. Is $\\bar{x} = (2, 1)$ a KKT point? (1) Check feasibility and find the active set. (2) Compute the gradients you need. (3) Solve for the multipliers. (4) Conclude.",
+      "pts": [
+        "(1) $g_1(2,1) = 0$: active. $g_2(2,1) = -14 < 0$: inactive, so $u_2 = 0$. $h(2,1) = 0$. Feasible, with $I(\\bar x) = \\{1\\}$.",
+        "(2) $\\nabla f = (4(x_1 - 4)^3,\\ 2(x_2 + 6)) = (-32, 14)$, $\\nabla g_1 = (2x_1 + 3,\\ 2x_2 - 4.5) = (7, -2.5)$, $\\nabla h = (8, 4)$.",
+        "(3) $-32 + 7u_1 + 8v_1 = 0$ and $14 - 2.5u_1 + 4v_1 = 0$ give $u_1 = 5$ and $v_1 = -\\tfrac38$.",
+        "(4) $u_1 = 5 \\ge 0$, $u_2 = 0$, and $v_1$ may be negative: $\\bar x$ is a KKT point. LICQ also holds, since $\\det \\begin{pmatrix} 7 & -2.5 \\\\ 8 & 4 \\end{pmatrix} = 48 \\ne 0$."
+      ],
+      "pit": "Being a KKT point only makes $(2,1)$ a candidate. It is the global minimum ($f = 65$) because the problem is convex.",
+      "src": "K1 p12–16",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-10",
+      "g": "KKT conditions",
+      "k": "Solving workflow",
+      "q": "You must find the minimizer of a constrained problem with KKT, and no candidate point is given. (1) List the five steps. (2) After guessing an active set and solving, which two checks show the guess was wrong, and what do you change? (3) Illustrate with $\\min x^2$ s.t. $1 - x \\le 0$.",
+      "pts": [
+        "(1) Standard form → derivatives → choose an active set (set $u_i = 0$ for the rest) → solve stationarity with the active constraints, keeping only feasible solutions with $u \\ge 0$ → conclude using a CQ and convexity.",
+        "(2) A constraint guessed inactive is violated: make it active. A constraint guessed active gets $u_i < 0$: remove it from the active set.",
+        "(3) Guess inactive: $u = 0$ gives $x = 0$, but then $g = 1 > 0$, infeasible. Guess active: $x = 1$, and $2x - u = 0$ gives $u = 2 \\ge 0$. So $x^* = 1$."
+      ],
+      "pit": "Start from the unconstrained minimizer and activate the constraints it violates. Blind enumeration costs up to $2^m$ cases.",
+      "src": "",
+      "seen": [
+        "T6 P3",
+        "HW3 P2"
+      ]
+    },
+    {
+      "id": "NLO-06-11",
+      "g": "KKT conditions",
+      "k": "Enumerating cases",
+      "q": "Find all KKT points of $\\min f = x_1^2 - 2x_1x_2 + 3x_2^2$ s.t. $g_1 = x_1 + x_2 - 1 \\le 0$, $g_2 = -x_1 \\le 0$. (1) Write stationarity. (2) Go through the four active-set cases. (3) State the result and the active set there.",
+      "pts": [
+        "(1) $2x_1 - 2x_2 + u_1 - u_2 = 0$ and $-2x_1 + 6x_2 + u_1 = 0$.",
+        "(2) Neither active: $x = (0,0)$, feasible, a KKT point. Only $g_1$ active: $x = (\\tfrac23, \\tfrac13)$ with $u_1 = -\\tfrac23 < 0$, rejected. Only $g_2$ active: $x_1 = 0$ gives $x_2 = 0$ and $u_2 = 0$, the same point. Both active: $x = (0,1)$ with $u_1 = -6 < 0$, rejected.",
+        "(3) The only KKT point is $(0,0)$ with $u = (0,0)$ and $f = 0$. There $g_1 = -1$ is inactive and $g_2 = 0$ is active with multiplier $0$. Since $f$ is strictly convex and the constraints are affine, it is the unique global minimizer."
+      ],
+      "pit": "$(0,0)$ appears in two cases. It is one KKT point, with $g_2$ weakly active.",
+      "src": "",
+      "seen": [
+        "HW3 P2"
+      ]
+    },
+    {
+      "id": "NLO-06-12",
+      "g": "Convex case",
+      "k": "Sufficiency theorem",
+      "q": "(1) State the theorem under which a KKT point is guaranteed to be a global minimum. (2) Which direction of “minimum ⇔ KKT point” does it give, and what gives the other direction? (3) Does it need a constraint qualification?",
+      "pts": [
+        "(1) If $f$ and every $g_i$ are convex and differentiable and every $h_j$ is affine, then any KKT point is a global minimum.",
+        "(2) It gives “KKT ⇒ minimum”. The direction “minimum ⇒ KKT” comes from a constraint qualification (LICQ or Slater).",
+        "(3) No. Sufficiency needs convexity only."
+      ],
+      "pit": "The slide says “$g_i$, $h_i$ convex”. The equalities must be affine, not merely convex.",
+      "src": "K2 p2",
+      "seen": [
+        "T6 P3"
+      ]
+    },
+    {
+      "id": "NLO-06-13",
+      "g": "Convex case",
+      "k": "Sufficiency proof",
+      "q": "Let $f$ and $g_i$ be convex and differentiable, $h_j$ affine, and $\\bar{x}$ a KKT point with multipliers $u, v$. Prove $f(y) \\ge f(\\bar{x})$ for every feasible $y$. Give (1) the inequality for $f$, (2) the fact about active inequalities, (3) the fact about equalities, (4) how they combine.",
+      "pts": [
+        "(1) Gradient inequality: $f(y) \\ge f(\\bar x) + \\nabla f(\\bar x)^\\top (y - \\bar x)$.",
+        "(2) For $i \\in I(\\bar x)$, convexity of $g_i$ gives $\\nabla g_i(\\bar x)^\\top (y - \\bar x) \\le g_i(y) - g_i(\\bar x) = g_i(y) \\le 0$. For inactive $i$, $u_i = 0$.",
+        "(3) $h_j$ is affine, so $\\nabla h_j^\\top (y - \\bar x) = h_j(y) - h_j(\\bar x) = 0$.",
+        "(4) Replace $\\nabla f(\\bar x)$ using stationarity: $$f(y) \\ge f(\\bar x) - \\sum_{i \\in I} u_i \\nabla g_i(\\bar x)^\\top (y - \\bar x) - \\sum_j v_j \\nabla h_j(\\bar x)^\\top (y - \\bar x)$$ The first sum is $\\le 0$ term by term (as $u_i \\ge 0$) and the second is $0$, so $f(y) \\ge f(\\bar x)$."
+      ],
+      "pit": "Step (3) is where affine is needed: for a convex nonlinear $h$ the term $v_j \\nabla h_j^\\top (y - \\bar x)$ can have either sign, because $v_j$ is free.",
+      "src": "K2 p2",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-14",
+      "g": "Convex case",
+      "k": "Affine equalities",
+      "q": "A convex problem requires its equality constraints to be affine. (1) Compare the feasible sets of $x_1^2 + x_2^2 - 1 \\le 0$ and $x_1^2 + x_2^2 - 1 = 0$. (2) Why is $\\{x : h(x) = 0\\}$ convex when $h$ is affine? (3) Use $\\min x$ s.t. $x^2 - 1 = 0$ to show that a KKT point need not be optimal when $h$ is convex but not affine.",
+      "pts": [
+        "(1) “$\\le 0$” gives the solid disk, which is convex. “$= 0$” gives the circle, which is not: the midpoint $(0,0)$ of $(1,0)$ and $(-1,0)$ is infeasible.",
+        "(2) $\\{h = 0\\} = \\{h \\le 0\\} \\cap \\{-h \\le 0\\}$. When $h$ is affine both $h$ and $-h$ are convex, so both sets are convex, and so is their intersection.",
+        "(3) The feasible set is $\\{-1, 1\\}$. At $x = 1$, stationarity $1 + 2v = 0$ gives $v = -\\tfrac12$, so $x = 1$ is a KKT point. But $f(1) = 1 > f(-1) = -1$."
+      ],
+      "pit": "The same convex function gives a convex set written as “$\\le 0$” and a nonconvex one written as “$= 0$”.",
+      "src": "K2 p2",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-15",
+      "g": "Convex case",
+      "k": "Nonconvex KKT point",
+      "q": "Consider $\\min -x^2$ s.t. $-1 \\le x \\le 1$. (1) Show that $x = 0$ is a KKT point. What is it really? (2) Find all KKT points and the minimizers. (3) What is the lesson?",
+      "pts": [
+        "(1) Both constraints are inactive at $0$, so $u = 0$, and $\\nabla f(0) = 0$. But $x = 0$ is the global maximum: $f(0) = 0 > f(\\pm 1) = -1$.",
+        "(2) With $g_1 = x - 1$ and $g_2 = -1 - x$: $x = 0$ ($u = 0$); $x = 1$ ($-2x + u_1 = 0$, $u_1 = 2$); $x = -1$ ($-2x - u_2 = 0$, $u_2 = 2$). Comparing values, $x = \\pm 1$ are the global minimizers with $f = -1$.",
+        "(3) KKT is a first-order condition and, like $\\nabla f = 0$, cannot tell a min from a max. Without convexity KKT points are only candidates: compare objective values or use second-order conditions."
+      ],
+      "pit": "For the max problem $\\max -x^2$ (i.e. $\\min x^2$) the same point $x = 0$ is again a KKT point, and there it is optimal.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-16",
+      "g": "Convex case",
+      "k": "Uniqueness",
+      "q": "For a convex problem (convex $f$, convex $g_i$, affine $h_j$): (1) what makes a KKT point a global minimum, and what additionally makes it the only one? (2) Prove uniqueness under that extra condition. (3) If $f$ is convex but not strictly convex, how many global minima can there be?",
+      "pts": [
+        "(1) Convexity alone gives “KKT ⇒ global minimum”. Uniqueness needs $f$ strictly convex.",
+        "(2) If $x \\ne y$ were both optimal with value $f^*$, the midpoint $m$ is feasible (the feasible set is convex) and $f(m) < \\tfrac12 f(x) + \\tfrac12 f(y) = f^*$: a contradiction.",
+        "(3) One, or infinitely many. If $x, y$ are optimal, every point of the segment between them is feasible with $f \\le f^*$, hence $= f^*$. Example: $\\min x_1$ s.t. $-x_1 \\le 0$, $-1 \\le x_2 \\le 1$."
+      ],
+      "pit": "Several isolated global minima can only occur in nonconvex problems.",
+      "src": "",
+      "seen": [
+        "T6 P3"
+      ]
+    },
+    {
+      "id": "NLO-06-17",
+      "g": "Convex case",
+      "k": "Disk and half-plane",
+      "q": "Solve $\\min \\tfrac12[(x_1 - 3)^2 + (x_2 - 4)^2]$ s.t. $g_1 = x_1^2 + x_2^2 - 2 \\le 0$, $g_2 = x_2 - 1 \\le 0$. (1) Why is KKT both necessary and sufficient here? (2) Write stationarity and rule out $u_1 = 0$. (3) Rule out $u_2 = 0$. (4) Solve the remaining case: give $x^*$, $u^*$ and $f^*$.",
+      "pts": [
+        "(1) $\\nabla^2 f = I$, $\\nabla^2 g_1 = 2I$ and $g_2$ is affine, so the problem is convex (sufficient). $(0,0)$ is a Slater point, $g = (-2, -1) < 0$ (necessary).",
+        "(2) $x_1 - 3 + 2u_1x_1 = 0$ and $x_2 - 4 + 2u_1x_2 + u_2 = 0$. If $u_1 = 0$ then $x_1 = 3$ and $g_1 \\ge 9 - 2 > 0$: infeasible.",
+        "(3) If $u_2 = 0$ then $x = (3, 4)/(1 + 2u_1)$ with $g_1$ active, so $25/(1 + 2u_1)^2 = 2$ and $x_2 = 4\\sqrt{2}/5 \\approx 1.13 > 1$: violates $g_2$.",
+        "(4) Both active: $x_2 = 1$, $x_1 = \\pm 1$. With $x_1 = 1$: $u_1 = 1$, then $u_2 = 1$. With $x_1 = -1$: $u_1 = -2 < 0$, rejected. So $x^* = (1,1)$, $u^* = (1,1)$, $f^* = \\tfrac{13}{2}$."
+      ],
+      "pit": "In case (3), finding $u_1 > 0$ is not enough: the candidate must also satisfy the other constraint. And do not forget the sign check at $x_1 = -1$.",
+      "src": "",
+      "seen": [
+        "T6 P3"
+      ]
+    },
+    {
+      "id": "NLO-06-18",
+      "g": "Convex case",
+      "k": "Line and half-plane",
+      "q": "Solve $\\min (x_1 - 1)^2 + (x_2 - 2)^2$ s.t. $-x_1 + x_2 = 1$, $x_1 + x_2 \\le 2$, $x_1, x_2 \\ge 0$. (1) Guess the active set from the unconstrained minimizer. (2) Find $x^*$ by reducing to one variable. (3) Verify KKT and give the multipliers.",
+      "pts": [
+        "(1) The unconstrained minimizer $(1, 2)$ satisfies the equality but has $x_1 + x_2 = 3 > 2$. So $g_1 = x_1 + x_2 - 2 \\le 0$ should be active.",
+        "(2) On the line $x_2 = 1 + x_1$: $f = 2(x_1 - 1)^2$ with $0 \\le x_1 \\le \\tfrac12$. It is decreasing there, so $x^* = (\\tfrac12, \\tfrac32)$ and $f^* = \\tfrac12$.",
+        "(3) $\\nabla f(x^*) = (-1, -1)$. Stationarity $(-1,-1) + u_1(1,1) + v(-1,1) = 0$ gives $u_1 = 1 \\ge 0$ and $v = 0$. The sign constraints are inactive, so their multipliers are $0$. Strictly convex objective and affine constraints: unique global minimum."
+      ],
+      "pit": "$v = 0$ here because the unconstrained minimizer happens to lie on the line, so the line exerts no force. An equality multiplier can be zero, positive or negative.",
+      "src": "K2 p5",
+      "seen": [
+        "K2 p5 HW"
+      ]
+    },
+    {
+      "id": "NLO-06-19",
+      "g": "Convex case",
+      "k": "Max problem",
+      "q": "Find all KKT points of $\\max x_1 + x_2$ s.t. $x_1^2 + x_2^2 \\le 1$ and decide optimality. (1) Put it in standard form. (2) Solve the KKT system. (3) Conclude.",
+      "pts": [
+        "(1) $\\min -x_1 - x_2$ s.t. $g = x_1^2 + x_2^2 - 1 \\le 0$.",
+        "(2) Stationarity: $-1 + 2ux_1 = 0$ and $-1 + 2ux_2 = 0$. So $u \\ne 0$, hence $u > 0$, the constraint is active and $x_1 = x_2 = 1/(2u)$. Then $2/(4u^2) = 1$ gives $u = 1/\\sqrt{2}$ and $x = (1/\\sqrt{2},\\ 1/\\sqrt{2})$.",
+        "(3) It is the only KKT point, and the problem is convex (linear objective, convex $g$), so it is the global minimizer. The maximum of $x_1 + x_2$ is $\\sqrt{2}$."
+      ],
+      "pit": "Applying $u \\ge 0$ to the max form directly gives the wrong sign. Convert to a min problem first.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-20",
+      "g": "Convex case",
+      "k": "KKT for a QP",
+      "q": "Consider the QP $\\min \\tfrac12 x^\\top Q x + c^\\top x$ s.t. $Ax = b$, $x \\ge 0$, with multipliers $u$ for $-x \\le 0$ and $v$ for $Ax = b$. (1) Write the KKT conditions. (2) Which of them are linear, and what does that imply for algorithms? (3) When is a KKT point a global minimum?",
+      "pts": [
+        "(1) $Qx + c - u + A^\\top v = 0$; $Ax = b$, $x \\ge 0$; $u \\ge 0$; $u_ix_i = 0$ for each $i$. (Here $J_g = -I$ and $J_h = A$.)",
+        "(2) Everything except complementarity is linear. The system is a linear system plus “$x_i = 0$ or $u_i = 0$” for each $i$, which is why QPs are solved by active-set, complementarity or interior-point methods.",
+        "(3) When $Q \\succeq 0$: the QP is then convex."
+      ],
+      "pit": "Other notation for the same system: with $\\pi$ for the equalities and $z$ for the bounds, $Qx + c - A^\\top \\pi - z = 0$ and $x_iz_i = 0$. That is $v = -\\pi$ and $u = z$.",
+      "src": "K2 p6–7",
+      "seen": [
+        "HW3 P3"
+      ]
+    },
+    {
+      "id": "NLO-06-21",
+      "g": "Convex case",
+      "k": "SVM example",
+      "q": "Hard-margin SVM with two points: $x_1 = (0,0)$ with $y_1 = -1$ and $x_2 = (2,2)$ with $y_2 = +1$. The problem is $\\min w_1^2 + w_2^2$ over $(w_1, w_2, b)$ s.t. $g_1 = 1 + b \\le 0$ and $g_2 = 1 - 2w_1 - 2w_2 - b \\le 0$. (1) Find the solution. (2) Verify KKT and find the multipliers $\\alpha_1, \\alpha_2$. (3) Which points are support vectors, and what is the margin?",
+      "pts": [
+        "(1) Adding the two constraints gives $w_1 + w_2 \\ge 1$. The smallest $w_1^2 + w_2^2$ on $w_1 + w_2 = 1$ is at $w = (\\tfrac12, \\tfrac12)$, and then $b = -1$.",
+        "(2) $\\nabla f = (2w_1, 2w_2, 0) = (1, 1, 0)$, $\\nabla g_1 = (0, 0, 1)$, $\\nabla g_2 = (-2, -2, -1)$. Stationarity $(1,1,0) + \\alpha_1(0,0,1) + \\alpha_2(-2,-2,-1) = 0$ gives $\\alpha_2 = \\tfrac12$ and $\\alpha_1 = \\tfrac12$.",
+        "(3) Both multipliers are positive, so both points are support vectors. The margin is $2/\\lVert w \\rVert = 2\\sqrt{2}$, the distance between the two points."
+      ],
+      "pit": "Support vectors are the points with $\\alpha_i > 0$. Points strictly outside the margin have $\\alpha_i = 0$ by complementary slackness and do not affect $w$.",
+      "src": "K1 p5–6",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-22",
+      "g": "Convex case",
+      "k": "Non-unique multipliers",
+      "q": "At $x^* = (0, 0, 2)$ of a convex QP in $\\mathbb{R}^3$, four constraints are active with gradients $(3,0,1)$, $(-1,0,0)$, $(0,-1,0)$ (inequalities, multipliers $u_A, u_{x_1}, u_{x_2}$) and $(1,0,1)$ (an equality, multiplier $v$), and $\\nabla f(x^*) = (6, 1, 13)$. (1) Solve stationarity. (2) Why are the multipliers not unique? (3) Neither LICQ nor Slater holds here. Why do KKT multipliers exist anyway?",
+      "pts": [
+        "(1) $6 + 3u_A - u_{x_1} + v = 0$, $1 - u_{x_2} = 0$, $13 + u_A + v = 0$. So $u_{x_2} = 1$, $v = -13 - u_A$ and $u_{x_1} = 2u_A - 7$. Every $u_A \\ge 3.5$ gives valid multipliers.",
+        "(2) Four active gradients in $\\mathbb{R}^3$ are linearly dependent, so LICQ fails, and uniqueness of multipliers relies on LICQ.",
+        "(3) All constraints are affine. With affine constraints KKT is necessary without any further qualification (a standard result the slides do not state)."
+      ],
+      "pit": "Failing LICQ does not mean KKT fails. It means the theorem gives no guarantee, and uniqueness may be lost.",
+      "src": "K1 p7; K2 p6–7",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-23",
+      "g": "Constraint qualif.",
+      "k": "Role of a CQ",
+      "q": "(1) What is a constraint qualification (CQ), and which theorem is it a hypothesis of? (2) You find that a point $\\bar{x}$ is not a KKT point. When may you conclude it is not a local minimum? (3) You find that $\\bar{x}$ is a KKT point. What may you conclude? (4) The CQ fails at $\\bar{x}$. What then?",
+      "pts": [
+        "(1) A condition on the constraints only (not on $f$) that guarantees “local minimum ⇒ KKT point”. The slides use LICQ and Slater.",
+        "(2) Only if a CQ holds at $\\bar x$. This is the contrapositive of “local minimum and CQ ⇒ KKT”.",
+        "(3) Only that it is a candidate. If the problem is convex it is a global minimum; otherwise compare objective values or use second-order conditions.",
+        "(4) KKT gives no conclusion. $\\bar x$ may be a minimum without being a KKT point, so check it separately."
+      ],
+      "pit": "A negative multiplier rejects a point only because the CQ holds there. Say so explicitly in the answer.",
+      "src": "K1 p8; K2 p8",
+      "seen": [
+        "T6 P2"
+      ]
+    },
+    {
+      "id": "NLO-06-24",
+      "g": "Constraint qualif.",
+      "k": "LICQ vs Slater",
+      "q": "Define (1) LICQ (a regular point) and (2) the Slater condition. (3) Compare them: where is each checked, does it need convexity, and are the multipliers unique?",
+      "pts": [
+        "(1) A feasible $\\bar x$ is regular if $\\{\\nabla g_i(\\bar x) : i \\in I(\\bar x)\\} \\cup \\{\\nabla h_j(\\bar x)\\}$ is linearly independent.",
+        "(2) The $g_i$ are convex, the $h_j$ are affine, and there is a Slater point $\\hat x$ with $g_i(\\hat x) < 0$ for all $i$ and $h(\\hat x) = 0$.",
+        "(3) LICQ: checked at the candidate point (local); no convexity needed; multipliers unique. Slater: checked once for the whole problem; needs convexity; multipliers may be non-unique."
+      ],
+      "pit": "Neither implies the other and neither is necessary. For $\\min -x$ s.t. $x \\le 0$, $2x \\le 0$: Slater holds ($\\hat x = -1$), LICQ fails at $0$, and KKT holds with many multipliers.",
+      "src": "K2 p8",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-25",
+      "g": "Constraint qualif.",
+      "k": "Unique multipliers",
+      "q": "Suppose LICQ holds at a KKT point $\\bar{x}$. Prove that the multipliers $(u, v)$ are unique.",
+      "pts": [
+        "Take two multiplier vectors $(u, v)$ and $(u', v')$. By complementary slackness both have zero entries for the inactive constraints. Subtracting the two stationarity equations: $$\\sum_{i \\in I(\\bar x)} (u_i - u_i')\\,\\nabla g_i(\\bar x) + \\sum_j (v_j - v_j')\\,\\nabla h_j(\\bar x) = 0$$",
+        "The active gradients are linearly independent, so every coefficient is zero: $u = u'$ and $v = v'$."
+      ],
+      "pit": "The inactive multipliers must be dealt with first (they are zero), because LICQ only speaks about the active gradients.",
+      "src": "K2 p8",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-26",
+      "g": "Constraint qualif.",
+      "k": "Min without KKT",
+      "q": "Consider $\\min x_1^2 - x_2$ s.t. $x_2^2 \\le 0$. (1) Find the global minimum. (2) Show that it is not a KKT point. (3) Which hypotheses fail? (4) The problem is convex. Why does that not help?",
+      "pts": [
+        "(1) Feasible points have $x_2 = 0$, where $f = x_1^2$. The global minimum is $(0,0)$.",
+        "(2) $\\nabla f(0,0) = (0, -1)$ and $\\nabla g = (0, 2x_2) = (0, 0)$. Stationarity $(0,-1) + u\\,(0,0) = 0$ is impossible.",
+        "(3) There is no Slater point ($x_2^2 < 0$ has no solution). LICQ fails because the only active gradient is the zero vector.",
+        "(4) Convexity gives “KKT ⇒ minimum”. Here we would need “minimum ⇒ KKT”, which requires a CQ."
+      ],
+      "pit": "Pattern for “optimal but not a KKT point”: show optimality directly, show stationarity has no solution with $u \\ge 0$, then name the failed CQ.",
+      "src": "K2 p9",
+      "seen": [
+        "T6 P5c"
+      ]
+    },
+    {
+      "id": "NLO-06-27",
+      "g": "Constraint qualif.",
+      "k": "Two descriptions",
+      "q": "The feasible set $\\{0\\} \\subset \\mathbb{R}$ can be written as $x^2 \\le 0$ or as $x \\le 0,\\ -x \\le 0$. For $\\min x$, the optimum is $x^* = 0$ either way. (1) Is it a KKT point in the first form? (2) In the second form? (3) What does this show?",
+      "pts": [
+        "(1) No. $\\nabla g(0) = 0$, and $1 + u \\cdot 0 = 0$ has no solution.",
+        "(2) Yes. $1 + u_1 - u_2 = 0$ holds with $u = (0, 1)$.",
+        "(3) Whether KKT holds depends on how the constraints are written, not only on the feasible set. That is what a CQ checks. In the second form neither LICQ nor Slater holds, but the constraints are affine, so KKT still holds."
+      ],
+      "pit": "",
+      "src": "K2 p9",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-28",
+      "g": "Constraint qualif.",
+      "k": "Rejecting a point",
+      "q": "Consider $\\min f = x_1 - x_2^2$ s.t. $g_1 = x_1^2 + x_2^2 - 1 \\le 0$, $g_2 = -x_2 - \\tfrac12 \\le 0$, and the point $\\bar{x} = (1, 0)$. (1) Check feasibility, the active set and LICQ. (2) Solve for the multipliers. (3) Conclude, stating the theorem used. (4) Give a feasible descent direction and the range of step lengths.",
+      "pts": [
+        "(1) $g_1 = 0$ (active), $g_2 = -\\tfrac12$ (inactive): feasible with $I(\\bar x) = \\{1\\}$. $\\nabla g_1(\\bar x) = (2, 0) \\ne 0$, so LICQ holds.",
+        "(2) $u_2 = 0$ and $\\nabla f = (1, -2x_2) = (1, 0)$. Then $(1,0) + u_1(2,0) = 0$ gives $u_1 = -\\tfrac12 < 0$: not a KKT point.",
+        "(3) “Local minimum and LICQ ⇒ KKT.” LICQ holds and KKT fails, so $\\bar x$ is not a local minimum.",
+        "(4) $d = (-1, 0)$: $\\nabla f^\\top d = -1 < 0$ and $\\nabla g_1^\\top d = -2 < 0$. At $(1 - t, 0)$: $g_1 = t^2 - 2t \\le 0$ for $t \\in [0, 2]$, $g_2 = -\\tfrac12$, and $f = 1 - t < 1$ for $t > 0$. So every $t \\in (0, 2]$ works."
+      ],
+      "pit": "$d = (0, 1)$ lowers $f$ but has $\\nabla g_1^\\top d = 0$, and $g_1(1, t) = t^2 > 0$: infeasible. For an active constraint require the strict $\\nabla g_i^\\top d < 0$, and substitute back at the end.",
+      "src": "",
+      "seen": [
+        "T6 P2"
+      ]
+    },
+    {
+      "id": "NLO-06-29",
+      "g": "Constraint qualif.",
+      "k": "Four cases",
+      "q": "Two properties decide what a KKT point tells you: whether a constraint qualification holds, and whether the problem is convex. State the conclusion in each of the four combinations.",
+      "pts": [
+        "CQ holds, convex: local minimum ⇔ global minimum ⇔ KKT point.",
+        "CQ holds, not convex: local minimum ⇒ KKT point. KKT points are only candidates.",
+        "No CQ, convex: KKT point ⇒ global minimum, but a minimum may fail to be a KKT point.",
+        "No CQ, not convex: no implication either way. Only the Fritz John conditions are guaranteed at a minimum."
+      ],
+      "pit": "A CQ gives “minimum ⇒ KKT”; convexity gives “KKT ⇒ minimum”. You need both for “⇔”.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-30",
+      "g": "Proof of KKT",
+      "k": "Proof map",
+      "q": "The slides prove the KKT conditions for inequality constraints in five links, starting from “$x^*$ is a local minimum”. Name the five links in order, with the tool used in each.",
+      "pts": [
+        "A. Local minimum ⇒ no feasible descent direction. Tool: $f'(x; d) = \\nabla f(x)^\\top d$.",
+        "B. Local minimum ⇒ the system (S) $\\nabla f(x^*)^\\top d < 0$, $\\nabla g_i(x^*)^\\top d < 0$ ($i \\in I(x^*)$) has no solution. Tool: continuity, and finitely many constraints.",
+        "C. (S) has no solution ⇒ there is $\\eta \\ge 0$, $\\eta \\ne 0$ with $A^\\top \\eta = 0$. Tool: Gordan's theorem.",
+        "D. $\\eta$ gives the Fritz John conditions. Tool: set $\\lambda_i = 0$ off the active set.",
+        "E. Fritz John and LICQ ⇒ KKT. Tool: show $\\lambda_0 > 0$ and divide by it."
+      ],
+      "pit": "Links B to E are the proof. Link A is the same idea for an abstract feasible set and motivates B.",
+      "src": "K2 p10–28",
+      "seen": [
+        "T6 P4",
+        "T6 P5"
+      ]
+    },
+    {
+      "id": "NLO-06-31",
+      "g": "Proof of KKT",
+      "k": "Directions",
+      "q": "For $\\min f(x)$ s.t. $x \\in C$: (1) define a feasible direction and a feasible descent direction at $x \\in C$. (2) Define the directional derivative $f'(x; d)$ and give its formula when $f$ is continuously differentiable. (3) What follows if $\\nabla f(x)^\\top d < 0$?",
+      "pts": [
+        "(1) $d \\ne 0$ is a feasible direction if there is $\\varepsilon > 0$ with $x + td \\in C$ for all $t \\in [0, \\varepsilon]$. It is a feasible descent direction if in addition $\\nabla f(x)^\\top d < 0$.",
+        "(2) $$f'(x; d) = \\lim_{t \\downarrow 0} \\frac{f(x + td) - f(x)}{t} = \\nabla f(x)^\\top d$$ by the chain rule applied to $\\varphi(t) = f(x + td)$.",
+        "(3) There is $\\varepsilon > 0$ with $f(x + td) < f(x)$ for all $t \\in (0, \\varepsilon)$. The same holds for any continuously differentiable $g_i$."
+      ],
+      "pit": "",
+      "src": "K2 p11–14",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-32",
+      "g": "Proof of KKT",
+      "k": "Lemma A",
+      "q": "Prove: if $x^*$ is a local minimum of $\\min f(x)$ s.t. $x \\in C$, with $f$ continuously differentiable, then there is no feasible descent direction at $x^*$.",
+      "pts": [
+        "Suppose $d$ is one. Feasibility gives $\\varepsilon_1$ with $x^* + td \\in C$ for $t \\in [0, \\varepsilon_1]$. Descent gives $\\varepsilon_2$ with $f(x^* + td) < f(x^*)$ for $t \\in (0, \\varepsilon_2)$.",
+        "For $t \\in (0, \\min\\{\\varepsilon_1, \\varepsilon_2\\})$ the point $x^* + td$ is feasible and strictly better. Since $t$ can be arbitrarily small, such points lie in every neighbourhood of $x^*$: contradiction."
+      ],
+      "pit": "Both step bounds are needed: one keeps the point feasible, the other makes it better.",
+      "src": "K2 p12, p16",
+      "seen": []
+    },
+    {
+      "id": "NLO-06-33",
+      "g": "Proof of KKT",
+      "k": "Lemma B",
+      "q": "Let $x^*$ be a local minimum of $\\min f$ s.t. $g_i(x) \\le 0$ ($i = 1, \\dots, m$), all functions continuously differentiable. Lemma B: no $d$ satisfies (S) $\\nabla f(x^*)^\\top d < 0$ and $\\nabla g_i(x^*)^\\top d < 0$ for $i \\in I(x^*)$. Prove it by contradiction, explaining how you handle (1) the objective, (2) the active constraints, (3) the inactive constraints, and (4) why one step bound works for all.",
+      "pts": [
+        "(1) $\\nabla f^\\top d < 0$ gives $f(x^* + td) < f(x^*)$ for $t \\in (0, \\varepsilon_0)$.",
+        "(2) Active $i$: $\\nabla g_i^\\top d < 0$ and $g_i(x^*) = 0$ give $g_i(x^* + td) < 0$ for $t \\in (0, \\varepsilon_i)$.",
+        "(3) Inactive $i$: $g_i(x^*) < 0$ and continuity give $g_i(x^* + td) < 0$ for $t \\in (0, \\varepsilon_i)$. No derivative information is needed.",
+        "(4) There are finitely many constraints, so $\\varepsilon = \\min\\{\\varepsilon_0, \\dots, \\varepsilon_m\\} > 0$. For $t \\in (0, \\varepsilon)$ the point $x^* + td$ is feasible with smaller $f$: contradiction."
+      ],
+      "pit": "Do not use $\\nabla g_i^\\top d$ for the inactive constraints, and say explicitly why the minimum of the $\\varepsilon$'s is positive (finitely many).",
+      "src": "K2 p17–18",
+      "seen": [
+        "T6 P4a"
+      ]
+    },
+    {
+      "id": "NLO-06-34",
+      "g": "Proof of KKT",
+      "k": "Strictness",
+      "q": "System (S) in Lemma B uses strict inequalities $\\nabla g_i(x^*)^\\top d < 0$. To see why, take $g_1 = x_1^2 + x_2 \\le 0$, $x^* = (0, 0)$ and $d = (1, 0)$. (1) Compute $\\nabla g_1(x^*)^\\top d$. (2) Compute $g_1(x^* + td)$. (3) What does this show?",
+      "pts": [
+        "(1) $\\nabla g_1 = (2x_1, 1) = (0, 1)$ at the origin, so $\\nabla g_1(x^*)^\\top d = 0$.",
+        "(2) $g_1(t, 0) = t^2 > 0$ for every $t > 0$: infeasible.",
+        "(3) A direction satisfying only the weak inequality $\\nabla g_i^\\top d \\le 0$ can be infeasible. So (S) must be strict, which is why Gordan's theorem (about strict systems) is the right tool. The gap between “first-order feasible” and “feasible” is what a CQ rules out."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "T6 P4b"
+      ]
+    },
+    {
+      "id": "NLO-06-35",
+      "g": "Proof of KKT",
+      "k": "Gordan's theorem",
+      "q": "(1) State Gordan's theorem for a matrix $A \\in \\mathbb{R}^{k \\times n}$. (2) Prove that its two systems cannot both have a solution. (3) How is $A$ chosen to apply it to system (S), and what does it give?",
+      "pts": [
+        "(1) Exactly one of these has a solution: (I) $Ad < 0$; (II) $\\eta \\ge 0$, $\\eta \\ne 0$, $A^\\top \\eta = 0$.",
+        "(2) If both held, $\\eta^\\top (Ad) = (A^\\top \\eta)^\\top d = 0$. But $\\eta^\\top (Ad) = \\sum_i \\eta_i (Ad)_i < 0$, because every $(Ad)_i < 0$, every $\\eta_i \\ge 0$ and at least one $\\eta_i > 0$.",
+        "(3) The rows of $A$ are $\\nabla f(x^*)^\\top$ and $\\nabla g_i(x^*)^\\top$ for $i \\in I(x^*)$, so (S) is $Ad < 0$. By Lemma B it has no solution, hence there is $\\eta = (\\lambda_0, \\lambda_i)_{i \\in I} \\ge 0$, $\\eta \\ne 0$, with $$\\lambda_0 \\nabla f(x^*) + \\sum_{i \\in I(x^*)} \\lambda_i \\nabla g_i(x^*) = 0$$"
+      ],
+      "pit": "The other half (“at least one has a solution”) is not proved on the slides. It follows from LP duality.",
+      "src": "K2 p20–23",
+      "seen": [
+        "T6 P5a"
+      ]
+    },
+    {
+      "id": "NLO-06-36",
+      "g": "Proof of KKT",
+      "k": "Fritz John",
+      "q": "(1) State the Fritz John conditions at a local minimum $x^*$ of $\\min f$ s.t. $g_i(x) \\le 0$ ($i = 1, \\dots, m$). (2) How do they follow from Gordan's vector $\\eta = (\\lambda_0, \\lambda_i)_{i \\in I(x^*)}$? (3) Why is the case $\\lambda_0 = 0$ uninformative?",
+      "pts": [
+        "(1) There are $\\lambda_0, \\lambda_1, \\dots, \\lambda_m \\ge 0$, not all zero, with $$\\lambda_0 \\nabla f(x^*) + \\sum_{i=1}^m \\lambda_i \\nabla g_i(x^*) = 0, \\qquad \\lambda_i\\,g_i(x^*) = 0$$ No constraint qualification is needed.",
+        "(2) Set $\\lambda_i = 0$ for every inactive $i$. The sum over $I(x^*)$ becomes a sum over all $i$ with the same value. Complementary slackness holds term by term (active: $g_i = 0$; inactive: $\\lambda_i = 0$). Not all are zero because $\\eta \\ne 0$.",
+        "(3) With $\\lambda_0 = 0$ the condition does not involve $f$ at all. It only says the active constraint gradients are positively dependent, which happens for instance whenever some $\\nabla g_i(x^*) = 0$."
+      ],
+      "pit": "KKT is the Fritz John condition with $\\lambda_0 = 1$, i.e. some Fritz John solution has $\\lambda_0 > 0$.",
+      "src": "K2 p19, p24",
+      "seen": [
+        "T6 P5a"
+      ]
+    },
+    {
+      "id": "NLO-06-37",
+      "g": "Proof of KKT",
+      "k": "Fritz John to KKT",
+      "q": "Let $(\\tilde\\lambda_0, \\tilde\\lambda_1, \\dots, \\tilde\\lambda_m)$ be Fritz John multipliers at $x^*$, and suppose LICQ holds there. Prove that the KKT conditions hold.",
+      "pts": [
+        "Suppose $\\tilde\\lambda_0 = 0$. Then $\\sum_{i \\in I} \\tilde\\lambda_i \\nabla g_i(x^*) = 0$ (the inactive ones are zero), and not all of these $\\tilde\\lambda_i$ vanish because the whole vector is nonzero. So the active gradients are linearly dependent, contradicting LICQ.",
+        "Hence $\\tilde\\lambda_0 > 0$. Set $\\lambda_i = \\tilde\\lambda_i / \\tilde\\lambda_0 \\ge 0$. Dividing both Fritz John equations by $\\tilde\\lambda_0$ gives stationarity with coefficient $1$ on $\\nabla f$, and complementary slackness."
+      ],
+      "pit": "The contradiction needs “not all active $\\tilde\\lambda_i$ are zero”. State where it comes from: the vector is nonzero and $\\tilde\\lambda_0 = 0$.",
+      "src": "K2 p25–28",
+      "seen": [
+        "T6 P5b"
+      ]
+    },
+    {
+      "id": "NLO-06-38",
+      "g": "Proof of KKT",
+      "k": "Fritz John without KKT",
+      "q": "Consider $\\min x_1$ s.t. $x_1^2 + x_2^2 \\le 0$. (1) Find the global minimum. (2) Give Fritz John multipliers there. (3) Show that no KKT multiplier exists. (4) Which hypothesis fails?",
+      "pts": [
+        "(1) The only feasible point is the origin, so it is the global minimum.",
+        "(2) $\\nabla f = (1, 0)$ and $\\nabla g = (2x_1, 2x_2) = (0, 0)$. $\\lambda_0(1,0) + \\lambda_1(0,0) = 0$ forces $\\lambda_0 = 0$; $(\\lambda_0, \\lambda_1) = (0, 1)$ works.",
+        "(3) $(1, 0) + \\lambda_1(0, 0) = (1, 0) \\ne 0$ for every $\\lambda_1$.",
+        "(4) LICQ: the only active gradient is the zero vector. Slater fails too, since no point has $x_1^2 + x_2^2 < 0$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "T6 P5c"
+      ]
+    },
+    {
+      "id": "NLO-06-39",
+      "g": "Proof of KKT",
+      "k": "Equality constraints",
+      "q": "The proof part of the slides writes $\\lambda_i$ for inequality multipliers and $\\mu_j$ for equality multipliers. (1) State the full KKT theorem with both kinds of constraint. (2) What are a regular point and a KKT point? (3) Why can the inequality-only proof not be extended by writing $h = 0$ as $h \\le 0$ and $-h \\le 0$?",
+      "pts": [
+        "(1) If $x^*$ is a local minimum and $\\{\\nabla g_i(x^*) : i \\in I(x^*)\\} \\cup \\{\\nabla h_j(x^*)\\}$ is linearly independent, there are $\\lambda \\ge 0$ and $\\mu$ with $$\\nabla f + \\sum_i \\lambda_i \\nabla g_i + \\sum_j \\mu_j \\nabla h_j = 0, \\qquad \\lambda_i\\,g_i(x^*) = 0$$",
+        "(2) Regular point: a feasible point where LICQ holds. KKT point: a feasible point at which such multipliers exist. In short: at a regular point, local minimum ⇒ KKT point.",
+        "(3) The gradients $\\nabla h$ and $-\\nabla h$ are always linearly dependent, so LICQ would fail automatically. The equality case needs the implicit function theorem; the slides state it without proof."
+      ],
+      "pit": "$\\lambda, \\mu$ in the proof part are the same objects as $u, v$ in the first part.",
+      "src": "K2 p29–30",
+      "seen": []
+    }
+  ]
+}
