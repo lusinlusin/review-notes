@@ -36,6 +36,8 @@
     .btn.strong { border-color:#444; color:#222; }
     .control:focus-visible, button:focus-visible, textarea:focus-visible { outline:1px solid #666; outline-offset:1px; }
     .card-head { display:flex; justify-content:space-between; font-size:12px; color:#999; margin-bottom:8px; font-variant-numeric:tabular-nums; }
+    #clearCard { color:#999; font-size:12px; margin-right:14px; }
+    #clearCard:hover { color:#222; text-decoration:underline; }
     .question { font-size:17px; font-weight:600; margin:0 0 16px; line-height:1.45; }
     .parts { list-style:none; margin:-6px 0 18px; padding:0; font-size:15px; font-weight:500; line-height:1.55; }
     .parts li { padding:2px 0; }
@@ -147,7 +149,7 @@
 
       <section aria-live="polite">
         <div id="cardContent">
-          <div class="card-head"><span id="cardId"></span><span id="counter"></span></div>
+          <div class="card-head"><span id="cardId"></span><span><button id="clearCard" class="hidden">Clear rating</button><span id="counter"></span></span></div>
           <h2 class="question" id="question"></h2>
           <ol class="parts" id="parts"></ol>
           <div class="work" id="work">
@@ -252,11 +254,19 @@ const nextInterval = (g, prev) => g === 'easy' ? Math.max(7, Math.round((prev ||
 const fmtPts = arr => arr.map(i => i + 1).join(',');
 const label = q => `${q.subj} · ${q.topic}`;
 
+// A record is either a rating {grade, due, interval, reviewedAt, hist} or, after "Clear rating",
+// a marker {clearedAt, hist: []}. clearedAt hides every review made before it, on every device.
+const cleared = at => ({ clearedAt: at, reviewedAt: 0, hist: [] });
 function sanitizeRecord(r) {
-  if (!r || typeof r !== 'object' || !GRADES.includes(fixGrade(r.grade)) || !Number.isFinite(r.due)) return null;
-  const hist = Array.isArray(r.hist) ? r.hist.filter(h => h && Number.isFinite(h.t) && GRADES.includes(fixGrade(h.g)))
-    .map(h => ({ t: h.t, g: fixGrade(h.g), m: Array.isArray(h.m) ? h.m.filter(i => Number.isInteger(i) && i >= 0 && i < 12) : [] })) : [];
-  return { grade: fixGrade(r.grade), due: r.due, interval: Number(r.interval) || 0, reviewedAt: Number(r.reviewedAt) || 0, hist: hist.slice(-HIST_MAX) };
+  if (!r || typeof r !== 'object') return null;
+  const c = Number.isFinite(r.clearedAt) ? r.clearedAt : 0;
+  const hist = (Array.isArray(r.hist) ? r.hist : []).filter(h => h && Number.isFinite(h.t) && h.t > c && GRADES.includes(fixGrade(h.g)))
+    .map(h => ({ t: h.t, g: fixGrade(h.g), m: Array.isArray(h.m) ? h.m.filter(i => Number.isInteger(i) && i >= 0 && i < 12) : [] })).slice(-HIST_MAX);
+  const rated = GRADES.includes(fixGrade(r.grade)) && Number.isFinite(r.due) && (Number(r.reviewedAt) || 0) > c;
+  if (!rated) return c ? cleared(c) : null;
+  const out = { grade: fixGrade(r.grade), due: r.due, interval: Number(r.interval) || 0, reviewedAt: Number(r.reviewedAt) || 0, hist };
+  if (c) out.clearedAt = c;
+  return out;
 }
 // Keeps records for every card ID, including cards from topic files that are not loaded right now,
 // so one page never deletes another topic's progress when it syncs.
@@ -271,10 +281,13 @@ function mergeProgress(a, b) {
   for (const id of new Set([...Object.keys(a), ...Object.keys(b)])) {
     const x = a[id], y = b[id];
     if (!x || !y) { out[id] = x || y; continue; }
-    const latest = (y.reviewedAt > x.reviewedAt) ? y : x;
+    const c = Math.max(x.clearedAt || 0, y.clearedAt || 0);
+    const live = [x, y].filter(r => r.grade && r.reviewedAt > c).sort((p, q) => q.reviewedAt - p.reviewedAt)[0];
+    if (!live) { out[id] = cleared(c); continue; }
     const seen = new Map();
-    for (const h of [...x.hist, ...y.hist]) seen.set(h.t + '|' + h.g, h);
-    out[id] = { ...latest, hist: [...seen.values()].sort((p, q) => p.t - q.t).slice(-HIST_MAX) };
+    for (const h of [...x.hist, ...y.hist]) if (h.t > c) seen.set(h.t + '|' + h.g, h);
+    out[id] = { grade: live.grade, due: live.due, interval: live.interval, reviewedAt: live.reviewedAt, hist: [...seen.values()].sort((p, q) => p.t - q.t).slice(-HIST_MAX) };
+    if (c) out[id].clearedAt = c;
   }
   return out;
 }
@@ -450,6 +463,7 @@ function render() {
   const index = list.findIndex(q => q.id === currentId), q = list[index];
   $('cardId').textContent = `${q.id} · ${label(q)}${q.k ? ' · ' + q.k : ''}`;
   $('counter').textContent = `${index + 1} / ${list.length}`;
+  $('clearCard').classList.toggle('hidden', !status[q.id]?.grade);
   const chunks = q.q.split(/\s(?=\(\d+\)\s)/), stem = /^\(\d+\)\s/.test(chunks[0]) ? '' : chunks.shift();
   setMath($('question'), stem); $('question').classList.toggle('hidden', !stem);
   const pl = $('parts'); pl.replaceChildren(); pl.classList.toggle('hidden', !chunks.length);
@@ -482,6 +496,7 @@ function grade(g) {
   const interval = nextInterval(g, prev.interval);
   const hist = [...(prev.hist || []), { t: now, g, m: [...missed].sort((a, b) => a - b) }].slice(-HIST_MAX);
   status[q.id] = { grade: g, interval, due: now + interval * DAY, reviewedAt: now, hist };
+  if (prev.clearedAt) status[q.id].clearedAt = prev.clearedAt;
   save(); scheduleSync();
   const newList = visible();
   let target = oldList.slice(i + 1).find(x => newList.some(n => n.id === x.id));
@@ -587,6 +602,11 @@ $('tabNotes').addEventListener('click', () => setView('notes'));
 $('mode').addEventListener('change', () => { currentId = null; shown = false; missed = new Set(); $('draft').value = ''; render(); });
 $('search').addEventListener('input', () => { currentId = null; shown = false; missed = new Set(); $('draft').value = ''; render(); });
 $('reveal').addEventListener('click', () => { shown = true; render(); });
+$('clearCard').addEventListener('click', () => {
+  const q = byId(currentId); if (!q || !status[q.id]?.grade) return;
+  status[q.id] = cleared(Date.now()); save(); scheduleSync(); shown = false; missed = new Set(); render();
+  $('feedback').textContent = q.id + ' cleared.';
+});
 $('next').addEventListener('click', next); $('previous').addEventListener('click', previous);
 $('shuffle').addEventListener('click', () => { const l = visible(); if (!l.length) return; const o = l.filter(q => q.id !== currentId); const pool = o.length ? o : l; switchTo(pool[Math.floor(Math.random() * pool.length)].id); });
 document.querySelectorAll('[data-grade]').forEach(b => b.addEventListener('click', () => grade(b.dataset.grade)));
@@ -626,8 +646,10 @@ $('filePicker').addEventListener('change', async e => {
   } catch (err) { $('feedback').textContent = 'Import failed: ' + err.message; } finally { e.target.value = ''; }
 });
 $('clear').addEventListener('click', () => {
-  const msg = configured() ? 'Clear progress in this browser? The synced copy in your repository is kept and will come back on the next sync. Disconnect sync first to start fresh here.' : 'Clear all local progress?';
-  if (confirm(msg)) { status = {}; save(); currentId = null; shown = false; missed = new Set(); $('draft').value = ''; render(); if (view === 'gaps') renderGaps(); $('feedback').textContent = 'Cleared.'; }
+  const msg = configured() ? 'Clear all progress, including the synced copy?' : 'Clear all progress in this browser?';
+  if (!confirm(msg)) return;
+  const now = Date.now(); for (const id of Object.keys(status)) status[id] = cleared(now);
+  save(); scheduleSync(); currentId = null; shown = false; missed = new Set(); $('draft').value = ''; render(); if (view === 'gaps') renderGaps(); $('feedback').textContent = 'Cleared.';
 });
 
 // ---------- start ----------
