@@ -5,10 +5,10 @@
       "id": "NLO-02-01",
       "q": "For min f(x) over a set S ⊆ ℝⁿ, define (1) a global minimizer, (2) a local minimizer, (3) the “strict” version of each, and (4) say how these notions imply one another.",
       "pts": [
-        "Global min: f(x) ≥ f(x*) for all x ∈ S; strict if f(x) > f(x*) for all x ∈ S, x ≠ x*.",
-        "Local min: there is ε > 0 with f(x*) ≤ f(x) for all x ∈ B(x*, ε) ∩ S; strict local min uses < for x ≠ x*.",
-        "Chain: strict global ⇒ global ⇒ local, and strict global ⇒ strict local ⇒ local.",
-        "A strict global minimizer is automatically unique."
+        "(1) Global min: f(x) ≥ f(x*) for all x ∈ S.",
+        "(2) Local min: there is ε > 0 with f(x*) ≤ f(x) for all x ∈ B(x*, ε) ∩ S.",
+        "(3) Strict versions replace ≤ with < for every x ≠ x* (in S, or in the ball).",
+        "(4) Strict global ⇒ global ⇒ local, and strict global ⇒ strict local ⇒ local; a strict global minimizer is unique."
       ],
       "pit": "Global does not imply strict: for a constant function every point is a global min and none is strict.",
       "src": "L2-1 s.7, 18–22"
@@ -17,9 +17,9 @@
       "id": "NLO-02-02",
       "q": "Let b ∈ ℝⁿ and let B be an n×n matrix, not necessarily symmetric. Give the gradient and Hessian of (1) bᵀx, (2) xᵀBx, and (3) f(x) = ½xᵀAx + bᵀx + c when A is symmetric.",
       "pts": [
-        "∇(bᵀx) = b and ∇(xᵀx) = 2x.",
-        "∇(xᵀBx) = (B + Bᵀ)x and ∇²(xᵀBx) = B + Bᵀ for a general square B.",
-        "For f = ½xᵀAx + bᵀx + c with A = Aᵀ: ∇f = Ax + b and H = A."
+        "(1) ∇(bᵀx) = b, Hessian 0 (and ∇(xᵀx) = 2x).",
+        "(2) ∇(xᵀBx) = (B + Bᵀ)x, Hessian B + Bᵀ.",
+        "(3) ∇f = Ax + b, Hessian A."
       ],
       "pit": "∇(xᵀBx) = 2Bx only when B is symmetric — the slide's derivative table drops this condition.",
       "src": "L2-1 s.2; L2-2 s.17"
@@ -62,9 +62,8 @@
       "id": "NLO-02-06",
       "q": "FONC assumes x* is an interior point and f is differentiable there. Explain what goes wrong in (1) minimizing f(x) = x over x ∈ [0, 1], whose minimizer is x* = 0, and (2) f(x) = |x| at x = 0.",
       "pts": [
-        "On [0, 1], x* = 0 is a boundary point: only feasible directions d ≥ 0 are allowed, so the proof only gives ∇f(x*)ᵀd ≥ 0 for feasible d (f′(0) = 1 ≠ 0).",
-        "That “no feasible descent direction” condition is the seed of the KKT conditions.",
-        "f = |x| has a strict global min at 0 but is not differentiable there, so the hypothesis of FONC fails (one-sided derivatives ±1)."
+        "(1) x* = 0 is a boundary point, so only feasible directions d ≥ 0 are allowed and the proof only gives ∇f(x*)ᵀd ≥ 0 for those d — here f′(0) = 1 ≠ 0. This “no feasible descent direction” condition is the seed of KKT.",
+        "(2) |x| has a strict global min at 0 but is not differentiable there (one-sided derivatives ±1), so FONC's hypothesis fails."
       ],
       "pit": "Non-smooth losses such as the hinge loss have the same issue at the kink — the reason subgradients exist.",
       "src": "Notes §2, CX 2.1–2.2"
@@ -84,10 +83,9 @@
       "id": "NLO-02-08",
       "q": "Which operations on sets preserve convexity? Use them to explain why the LP feasible set {x : Ax ≤ b} is convex.",
       "pts": [
-        "Any intersection (arbitrary index set) of convex sets is convex.",
-        "Scaling βC and the Minkowski sum C₁ + C₂ are convex.",
-        "A polyhedron {Ax ≤ b} is an intersection of half-spaces, so it is convex — this covers LP feasible sets.",
-        "Sublevel sets {g(x) ≤ 0} of convex g are convex, so {gᵢ(x) ≤ 0 ∀i, Ax = b} is convex when every gᵢ is convex."
+        "Intersections (of any number of sets), scaling βC and Minkowski sums C₁ + C₂ of convex sets are convex.",
+        "Sublevel sets {g ≤ 0} of convex g are convex, so {gᵢ(x) ≤ 0 ∀i, Ax = b} is convex when every gᵢ is.",
+        "LP: {Ax ≤ b} is an intersection of half-spaces, hence convex."
       ],
       "pit": "Unions do not preserve convexity.",
       "src": "L2-2 s.12–13"
@@ -152,10 +150,8 @@
       "id": "NLO-02-14",
       "q": "Call min f(x) over S a convex problem when S is a convex set and f is convex on S. (1) State the “local = global” theorem, including the strictly convex case. (2) Outline its proof: which point z do you construct, and how do you finish?",
       "pts": [
-        "(1) Every local minimizer of a convex problem is a global minimizer.",
-        "(1) If f is strictly convex, the minimizer is also unique and strict.",
-        "(2) For y outside the ball B(x*, ε), take z = λ′x* + (1 − λ′)y with 1 − λ′ = ε/‖y − x*‖: z is in S (convex set) and on the ball.",
-        "(2) Then f(x*) ≤ f(z) ≤ λ′f(x*) + (1 − λ′)f(y); divide by 1 − λ′ > 0 to get f(x*) ≤ f(y)."
+        "(1) Every local minimizer of a convex problem is global; if f is strictly convex, it is also unique and strict.",
+        "(2) For y outside B(x*, ε), take z = λ′x* + (1 − λ′)y with 1 − λ′ = ε/‖y − x*‖, so z ∈ S and on the ball. Then f(x*) ≤ f(z) ≤ λ′f(x*) + (1 − λ′)f(y); divide by 1 − λ′ > 0 to get f(x*) ≤ f(y)."
       ],
       "pit": "Both convexities are needed: (x − 2)² on S = [−1, 0] ∪ [1, 3] has a local min at 0 that is not global.",
       "src": "L2-2 s.29–36"
@@ -164,10 +160,8 @@
       "id": "NLO-02-15",
       "q": "Let f be differentiable on an open convex set C. (1) State the gradient inequality that characterizes convexity and interpret it geometrically. (2) What does it imply for a point x* with ∇f(x*) = 0?",
       "pts": [
-        "f differentiable on open convex C: f convex ⇔ f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) for all x, y ∈ C.",
-        "The tangent plane is a global under-estimator; strict convexity ⇔ strict inequality for y ≠ x.",
-        "Corollary: if f is convex and ∇f(x*) = 0, then x* is a global minimizer (strict if f is strictly convex).",
-        "So for differentiable convex f on ℝⁿ, FONC is necessary and sufficient."
+        "(1) f convex ⇔ f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) for all x, y ∈ C (strict for y ≠ x ⇔ strictly convex): the tangent plane is a global under-estimator.",
+        "(2) Put x = x*: f(y) ≥ f(x*) for all y, so x* is a global minimizer. For differentiable convex f on ℝⁿ, FONC is therefore necessary and sufficient."
       ],
       "pit": "On a constrained convex S the right condition is ∇f(x*)ᵀ(y − x*) ≥ 0 for all y ∈ S, not ∇f(x*) = 0.",
       "src": "L2-2 s.37–39"
@@ -188,10 +182,9 @@
       "id": "NLO-02-17",
       "q": "For a twice-differentiable f, state (1) the second-order necessary condition (SONC) and (2) the second-order sufficient condition (SOSC). (3) Which case can neither of them decide?",
       "pts": [
-        "SONC: if x̄ is a local min and f is twice differentiable, then ∇f(x̄) = 0 and H(x̄) ⪰ 0.",
-        "SOSC: if ∇f(x*) = 0 and H(x*) ≻ 0, then x* is a strict local min.",
-        "SOSC is local only — one PD Hessian says nothing global (x³ − x² − 4x − 6 has a strict local min but is unbounded below).",
-        "Gap: when H(x*) is PSD and singular, neither decides — x⁴ is a min, x³ is neither."
+        "(1) SONC: if x̄ is a local min, then ∇f(x̄) = 0 and H(x̄) ⪰ 0.",
+        "(2) SOSC: if ∇f(x*) = 0 and H(x*) ≻ 0, then x* is a strict local min — local only, it says nothing global.",
+        "(3) H(x*) PSD but singular: undecided — x⁴ has a min at 0, x³ has neither."
       ],
       "pit": "x₁² + x₂⁴ and x₁² − x₂⁴ both have H(0) = diag(2, 0), yet one is a strict min and the other a saddle: look along the null direction.",
       "src": "L2-2 s.41–47"
@@ -200,9 +193,8 @@
       "id": "NLO-02-18",
       "q": "What is a saddle point of f, and which second-order test identifies one?",
       "pts": [
-        "A stationary point that is neither a local min nor a local max: every neighbourhood has points with larger and with smaller f.",
-        "Test: ∇f(x*) = 0 and H(x*) indefinite ⇒ saddle point.",
-        "A symmetric matrix is indefinite ⇔ it has a positive and a negative eigenvalue."
+        "A stationary point that is neither a local min nor a local max: every neighbourhood contains points with larger and with smaller f.",
+        "Test: ∇f(x*) = 0 and H(x*) indefinite (it has both a positive and a negative eigenvalue) ⇒ saddle point."
       ],
       "pit": "A PSD but singular Hessian can still be a saddle (x₁² − x₂⁴ at 0); indefiniteness is sufficient, not necessary.",
       "src": "L2-2 s.48–50"
