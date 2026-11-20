@@ -77,6 +77,8 @@
     .layout.with-side { display:grid; grid-template-columns:172px minmax(0,1fr); gap:28px; }
     .side { display:flex; flex-direction:column; font-size:12px; font-variant-numeric:tabular-nums; border-right:1px solid #f0f0f0; padding:12px 12px 0 0; align-self:start; position:sticky; top:12px; max-height:calc(100vh - 24px); overflow:auto; }
     .side-item { display:flex; gap:9px; text-align:left; color:#666; padding:3px 0; white-space:nowrap; }
+    .side-h { font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:#aaa; margin:12px 0 3px; white-space:nowrap; }
+    .side-h:first-child { margin-top:0; }
     .side-item .no { color:#bbb; flex:0 0 auto; font-weight:400; }
     .side-item .kw { overflow:hidden; text-overflow:ellipsis; }
     .side-item:hover { color:#222; }
@@ -294,7 +296,7 @@ async function loadTopics() {
       if (!validCard(c)) { problems.push('bad card in ' + res.title); continue; }
       if (seen.has(c.id)) { problems.push('duplicate id ' + c.id); continue; }
       seen.add(c.id);
-      bank.push({ id: c.id, k: typeof c.k === 'string' ? c.k : '', q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', src: typeof c.src === 'string' ? c.src : '', seen: Array.isArray(c.seen) ? c.seen.filter(v => typeof v === 'string') : [], subj: res.subj, topic: res.title });
+      bank.push({ id: c.id, g: typeof c.g === 'string' ? c.g : '', k: typeof c.k === 'string' ? c.k : '', q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', src: typeof c.src === 'string' ? c.src : '', seen: Array.isArray(c.seen) ? c.seen.filter(v => typeof v === 'string') : [], subj: res.subj, topic: res.title });
     }
   }
   // keep manifest order
@@ -522,7 +524,9 @@ function renderSide(list) {
   const side = $('side'), show = subject !== ALL && !!effectiveTopic() && list.length > 0;
   side.classList.toggle('hidden', !show); $('layout').classList.toggle('with-side', show);
   side.replaceChildren(); if (!show) return;
+  let group = '';
   for (const q of list) {
+    if (q.g && q.g !== group) { group = q.g; const h = document.createElement('div'); h.className = 'side-h'; h.textContent = q.g; side.append(h); }
     const b = document.createElement('button'); b.type = 'button'; b.title = q.id;
     if (q.k) { const no = document.createElement('span'); no.className = 'no'; no.textContent = q.id.split('-').pop(); const kw = document.createElement('span'); kw.className = 'kw'; kw.textContent = q.k; b.append(no, kw); }
     else b.textContent = q.id;
