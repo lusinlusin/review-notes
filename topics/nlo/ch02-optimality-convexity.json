@@ -3,7 +3,7 @@
   "cards": [
     {
       "id": "NLO-02-01",
-      "q": "Define global, local and strict minimizers of min f(x) over S. How do they imply each other?",
+      "q": "For min f(x) over a set S ⊆ ℝⁿ, define (1) a global minimizer, (2) a local minimizer, (3) the “strict” version of each, and (4) say how these notions imply one another.",
       "pts": [
         "Global min: f(x) ≥ f(x*) for all x ∈ S; strict if f(x) > f(x*) for all x ∈ S, x ≠ x*.",
         "Local min: there is ε > 0 with f(x*) ≤ f(x) for all x ∈ B(x*, ε) ∩ S; strict local min uses < for x ≠ x*.",
@@ -15,7 +15,7 @@
     },
     {
       "id": "NLO-02-02",
-      "q": "Gradient and Hessian of bᵀx, xᵀBx and ½xᵀAx (A symmetric)?",
+      "q": "Let b ∈ ℝⁿ and let B be an n×n matrix, not necessarily symmetric. Give the gradient and Hessian of (1) bᵀx, (2) xᵀBx, and (3) f(x) = ½xᵀAx + bᵀx + c when A is symmetric.",
       "pts": [
         "∇(bᵀx) = b and ∇(xᵀx) = 2x.",
         "∇(xᵀBx) = (B + Bᵀ)x and ∇²(xᵀBx) = B + Bᵀ for a general square B.",
@@ -26,7 +26,7 @@
     },
     {
       "id": "NLO-02-03",
-      "q": "State the first-order necessary condition (FONC) with its hypotheses.",
+      "q": "State the first-order necessary condition (FONC) for minimizing f over ℝⁿ: what must be assumed about f and about the point x*, and what does it conclude?",
       "pts": [
         "f is differentiable at x*.",
         "x* is a local minimizer of the unconstrained problem min over ℝⁿ (an interior point, so every direction is allowed).",
@@ -37,7 +37,7 @@
     },
     {
       "id": "NLO-02-04",
-      "q": "What are the three essential moves in a rigorous proof of FONC?",
+      "q": "FONC says: if x* is a local minimizer of a differentiable f on ℝⁿ, then ∇f(x*) = 0. Outline a rigorous proof in three steps.",
       "pts": [
         "Fix any direction d; for small t > 0, x* + td is in the ball, so f(x* + td) − f(x*) ≥ 0.",
         "Divide by t > 0 (inequality keeps direction) and let t ↓ 0 using the o(t) Taylor remainder: ∇f(x*)ᵀd ≥ 0 for every d.",
@@ -48,7 +48,7 @@
     },
     {
       "id": "NLO-02-05",
-      "q": "What can FONC do, and what can it not do?",
+      "q": "FONC narrows the search to points with ∇f(x) = 0. What does this achieve, and what are its three limitations?",
       "pts": [
         "Can: rule out every non-stationary point and reduce the search to solving ∇f(x) = 0 (n equations, n unknowns).",
         "Cannot tell a min from a max: f and −f have the same stationary points.",
@@ -60,7 +60,7 @@
     },
     {
       "id": "NLO-02-06",
-      "q": "Why does FONC fail for min x over [0, 1] at x* = 0, and for f = |x| at 0?",
+      "q": "FONC assumes x* is an interior point and f is differentiable there. Explain what goes wrong in (1) minimizing f(x) = x over x ∈ [0, 1], whose minimizer is x* = 0, and (2) f(x) = |x| at x = 0.",
       "pts": [
         "On [0, 1], x* = 0 is a boundary point: only feasible directions d ≥ 0 are allowed, so the proof only gives ∇f(x*)ᵀd ≥ 0 for feasible d (f′(0) = 1 ≠ 0).",
         "That “no feasible descent direction” condition is the seed of the KKT conditions.",
@@ -71,7 +71,7 @@
     },
     {
       "id": "NLO-02-07",
-      "q": "Define a convex set and give standard examples.",
+      "q": "Define a convex set C ⊆ ℝⁿ, list standard examples, and explain how an affine set differs from a general convex set.",
       "pts": [
         "C is convex if x, y ∈ C and λ ∈ [0, 1] imply λx + (1 − λ)y ∈ C (the whole segment stays in C).",
         "Examples: ℝⁿ, ∅, half-spaces {aᵀx ≥ β}, balls, affine sets {Ax = b}, the PSD cone.",
@@ -82,7 +82,7 @@
     },
     {
       "id": "NLO-02-08",
-      "q": "Which operations preserve convexity of sets? Why is an LP feasible set convex?",
+      "q": "Which operations on sets preserve convexity? Use them to explain why the LP feasible set {x : Ax ≤ b} is convex.",
       "pts": [
         "Any intersection (arbitrary index set) of convex sets is convex.",
         "Scaling βC and the Minkowski sum C₁ + C₂ are convex.",
@@ -94,7 +94,7 @@
     },
     {
       "id": "NLO-02-09",
-      "q": "Define a convex function. Why must the domain be convex first?",
+      "q": "Define a convex function and a strictly convex function f on a set S. Why must S itself be convex for the definition to make sense?",
       "pts": [
         "f(λx + (1 − λ)y) ≤ λf(x) + (1 − λ)f(y) for all x, y ∈ S, λ ∈ [0, 1] — the chord lies above the graph.",
         "Strictly convex: strict inequality whenever x ≠ y and λ ∈ (0, 1). f is concave if −f is convex.",
@@ -105,18 +105,18 @@
     },
     {
       "id": "NLO-02-10",
-      "q": "When is f(x) = ½xᵀAx + bᵀx + c (A symmetric) convex or strictly convex? Why?",
+      "q": "Let f(x) = ½xᵀAx + bᵀx + c with A symmetric. (1) When is f convex, and when strictly convex? (2) What identity proves this without using the Hessian? (3) Apply it to portfolio variance xᵀQx, where Q is a covariance matrix.",
       "pts": [
-        "Identity: λf(x) + (1 − λ)f(y) − f(λx + (1 − λ)y) = ½λ(1 − λ)(x − y)ᵀA(x − y).",
-        "So f is convex ⇔ A ⪰ 0, and strictly convex ⇔ A ≻ 0 — no Hessian argument needed.",
-        "Portfolio variance xᵀQx is convex because a covariance matrix is PSD (xᵀQx = Var(xᵀr) ≥ 0); strictly convex iff no riskless combination exists."
+        "(1) f is convex ⇔ A ⪰ 0, and strictly convex ⇔ A ≻ 0.",
+        "(2) λf(x) + (1 − λ)f(y) − f(λx + (1 − λ)y) = ½λ(1 − λ)(x − y)ᵀA(x − y): the gap is ≥ 0 for all x, y exactly when A ⪰ 0 (if vᵀAv < 0, take x − y = v).",
+        "(3) xᵀQx = Var(xᵀr) ≥ 0, so a covariance matrix is PSD and portfolio variance is convex; strictly convex iff Q ≻ 0, i.e. no riskless combination of the assets."
       ],
       "pit": "Necessity: if vᵀAv < 0 for some v, choose x − y = v and the identity turns negative.",
       "src": "L2-2 s.17–18"
     },
     {
       "id": "NLO-02-11",
-      "q": "Which operations preserve convexity of functions?",
+      "q": "Which operations on functions preserve convexity? Give the rules for (1) sums, (2) positive scaling, (3) composition g∘f, and (4) two further rules needed for ML losses such as hinge and logistic.",
       "pts": [
         "Sum f₁ + f₂ is convex; strictly convex if at least one term is.",
         "αf with α > 0 keeps (strict) convexity.",
@@ -128,7 +128,7 @@
     },
     {
       "id": "NLO-02-12",
-      "q": "State the Hessian test for convexity with all its hypotheses.",
+      "q": "State the Hessian test for convexity of f on a set C: (1) the hypotheses on C and on f, (2) the test for convexity, (3) the test for strict convexity.",
       "pts": [
         "C is non-empty, open and convex, and f ∈ C²(C).",
         "f is convex on C ⇔ H(x) ⪰ 0 for all x ∈ C.",
@@ -139,7 +139,7 @@
     },
     {
       "id": "NLO-02-13",
-      "q": "How do you check positive definite vs positive semidefinite?",
+      "q": "For a symmetric matrix, how do you check (1) positive definiteness (PD), (2) positive semidefiniteness (PSD), and (3) PSD for a 2×2 matrix [[a, b], [b, c]]?",
       "pts": [
         "PD: all leading principal minors > 0, or all eigenvalues > 0.",
         "PSD: all principal minors ≥ 0 — not only the leading ones — or all eigenvalues ≥ 0.",
@@ -150,19 +150,19 @@
     },
     {
       "id": "NLO-02-14",
-      "q": "State the “local = global” theorem for convex problems and the key step of its proof.",
+      "q": "Call min f(x) over S a convex problem when S is a convex set and f is convex on S. (1) State the “local = global” theorem, including the strictly convex case. (2) Outline its proof: which point z do you construct, and how do you finish?",
       "pts": [
-        "Convex problem: S is a convex set and f is convex on S. Then every local minimizer is a global minimizer.",
-        "If f is strictly convex, the minimizer is the unique, strict global minimizer.",
-        "Proof: for y outside the ball, take z = λ′x* + (1 − λ′)y with 1 − λ′ = ε/‖y − x*‖, so z lies on the ball and in S.",
-        "Then f(x*) ≤ f(z) ≤ λ′f(x*) + (1 − λ′)f(y); divide by 1 − λ′ > 0 to get f(x*) ≤ f(y)."
+        "(1) Every local minimizer of a convex problem is a global minimizer.",
+        "(1) If f is strictly convex, the minimizer is also unique and strict.",
+        "(2) For y outside the ball B(x*, ε), take z = λ′x* + (1 − λ′)y with 1 − λ′ = ε/‖y − x*‖: z is in S (convex set) and on the ball.",
+        "(2) Then f(x*) ≤ f(z) ≤ λ′f(x*) + (1 − λ′)f(y); divide by 1 − λ′ > 0 to get f(x*) ≤ f(y)."
       ],
       "pit": "Both convexities are needed: (x − 2)² on S = [−1, 0] ∪ [1, 3] has a local min at 0 that is not global.",
       "src": "L2-2 s.29–36"
     },
     {
       "id": "NLO-02-15",
-      "q": "State the gradient inequality and what it implies for stationary points.",
+      "q": "Let f be differentiable on an open convex set C. (1) State the gradient inequality that characterizes convexity and interpret it geometrically. (2) What does it imply for a point x* with ∇f(x*) = 0?",
       "pts": [
         "f differentiable on open convex C: f convex ⇔ f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) for all x, y ∈ C.",
         "The tangent plane is a global under-estimator; strict convexity ⇔ strict inequality for y ≠ x.",
@@ -174,19 +174,19 @@
     },
     {
       "id": "NLO-02-16",
-      "q": "Least squares min ½‖Xw − y‖²: convexity, solution and when it is unique.",
+      "q": "Least squares: X is the data matrix (n samples × d features), y ∈ ℝⁿ the targets, and we choose weights w ∈ ℝᵈ to minimize f(w) = ½‖Xw − y‖². (1) Give ∇f and the Hessian, and explain why f is always convex. (2) When is the minimizer unique, and what is it? (3) What does the optimality condition mean geometrically? (4) What happens when the uniqueness condition fails?",
       "pts": [
-        "∇f = Xᵀ(Xw − y) and H = XᵀX ⪰ 0, so f is always convex.",
-        "If X has full column rank, XᵀX ≻ 0 and the unique minimizer is w* = (XᵀX)⁻¹Xᵀy (normal equations).",
-        "Optimality means the residual is orthogonal to the columns of X: Xᵀr = 0.",
-        "Rank-deficient X: still convex (local = global) but infinitely many minimizers; ridge (XᵀX + γI) restores uniqueness."
+        "(1) ∇f(w) = Xᵀ(Xw − y) and H = XᵀX. H is PSD because wᵀXᵀXw = ‖Xw‖² ≥ 0, so f is convex for any X.",
+        "(2) Unique iff X has full column rank (no redundant features). Then XᵀX ≻ 0, and setting ∇f = 0 (normal equations XᵀXw = Xᵀy) gives w* = (XᵀX)⁻¹Xᵀy.",
+        "(3) ∇f(w*) = 0 means Xᵀr = 0 for the residual r = Xw* − y: the residual is orthogonal to every column of X.",
+        "(4) If X is rank-deficient (e.g. one column is a multiple of another), XᵀX is singular: f is still convex, so local = global, but there are infinitely many minimizers. Ridge (XᵀX + γI ≻ 0) restores uniqueness."
       ],
       "pit": "The slides say “full row rank” — backwards. A tall regression matrix can never have full row rank; what is needed is full column rank.",
       "src": "L2-2 s.19, 40"
     },
     {
       "id": "NLO-02-17",
-      "q": "State SONC and SOSC. What is the gap between them?",
+      "q": "For a twice-differentiable f, state (1) the second-order necessary condition (SONC) and (2) the second-order sufficient condition (SOSC). (3) Which case can neither of them decide?",
       "pts": [
         "SONC: if x̄ is a local min and f is twice differentiable, then ∇f(x̄) = 0 and H(x̄) ⪰ 0.",
         "SOSC: if ∇f(x*) = 0 and H(x*) ≻ 0, then x* is a strict local min.",
@@ -198,7 +198,7 @@
     },
     {
       "id": "NLO-02-18",
-      "q": "What is a saddle point, and how do you detect one?",
+      "q": "What is a saddle point of f, and which second-order test identifies one?",
       "pts": [
         "A stationary point that is neither a local min nor a local max: every neighbourhood has points with larger and with smaller f.",
         "Test: ∇f(x*) = 0 and H(x*) indefinite ⇒ saddle point.",
@@ -209,7 +209,7 @@
     },
     {
       "id": "NLO-02-19",
-      "q": "Classify the stationary points of f(x) = x³ − x² − 4x − 6.",
+      "q": "Find and classify all stationary points of f(x) = x³ − x² − 4x − 6 (local min or local max), and say whether f has a global minimum.",
       "pts": [
         "f′ = 3x² − 2x − 4 = 0 gives x = (1 ± √13)/3 ≈ 1.535 and −0.869.",
         "f″ = 6x − 2: at x₊ = (1 + √13)/3, f″ = 2√13 > 0 ⇒ strict local min.",
