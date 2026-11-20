@@ -3,6 +3,7 @@
   "cards": [
     {
       "id": "TS-01",
+      "k": "Weak stationarity",
       "q": "What is weak stationarity?",
       "pts": [
         "E[Xₜ] = μ is constant over time.",
@@ -13,6 +14,7 @@
     },
     {
       "id": "TS-02",
+      "k": "ACF vs PACF",
       "q": "What does the ACF tell you compared with the PACF?",
       "pts": [
         "ACF ρ(h): correlation between Xₜ and Xₜ₋ₕ, including indirect effects through the lags in between.",
@@ -23,6 +25,7 @@
     },
     {
       "id": "TS-03",
+      "k": "AR vs MA",
       "q": "What is the key distinction between AR(p) and MA(q)?",
       "pts": [
         "AR(p): Xₜ = c + φ₁Xₜ₋₁ + … + φₚXₜ₋ₚ + εₜ — depends on past values of the series.",
@@ -33,6 +36,7 @@
     },
     {
       "id": "TS-04",
+      "k": "Cointegration",
       "q": "What is cointegration?",
       "pts": [
         "Each series is I(1): nonstationary with a unit root.",
@@ -44,6 +48,7 @@
     },
     {
       "id": "TS-05",
+      "k": "Train / test split",
       "q": "Why can random train/test splitting be dangerous in time-series ML?",
       "pts": [
         "A random split lets future information leak into training, so scores look too optimistic.",
@@ -54,6 +59,7 @@
     },
     {
       "id": "TS-06",
+      "k": "GARCH(1,1)",
       "q": "What does GARCH(1,1) model?",
       "pts": [
         "Conditional variance: hₜ = ω + α ε²ₜ₋₁ + β hₜ₋₁ with ω > 0, α, β ≥ 0.",
@@ -64,6 +70,7 @@
     },
     {
       "id": "TS-07",
+      "k": "White noise vs MDS",
       "q": "What is the difference between white noise and a martingale difference sequence?",
       "pts": [
         "White noise: zero mean, constant finite variance, zero autocorrelation at all nonzero lags.",
@@ -75,6 +82,7 @@
     },
     {
       "id": "TS-08",
+      "k": "Look-ahead bias",
       "q": "What is look-ahead bias in a trading backtest?",
       "pts": [
         "The strategy uses information that was not available at the decision time.",

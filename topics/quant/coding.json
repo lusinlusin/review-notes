@@ -3,6 +3,7 @@
   "cards": [
     {
       "id": "CODE-01",
+      "k": "Sort complexity",
       "q": "What is the time complexity of sorting a Python list?",
       "pts": [
         "list.sort() and sorted() use Timsort.",
@@ -13,6 +14,7 @@
     },
     {
       "id": "CODE-02",
+      "k": "Generator vs list",
       "q": "Generator vs list in Python?",
       "pts": [
         "A generator yields values lazily — constant memory, good for streaming large data.",
@@ -23,6 +25,7 @@
     },
     {
       "id": "CODE-03",
+      "k": "Shallow vs deep copy",
       "q": "What is the difference between a shallow and a deep copy?",
       "pts": [
         "Shallow copy (copy.copy, list[:]): a new outer container that still references the same nested objects.",
@@ -33,6 +36,7 @@
     },
     {
       "id": "CODE-04",
+      "k": "Data leakage",
       "q": "What is data leakage in machine learning?",
       "pts": [
         "Training or model selection uses information that would not be available at prediction time.",
@@ -43,6 +47,7 @@
     },
     {
       "id": "CODE-05",
+      "k": "L1 sparsity",
       "q": "Why does L1 regularization create sparse coefficients?",
       "pts": [
         "The L1 penalty λ‖β‖₁ is non-differentiable at 0; its subgradient lets coefficients sit exactly at zero.",
@@ -53,6 +58,7 @@
     },
     {
       "id": "CODE-06",
+      "k": "WHERE vs HAVING",
       "q": "What is the difference between SQL WHERE and HAVING?",
       "pts": [
         "WHERE filters rows before grouping.",
@@ -63,6 +69,7 @@
     },
     {
       "id": "CODE-07",
+      "k": "Window functions",
       "q": "What is a window function in SQL?",
       "pts": [
         "Computes over a window of rows: f(...) OVER (PARTITION BY … ORDER BY …).",
@@ -73,6 +80,7 @@
     },
     {
       "id": "CODE-08",
+      "k": "K-fold in finance",
       "q": "Why is ordinary K-fold CV unsuitable for many financial time series?",
       "pts": [
         "Observations are serially dependent; random folds put the neighbors of test points into training.",

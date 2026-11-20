@@ -3,6 +3,7 @@
   "cards": [
     {
       "id": "STA-01",
+      "k": "Unbiasedness",
       "q": "Why is an estimator being unbiased not enough to make it good?",
       "pts": [
         "Unbiased only means E[θ̂] = θ — it says nothing about how spread out θ̂ is.",
@@ -13,6 +14,7 @@
     },
     {
       "id": "STA-02",
+      "k": "CLT",
       "q": "What is the central limit theorem in its basic i.i.d. form?",
       "pts": [
         "X₁, …, Xₙ i.i.d. with mean μ and finite variance σ² > 0.",
@@ -23,6 +25,7 @@
     },
     {
       "id": "STA-03",
+      "k": "Bootstrap vs CV",
       "q": "What is the difference between bootstrap and cross-validation?",
       "pts": [
         "Bootstrap: resample with replacement to approximate an estimator’s sampling distribution (standard errors, confidence intervals).",
@@ -33,6 +36,7 @@
     },
     {
       "id": "STA-04",
+      "k": "MLE vs MAP",
       "q": "MLE vs MAP estimation?",
       "pts": [
         "MLE: θ̂ = argmax p(data | θ).",
@@ -44,6 +48,7 @@
     },
     {
       "id": "STA-05",
+      "k": "p-value",
       "q": "What is a p-value, and what is it not?",
       "pts": [
         "The probability, assuming H₀ is true, of a test statistic at least as extreme as the one observed.",
@@ -54,6 +59,7 @@
     },
     {
       "id": "STA-06",
+      "k": "Heteroskedasticity",
       "q": "Why can heteroskedasticity cause problems in OLS inference?",
       "pts": [
         "Under exogeneity, OLS coefficients stay unbiased and consistent.",
@@ -64,6 +70,7 @@
     },
     {
       "id": "STA-07",
+      "k": "CI vs PI",
       "q": "What is the difference between confidence and prediction intervals?",
       "pts": [
         "Confidence interval: for a parameter or the conditional mean E[y | x].",
@@ -74,6 +81,7 @@
     },
     {
       "id": "STA-08",
+      "k": "Bias–variance",
       "q": "What is the bias–variance tradeoff?",
       "pts": [
         "Expected squared prediction error = Bias² + Variance + irreducible noise σ².",

@@ -398,6 +398,7 @@
   "cards": [
     {
       "id": "NLO-02-01",
+      "k": "Min definitions",
       "q": "Consider $\\min f(x)$ over a set $S \\subseteq \\mathbb{R}^n$, and let $B(x^*, \\varepsilon)$ be the ball of radius $\\varepsilon$ around $x^*$. Define (1) a global minimizer, (2) a local minimizer, (3) the strict version of each. (4) How do these notions imply one another?",
       "pts": [
         "(1) Global: $f(x) \\ge f(x^*)$ for all $x \\in S$.",
@@ -410,6 +411,7 @@
     },
     {
       "id": "NLO-02-02",
+      "k": "Gradients",
       "q": "Let $b \\in \\mathbb{R}^n$, and let $B$ be an $n \\times n$ matrix that is not necessarily symmetric. Gradients are column vectors. Give the gradient and Hessian of (1) $b^\\top x$, (2) $x^\\top B x$, (3) $f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ where $A$ is symmetric.",
       "pts": [
         "(1) Gradient $b$, Hessian $0$.",
@@ -421,6 +423,7 @@
     },
     {
       "id": "NLO-02-03",
+      "k": "FONC statement",
       "q": "Consider the unconstrained problem $\\min f(x)$ over $x \\in \\mathbb{R}^n$. State the first-order necessary condition (FONC): (1) what is assumed about $f$ and about the point $x^*$, (2) what is concluded, (3) is the converse true?",
       "pts": [
         "(1) $f$ is differentiable at $x^*$, and $x^*$ is a local minimizer over $\\mathbb{R}^n$.",
@@ -432,6 +435,7 @@
     },
     {
       "id": "NLO-02-04",
+      "k": "FONC proof",
       "q": "FONC: if $x^*$ is a local minimizer of a differentiable $f$ on $\\mathbb{R}^n$, then $\\nabla f(x^*) = 0$. Outline a rigorous proof. (1) What inequality do you start from? (2) How do you turn it into a statement about $\\nabla f(x^*)^\\top d$? (3) How do you conclude $\\nabla f(x^*) = 0$?",
       "pts": [
         "(1) Fix any direction $d$. For small $t > 0$ the point $x^* + td$ is inside the ball of local optimality, so $f(x^* + td) - f(x^*) \\ge 0$.",
@@ -443,6 +447,7 @@
     },
     {
       "id": "NLO-02-05",
+      "k": "FONC limits",
       "q": "FONC reduces $\\min f(x)$ over $\\mathbb{R}^n$ to finding points with $\\nabla f(x) = 0$. (1) What does this achieve? (2) What three things can it not do? Give an example for each.",
       "pts": [
         "(1) It rules out every non-stationary point, leaving a square system $\\nabla f(x) = 0$ ($n$ equations, $n$ unknowns).",
@@ -455,6 +460,7 @@
     },
     {
       "id": "NLO-02-06",
+      "k": "FONC failures",
       "q": "FONC assumes $x^*$ is an interior point and $f$ is differentiable there. Explain what goes wrong in (1) minimizing $f(x) = x$ over $x \\in [0, 1]$, whose minimizer is $x^* = 0$, and (2) minimizing $f(x) = |x|$, whose minimizer is $x^* = 0$.",
       "pts": [
         "(1) $x^* = 0$ is a boundary point, so only directions $d \\ge 0$ are feasible. The proof then gives $\\nabla f(x^*)^\\top d \\ge 0$ only for feasible $d$, not $\\nabla f(x^*) = 0$. Here $f'(0) = 1 \\ne 0$. This “no feasible descent direction” condition is the seed of KKT.",
@@ -465,6 +471,7 @@
     },
     {
       "id": "NLO-02-07",
+      "k": "Convex sets",
       "q": "(1) Define a convex set $C \\subseteq \\mathbb{R}^n$. (2) Name four standard examples. (3) An affine set $\\{x : Ax = b\\}$ is convex. What stronger property does it have?",
       "pts": [
         "(1) For all $x, y \\in C$ and $\\lambda \\in [0, 1]$, the point $\\lambda x + (1 - \\lambda) y$ is in $C$: the segment between two points of $C$ stays in $C$.",
@@ -476,6 +483,7 @@
     },
     {
       "id": "NLO-02-08",
+      "k": "Set operations",
       "q": "(1) Which three operations on convex sets give a convex set again? (2) Let $g$ be a convex function. Why is $\\{x : g(x) \\le 0\\}$ convex? (3) Why is the LP feasible set $\\{x : Ax \\le b\\}$ convex?",
       "pts": [
         "(1) Intersection (of any number of sets), scaling $\\beta C$, and the Minkowski sum $C_1 + C_2$.",
@@ -487,6 +495,7 @@
     },
     {
       "id": "NLO-02-09",
+      "k": "Convex function",
       "q": "Let $f$ be a real-valued function on a set $S \\subseteq \\mathbb{R}^n$. (1) Define “$f$ is convex” and give the geometric picture. (2) Define “strictly convex” and “concave”. (3) Why must $S$ be a convex set?",
       "pts": [
         "(1) For all $x, y \\in S$ and $\\lambda \\in [0, 1]$: $$f(\\lambda x + (1 - \\lambda) y) \\le \\lambda f(x) + (1 - \\lambda) f(y)$$ The chord between two points of the graph lies on or above the graph.",
@@ -498,6 +507,7 @@
     },
     {
       "id": "NLO-02-10",
+      "k": "Quadratics",
       "q": "Let $f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ with $A$ symmetric. (1) When is $f$ convex, and when strictly convex? (2) Which identity proves this directly from the definition of convexity? (3) Apply the result to portfolio variance $x^\\top Q x$, where $Q$ is the covariance matrix of asset returns $r$ and $x$ the weights.",
       "pts": [
         "(1) Convex ⇔ $A \\succeq 0$ (PSD). Strictly convex ⇔ $A \\succ 0$ (PD).",
@@ -509,6 +519,7 @@
     },
     {
       "id": "NLO-02-11",
+      "k": "Function operations",
       "q": "Let $f, f_1, f_2$ be convex functions on a convex set. Under what conditions are the following convex: (1) $f_1 + f_2$ and $\\alpha f$, (2) the composition $g(f(x))$ with $g: \\mathbb{R} \\to \\mathbb{R}$, (3) $f(Ax + b)$ and $\\max\\{f_1(x), f_2(x)\\}$?",
       "pts": [
         "(1) $f_1 + f_2$ always (strictly convex if one of them is). $\\alpha f$ when $\\alpha > 0$.",
@@ -520,6 +531,7 @@
     },
     {
       "id": "NLO-02-12",
+      "k": "Hessian test",
       "q": "Let $H(x)$ be the Hessian of $f$. State the Hessian test for convexity of $f$ on a set $C$: (1) what is assumed about $C$ and $f$, (2) the test for convexity, (3) the test for strict convexity, and whether it works in both directions.",
       "pts": [
         "(1) $C$ is non-empty, open and convex, and $f$ is twice continuously differentiable on $C$.",
@@ -531,6 +543,7 @@
     },
     {
       "id": "NLO-02-13",
+      "k": "PD / PSD check",
       "q": "Let $A$ be a symmetric matrix. How do you check (1) that $A$ is positive definite (PD), (2) that $A$ is positive semidefinite (PSD)? (3) Write the PSD conditions for the $2 \\times 2$ matrix $\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$.",
       "pts": [
         "(1) All leading principal minors $> 0$ (determinants of the upper-left $k \\times k$ blocks), or all eigenvalues $> 0$.",
@@ -542,6 +555,7 @@
     },
     {
       "id": "NLO-02-14",
+      "k": "Local = global",
       "q": "A convex problem is $\\min f(x)$ over $x \\in S$ where $S$ is a convex set and $f$ is convex on $S$. (1) State the “local = global” theorem, including what strict convexity adds. (2) Outline the proof: $x^*$ is a local minimizer with radius $\\varepsilon$ and $y \\in S$ is any point outside the ball $B(x^*, \\varepsilon)$. Which point $z$ do you construct, and how do you finish?",
       "pts": [
         "(1) Every local minimizer is a global minimizer. If $f$ is strictly convex, the minimizer is also unique (and strict).",
@@ -552,6 +566,7 @@
     },
     {
       "id": "NLO-02-15",
+      "k": "Gradient inequality",
       "q": "Let $f$ be differentiable on an open convex set $C$. (1) State the gradient inequality that is equivalent to convexity of $f$, and give its geometric meaning. (2) Suppose $f$ is convex and $\\nabla f(x^*) = 0$. What follows, and why? (3) What does this mean for FONC when $f$ is convex on $\\mathbb{R}^n$?",
       "pts": [
         "(1) For all $x, y \\in C$: $$f(y) \\ge f(x) + \\nabla f(x)^\\top (y - x)$$ The tangent plane at any point lies below the graph everywhere.",
@@ -563,6 +578,7 @@
     },
     {
       "id": "NLO-02-16",
+      "k": "Least squares",
       "q": "Least squares: $X$ is the data matrix ($n$ samples $\\times$ $d$ features), $y \\in \\mathbb{R}^n$ the targets, and we choose weights $w \\in \\mathbb{R}^d$ to minimize $f(w) = \\tfrac12 \\lVert Xw - y \\rVert^2$. (1) Give $\\nabla f$ and the Hessian, and explain why $f$ is always convex. (2) When is the minimizer unique, and what is it? (3) What does the optimality condition say about the residual $r = Xw^* - y$? (4) What happens when the uniqueness condition fails?",
       "pts": [
         "(1) $\\nabla f(w) = X^\\top (Xw - y)$, Hessian $X^\\top X$. The Hessian is PSD because $w^\\top X^\\top X w = \\lVert Xw \\rVert^2 \\ge 0$, so $f$ is convex for any $X$.",
@@ -575,6 +591,7 @@
     },
     {
       "id": "NLO-02-17",
+      "k": "SONC / SOSC",
       "q": "Let $f$ be twice differentiable on $\\mathbb{R}^n$ with Hessian $H(x)$, and suppose $f$ is not known to be convex. State (1) the second-order necessary condition (SONC), (2) the second-order sufficient condition (SOSC). (3) Which case can neither condition decide? Give examples.",
       "pts": [
         "(1) SONC: if $x^*$ is a local min, then $\\nabla f(x^*) = 0$ and $H(x^*) \\succeq 0$.",
@@ -586,6 +603,7 @@
     },
     {
       "id": "NLO-02-18",
+      "k": "Saddle point",
       "q": "Let $x^*$ be a stationary point of $f$, i.e. $\\nabla f(x^*) = 0$. (1) What does it mean for $x^*$ to be a saddle point? (2) Which condition on the Hessian $H(x^*)$ guarantees a saddle point, and how do you check it?",
       "pts": [
         "(1) $x^*$ is neither a local min nor a local max: every neighbourhood contains points with $f$ larger and points with $f$ smaller than $f(x^*)$.",
@@ -596,6 +614,7 @@
     },
     {
       "id": "NLO-02-19",
+      "k": "Cubic example",
       "q": "Let $f(x) = x^3 - x^2 - 4x - 6$ on $\\mathbb{R}$. (1) Find the stationary points. (2) Classify each with the second derivative. (3) Does $f$ have a global minimum?",
       "pts": [
         "(1) $f'(x) = 3x^2 - 2x - 4 = 0$ gives $x = \\dfrac{1 \\pm \\sqrt{13}}{3}$, about $1.535$ and $-0.869$.",
@@ -607,6 +626,7 @@
     },
     {
       "id": "NLO-02-20",
+      "k": "Convex or not?",
       "q": "For each function, say whether it is convex on the stated domain and give a one-line reason: (1) $e^{ax}$ on $\\mathbb{R}$, (2) $-\\log x$ on $(0, \\infty)$, (3) the hinge loss $\\max(0, 1 - z)$ on $\\mathbb{R}$, (4) $e^{-x^2}$ on $\\mathbb{R}$.",
       "pts": [
         "(1) Convex: second derivative $a^2 e^{ax} \\ge 0$.",

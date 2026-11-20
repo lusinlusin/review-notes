@@ -13,7 +13,7 @@
     button, select, textarea, input { font:inherit; color:inherit; }
     button { cursor:pointer; background:none; border:none; padding:0; }
     button:disabled { cursor:default; color:#bbb; }
-    .wrap { max-width:1040px; margin:0 auto; padding:28px 24px 48px; }
+    .wrap { max-width:1120px; margin:0 auto; padding:28px 24px 48px; }
     header { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid #e6e6e6; padding-bottom:12px; }
     h1 { font-size:15px; font-weight:600; margin:0; letter-spacing:.01em; }
     .tabs { display:flex; gap:18px; font-size:13px; }
@@ -74,9 +74,11 @@
     .katex { font-size:1.12em; }
     .katex-display { margin:.5em 0; text-align:left; overflow-x:auto; overflow-y:hidden; padding:1px 0; }
     .katex-display > .katex { text-align:left; }
-    .layout.with-side { display:grid; grid-template-columns:100px minmax(0,1fr); gap:28px; }
+    .layout.with-side { display:grid; grid-template-columns:172px minmax(0,1fr); gap:28px; }
     .side { display:flex; flex-direction:column; font-size:12px; font-variant-numeric:tabular-nums; border-right:1px solid #f0f0f0; padding:12px 12px 0 0; align-self:start; position:sticky; top:12px; max-height:calc(100vh - 24px); overflow:auto; }
-    .side-item { text-align:left; color:#777; padding:3px 0; white-space:nowrap; }
+    .side-item { display:flex; gap:9px; text-align:left; color:#666; padding:3px 0; white-space:nowrap; }
+    .side-item .no { color:#bbb; flex:0 0 auto; font-weight:400; }
+    .side-item .kw { overflow:hidden; text-overflow:ellipsis; }
     .side-item:hover { color:#222; }
     .side-item.done { color:#c4c4c4; }
     .side-item.again::after { content:" \2022"; color:#888; }
@@ -291,7 +293,7 @@ async function loadTopics() {
       if (!validCard(c)) { problems.push('bad card in ' + res.title); continue; }
       if (seen.has(c.id)) { problems.push('duplicate id ' + c.id); continue; }
       seen.add(c.id);
-      bank.push({ id: c.id, q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', src: typeof c.src === 'string' ? c.src : '', subj: res.subj, topic: res.title });
+      bank.push({ id: c.id, k: typeof c.k === 'string' ? c.k : '', q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', src: typeof c.src === 'string' ? c.src : '', subj: res.subj, topic: res.title });
     }
   }
   // keep manifest order
@@ -363,7 +365,7 @@ function inScope(q) { return (subject === ALL || q.subj === subject) && (topic =
 function visible() {
   const term = $('search').value.trim().toLowerCase(), mode = $('mode').value;
   return QUESTION_BANK.filter(q => inScope(q) &&
-    (!term || [q.id, q.subj, q.topic, q.q, q.pit, ...q.pts].some(v => v.toLowerCase().includes(term))) &&
+    (!term || [q.id, q.k, q.subj, q.topic, q.q, q.pit, ...q.pts].some(v => v.toLowerCase().includes(term))) &&
     (mode === 'all' || (mode === 'due' && isDue(q)) || (mode === 'weak' && status[q.id]?.grade === 'again') || (mode === 'gaps' && hasGaps(q))));
 }
 function navButton(text, count, active, onClick) {
@@ -431,7 +433,7 @@ function render() {
   $('cardContent').classList.remove('hidden'); $('empty').classList.add('hidden');
   if (!list.some(q => q.id === currentId)) { currentId = list[0].id; shown = false; missed = new Set(); $('draft').value = ''; }
   const index = list.findIndex(q => q.id === currentId), q = list[index];
-  $('cardId').textContent = `${q.id} · ${label(q)}`;
+  $('cardId').textContent = `${q.id} · ${label(q)}${q.k ? ' · ' + q.k : ''}`;
   $('counter').textContent = `${index + 1} / ${list.length}`;
   const chunks = q.q.split(/\s(?=\(\d+\)\s)/), stem = /^\(\d+\)\s/.test(chunks[0]) ? '' : chunks.shift();
   setMath($('question'), stem); $('question').classList.toggle('hidden', !stem);
@@ -519,7 +521,9 @@ function renderSide(list) {
   side.classList.toggle('hidden', !show); $('layout').classList.toggle('with-side', show);
   side.replaceChildren(); if (!show) return;
   for (const q of list) {
-    const b = document.createElement('button'); b.type = 'button'; b.textContent = q.id; b.title = q.q.replace(/\$/g, '');
+    const b = document.createElement('button'); b.type = 'button'; b.title = q.id;
+    if (q.k) { const no = document.createElement('span'); no.className = 'no'; no.textContent = q.id.split('-').pop(); const kw = document.createElement('span'); kw.className = 'kw'; kw.textContent = q.k; b.append(no, kw); }
+    else b.textContent = q.id;
     const g = status[q.id]?.grade;
     b.className = 'side-item' + (q.id === currentId ? ' current' : '') + (g === 'again' ? ' again' : g ? ' done' : '');
     b.addEventListener('click', () => switchTo(q.id));

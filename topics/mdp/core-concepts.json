@@ -3,6 +3,7 @@
   "cards": [
     {
       "id": "MDP-01",
+      "k": "Markov property",
       "q": "What is the Markov property?",
       "pts": [
         "P(sₜ₊₁, rₜ₊₁ | sₜ, aₜ, full history) = P(sₜ₊₁, rₜ₊₁ | sₜ, aₜ).",
@@ -13,6 +14,7 @@
     },
     {
       "id": "MDP-02",
+      "k": "Bellman equations",
       "q": "Bellman expectation equation vs Bellman optimality equation?",
       "pts": [
         "Expectation: V^π(s) = Σₐ π(a|s) Σₛ′ P(s′|s,a)[r + γV^π(s′)] — evaluates a fixed policy π.",
@@ -23,6 +25,7 @@
     },
     {
       "id": "MDP-03",
+      "k": "VI vs PI",
       "q": "What is the difference between value iteration and policy iteration?",
       "pts": [
         "Value iteration: repeatedly apply the Bellman optimality operator V ← TV; extract the greedy policy at the end.",
@@ -34,6 +37,7 @@
     },
     {
       "id": "MDP-04",
+      "k": "Discount factor",
       "q": "Why does a discount factor γ < 1 help?",
       "pts": [
         "With bounded rewards, the infinite-horizon value is finite: |V| ≤ R_max / (1 − γ).",
@@ -44,6 +48,7 @@
     },
     {
       "id": "MDP-05",
+      "k": "On / off-policy",
       "q": "What is the difference between on-policy and off-policy learning?",
       "pts": [
         "On-policy: learn the value of the same policy that generates the data (e.g. SARSA).",
@@ -54,6 +59,7 @@
     },
     {
       "id": "MDP-06",
+      "k": "TD learning",
       "q": "What does temporal-difference learning update?",
       "pts": [
         "TD(0): V(sₜ) ← V(sₜ) + α[rₜ₊₁ + γV(sₜ₊₁) − V(sₜ)].",
@@ -64,6 +70,7 @@
     },
     {
       "id": "MDP-07",
+      "k": "Transaction costs",
       "q": "How would transaction costs change an asset-allocation MDP?",
       "pts": [
         "The state must include current holdings / weights (and wealth), not just market signals.",
@@ -75,6 +82,7 @@
     },
     {
       "id": "MDP-08",
+      "k": "Explore / exploit",
       "q": "What is the exploration–exploitation tradeoff?",
       "pts": [
         "Exploit: choose the action with the highest current estimated value.",

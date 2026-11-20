@@ -3,6 +3,7 @@
   "cards": [
     {
       "id": "NLO-01",
+      "k": "KKT sufficiency",
       "q": "When are the KKT conditions sufficient for global optimality?",
       "pts": [
         "The problem is convex: convex objective f, convex inequality constraints gᵢ(x) ≤ 0, affine equality constraints.",
@@ -14,6 +15,7 @@
     },
     {
       "id": "NLO-02",
+      "k": "Slater's condition",
       "q": "What role does Slater’s condition play in convex optimization?",
       "pts": [
         "Definition: there is a strictly feasible point — gᵢ(x) < 0 for the non-affine inequality constraints, with affine constraints satisfied.",
@@ -24,6 +26,7 @@
     },
     {
       "id": "NLO-03",
+      "k": "Strong convexity",
       "q": "What distinguishes convexity from strong convexity?",
       "pts": [
         "Convex (differentiable f): f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) — f lies above every tangent plane.",
@@ -35,6 +38,7 @@
     },
     {
       "id": "NLO-04",
+      "k": "Stationary ⇒ global",
       "q": "When is a stationary point globally optimal?",
       "pts": [
         "Unconstrained, differentiable convex f: ∇f(x*) = 0 ⇔ x* is a global minimizer.",
@@ -45,6 +49,7 @@
     },
     {
       "id": "NLO-05",
+      "k": "PSD Hessian",
       "q": "Why is a positive semidefinite Hessian useful?",
       "pts": [
         "On an open convex set, for f ∈ C²: ∇²f(x) ⪰ 0 for all x ⇔ f is convex.",
@@ -56,6 +61,7 @@
     },
     {
       "id": "NLO-06",
+      "k": "Local vs strict",
       "q": "What is the difference between a local minimum and a strict local minimum?",
       "pts": [
         "Local minimum: f(x*) ≤ f(x) for all feasible x in some neighborhood of x*.",
@@ -66,6 +72,7 @@
     },
     {
       "id": "NLO-07",
+      "k": "Duality gap",
       "q": "What is the duality gap and when is it zero?",
       "pts": [
         "Weak duality (minimization): the dual optimum d* ≤ primal optimum p*, always — even for nonconvex problems.",
@@ -76,6 +83,7 @@
     },
     {
       "id": "NLO-08",
+      "k": "Newton vs GD",
       "q": "Why can Newton’s method converge faster than gradient descent?",
       "pts": [
         "The Newton step solves ∇²f(x)d = −∇f(x): it minimizes the local quadratic model, using curvature.",
@@ -87,6 +95,7 @@
     },
     {
       "id": "NLO-09",
+      "k": "Compl. slackness",
       "q": "What is complementary slackness?",
       "pts": [
         "For gᵢ(x) ≤ 0 with multipliers λᵢ ≥ 0, KKT requires λᵢ gᵢ(x*) = 0 for every i.",
@@ -98,6 +107,7 @@
     },
     {
       "id": "NLO-10",
+      "k": "Projected GD",
       "q": "When is projected gradient descent useful?",
       "pts": [
         "Update: xₖ₊₁ = Proj_C(xₖ − αₖ∇f(xₖ)) — take a gradient step, then project back onto the feasible set C.",

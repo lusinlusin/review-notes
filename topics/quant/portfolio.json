@@ -3,6 +3,7 @@
   "cards": [
     {
       "id": "PF-01",
+      "k": "MVO limits",
       "q": "What is the main limitation of mean–variance optimization?",
       "pts": [
         "Weights are very sensitive to errors in expected returns μ — small changes cause large weight swings ('error maximization').",
@@ -14,6 +15,7 @@
     },
     {
       "id": "PF-02",
+      "k": "Transaction costs",
       "q": "What changes when you add transaction costs to portfolio optimization?",
       "pts": [
         "The objective adds a cost on trades, e.g. Σ cᵢ|wᵢ − wᵢ⁰| (proportional) or a quadratic market-impact term.",
@@ -25,6 +27,7 @@
     },
     {
       "id": "PF-03",
+      "k": "Risk parity vs MinVar",
       "q": "Risk parity vs minimum variance portfolio?",
       "pts": [
         "Risk contribution of asset i: RCᵢ = wᵢ(Σw)ᵢ; the contributions sum to portfolio variance wᵀΣw.",
@@ -36,6 +39,7 @@
     },
     {
       "id": "PF-04",
+      "k": "Black–Litterman",
       "q": "What is Black–Litterman designed to address?",
       "pts": [
         "Start from equilibrium implied returns π = δΣw_mkt (reverse optimization).",
@@ -46,6 +50,7 @@
     },
     {
       "id": "PF-05",
+      "k": "Tracking error",
       "q": "What is tracking error?",
       "pts": [
         "Active return = r_portfolio − r_benchmark.",
@@ -56,6 +61,7 @@
     },
     {
       "id": "PF-06",
+      "k": "CVaR",
       "q": "What is CVaR / expected shortfall?",
       "pts": [
         "VaR_α: the α-quantile of the loss distribution.",
@@ -66,6 +72,7 @@
     },
     {
       "id": "PF-07",
+      "k": "Monte Carlo",
       "q": "Why is Monte Carlo useful for multi-period asset allocation?",
       "pts": [
         "Simulate joint return paths from an explicit stochastic model (e.g. regime-switching, block bootstrap).",
@@ -76,6 +83,7 @@
     },
     {
       "id": "PF-08",
+      "k": "Robust optimization",
       "q": "What is robust optimization trying to protect against?",
       "pts": [
         "Inputs (e.g. μ) are treated as lying in an uncertainty set U rather than at a single point estimate.",
