@@ -52,6 +52,7 @@
     .point[aria-pressed="true"] .tag { visibility:visible; }
     .pitfall { margin-top:12px; font-size:13px; color:#666; }
     .pitfall span:first-child { color:#999; }
+    .ref { margin-top:6px; font-size:12px; color:#aaa; }
     .foot { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:22px; padding-top:14px; border-top:1px solid #eee; }
     .group { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
     .hint { font-size:12px; color:#999; }
@@ -117,6 +118,7 @@
               <div class="label">Key points — mark what you missed (1–4)</div>
               <ol class="points" id="points"></ol>
               <div class="pitfall"><span>Pitfall — </span><span id="pitfall"></span></div>
+              <div class="ref" id="ref"></div>
             </div>
           </div>
           <div class="foot">
@@ -235,7 +237,7 @@ async function loadTopics() {
       if (!validCard(c)) { problems.push('bad card in ' + res.title); continue; }
       if (seen.has(c.id)) { problems.push('duplicate id ' + c.id); continue; }
       seen.add(c.id);
-      bank.push({ id: c.id, q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', subj: res.subj, topic: res.title });
+      bank.push({ id: c.id, q: c.q, pts: c.pts, pit: typeof c.pit === 'string' ? c.pit : '', src: typeof c.src === 'string' ? c.src : '', subj: res.subj, topic: res.title });
     }
   }
   // keep manifest order
@@ -379,6 +381,7 @@ function render() {
   $('counter').textContent = `${index + 1} / ${list.length}`;
   $('question').textContent = q.q;
   $('pitfall').textContent = q.pit; $('pitfall').parentElement.classList.toggle('hidden', !q.pit);
+  $('ref').textContent = q.src ? 'Ref — ' + q.src : ''; $('ref').classList.toggle('hidden', !q.src);
   $('answerCol').classList.toggle('hidden', !shown);
   $('work').classList.toggle('split', shown);
   $('reveal').classList.toggle('hidden', shown);

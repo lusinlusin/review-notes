@@ -4,6 +4,10 @@
       "name": "NLO",
       "topics": [
         {
+          "title": "Optimality & convexity",
+          "file": "nlo/ch02-optimality-convexity.json"
+        },
+        {
           "title": "Core concepts",
           "file": "nlo/core-concepts.json"
         }
