@@ -74,12 +74,12 @@
       "name": "Stochastic",
       "topics": [
         {
-          "title": "Finite Markov chains",
-          "file": "stochastic/ch01-finite-markov-chains.json"
-        },
-        {
           "title": "Preliminaries",
           "file": "stochastic/ch00-preliminaries.json"
+        },
+        {
+          "title": "Finite Markov chains",
+          "file": "stochastic/ch01-finite-markov-chains.json"
         }
       ]
     },
