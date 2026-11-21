@@ -57,6 +57,10 @@
           "file": "mdp/ch05-lqr.json"
         },
         {
+          "title": "Portfolio optimization",
+          "file": "mdp/ch06-portfolio.json"
+        },
+        {
           "title": "Core concepts",
           "file": "mdp/core-concepts.json"
         }

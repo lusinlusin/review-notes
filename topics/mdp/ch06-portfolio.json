@@ -1,0 +1,1175 @@
+{
+  "title": "Portfolio optimization",
+  "notes": [
+    {
+      "h": "Market model",
+      "items": [
+        {
+          "t": "Market and portfolio",
+          "d": [
+            "$Z_{t+1,i}$: what one dollar in asset $i$ becomes. $U_{t,i} = X_{t,i}/X_t$, $U_t \\in \\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$."
+          ],
+          "cards": [
+            "MDP-06-01"
+          ]
+        },
+        {
+          "t": "Dynamics and problem",
+          "d": [
+            "$X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$; $V_0(x_0) = \\max_\\mu E(G(X_T) \\mid X_0 = x_0)$; no running reward.",
+            "$V_T = G$, $V_t(x) = \\max_{u \\in \\mathcal{U}} E\\,V_{t+1}(x\\,u^\\top Z_{t+1})$."
+          ],
+          "cards": [
+            "MDP-06-02",
+            "MDP-06-03"
+          ]
+        },
+        {
+          "t": "Coin-flip market",
+          "d": [
+            "Heads $Z = (1.4, 0.8)$, tails $Z = (0.7, 1.15)$, probability $\\tfrac12$ each. Expected net returns $+5\\%$ and $-2.5\\%$."
+          ],
+          "cards": [
+            "MDP-06-04"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Utility",
+      "items": [
+        {
+          "t": "Ranking",
+          "d": [
+            "$X$ preferred to $Y$ if $E\\,G(X) > E\\,G(Y)$. $G(x) = x$: risk neutral."
+          ],
+          "cards": [
+            "MDP-06-05"
+          ]
+        },
+        {
+          "t": "Common utilities",
+          "d": [
+            "$-e^{-ax}$ ($a > 0$); $\\log x$ ($x > 0$); $\\tfrac{x^{1-\\gamma}}{1-\\gamma}$ ($\\gamma \\ge 0$, $\\gamma \\ne 1$); $x - bx^2$ ($b > 0$, increasing for $x \\le \\tfrac{1}{2b}$)."
+          ],
+          "cards": [
+            "MDP-06-06"
+          ]
+        },
+        {
+          "t": "Risk aversion",
+          "d": [
+            "$G$ concave: $G[\\alpha x + (1 - \\alpha)y] \\ge \\alpha G(x) + (1 - \\alpha)G(y)$. The sure average is preferred to the gamble; $E\\,G(X) \\le G(E\\,X)$."
+          ],
+          "cards": [
+            "MDP-06-07",
+            "MDP-06-08",
+            "MDP-06-09"
+          ]
+        },
+        {
+          "t": "Certainty equivalent",
+          "d": [
+            "$c = G^{-1}(E\\,G(X)) \\le E\\,X$ for concave $G$."
+          ],
+          "cards": [
+            "MDP-06-10"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Kelly criterion",
+      "items": [
+        {
+          "t": "Growth rate",
+          "d": [
+            "$\\tfrac1T\\log\\tfrac{X_T}{x_0} \\to E\\log(u^\\top Z)$: maximizing expected log wealth maximizes the long-run growth rate."
+          ],
+          "cards": [
+            "MDP-06-11"
+          ]
+        },
+        {
+          "t": "Even-odds bet",
+          "d": [
+            "Win probability $p > \\tfrac12$: bet the fraction $f^\\star = 2p - 1$."
+          ],
+          "cards": [
+            "MDP-06-12"
+          ]
+        },
+        {
+          "t": "Two averages",
+          "d": [
+            "$e^{E\\ln Y} \\le E\\,Y$, with equality only without risk."
+          ],
+          "cards": [
+            "MDP-06-13"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Log utility",
+      "items": [
+        {
+          "t": "Theorem",
+          "d": [
+            "$V_t(x) = \\alpha(T - t) + \\log x$, $\\alpha = \\max_{u \\in \\mathcal{U}} E\\log(u^\\top Z_1)$, $\\mu_t(x) = u^\\star$: fixed-mix and myopic."
+          ],
+          "cards": [
+            "MDP-06-16",
+            "MDP-06-17"
+          ]
+        },
+        {
+          "t": "Proof",
+          "d": [
+            "1. $V_T = \\log x$. 2. $\\log(x\\,u^\\top Z) = \\log x + \\log(u^\\top Z)$; constants leave $E$ and $\\max$. 3. The remaining maximum is $\\alpha$ at every step (identical distributions)."
+          ],
+          "cards": [
+            "MDP-06-14",
+            "MDP-06-15"
+          ]
+        },
+        {
+          "t": "Without the assumptions",
+          "d": [
+            "Independent, not identical: $u^\\star_t$ per period, $V_t = \\sum_{s \\ge t}\\alpha_s + \\log x$. Other utilities (quadratic): the split depends on wealth."
+          ],
+          "cards": [
+            "MDP-06-18",
+            "MDP-06-19"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Binomial market",
+      "items": [
+        {
+          "t": "One-period problem",
+          "d": [
+            "$\\max_{0 \\le u_1 \\le 1}\\tfrac12\\log(0.8 + 0.6u_1) + \\tfrac12\\log(1.15 - 0.45u_1)$; $\\tfrac{0.6}{0.8 + 0.6u_1} = \\tfrac{0.45}{1.15 - 0.45u_1}$; $u_1^\\star = \\tfrac{11}{18}$."
+          ],
+          "cards": [
+            "MDP-06-20"
+          ]
+        },
+        {
+          "t": "At the optimum",
+          "d": [
+            "Returns $\\tfrac76$, $\\tfrac78$; $\\alpha = \\tfrac12\\ln\\tfrac{49}{48} \\approx 0.0103$; expected return $\\tfrac{49}{48} \\approx 1.0208$."
+          ],
+          "cards": [
+            "MDP-06-21"
+          ]
+        },
+        {
+          "t": "Three portfolios",
+          "d": [
+            "$u_1 = 1$: $E\\ln = -1.01\\%$, $E = 1.05$. $u_1 = 0$: $-4.17\\%$, $0.975$. $u_1 = \\tfrac{11}{18}$: $+1.03\\%$, $1.0208$."
+          ],
+          "cards": [
+            "MDP-06-22",
+            "MDP-06-23",
+            "MDP-06-24"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Typical vs expected",
+      "items": [
+        {
+          "t": "Product of returns",
+          "d": [
+            "$X_T = y_+^Sy_-^{T-S}$, $S \\sim \\text{Binomial}(T, \\tfrac12)$. $E\\,X_T = (E\\,Y)^T$; median $\\approx (y_+y_-)^{T/2} = e^{T\\,E\\ln Y}$."
+          ],
+          "cards": [
+            "MDP-06-25",
+            "MDP-06-26"
+          ]
+        },
+        {
+          "t": "Why the mix wins",
+          "d": [
+            "One head and one tail: $0.98$ (asset 1), $0.92$ (asset 2), $\\tfrac{49}{48}$ (mix). Smaller swings, smaller drag."
+          ],
+          "cards": [
+            "MDP-06-27"
+          ]
+        },
+        {
+          "t": "Rebalancing",
+          "d": [
+            "Restore the proportions every period: sell what has risen, buy what has fallen."
+          ],
+          "cards": [
+            "MDP-06-28"
+          ]
+        },
+        {
+          "t": "Probability of a profit",
+          "d": [
+            "Asset 1: $S/T \\ge 0.515$, probability $\\to 0$. Mix: $S/T \\ge 0.464$, probability $\\to 1$."
+          ],
+          "cards": [
+            "MDP-06-29"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Power utility",
+      "items": [
+        {
+          "t": "Theorem",
+          "d": [
+            "$V_t(x) = \\alpha^{T-t}\\tfrac{x^{1-\\gamma}}{1-\\gamma}$, $\\alpha = (1 - \\gamma)\\max_u E\\big[\\tfrac{(u^\\top Z_1)^{1-\\gamma}}{1-\\gamma}\\big] = E[(u^{\\star\\top}Z_1)^{1-\\gamma}] > 0$; fixed-mix, myopic."
+          ],
+          "cards": [
+            "MDP-06-30",
+            "MDP-06-31",
+            "MDP-06-32"
+          ]
+        },
+        {
+          "t": "Coin-flip market",
+          "d": [
+            "$u_1^\\star = \\tfrac{1.15 - 0.8q}{0.45 + 0.6q}$ with $q = 0.75^{1/\\gamma}$, capped at 1 (for $\\gamma \\le 0.415$)."
+          ],
+          "cards": [
+            "MDP-06-33",
+            "MDP-06-34"
+          ]
+        },
+        {
+          "t": "Special cases",
+          "d": [
+            "$\\gamma = 0$: linear, everything in the asset with the largest mean, $V_t = m^{T-t}x$. $\\gamma \\to 1$: logarithm."
+          ],
+          "cards": [
+            "MDP-06-35",
+            "MDP-06-36"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Exponential utility",
+      "items": [
+        {
+          "t": "Additive wealth",
+          "d": [
+            "$X_{t+1} = X_t + uZ$, $G = -e^{-x}$: $V_t = \\beta^{T-t}G$, $\\beta = \\min_u E\\,e^{-uZ} \\in (0, 1]$; a constant dollar amount."
+          ],
+          "cards": [
+            "MDP-06-37",
+            "MDP-06-38"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Overview",
+      "items": [
+        {
+          "t": "By utility",
+          "d": [
+            "Linear: one asset. Log and power: fixed mix, independent of wealth and time. Quadratic, exponential (fractions): depends on wealth."
+          ],
+          "cards": [
+            "MDP-06-39"
+          ]
+        },
+        {
+          "t": "Against LQ",
+          "d": [
+            "Multiplicative instead of additive; maximum of terminal utility; constant split instead of a linear rule; the whole return distribution matters."
+          ],
+          "cards": [
+            "MDP-06-40"
+          ]
+        },
+        {
+          "t": "Steps and symbols",
+          "d": [
+            "First step, separate the wealth, guess, induct; then solve the one-period problem."
+          ],
+          "cards": [
+            "MDP-06-41",
+            "MDP-06-42"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "Log utility",
+          "d": [
+            "$u^\\star = (\\tfrac{11}{18}, \\tfrac{7}{18})$, $\\alpha = 0.0103$; $V_{T-1}(100) = 4.6155$; $T = 2$: $V_0(100) = 4.6258$."
+          ],
+          "cards": [
+            "MDP-06-20",
+            "MDP-06-21",
+            "MDP-06-17"
+          ]
+        },
+        {
+          "t": "Power utility",
+          "d": [
+            "$\\gamma = 0.5$: $u_1^\\star = \\tfrac89$. $\\gamma = 2$: $0.472$, returns $1.083$, $0.938$, $\\alpha = 0.995$. $\\gamma \\to \\infty$: $\\tfrac13$."
+          ],
+          "cards": [
+            "MDP-06-33",
+            "MDP-06-34"
+          ]
+        },
+        {
+          "t": "T = 100",
+          "d": [
+            "Asset 1: $E\\,X = 131.5$, median $0.364$. Mix: $E\\,X = 7.86$, median $2.80$."
+          ],
+          "cards": [
+            "MDP-06-26"
+          ]
+        },
+        {
+          "t": "Rebalancing from 100",
+          "d": [
+            "Heads: $85.56 + 31.11 = 116.67$, sell $14.26$ of asset 1. Tails: $42.78 + 44.72 = 87.5$, buy $10.69$."
+          ],
+          "cards": [
+            "MDP-06-28"
+          ]
+        },
+        {
+          "t": "Bets",
+          "d": [
+            "$p = 0.6$: $f^\\star = 0.2$, growth $2.01\\%$. Cash and asset 1: $a^\\star = \\tfrac{5}{12}$."
+          ],
+          "cards": [
+            "MDP-06-12",
+            "MDP-06-24"
+          ]
+        },
+        {
+          "t": "Exponential utility",
+          "d": [
+            "$u^\\star = \\tfrac12\\ln 1.5 \\approx 0.203$, $\\beta = 2\\sqrt{0.24} \\approx 0.980$."
+          ],
+          "cards": [
+            "MDP-06-38"
+          ]
+        },
+        {
+          "t": "Gambles",
+          "d": [
+            "$-e^{-x}$, 0 or 10: $c \\approx 0.69$. $\\ln x$, 1 or 9: $c = 3$."
+          ],
+          "cards": [
+            "MDP-06-09",
+            "MDP-06-10"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "Separate the state",
+          "d": [
+            "$\\log(xy) = \\log x + \\log y$; $(xy)^{1-\\gamma} = x^{1-\\gamma}y^{1-\\gamma}$; $e^{-(x+y)} = e^{-x}e^{-y}$. What is left to optimize contains no $x$."
+          ],
+          "cards": [
+            "MDP-06-14",
+            "MDP-06-30",
+            "MDP-06-37"
+          ]
+        },
+        {
+          "t": "Sign before pulling out",
+          "d": [
+            "A positive factor may leave a maximum; a negative one turns it into a minimum."
+          ],
+          "cards": [
+            "MDP-06-31",
+            "MDP-06-33",
+            "MDP-06-37"
+          ]
+        },
+        {
+          "t": "One-period problem",
+          "d": [
+            "Concave objective: interior root of the first-order condition, otherwise a boundary point; a linear objective sits at a vertex."
+          ],
+          "cards": [
+            "MDP-06-20",
+            "MDP-06-34",
+            "MDP-06-35"
+          ]
+        },
+        {
+          "t": "Mean or typical",
+          "d": [
+            "$(E\\,Y)^T$ against $e^{T\\,E\\ln Y}$."
+          ],
+          "cards": [
+            "MDP-06-13",
+            "MDP-06-25",
+            "MDP-06-26"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "alpha",
+          "d": [
+            "Weight in the concavity definition; additive constant (log); multiplicative constant (power)."
+          ],
+          "cards": [
+            "MDP-06-42",
+            "MDP-06-07"
+          ]
+        },
+        {
+          "t": "gamma, a, b",
+          "d": [
+            "Risk aversion and utility parameters here; discount factor, system coefficient and cost weight elsewhere."
+          ],
+          "cards": [
+            "MDP-06-42",
+            "MDP-06-06"
+          ]
+        },
+        {
+          "t": "Base of the logarithm",
+          "d": [
+            "Natural in the theory; base 10 (per mille) in the slide table: multiply by $2.303$."
+          ],
+          "cards": [
+            "MDP-06-22"
+          ]
+        },
+        {
+          "t": "KE letters",
+          "d": [
+            "$W_t$, $J_t$, $\\Delta_n$, $\\ln$, $\\beta_t$; the split in the example is $(a, b)$."
+          ],
+          "cards": [
+            "MDP-06-42",
+            "MDP-06-20"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Domain of the logarithm",
+          "d": [
+            "“$x_T \\ge 0$” and “$\\log(X_T)$” should read $x_T > 0$ and $\\log(x_T)$."
+          ],
+          "cards": [
+            "MDP-06-14"
+          ]
+        },
+        {
+          "t": "Range of t",
+          "d": [
+            "The policy is defined for $t = 0, \\dots, T - 1$, not up to $T$."
+          ],
+          "cards": [
+            "MDP-06-16"
+          ]
+        },
+        {
+          "t": "Titles",
+          "d": [
+            "The slides introducing the power utility keep the title of the logarithmic part."
+          ],
+          "cards": [
+            "MDP-06-30"
+          ]
+        },
+        {
+          "t": "Growth-rate table",
+          "d": [
+            "Base-10 logarithm, not stated on the slide."
+          ],
+          "cards": [
+            "MDP-06-22"
+          ]
+        },
+        {
+          "t": "Positivity",
+          "d": [
+            "$\\alpha > 0$ (slides: $\\ge 0$); KE: $\\beta_t > 0$."
+          ],
+          "cards": [
+            "MDP-06-31"
+          ]
+        },
+        {
+          "t": "KE slips",
+          "d": [
+            "Expected net return of asset 1 is $+5\\%$, not $+2.5\\%$; the tails return of the mix is $15.75/18$, not $16.9/18$."
+          ],
+          "cards": [
+            "MDP-06-04",
+            "MDP-06-21"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MDP-06-01",
+      "g": "Market model",
+      "k": "Market and portfolio",
+      "q": "A market has $n$ assets and an investor re-splits the wealth every period. (1) Define the return vector $Z_{t+1}$. (2) Define $X_t$, $X_{t,i}$ and $U_{t,i}$. (3) Write the set $\\mathcal{U}$ of allowed portfolio weights. (4) What do the two constraints rule out?",
+      "pts": [
+        "(1) $Z_{t+1} = (Z_{t+1,1}, \\dots, Z_{t+1,n})$: total (gross) returns from $t$ to $t+1$; each dollar in asset $i$ at time $t$ is worth $Z_{t+1,i}$ dollars at $t + 1$.",
+        "(2) $X_t$: wealth at time $t$; $X_{t,i} \\ge 0$: dollars put in asset $i$; $U_{t,i} = X_{t,i}/X_t$: fraction of wealth in asset $i$.",
+        "(3) $\\mathcal{U} = \\{u \\in \\mathbb{R}^n : \\sum_{i=1}^n u_i = 1,\\ u_i \\ge 0\\ \\forall i\\}$.",
+        "(4) $u_i \\ge 0$: no short selling. $\\sum_i u_i = 1$: fully invested, no borrowing and nothing held back."
+      ],
+      "pit": "$Z$ is a gross return: a net return of $+40\\%$ is $Z = 1.4$. KE writes $W_t$ for the returns and $\\Delta_n$ for the set of weights.",
+      "src": "S6 s.3 · KE p52",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-02",
+      "g": "Market model",
+      "k": "Wealth dynamics",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$. (1) Derive the wealth dynamics for a general market with $n$ assets. (2) Give the order of events within a period. (3) With wealth 100 and $u = (0.5, 0.5)$ compute next wealth on heads and on tails. (4) Why are the dynamics called multiplicative?",
+      "pts": [
+        "(1) Each amount is multiplied by its own return: $X_{t+1} = \\sum_{i=1}^n X_tU_{t,i}Z_{t+1,i} = X_t \\cdot U_t^\\top Z_{t+1}$.",
+        "(2) See the wealth $x_t$; choose the split $u_t$; the returns $Z_{t+1}$ are revealed; wealth becomes $x_{t+1}$.",
+        "(3) Heads: $50 \\times 1.4 + 50 \\times 0.8 = 110$. Tails: $50 \\times 0.7 + 50 \\times 1.15 = 92.5$. The portfolio returns $u^\\top Z$ are $1.1$ and $0.925$.",
+        "(4) Next wealth is current wealth times the gross return $u^\\top Z$ of the portfolio, hence proportional to current wealth. In the linear-quadratic model the control and the noise were added to the state."
+      ],
+      "pit": "",
+      "src": "S6 s.7 · KE p52",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-03",
+      "g": "Market model",
+      "k": "Problem and recursion",
+      "q": "An investor with initial wealth $x_0$ maximizes the expected utility $G$ of terminal wealth; wealth follows $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$ with i.i.d. return vectors and splits in $\\mathcal{U}$. (1) Write the dynamic portfolio selection problem. (2) What is the running reward? (3) Write the recursion for $V_t$. (4) Why is the expectation in the recursion not conditional on $X_t$?",
+      "pts": [
+        "(1) $V_0(x_0) = \\max_\\mu E\\big(G(X_T) \\mid X_0 = x_0\\big)$ subject to $\\mu_t(x_t) \\in \\mathcal{U}$ for all $x_t$ and $t = 0, \\dots, T - 1$.",
+        "(2) There is none, $g(x, u) = 0$: only $G(X_T)$ counts. It is a maximization.",
+        "(3) $V_T(x) = G(x)$ and $V_t(x) = \\max_{u \\in \\mathcal{U}} E\\,V_{t+1}(x \\cdot u^\\top Z_{t+1})$ for $t = T - 1, \\dots, 0$.",
+        "(4) $Z_{t+1}$ is independent of the past, so conditioning on $X_t = x$ only fixes the factor $x$."
+      ],
+      "pit": "",
+      "src": "S6 s.7 · KE p54",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-04",
+      "g": "Market model",
+      "k": "Opening puzzle",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$. (1) Compute the expected net return of each asset. (2) Which split maximizes expected one-period wealth, and why? (3) What is surprising about that split in a long simulation?",
+      "pts": [
+        "(1) Asset 1: $\\tfrac12(+40\\%) + \\tfrac12(-30\\%) = +5\\%$. Asset 2: $\\tfrac12(-20\\%) + \\tfrac12(+15\\%) = -2.5\\%$.",
+        "(2) $E(u^\\top Z) = 1.05u_1 + 0.975(1 - u_1) = 0.975 + 0.075u_1$ is increasing in $u_1$: everything in asset 1.",
+        "(3) Most simulated paths that hold only asset 1 lose money, while a fixed mix of the two assets grows steadily."
+      ],
+      "pit": "KE prints the expected net return of asset 1 as $+2.5\\%$; it is $+5\\%$ (KE's own table has $E(u^\\top W) = 1.05$).",
+      "src": "S6 s.31, s.36 · KE p58",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-05",
+      "g": "Utility",
+      "k": "Expected utility",
+      "q": "(1) What is a utility function? (2) How are two random wealth levels $X$ and $Y$ ranked? (3) What does $G(x) = x$ rank by, and what is an investor using it called? (4) Why do utility functions differ between investors, and which property do they share?",
+      "pts": [
+        "(1) A function $G$ that assigns a real number (a utility index) to each possible wealth level.",
+        "(2) By expected utility: compare $E[G(X)]$ and $E[G(Y)]$; the larger one is preferred.",
+        "(3) By expected values only; the investor is called risk neutral.",
+        "(4) They depend on risk tolerance and on the individual financial environment. A utility function is increasing: more wealth, more utility."
+      ],
+      "pit": "",
+      "src": "S6 s.10–12 · KE p52",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-06",
+      "g": "Utility",
+      "k": "Common utilities",
+      "q": "Give the formula, the parameter restriction and the domain of (1) the exponential and the logarithmic utility; (2) the power utility; (3) the quadratic utility. (4) Which of them guard the investor against bankruptcy, and why?",
+      "pts": [
+        "(1) Exponential: $G(x) = -e^{-ax}$, $a > 0$, all real $x$. Logarithmic: $G(x) = \\log x$, only $x > 0$.",
+        "(2) Power: $G(x) = \\dfrac{x^{1-\\gamma}}{1-\\gamma}$ with $\\gamma \\ge 0$, $\\gamma \\ne 1$; defined for $x > 0$ if $\\gamma > 1$ and for $x \\ge 0$ if $\\gamma < 1$.",
+        "(3) Quadratic: $G(x) = x - bx^2$, $b > 0$; increasing only for $x \\le \\dfrac{1}{2b}$.",
+        "(4) The logarithm and the power utility with $\\gamma > 1$: $G(x) \\to -\\infty$ as $x \\to 0^+$, so any positive probability of losing everything gives expected utility $-\\infty$."
+      ],
+      "pit": "The $a$ and $b$ here are utility parameters, unrelated to the system coefficient and cost weight of the linear-quadratic model. $\\log$ is the natural logarithm.",
+      "src": "S6 s.13 · KE p53",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-07",
+      "g": "Utility",
+      "k": "Risk aversion",
+      "q": "(1) Define a concave function $G : [a, b] \\to \\mathbb{R}$. (2) Give the geometric meaning. (3) When is a utility function called risk averse, risk neutral, risk seeking? (4) Check with the second derivative that $\\log x$, $-e^{-ax}$ and the power utility are risk averse.",
+      "pts": [
+        "(1) For every $\\alpha \\in [0, 1]$ and $x, y \\in [a, b]$: $G[\\alpha x + (1 - \\alpha)y] \\ge \\alpha G(x) + (1 - \\alpha)G(y)$.",
+        "(2) The straight line between two points of the graph lies below or on the graph.",
+        "(3) Risk averse: concave. Risk neutral: linear. Risk seeking: convex.",
+        "(4) $(\\log x)'' = -\\dfrac{1}{x^2} < 0$; $(-e^{-ax})'' = -a^2e^{-ax} < 0$; $\\Big(\\dfrac{x^{1-\\gamma}}{1-\\gamma}\\Big)'' = -\\gamma x^{-\\gamma-1} \\le 0$."
+      ],
+      "pit": "This $\\alpha$ is a weight between 0 and 1; later the same letter denotes the constant in the value function.",
+      "src": "S6 s.17 · KE p53",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-08",
+      "g": "Utility",
+      "k": "Sure thing or gamble",
+      "q": "Alternative 1: receive $x$ with probability $\\alpha$ or $y$ with probability $1 - \\alpha$. Alternative 2: receive $\\alpha x + (1 - \\alpha)y$ with certainty. (1) Compare the expected wealth. (2) Write the expected utility of each. (3) Which is preferred when $G$ is concave, and why? (4) State the general inequality behind it.",
+      "pts": [
+        "(1) Both have expected wealth $\\alpha x + (1 - \\alpha)y$.",
+        "(2) Alternative 1: $\\alpha G(x) + (1 - \\alpha)G(y)$. Alternative 2: $G[\\alpha x + (1 - \\alpha)y]$.",
+        "(3) The risk-free alternative 2: the definition of concavity says exactly that its utility is at least that of alternative 1.",
+        "(4) Jensen's inequality for concave $G$: $E\\,G(X) \\le G(E\\,X)$."
+      ],
+      "pit": "",
+      "src": "S6 s.20 · KE p52–53",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-09",
+      "g": "Utility",
+      "k": "Three gambles",
+      "q": "A gamble pays $x_1$ or $x_2$ with probability $\\tfrac12$ each; the sure alternative pays $x^* = \\tfrac12(x_1 + x_2)$. Case 1: $(0, 10)$. Case 2: $(-5, 15)$. Case 3: $(0, 1000)$. (1) What does $G(x) = x$ say in all three cases? (2) With $G(x) = -e^{-x}$ compare gamble and sure amount in case 1. (3) Same in case 2. (4) What does the example show?",
+      "pts": [
+        "(1) Indifference: gamble and sure amount have the same expected wealth ($5$, $5$, $500$).",
+        "(2) Gamble: $-\\tfrac12(1 + e^{-10}) \\approx -0.50002$. Sure: $-e^{-5} \\approx -0.0067$. The sure amount is preferred.",
+        "(3) Gamble: $-\\tfrac12(e^{5} + e^{-15}) \\approx -74.2$. Sure: $-e^{-5} \\approx -0.0067$. The sure amount is preferred by far, because the gamble may end below zero.",
+        "(4) Ranking by expected values treats very different risks as the same; a concave utility tells them apart."
+      ],
+      "pit": "",
+      "src": "KE p52–53",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-10",
+      "g": "Utility",
+      "k": "Certainty equivalent",
+      "q": "(1) Define the certainty equivalent $c$ of a gamble for a utility $G$. (2) Compute it for $G(x) = -e^{-x}$ and a gamble paying 0 or 10 with probability $\\tfrac12$ each. (3) Compute it for $G(x) = \\ln x$ and a gamble paying 1 or 9 with probability $\\tfrac12$ each. (4) How does it differ from the certainty equivalence principle of linear-quadratic control?",
+      "pts": [
+        "(1) The sure amount with the same utility as the gamble: $G(c) = E\\,G(X)$, i.e. $c = G^{-1}(E\\,G(X))$.",
+        "(2) $-e^{-c} = -\\tfrac12(1 + e^{-10})$, so $c = -\\ln 0.50002 \\approx 0.69 \\approx \\ln 2$: a gamble with mean 5 is worth $0.69$.",
+        "(3) $\\ln c = \\tfrac12\\ln 1 + \\tfrac12\\ln 9 = \\ln 3$, so $c = 3 < 5$.",
+        "(4) The certainty equivalent is a number that prices a gamble. Certainty equivalence is a property of a control problem: replacing the noise by its mean leaves the optimal policy unchanged. The two are unrelated."
+      ],
+      "pit": "For a concave $G$, $c \\le E\\,X$; the gap is the risk premium.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-11",
+      "g": "Kelly criterion",
+      "k": "Growth rate",
+      "q": "A fixed split $u$ is used in every period; $Y_t = u^\\top Z_t$ is the i.i.d. gross return of the portfolio and $X_T = x_0Y_1 \\cdots Y_T$. (1) What is the Kelly criterion? (2) Show that $\\tfrac1T\\log\\tfrac{X_T}{x_0} \\to E\\log Y_1$. (3) What does this say about wealth on a typical path? (4) Which split grows fastest in the long run?",
+      "pts": [
+        "(1) A rule for sizing a bet: choose the bet that maximizes the expected logarithm of wealth.",
+        "(2) Taking logs turns the product into a sum, $\\tfrac1T\\log\\tfrac{X_T}{x_0} = \\tfrac1T\\sum_{t=1}^T \\log Y_t$, and the law of large numbers gives the limit $E\\log Y_1$.",
+        "(3) On almost every path wealth behaves like $x_0e^{T\\,E\\log Y}$: it grows if $E\\log Y > 0$ and shrinks if $E\\log Y < 0$.",
+        "(4) The one with the largest $E\\log(u^\\top Z)$, which is the one-period problem of the log-utility investor."
+      ],
+      "pit": "The slide only states the criterion; the growth-rate argument explains why the logarithm is singled out.",
+      "src": "S6 s.21",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-12",
+      "g": "Kelly criterion",
+      "k": "How much to bet",
+      "q": "A bet at even odds is won with probability $p = 0.6$. Each round a fraction $f \\in [0, 1]$ of current wealth is bet; the rest is kept. (1) Write the wealth multiplier $Y$ of one round. (2) Maximize $E\\ln Y$. (3) Give the general formula for $p > \\tfrac12$. (4) Compare $E\\ln Y$ and $E\\,Y$ for $f = 0.2$, $0.4$ and $1$.",
+      "pts": [
+        "(1) $Y = 1 + f$ on a win and $Y = 1 - f$ on a loss.",
+        "(2) $E\\ln Y = 0.6\\ln(1 + f) + 0.4\\ln(1 - f)$; $\\dfrac{0.6}{1 + f} = \\dfrac{0.4}{1 - f}$ gives $0.6 - 0.6f = 0.4 + 0.4f$, so $f^\\star = 0.2$.",
+        "(3) $f^\\star = 2p - 1$.",
+        "(4) $f = 0.2$: $E\\ln Y = +2.01\\%$, $E\\,Y = 1.04$. $f = 0.4$: $-0.24\\%$, $1.08$. $f = 1$: $-\\infty$, $1.2$. The expectation keeps rising with $f$ while the growth rate turns negative."
+      ],
+      "pit": "Betting everything maximizes expected wealth and is ruined at the first loss.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-13",
+      "g": "Kelly criterion",
+      "k": "Mean vs typical factor",
+      "q": "$Y > 0$ is the random gross return of a portfolio per period. (1) How do $E\\,Y$ and $e^{E\\ln Y}$ compare, and why? (2) When are they equal? (3) Which of them governs expected wealth after $T$ periods and which typical wealth? (4) Evaluate both for a return of 1.4 or 0.7 with probability $\\tfrac12$ each.",
+      "pts": [
+        "(1) $e^{E\\ln Y} \\le E\\,Y$: the logarithm is concave, so $E\\ln Y \\le \\ln E\\,Y$ (Jensen).",
+        "(2) Only if $Y$ is constant (no risk).",
+        "(3) Expected wealth is $x_0(E\\,Y)^T$; typical (median) wealth is about $x_0\\big(e^{E\\ln Y}\\big)^T$.",
+        "(4) $E\\,Y = 1.05$ and $e^{E\\ln Y} = \\sqrt{1.4 \\times 0.7} = \\sqrt{0.98} \\approx 0.990$: the mean grows by 5% per period, the typical path loses 1%."
+      ],
+      "pit": "",
+      "src": "KE p59–60",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-14",
+      "g": "Log utility",
+      "k": "First step",
+      "q": "Portfolio problem: wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$, where $Z_1, \\dots, Z_T \\in \\mathbb{R}^n$ are i.i.d. vectors of positive gross returns and the split $U_t$ lies in $\\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$; the objective is $\\max E\\,G(X_T)$ with $G(x) = \\log x$. Carry out the step $t = T - 1$. (1) Write $V_{T-1}(x)$ with $V_T$ substituted. (2) Separate the wealth from the maximization and name the rules used. (3) Define $\\alpha$ and give $V_{T-1}$ and the optimal action. (4) State the two observations.",
+      "pts": [
+        "(1) $V_{T-1}(x) = \\max_{u \\in \\mathcal{U}} E\\log(x \\cdot u^\\top Z_T)$.",
+        "(2) $\\log(x \\cdot u^\\top Z_T) = \\log x + \\log(u^\\top Z_T)$, and $\\log x$ depends neither on $Z$ nor on $u$, so it leaves the expectation and the maximum: $V_{T-1}(x) = \\log x + \\max_u E\\log(u^\\top Z_T)$.",
+        "(3) $\\alpha = \\max_{u \\in \\mathcal{U}} E\\log(u^\\top Z_1)$ with maximizer $u^\\star$; $V_{T-1}(x) = \\alpha + \\log x$ and $\\mu_{T-1}(x) = u^\\star$.",
+        "(4) The optimal portfolio does not depend on the wealth $x$; it does not depend on time either, because every $Z_t$ has the distribution of $Z_1$."
+      ],
+      "pit": "The slides write $x_T \\ge 0$ and $\\log(X_T)$; the logarithm needs $x > 0$ and the value is $\\log(x_T)$.",
+      "src": "S6 s.23–25 · KE p56",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-15",
+      "g": "Log utility",
+      "k": "Induction step",
+      "q": "Portfolio problem: wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$, where $Z_1, \\dots, Z_T \\in \\mathbb{R}^n$ are i.i.d. vectors of positive gross returns and the split $U_t$ lies in $\\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$; the objective is $\\max E\\,G(X_T)$ with $G(x) = \\log x$ and $\\alpha = \\max_{u \\in \\mathcal{U}} E\\log(u^\\top Z_1)$. Prove $V_t(x) = \\alpha(T - t) + \\log x$ by backward induction. (1) Base case. (2) Induction step. (3) Why is the same $u^\\star$ optimal at every step? (4) Which assumptions are used, and where?",
+      "pts": [
+        "(1) $V_T(x) = \\log x = \\alpha \\cdot 0 + \\log x$.",
+        "(2) Assume the claim for $t + 1$: $$\\begin{aligned}V_t(x) &= \\max_u E\\big[\\alpha(T - t - 1) + \\log(x\\,u^\\top Z_{t+1})\\big]\\\\ &= \\alpha(T - t - 1) + \\log x + \\max_u E\\log(u^\\top Z_{t+1})\\\\ &= \\alpha(T - t) + \\log x.\\end{aligned}$$",
+        "(3) Only $E\\log(u^\\top Z_{t+1})$ is maximized; the terms pulled out are constants that do not move the maximizer, and the remaining problem contains neither $x$ nor $t$.",
+        "(4) $x > 0$ and $u^\\top Z > 0$ so that the logarithm is defined; identical distributions so that the maximum equals the same $\\alpha$ at every step; independence over time for the recursion; the maximum is assumed to be attained."
+      ],
+      "pit": "",
+      "src": "S6 s.28 · KE p56, p78",
+      "seen": [
+        "Ex 4.3"
+      ]
+    },
+    {
+      "id": "MDP-06-16",
+      "g": "Log utility",
+      "k": "Theorem",
+      "q": "Portfolio problem: wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$, where $Z_1, \\dots, Z_T \\in \\mathbb{R}^n$ are i.i.d. vectors of positive gross returns and the split $U_t$ lies in $\\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$; the objective is $\\max E\\,G(X_T)$ with $G(x) = \\log x$. State (1) the value functions; (2) the constant $\\alpha$; (3) the optimal policy. (4) Define “fixed-mix” and “myopic”.",
+      "pts": [
+        "(1) $V_t(x) = \\alpha \\cdot (T - t) + \\log x$ for $t = 0, \\dots, T$ and $x > 0$.",
+        "(2) $\\alpha = \\max_{u \\in \\mathcal{U}} E\\log(u^\\top Z_1)$, a static one-period problem.",
+        "(3) $\\mu_t(x) = u^\\star$ for all $x > 0$ and $t = 0, \\dots, T - 1$, where $u^\\star$ solves that one-period problem.",
+        "(4) Fixed-mix: the same proportions $u^\\star$ in every period, whatever the wealth. Myopic: optimizing over one period only gives the same portfolio as optimizing over $T$ periods."
+      ],
+      "pit": "The slide with the general step says “for all $t = 0, \\dots, T$”; there is no decision at $T$, the theorem has $T - 1$.",
+      "src": "S6 s.28–29 · KE p56",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-17",
+      "g": "Log utility",
+      "k": "Value in numbers",
+      "q": "In the coin-flip market the log-utility investor has $\\alpha = \\tfrac12\\ln\\tfrac{49}{48} \\approx 0.0103$ and $u^\\star = (\\tfrac{11}{18}, \\tfrac{7}{18})$; $V_t(x) = \\alpha(T - t) + \\ln x$ and $\\ln 100 \\approx 4.6052$. (1) Compute $V_{T-1}(100)$. (2) Compute $V_0(100)$ for $T = 2$ and give the split in each period. (3) How do value and split change if wealth doubles? (4) Does the two-period investor hold anything back in the first period?",
+      "pts": [
+        "(1) $4.6052 + 0.0103 = 4.6155$.",
+        "(2) $4.6052 + 2 \\times 0.0103 = 4.6258$; the split is $(\\tfrac{11}{18}, \\tfrac{7}{18})$ in both periods and after either outcome of the coin.",
+        "(3) The value rises by $\\ln 2 \\approx 0.693$ at every $t$; the split is unchanged.",
+        "(4) No: the policy is myopic, the first-period split is the one-period optimum."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-18",
+      "g": "Log utility",
+      "k": "Dropping assumptions",
+      "q": "Log-utility portfolio problem with $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$. Suppose the return vectors are independent but not identically distributed. (1) What remains true? (2) What changes? (3) Give the value function. (4) What if returns were not independent over time?",
+      "pts": [
+        "(1) $\\log x$ still leaves the maximization at every step: the optimal split does not depend on wealth, and it is still myopic (a one-period problem per period).",
+        "(2) Step $t$ solves $\\alpha_t = \\max_u E\\log(u^\\top Z_{t+1})$, which changes with $t$: the policy $u^\\star_t$ is no longer fixed-mix.",
+        "(3) $V_t(x) = \\sum_{s=t}^{T-1}\\alpha_s + \\log x$.",
+        "(4) The state would have to include the information that predicts future returns, and the split would depend on it."
+      ],
+      "pit": "",
+      "src": "KE p55–56",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-19",
+      "g": "Log utility",
+      "k": "Wealth does not factor",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$. One period, quadratic utility $G(x) = x - bx^2$ with $b = 0.1$, portfolio return $R = u^\\top Z$; here $\\tfrac{d}{du_1}E\\,R = 0.075$ and $\\tfrac{d}{du_1}E\\,R^2 = -0.0375 + 0.5625u_1$. (1) Write $E\\,G(xR)$. (2) Solve the first-order condition for $u_1$. (3) Evaluate at wealth $x = 1, 2, 4$. (4) What does this show?",
+      "pts": [
+        "(1) $E\\,G(xR) = x\\,E\\,R - bx^2\\,E\\,R^2$.",
+        "(2) $0.075x = bx^2(-0.0375 + 0.5625u_1)$, so $u_1 = \\dfrac{0.075/(bx) + 0.0375}{0.5625}$.",
+        "(3) $x = 1$: $1.4 > 1$, so the boundary $u_1 = 1$. $x = 2$: $0.733$. $x = 4$: $0.4$.",
+        "(4) The optimal split depends on wealth: no fixed mix exists, and the recursion would need a separate optimization for every wealth level."
+      ],
+      "pit": "Wealth factors out for the logarithm and the power utility only because $\\log(xy) = \\log x + \\log y$ and $(xy)^{1-\\gamma} = x^{1-\\gamma}y^{1-\\gamma}$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-20",
+      "g": "Binomial market",
+      "k": "Optimal split 11/18",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$. Solve the one-period problem of the log-utility investor. (1) Write the portfolio return on heads and on tails in terms of $u_1$. (2) Write the problem defining $\\alpha$. (3) Solve the first-order condition. (4) Why is the root the maximum?",
+      "pts": [
+        "(1) Heads: $1.4u_1 + 0.8(1 - u_1) = 0.8 + 0.6u_1$. Tails: $0.7u_1 + 1.15(1 - u_1) = 1.15 - 0.45u_1$.",
+        "(2) $\\alpha = \\max_{0 \\le u_1 \\le 1} \\tfrac12\\log(0.8 + 0.6u_1) + \\tfrac12\\log(1.15 - 0.45u_1)$.",
+        "(3) $\\dfrac{0.6}{0.8 + 0.6u_1} = \\dfrac{0.45}{1.15 - 0.45u_1}$; cross-multiplying, $0.69 - 0.27u_1 = 0.36 + 0.27u_1$, so $u_1^\\star = \\dfrac{0.33}{0.54} = \\dfrac{11}{18} \\approx 0.611$.",
+        "(4) The objective is a sum of logarithms of affine functions, hence concave, and the root lies inside $[0, 1]$. A root outside the interval would mean a boundary solution."
+      ],
+      "pit": "KE writes the split as $u = (a, b)$.",
+      "src": "S6 s.31–35 · KE p57",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-21",
+      "g": "Binomial market",
+      "k": "At the optimum",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$. The log-optimal split is $u_1^\\star = \\tfrac{11}{18}$. (1) Compute the portfolio return on heads and on tails. (2) Compute $\\alpha$. (3) Write $V_t(x)$. (4) Compute the expected return per period and compare with holding only asset 1.",
+      "pts": [
+        "(1) Heads: $0.8 + 0.6 \\cdot \\tfrac{11}{18} = \\tfrac{21}{18} = \\tfrac76 \\approx 1.167$. Tails: $1.15 - 0.45 \\cdot \\tfrac{11}{18} = \\tfrac{15.75}{18} = \\tfrac78 = 0.875$.",
+        "(2) $\\alpha = \\tfrac12\\ln\\big(\\tfrac76 \\cdot \\tfrac78\\big) = \\tfrac12\\ln\\tfrac{49}{48} \\approx 0.0103$.",
+        "(3) $V_t(x) = 0.0103\\,(T - t) + \\ln x$.",
+        "(4) $\\tfrac12\\big(\\tfrac76 + \\tfrac78\\big) = \\tfrac{49}{48} \\approx 1.0208$, below the $1.05$ of asset 1: the log investor gives up expected return."
+      ],
+      "pit": "KE prints the tails return of the mix as $16.9/18$; it is $15.75/18$.",
+      "src": "S6 s.35 · KE p57, p59",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-22",
+      "g": "Binomial market",
+      "k": "Three portfolios",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$. Compare $u_1 = 1$, $u_1 = 0$ and $u_1 = \\tfrac{11}{18}$ over one period. (1) Compute $E\\ln(u^\\top Z)$ for each. (2) Compute $E(u^\\top Z)$ for each. (3) Give the ranking under linear and under log utility. (4) The slides list $-4.39$‰, $-18.1$‰ and $+4.48$‰ for the same three portfolios. Reconcile.",
+      "pts": [
+        "(1) $\\tfrac12\\ln(1.4 \\times 0.7) = \\tfrac12\\ln 0.98 = -1.01\\%$; $\\tfrac12\\ln(0.8 \\times 1.15) = \\tfrac12\\ln 0.92 = -4.17\\%$; $\\tfrac12\\ln\\tfrac{49}{48} = +1.03\\%$.",
+        "(2) $1.05$; $0.975$; $1.0208$.",
+        "(3) Linear: asset 1, then the mix, then asset 2. Log: the mix, then asset 1, then asset 2. The choice of $G$ changes the answer.",
+        "(4) The slide table uses base-10 logarithms in per mille: $\\tfrac12\\log_{10}0.98 = -4.39$‰. Multiplying by $\\ln 10 \\approx 2.303$ gives $-1.01\\%$. The base does not change $u^\\star$, but $\\alpha$ must be computed with $\\ln$."
+      ],
+      "pit": "",
+      "src": "S6 s.35 · KE p57",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-23",
+      "g": "Binomial market",
+      "k": "Another split",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$. Take wealth 100 and $u = (0.3, 0.7)$. (1) Compute wealth after heads and after tails. (2) Compute expected wealth. (3) Compute $E\\ln(u^\\top Z)$. (4) Compare with the log-optimal split.",
+      "pts": [
+        "(1) Heads: $0.3 \\times 1.4 + 0.7 \\times 0.8 = 0.98$, wealth 98. Tails: $0.3 \\times 0.7 + 0.7 \\times 1.15 = 1.015$, wealth 101.5.",
+        "(2) $\\tfrac12(98 + 101.5) = 99.75$.",
+        "(3) $\\tfrac12(\\ln 0.98 + \\ln 1.015) = \\tfrac12(-0.0202 + 0.0149) \\approx -0.27\\%$.",
+        "(4) Too little of asset 1: the growth rate is negative, against $+1.03\\%$ at $u_1 = \\tfrac{11}{18}$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-24",
+      "g": "Binomial market",
+      "k": "Cash and one asset",
+      "q": "A market offers cash (gross return 1) and one risky asset with gross return 1.4 or 0.7 with probability $\\tfrac12$ each; $a$ is the fraction of wealth in the risky asset. (1) Write the one-period problem of the log-utility investor. (2) Solve it. (3) Compute the portfolio returns. (4) Compare with the mix $\\tfrac{11}{18} : \\tfrac{7}{18}$ of this asset and a second asset returning 0.8 or 1.15 on the same coin.",
+      "pts": [
+        "(1) $\\max_{0 \\le a \\le 1} \\tfrac12\\ln(1 + 0.4a) + \\tfrac12\\ln(1 - 0.3a)$.",
+        "(2) $\\dfrac{0.4}{1 + 0.4a} = \\dfrac{0.3}{1 - 0.3a}$ gives $0.4 - 0.12a = 0.3 + 0.12a$, so $a^\\star = \\dfrac{0.1}{0.24} = \\dfrac{5}{12}$.",
+        "(3) $1 + 0.4 \\cdot \\tfrac{5}{12} = \\tfrac76$ and $1 - 0.3 \\cdot \\tfrac{5}{12} = \\tfrac78$.",
+        "(4) Exactly the same returns $\\tfrac76$, $\\tfrac78$, hence the same growth rate $1.03\\%$. In the two-asset market the second asset serves to reduce the exposure to the first."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-25",
+      "g": "Typical vs expected",
+      "k": "Wealth as a product",
+      "q": "A fixed split is used in every period of the coin-flip market; the portfolio returns $y_+$ on heads and $y_-$ on tails per period, and $X_0 = 1$. (1) Write $X_T$ in terms of the number of heads $S$. (2) Compute expected wealth. (3) Give the typical (median) wealth. (4) Which of the two does the log-utility investor maximize?",
+      "pts": [
+        "(1) $X_T = y_+^{S}\\,y_-^{T-S}$ with $S \\sim \\text{Binomial}(T, \\tfrac12)$.",
+        "(2) The periods are independent, so $E\\,X_T = (E\\,Y)^T$ with $E\\,Y = \\tfrac12(y_+ + y_-)$.",
+        "(3) The most likely outcome is $S \\approx T/2$: $X_T \\approx (y_+y_-)^{T/2} = e^{T\\,E\\ln Y}$.",
+        "(4) $E\\ln X_T = T\\,E\\ln Y$: the typical growth rate, not expected wealth."
+      ],
+      "pit": "",
+      "src": "KE p58–60",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-26",
+      "g": "Typical vs expected",
+      "k": "100 periods",
+      "q": "Coin-flip market, $X_0 = 1$, $T = 100$. Holding only asset 1 returns 1.4 or 0.7 per period; the fixed mix $u_1 = \\tfrac{11}{18}$ returns $\\tfrac76$ or $\\tfrac78$. For each give (1) the expected factor per period and the typical factor (the square root of the product of the two returns); (2) $E\\,X_{100}$; (3) the median of $X_{100}$. (4) Interpret.",
+      "pts": [
+        "(1) Asset 1: $1.05$ and $\\sqrt{0.98} \\approx 0.990$. Mix: $1.0208$ and $\\sqrt{49/48} \\approx 1.0104$.",
+        "(2) Asset 1: $1.05^{100} \\approx 131.5$. Mix: $1.0208^{100} \\approx 7.86$.",
+        "(3) Asset 1: $0.98^{50} \\approx 0.364$. Mix: $(49/48)^{50} \\approx 2.80$.",
+        "(4) Asset 1 has by far the larger expectation, but it is carried by a few paths with unusually many heads; its typical path loses almost two thirds. The mix has a smaller expectation and a typical path that nearly triples."
+      ],
+      "pit": "$P(X_{100} > 1)$ is $0.38$ for asset 1 and $0.76$ for the mix.",
+      "src": "S6 s.36 · KE p59–60",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-27",
+      "g": "Typical vs expected",
+      "k": "Losing stocks",
+      "q": "Coin-flip market: asset 1 returns 1.4 or 0.7, asset 2 returns 0.8 or 1.15, the mix $u_1 = \\tfrac{11}{18}$ returns $\\tfrac76$ or $\\tfrac78$. Compute what one dollar becomes after one head and one tail for (1) asset 1; (2) asset 2; (3) the mix. (4) Why does the mix make money when each asset alone loses?",
+      "pts": [
+        "(1) $1.4 \\times 0.7 = 0.98$: a loss of 2% although the average net return is $+5\\%$. The larger the swings, the stronger this drag.",
+        "(2) $0.8 \\times 1.15 = 0.92$.",
+        "(3) $\\tfrac76 \\times \\tfrac78 = \\tfrac{49}{48} \\approx 1.0208$.",
+        "(4) The two assets always move in opposite directions, so mixing shrinks the swing per period from $+40\\%/-30\\%$ to $+16.7\\%/-12.5\\%$; a little expected return is given up for a much smaller drag."
+      ],
+      "pit": "",
+      "src": "S6 s.36 · KE p58",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-28",
+      "g": "Typical vs expected",
+      "k": "Rebalancing",
+      "q": "Coin-flip market (asset 1: 1.4 or 0.7; asset 2: 0.8 or 1.15). Wealth 100 is held in the fixed mix $\\tfrac{11}{18} : \\tfrac{7}{18}$. (1) Give the dollar holdings. (2) After heads, give the holdings, total wealth and the share of asset 1. (3) Which trade restores the mix? (4) Which trade is needed after tails instead, and what is the general rule?",
+      "pts": [
+        "(1) $61.11$ in asset 1 and $38.89$ in asset 2.",
+        "(2) $61.11 \\times 1.4 = 85.56$ and $38.89 \\times 0.8 = 31.11$; total $116.67$; asset 1 is now $73.3\\%$.",
+        "(3) The target is $116.67 \\times \\tfrac{11}{18} = 71.30$: sell $14.26$ of asset 1 and buy asset 2.",
+        "(4) After tails: $42.78$ and $44.72$, total $87.5$, target $53.47$: buy $10.69$ of asset 1. Fixed-mix sells what has risen and buys what has fallen."
+      ],
+      "pit": "Fixed-mix is not buy-and-hold: the proportions are restored in every period.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-29",
+      "g": "Typical vs expected",
+      "k": "Chance of a profit",
+      "q": "Coin-flip market, $X_0 = 1$, $S$ = number of heads in $T$ flips. Holding only asset 1 gives $X_T = 1.4^S\\,0.7^{T-S}$; the mix $u_1 = \\tfrac{11}{18}$ gives $X_T = (\\tfrac{21}{18})^S(\\tfrac{15.75}{18})^{T-S}$. (1) Rewrite $\\{X_T \\ge 1\\}$ for asset 1 as a condition on $S/T$. (2) What happens to its probability as $T \\to \\infty$, and why? (3) Do the same for the mix. (4) Give the probabilities of a profit at $T = 100$ and $T = 1000$.",
+      "pts": [
+        "(1) $S\\ln 1.4 + (T - S)\\ln 0.7 \\ge 0 \\iff \\dfrac{S}{T} \\ge c = \\dfrac{\\ln(10/7)}{\\ln 2} \\approx 0.515$.",
+        "(2) It tends to 0: $S/T \\to \\tfrac12$ by the law of large numbers and $c > \\tfrac12$.",
+        "(3) $X_T \\ge 1 \\iff \\dfrac{S}{T} \\ge d = \\dfrac{\\ln(18/15.75)}{\\ln(21/15.75)} \\approx 0.464 < \\tfrac12$, so the probability tends to 1.",
+        "(4) Asset 1: $0.38$ and $0.18$. Mix: $0.76$ and $0.99$."
+      ],
+      "pit": "KE's bound $1.0533\\sqrt{T}/1.0004^T$ for asset 1 is correct but exceeds 1 until $T$ is about 11000.",
+      "src": "KE p60–61",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-30",
+      "g": "Power utility",
+      "k": "First step",
+      "q": "Portfolio problem: wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$, where $Z_1, \\dots, Z_T \\in \\mathbb{R}^n$ are i.i.d. vectors of positive gross returns and the split $U_t$ lies in $\\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$; the objective is $\\max E\\,G(X_T)$ with the power utility $G(x) = \\dfrac{x^{1-\\gamma}}{1-\\gamma}$, $\\gamma \\ge 0$, $\\gamma \\ne 1$. Carry out the step $t = T - 1$. (1) Write $V_{T-1}(x)$. (2) Separate the wealth and say why this is allowed. (3) Write the result as a scaled power utility and define $\\alpha$. (4) Give the optimal action.",
+      "pts": [
+        "(1) $V_{T-1}(x) = \\max_{u \\in \\mathcal{U}} E\\Big[\\dfrac{(x \\cdot u^\\top Z_T)^{1-\\gamma}}{1-\\gamma}\\Big]$.",
+        "(2) $(x\\,u^\\top Z)^{1-\\gamma} = x^{1-\\gamma}(u^\\top Z)^{1-\\gamma}$, and the factor $x^{1-\\gamma} \\ge 0$ does not change which $u$ is best: $V_{T-1}(x) = x^{1-\\gamma}\\max_u E\\Big[\\dfrac{(u^\\top Z_T)^{1-\\gamma}}{1-\\gamma}\\Big]$.",
+        "(3) $V_{T-1}(x) = \\alpha \\cdot \\dfrac{x^{1-\\gamma}}{1-\\gamma}$ with $\\alpha = (1 - \\gamma)\\max_{u \\in \\mathcal{U}} E\\Big[\\dfrac{(u^\\top Z_1)^{1-\\gamma}}{1-\\gamma}\\Big]$.",
+        "(4) $\\mu_{T-1}(x) = u^\\star$, the maximizer of that one-period problem, for every $x$."
+      ],
+      "pit": "The two slides that open this part are still titled “Logarithmic Utility”.",
+      "src": "S6 s.38–41 · KE p54–55",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-31",
+      "g": "Power utility",
+      "k": "Sign of the constant",
+      "q": "For the power utility the one-period constant is $\\alpha = (1 - \\gamma)\\max_{u \\in \\mathcal{U}} E\\Big[\\dfrac{(u^\\top Z_1)^{1-\\gamma}}{1-\\gamma}\\Big]$ with maximizer $u^\\star$ and positive returns. (1) Show $\\alpha > 0$. (2) Check the signs for $\\gamma < 1$. (3) Check them for $\\gamma > 1$ and restate the one-period problem. (4) Why does the induction need $\\alpha > 0$?",
+      "pts": [
+        "(1) $\\alpha = E\\big[(u^{\\star\\top}Z_1)^{1-\\gamma}\\big]$, the expectation of a positive number.",
+        "(2) $1 - \\gamma > 0$ and the maximum is positive.",
+        "(3) $1 - \\gamma < 0$ and the maximum is negative ($G < 0$); the product is positive. Maximizing a negative multiple is minimizing: $u^\\star$ minimizes $E\\big[(u^\\top Z_1)^{1-\\gamma}\\big]$.",
+        "(4) In the general step the factor $\\alpha^{T-t-1}$ is pulled out of the maximum; a negative factor would turn the maximization into a minimization."
+      ],
+      "pit": "The slide writes $\\alpha \\ge 0$ and KE $\\beta_t \\ge 0$; with positive returns they are strictly positive.",
+      "src": "S6 s.41 · KE p55",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-32",
+      "g": "Power utility",
+      "k": "Induction and theorem",
+      "q": "Portfolio problem: wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$, where $Z_1, \\dots, Z_T \\in \\mathbb{R}^n$ are i.i.d. vectors of positive gross returns and the split $U_t$ lies in $\\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$; the objective is $\\max E\\,G(X_T)$ with $G(x) = \\dfrac{x^{1-\\gamma}}{1-\\gamma}$ and $\\alpha = (1 - \\gamma)\\max_u E\\Big[\\dfrac{(u^\\top Z_1)^{1-\\gamma}}{1-\\gamma}\\Big] > 0$. (1) Assume $V_{t+1}(y) = \\alpha^{T-t-1}\\dfrac{y^{1-\\gamma}}{1-\\gamma}$ and compute $V_t$. (2) Give the optimal policy and its two names. (3) State the theorem. (4) How does one step back change the value, compared with log utility?",
+      "pts": [
+        "(1) $$\\begin{aligned}V_t(x) &= \\max_u E\\Big[\\alpha^{T-t-1}\\frac{(x\\,u^\\top Z_{t+1})^{1-\\gamma}}{1-\\gamma}\\Big]\\\\ &= \\alpha^{T-t-1}x^{1-\\gamma}\\max_u E\\Big[\\frac{(u^\\top Z_{t+1})^{1-\\gamma}}{1-\\gamma}\\Big]\\\\ &= \\alpha^{T-t}\\,\\frac{x^{1-\\gamma}}{1-\\gamma}.\\end{aligned}$$",
+        "(2) $\\mu_t(x) = u^\\star$ for all $x$ and $t = 0, \\dots, T - 1$: fixed-mix and myopic.",
+        "(3) $V_t(x) = \\alpha^{T-t}\\dfrac{x^{1-\\gamma}}{1-\\gamma}$ for $t = 0, \\dots, T$, where $u^\\star$ and $\\alpha$ come from the static one-period problem.",
+        "(4) Power: the value is multiplied by $\\alpha$. Log: $\\alpha$ is added."
+      ],
+      "pit": "KE first allows non-identical distributions: $J_t(x) = \\beta_t\\dfrac{x^{1-\\gamma}}{1-\\gamma}$ with $\\beta_T = 1$, $\\beta_t = \\alpha_t\\beta_{t+1}$.",
+      "src": "S6 s.45–46 · KE p55–56",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-33",
+      "g": "Power utility",
+      "k": "Example: gamma = 2",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$; the portfolio returns $R_+ = 0.8 + 0.6u_1$ on heads and $R_- = 1.15 - 0.45u_1$ on tails. Power utility with $\\gamma = 2$, i.e. $G(x) = -1/x$. (1) Write the one-period problem. (2) Solve the first-order condition. (3) Compute the two returns and $\\alpha$. (4) Compute $V_{T-1}(100)$.",
+      "pts": [
+        "(1) $\\max_{u_1} E[-1/R]$, i.e. $\\min_{u_1} \\tfrac12\\Big(\\dfrac{1}{R_+} + \\dfrac{1}{R_-}\\Big)$.",
+        "(2) $\\dfrac{0.6}{R_+^2} = \\dfrac{0.45}{R_-^2}$, so $\\dfrac{R_-}{R_+} = \\sqrt{0.75} \\approx 0.866$ and $u_1^\\star = \\dfrac{1.15 - 0.8 \\times 0.866}{0.45 + 0.6 \\times 0.866} = \\dfrac{0.457}{0.970} \\approx 0.472$.",
+        "(3) $R_+ \\approx 1.083$, $R_- \\approx 0.938$; $\\alpha = E[1/R] = \\tfrac12\\Big(\\dfrac{1}{1.083} + \\dfrac{1}{0.938}\\Big) \\approx 0.995$.",
+        "(4) $V_{T-1}(100) = \\alpha \\cdot \\Big(-\\dfrac{1}{100}\\Big) \\approx -0.00995$."
+      ],
+      "pit": "For $\\gamma > 1$ a smaller $\\alpha$ is better: the value is $\\alpha$ times a negative number.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-34",
+      "g": "Power utility",
+      "k": "Split against gamma",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $Z = (1.4, 0.8)$ on heads and $Z = (0.7, 1.15)$ on tails, i.i.d. over periods; a split is $u = (u_1, 1 - u_1)$ with $0 \\le u_1 \\le 1$; the portfolio returns $R_+ = 0.8 + 0.6u_1$ on heads and $R_- = 1.15 - 0.45u_1$ on tails. Power utility with parameter $\\gamma > 0$. (1) Write the first-order condition of the one-period problem. (2) Solve it for $u_1$. (3) Evaluate for $\\gamma = 0.5$, $\\gamma = 1$, $\\gamma = 2$ and $\\gamma \\to \\infty$. (4) For which $\\gamma$ is the solution at the boundary?",
+      "pts": [
+        "(1) $0.6\\,R_+^{-\\gamma} = 0.45\\,R_-^{-\\gamma}$, i.e. $\\Big(\\dfrac{R_-}{R_+}\\Big)^{\\gamma} = 0.75$.",
+        "(2) With $q = 0.75^{1/\\gamma}$: $1.15 - 0.45u_1 = q(0.8 + 0.6u_1)$, so $u_1^\\star = \\dfrac{1.15 - 0.8q}{0.45 + 0.6q}$.",
+        "(3) $\\gamma = 0.5$: $q = 0.5625$, $u_1^\\star = \\tfrac{0.7}{0.7875} = \\tfrac89$. $\\gamma = 1$: $q = 0.75$, $\\tfrac{0.55}{0.9} = \\tfrac{11}{18}$. $\\gamma = 2$: $0.472$. $\\gamma \\to \\infty$: $q \\to 1$, $u_1^\\star \\to \\tfrac13$, where both returns equal 1 (a riskless portfolio).",
+        "(4) The formula gives $u_1 \\ge 1$ when $q \\le 0.5$, i.e. $\\gamma \\le \\dfrac{\\ln 0.75}{\\ln 0.5} \\approx 0.415$: then $u_1^\\star = 1$, as for a risk-neutral investor."
+      ],
+      "pit": "The larger $\\gamma$, the less of the volatile asset.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-35",
+      "g": "Power utility",
+      "k": "Linear utility",
+      "q": "Portfolio problem: wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$, where $Z_1, \\dots, Z_T \\in \\mathbb{R}^n$ are i.i.d. vectors of positive gross returns and the split $U_t$ lies in $\\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$; the objective is $\\max E\\,G(X_T)$ with $G(x) = x$ (the power utility with $\\gamma = 0$). (1) Write the one-period objective. (2) Where is it maximized over $\\mathcal{U}$, and why? (3) Give the optimal policy and $V_t$. (4) In the coin-flip market (expected returns 1.05 and 0.975) give $V_0(1)$ for $T = 10$ and compare with the median of $X_{10}$.",
+      "pts": [
+        "(1) $E(u^\\top Z) = \\sum_i u_i\\,E\\,Z_{1,i}$, linear in $u$.",
+        "(2) At a vertex: a weighted average of the numbers $E\\,Z_{1,i}$ with non-negative weights summing to 1 is at most the largest of them.",
+        "(3) Everything in the asset $i^\\star$ with the largest expected return; $V_t(x) = m^{T-t}x$ with $m = \\max_i E\\,Z_{1,i}$.",
+        "(4) $V_0(1) = 1.05^{10} \\approx 1.63$; the median path has 5 heads and ends at $0.98^5 \\approx 0.90$."
+      ],
+      "pit": "Do not set a derivative to zero here: the objective is linear and its derivative never vanishes.",
+      "src": "S6 s.12 · KE p56",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-36",
+      "g": "Power utility",
+      "k": "The power family",
+      "q": "Power utility $G_\\gamma(x) = \\dfrac{x^{1-\\gamma}}{1-\\gamma}$, $\\gamma \\ge 0$, $\\gamma \\ne 1$. (1) Which member is the linear utility? (2) In which sense is the logarithm the case $\\gamma = 1$? (3) Why does replacing $G$ by $cG + d$ with $c > 0$ not change the optimal portfolio? (4) What does $\\gamma$ measure, and how does the optimal split react to it?",
+      "pts": [
+        "(1) $\\gamma = 0$: $G(x) = x$, risk neutral.",
+        "(2) $\\dfrac{x^{1-\\gamma} - 1}{1-\\gamma} \\to \\ln x$ as $\\gamma \\to 1$.",
+        "(3) $E[cG(X) + d] = c\\,E\\,G(X) + d$: the ranking of all random wealth levels is unchanged.",
+        "(4) Risk aversion: the larger $\\gamma$, the more concave $G$ and the smaller the swings of the chosen portfolio. In the coin-flip market $u_1^\\star$ falls from 1 through $\\tfrac{11}{18}$ at $\\gamma = 1$ towards $\\tfrac13$."
+      ],
+      "pit": "This $\\gamma$ is not a discount factor.",
+      "src": "S6 s.13",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-37",
+      "g": "Exponential utility",
+      "k": "Additive wealth",
+      "q": "Each period an investor bets an amount $u \\ge 0$ in dollars on a risky asset with excess return $Z = +1$ with probability 0.6 and $-1$ with probability 0.4, i.i.d.; wealth follows $X_{t+1} = X_t + u_tZ_{t+1}$ and the objective is $\\max E\\,G(X_T)$ with $G(x) = -e^{-x}$. (1) Carry out the first step and show $V_{T-1} = \\beta G$. (2) Why is $\\beta \\in (0, 1]$? (3) Prove $V_t = \\beta^{T-t}G$. (4) Describe the optimal policy.",
+      "pts": [
+        "(1) $V_{T-1}(x) = \\max_u E\\big[-e^{-x}e^{-uZ}\\big] = -e^{-x}\\min_{u \\ge 0} E\\,e^{-uZ} = \\beta\\,G(x)$ with $\\beta = \\min_{u \\ge 0} E\\,e^{-uZ}$.",
+        "(2) $u = 0$ gives $E\\,e^0 = 1$, so $\\beta \\le 1$; an exponential is positive, so $\\beta > 0$.",
+        "(3) If $V_{t+1} = \\beta^{T-t-1}G$, then $V_t(x) = \\beta^{T-t-1}\\max_u E\\,G(x + uZ) = \\beta^{T-t}G(x)$: the positive factor does not move the maximizer, and the inner problem is the first step.",
+        "(4) $\\mu_t(x) = u^\\star$, the minimizer of $E\\,e^{-uZ}$: the same dollar amount for every wealth level and every period."
+      ],
+      "pit": "Here wealth separates through $e^{-(x+y)} = e^{-x}e^{-y}$, and the dynamics are additive.",
+      "src": "",
+      "seen": [
+        "MkB P4"
+      ]
+    },
+    {
+      "id": "MDP-06-38",
+      "g": "Exponential utility",
+      "k": "Constant amount",
+      "q": "An investor with $G(x) = -e^{-x}$ and wealth $X_{t+1} = X_t + u_tZ_{t+1}$ ($Z = +1$ with probability 0.6, $-1$ with probability 0.4) has $V_t = \\beta^{T-t}G$ with $\\beta = \\min_{u \\ge 0} E\\,e^{-uZ}$. (1) Compute $u^\\star$. (2) Compute $\\beta$. (3) What is constant here, and what is constant for log utility with multiplicative wealth? (4) What happens to the fraction of wealth at risk as wealth grows?",
+      "pts": [
+        "(1) $E\\,e^{-uZ} = 0.6e^{-u} + 0.4e^{u}$; the derivative vanishes when $e^{2u} = 1.5$, so $u^\\star = \\tfrac12\\ln 1.5 \\approx 0.203$ (a minimum, the second derivative is positive).",
+        "(2) $\\beta = 2\\sqrt{0.6 \\times 0.4} = 2\\sqrt{0.24} \\approx 0.980$.",
+        "(3) Here the dollar amount $u^\\star$; for log utility the fraction of wealth $u^\\star$.",
+        "(4) $u^\\star/x \\to 0$: the richer the investor, the smaller the share at risk."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MkB P4"
+      ]
+    },
+    {
+      "id": "MDP-06-39",
+      "g": "Overview",
+      "k": "Utility decides",
+      "q": "Portfolio problem with i.i.d. returns and wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$. For each utility give the form of $V_t$ and say whether the optimal split depends on wealth or time: (1) linear; (2) logarithmic; (3) power; (4) quadratic and exponential.",
+      "pts": [
+        "(1) $V_t(x) = (\\max_i E\\,Z_{1,i})^{T-t}x$; everything in the asset with the highest expected return; no dependence.",
+        "(2) $V_t(x) = \\alpha(T - t) + \\log x$ with $\\alpha = \\max_u E\\log(u^\\top Z_1)$; fixed mix; no dependence.",
+        "(3) $V_t(x) = \\alpha^{T-t}\\dfrac{x^{1-\\gamma}}{1-\\gamma}$; fixed mix that depends on $\\gamma$; no dependence on wealth or time.",
+        "(4) No closed form in this model: wealth does not factor out and the optimal fractions depend on wealth."
+      ],
+      "pit": "",
+      "src": "S6 s.12–13, s.29, s.46",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-40",
+      "g": "Overview",
+      "k": "Against LQ control",
+      "q": "Compare the portfolio problem with the linear-quadratic problem. (1) Dynamics. (2) Objective. (3) Shape of the value function and why one step preserves it. (4) Optimal policy. (5) Role of the noise.",
+      "pts": [
+        "(1) LQ: additive, $X_{t+1} = aX_t + U_t + Z_{t+1}$. Portfolio: multiplicative, $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$.",
+        "(2) LQ: minimize running plus terminal cost. Portfolio: maximize expected utility of terminal wealth, no running reward.",
+        "(3) LQ: $k_tx^2 + \\ell_t$, a quadratic minimized over $u$ stays quadratic. Portfolio: $\\alpha(T - t) + \\log x$ or $\\alpha^{T-t}x^{1-\\gamma}/(1-\\gamma)$, because the wealth separates from the maximization.",
+        "(4) LQ: $u = m_tx$, depending on state and time. Portfolio: a constant split $u^\\star$.",
+        "(5) LQ: only mean and variance matter and the action ignores the noise (certainty equivalence). Portfolio: the whole distribution of the returns determines $u^\\star$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-41",
+      "g": "Overview",
+      "k": "Which step",
+      "q": "Which step answers each request in a portfolio problem? (1) “Show the optimal policy is a fixed mix.” (2) “Find the optimal portfolio.” (3) “What happens in the long run?” (4) The utility is neither logarithmic nor a power. (5) The returns are not identically distributed.",
+      "pts": [
+        "(1) Set $V_T = G$; do the first step, separating the wealth with $\\log(xy) = \\log x + \\log y$ or $(xy)^{1-\\gamma} = x^{1-\\gamma}y^{1-\\gamma}$; guess the shape; induct. For a power utility show $\\alpha > 0$.",
+        "(2) Solve the one-period problem: eliminate the constraint with $u_n = 1 - \\sum_{i<n}u_i$, set the derivative to zero, check concavity and the boundaries.",
+        "(3) Treat $E\\ln Y$ (typical growth, median) and $E\\,Y$ (expected wealth) separately.",
+        "(4) Check whether the wealth still separates (it does for exponential utility with additive wealth); otherwise the split depends on wealth.",
+        "(5) Still myopic, but one problem per period: $u^\\star_t$ changes with $t$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-06-42",
+      "g": "Overview",
+      "k": "Notation traps",
+      "q": "What does each symbol mean in this topic, and what is it easily confused with? (1) $\\alpha$. (2) $\\gamma$. (3) $\\log$. (4) $U$ and $\\mathcal{U}$. (5) The letters used by KE.",
+      "pts": [
+        "(1) Three roles: the weight or probability in the definition of concavity; the constant added per period for log utility; the constant multiplied per period for power utility.",
+        "(2) The risk-aversion parameter of the power utility, not a discount factor.",
+        "(3) The natural logarithm in the theory; the slide table of growth rates uses base 10.",
+        "(4) $U_t$ is the split (the action), $\\mathcal{U}$ the set of allowed splits; on one slide an old $U$ for the utility function shows through under $G$.",
+        "(5) Returns $W_t$, value function $J_t$, weights in $\\Delta_n$, $\\ln$, and $\\beta_t = \\prod_{s \\ge t}\\alpha_s$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}
