@@ -280,7 +280,7 @@
       "k": "Accuracy as target",
       "q": "(1) Why can maximising prediction accuracy be the wrong objective for trading? Give four reasons. (2) What objectives or metrics are better?",
       "pts": [
-        "(1) Ignores magnitude (55% right but the misses are the big drops); ignores ranking and portfolio construction (cross-sectional strategies need relative order); ignores costs (flipping predictions churn); class imbalance (predicting \\\"flat\\\" scores well).",
+        "(1) Ignores magnitude (55% right but the misses are the big drops); ignores ranking and portfolio construction (cross-sectional strategies need relative order); ignores costs (flipping predictions churn); class imbalance (predicting \"flat\" scores well).",
         "(2) Rank IC, net-of-cost long-short Sharpe, magnitude-weighted losses, or a loss built from the downstream portfolio utility (decision-focused learning), with strong regularisation."
       ],
       "pit": "",

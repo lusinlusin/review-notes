@@ -67,7 +67,7 @@
       "pts": [
         "(1) One clear, falsifiable hypothesis with a mechanism: who misprices or bears risk, and why the effect is not arbitraged away (e.g. limited attention to information that takes effort to read).",
         "(2) Data and timestamps (when each input became known, returns from the next tradable time); feature definition; target and horizon (e.g. industry/style-adjusted returns over days +2 to +60); point-in-time universe; baselines (known signals it might proxy); main test (Fama-MacBeth with NW SEs, quintile long-short).",
-        "(3) Does it vanish after controlling for the baselines? Placebo: does it \\\"predict\\\" past returns (timing error)? Does it work only in a suspicious sub-sample?",
+        "(3) Does it vanish after controlling for the baselines? Placebo: does it \"predict\" past returns (timing error)? Does it work only in a suspicious sub-sample?",
         "(4) Costs and capacity, and the pre-set abandonment rule (e.g. OOS rank IC $t<2$ after controls, or negative net returns with costs ×2)."
       ],
       "pit": "",
@@ -94,7 +94,7 @@
       "k": "A failed idea",
       "q": "You are asked about a research idea that failed. (1) What is the listener looking for? (2) Give the five-step structure.",
       "pts": [
-        "(1) That you can reject your own idea by criteria set in advance, rather than tuning until it \\\"works\\\".",
+        "(1) That you can reject your own idea by criteria set in advance, rather than tuning until it \"works\".",
         "(2) Idea and reasoning → initial evidence that looked promising → the diagnostic that killed it (vanished after a known factor, failed OOS, one subperiod only, negative after costs, a data problem) → when and why you stopped instead of searching variants → what you changed in your process afterwards (e.g. running known-factor controls before looking at performance)."
       ],
       "pit": "",

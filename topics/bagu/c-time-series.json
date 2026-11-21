@@ -252,7 +252,7 @@
       "k": "No random split",
       "q": "(1) Why is a random train/test split wrong for financial time series? Name three leakage channels. (2) What do you do instead?",
       "pts": [
-        "(1a) Time order: training contains data after the test point, so the model learns future regimes and then \\\"predicts\\\" the past.",
+        "(1a) Time order: training contains data after the test point, so the model learns future regimes and then \"predicts\" the past.",
         "(1b) Serial correlation: a test point's neighbours are almost all in training, so the test set is effectively seen.",
         "(1c) Overlapping labels: 20-day forward returns at $t$ and $t+1$ share 19 days.",
         "(2) Walk-forward (rolling or expanding); purge training samples whose label windows overlap the test period, add an embargo after it; keep a final untouched test period."

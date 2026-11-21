@@ -224,12 +224,12 @@
       "id": "BAG-A-01",
       "g": "Optimal stopping",
       "k": "Die reroll: Bellman",
-      "q": "A fair 100-sided die shows $1,\\dots,100$. After each roll you may stop and take the face value, or pay 1 point and roll again, with no limit on rolls. (1) Define the value $V$ and write the Bellman equation. (2) Why is the optimal policy a threshold, and what is the rule in terms of $V$? (3) Under the policy \\\"stop at $k$ or above\\\", write the expected payoff $f(k)$. (4) Give the optimal $k$ and $V$.",
+      "q": "A fair 100-sided die shows $1,\\dots,100$. After each roll you may stop and take the face value, or pay 1 point and roll again, with no limit on rolls. (1) Define the value $V$ and write the Bellman equation. (2) Why is the optimal policy a threshold, and what is the rule in terms of $V$? (3) Under the policy \"stop at $k$ or above\", write the expected payoff $f(k)$. (4) Give the optimal $k$ and $V$.",
       "pts": [
         "(1) $V$ = expected payoff just before a roll, playing optimally. After seeing $x$: stopping gives $x$; rerolling puts you back in the same situation minus the fee, $V-1$. $$V = E\\big[\\max(X,\\,V-1)\\big]$$",
         "(2) $V-1$ is a constant, so stop iff $x \\ge V-1$: keep high faces, reroll low ones.",
         "(3) Stop probability per roll $p=\\frac{101-k}{100}$; the accepted face is uniform on $\\{k,\\dots,100\\}$ with mean $\\frac{k+100}{2}$; the number of rolls is geometric with mean $1/p$, so paid rerolls average $1/p-1$. $$f(k)=\\frac{k+100}{2}-\\Big(\\frac{100}{101-k}-1\\Big)$$",
-        "(4) $k=87$: $p=0.14$, $f(87)=93.5-(7.143-1)=87.357$ (vs $f(86)=87.333$, $f(88)=87.308$). Check: $V-1=86.36$, so \\\"stop at 87 or above\\\" matches (2)."
+        "(4) $k=87$: $p=0.14$, $f(87)=93.5-(7.143-1)=87.357$ (vs $f(86)=87.333$, $f(88)=87.308$). Check: $V-1=86.36$, so \"stop at 87 or above\" matches (2)."
       ],
       "pit": "The threshold is $V-1$, not $V$; and maximising the average accepted face alone ignores the fees.",
       "src": "Q1",
@@ -334,7 +334,7 @@
       "pts": [
         "(1) Gamblers martingale (a new gambler bets on $A$ before each toss): $$E[T_A]=\\sum_{k=1}^{n}2^{k}\\,\\mathbf 1\\{\\text{first }k\\text{ letters of }A=\\text{last }k\\text{ letters}\\}$$",
         "(2) HHH: $k=1,2,3$, $2+4+8=14$. THH: only $k=3$, 8. HHTTHH: $k=1,2,6$, $2+4+64=70$. Self-overlapping patterns take longer.",
-        "(3) Probability 1/2 each: after the first H, the next toss decides. The expected waiting times differ (6 vs 4), but \\\"which comes first\\\" is a race, not a waiting time."
+        "(3) Probability 1/2 each: after the first H, the next toss decides. The expected waiting times differ (6 vs 4), but \"which comes first\" is a race, not a waiting time."
       ],
       "pit": "",
       "src": "Q3",

@@ -148,7 +148,7 @@
       "q": "(1) Solve $\\max_w\\ w^\\top\\mu-\\frac\\gamma2w^\\top\\Sigma w$ and give the intuition. (2) Why is the unconstrained solution unstable? (3) What does instability look like? (4) List the fixes.",
       "pts": [
         "(1) $w^*=\\frac1\\gamma\\Sigma^{-1}\\mu$: money per unit of risk-adjusted expected return, accounting for hedges between assets.",
-        "(2) $\\Sigma^{-1}$ blows up small-eigenvalue directions (spreads between highly correlated assets), which estimation error makes look low-risk and high-return (an \\\"error maximiser\\\"); and $\\mu$ is the noisiest input (Chopra-Ziemba: mean errors cost about 10× variance errors and 20× covariance errors).",
+        "(2) $\\Sigma^{-1}$ blows up small-eigenvalue directions (spreads between highly correlated assets), which estimation error makes look low-risk and high-return (an \"error maximiser\"); and $\\mu$ is the noisiest input (Chopra-Ziemba: mean errors cost about 10× variance errors and 20× covariance errors).",
         "(3) Extreme long-short weights, hypersensitivity to small input changes, poor OOS, often worse than $1/N$.",
         "(4) Shrink $\\mu$ (Black-Litterman, toward 0 or a common value); shrink $\\Sigma$ or use a factor model; constraints (long-only is itself a covariance shrinkage, Jagannathan-Ma); robust optimisation over a set for $\\mu$; an $\\lVert w\\rVert^2$ penalty."
       ],

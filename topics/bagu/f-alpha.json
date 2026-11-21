@@ -2,22 +2,55 @@
   "title": "Alpha research",
   "notes": [
     {
+      "h": "Big picture",
+      "items": [
+        {
+          "t": "What this topic is about",
+          "d": [
+            "Every question here is about one object: a signal that ranks stocks today by how much they should outperform over the next period. The topic asks how to find one, how to tell whether it is real, and whether it makes money after trading it.",
+            "The questions come in four stages. Each section below answers one or more of them:",
+            "$$\\begin{array}{lll} \\textsf{Stage} & \\textsf{Question} & \\textsf{Sections} \\\\ \\hline \\textsf{1} & \\textsf{Is the backtest wrong?} & \\textsf{Backtest biases} \\\\ \\textsf{2} & \\textsf{Is the effect real?} & \\textsf{Validating results, Signal metrics, Diagnosing signals} \\\\ \\textsf{3} & \\textsf{Can it be traded?} & \\textsf{Costs \\& capacity} \\\\ \\textsf{4} & \\textsf{Does it add anything?} & \\textsf{Combining \\& new data} \\end{array}$$",
+            "The order matters: stage 1 is cheapest and catches the commonest mistakes, so it comes first. \"Research workflow\" is the whole path written as a checklist."
+          ],
+          "cards": [
+            "BAG-F-01",
+            "BAG-F-06"
+          ]
+        },
+        {
+          "t": "Running example: signal S",
+          "d": [
+            "Used in every section so the numbers connect.",
+            "Idea: analysts revise earnings forecasts slowly and investors under-react to revisions. S = z-score of the 3-month change in the consensus EPS forecast.",
+            "Setting: universe of $N=1000$ liquid stocks, rebalanced monthly, target = next-month return, sample $T=180$ months (15 years).",
+            "In-sample results: monthly rank IC with mean $0.03$ and standard deviation $0.05$; long-short book with gross return 8% a year and vol 4%, so gross Sharpe $=8/4=2.0$.",
+            "Costs (assumed): the book trades 10× its capital a year at 10 bp per unit traded, i.e. 1% a year."
+          ],
+          "cards": []
+        }
+      ]
+    },
+    {
       "h": "Research workflow",
       "items": [
         {
-          "t": "Pipeline",
+          "t": "The research pipeline",
           "d": [
-            "Hypothesis → point-in-time data → feature → target → baselines → validation → portfolio → costs/capacity → robustness → monitoring.",
-            "Pre-register the main definition and success bar; log every variant."
+            "Question: in what order do you build and test an idea so that the result means something?",
+            "$$\\begin{array}{ll} \\textsf{Step} & \\textsf{What you decide (S)} \\\\ \\hline \\textsf{Hypothesis} & \\textsf{under-reaction to revisions} \\\\ \\textsf{Data} & \\textsf{revision dates as first seen in the database} \\\\ \\textsf{Feature} & \\textsf{3-month change, z-scored by date} \\\\ \\textsf{Target} & \\textsf{next-month return, from the next open} \\\\ \\textsf{Baselines} & \\textsf{momentum, earnings surprise} \\\\ \\textsf{Validation} & \\textsf{quintile returns, IC, walk-forward} \\\\ \\textsf{Portfolio} & \\textsf{neutralise, size, rebalance} \\\\ \\textsf{Costs} & \\textsf{turnover, impact, capacity} \\\\ \\textsf{Robustness} & \\textsf{subperiods, sizes, parameters} \\\\ \\textsf{Monitoring} & \\textsf{live IC, switch-off rule} \\end{array}$$",
+            "Why fix the definition first: every later choice you make after seeing results is another test. Write down the main definition and the pass bar before running anything, and log every variant you try."
           ],
           "cards": [
             "BAG-F-01"
           ]
         },
         {
-          "t": "Baselines",
+          "t": "Why baselines",
           "d": [
-            "Increment over baseline is the value of complexity; a suspiciously good baseline points to leakage."
+            "Question: how do you know a complex model added something?",
+            "Value of complexity = performance of the complex model − performance of the simple baseline, both out of sample under the same protocol.",
+            "Example: a neural net on 50 features gets OOS rank IC 0.032; plain momentum gets 0.030. The net added 0.002, not 0.032.",
+            "Debugging use: if the simple baseline is also suspiciously good, the problem is in the data or the alignment, not the model."
           ],
           "cards": [
             "BAG-F-02"
@@ -29,18 +62,26 @@
       "h": "Backtest biases",
       "items": [
         {
-          "t": "Look-ahead",
+          "t": "Look-ahead bias",
           "d": [
-            "Use knowledge time, not period time: announcement dates, point-in-time constituents, next-open fills, in-fold preprocessing."
+            "Question: did the backtest use anything you could not have known at the time you traded?",
+            "Key idea: every number has two dates. The period it describes, and the moment it became public. A backtest may use only values whose public date is before the trade.",
+            "Example: Q4 results describe the period ending Dec 31 but are published around mid-February. A backtest that uses them on Dec 31 trades on information six weeks early.",
+            "For S: a revision must be dated when it entered the database, not when the analyst says it was made. Late-arriving records dated backwards are a classic leak.",
+            "Common entry points: fiscal-period alignment; restated data; today's index members; trading at the same close that produced the signal; z-scores or PCA fit on the whole sample; LLMs trained on later text."
           ],
           "cards": [
             "BAG-F-03"
           ]
         },
         {
-          "t": "Survivorship",
+          "t": "Survivorship bias",
           "d": [
-            "Include dead securities and delisting returns; bias is largest for distressed, small, levered tilts."
+            "Question: does the historical universe contain only the stocks that are still alive today?",
+            "Toy example: 100 stocks; 90 survive with average return +10%, 10 are delisted with average −60%.",
+            "$$\\text{true average}=0.9\\times10\\%+0.1\\times(-60\\%)=3\\%,\\qquad \\text{survivors only}=10\\%$$",
+            "Dropping the dead names overstates the return by 7 points. The damage is largest for strategies that buy cheap, distressed, small or levered stocks, since those are the ones that die.",
+            "Fix: a point-in-time universe that keeps dead securities, plus their delisting returns."
           ],
           "cards": [
             "BAG-F-04"
@@ -49,7 +90,11 @@
         {
           "t": "Data snooping",
           "d": [
-            "Count the whole search; holdout once; $t$ bar ≈ 3; deflated Sharpe; replicate elsewhere."
+            "Question: how many versions were tried before this one looked good?",
+            "One honest test: $P(|t|\\ge3)\\approx0.0027$ under the null. After 200 independent null variants:",
+            "$$P(\\text{some }|t|\\ge3)=1-(1-0.0027)^{200}\\approx0.42$$",
+            "So a $t$ of 3 found after 200 tries is close to a coin flip. A Bonferroni bar for 200 tests at 5% two-sided is $|t|\\ge3.66$.",
+            "Controls: count all trials (a research log), keep an untouched holdout, raise the bar, require an economic reason, replicate elsewhere."
           ],
           "cards": [
             "BAG-F-05"
@@ -61,21 +106,36 @@
       "h": "Validating results",
       "items": [
         {
-          "t": "Order of checks",
+          "t": "Sharpe 2: the order of checks",
           "d": [
-            "Wrong? → real? → tradeable? → incremental?"
+            "Question: S shows in-sample Sharpe 2.0. What next?",
+            "Wrong? Audit look-ahead, survivorship, signal-to-fill delay. Real? Count variants, run untouched OOS, check subperiods and parameter sensitivity (a plateau is good, a single spike is not). Tradeable? Subtract costs (below). Incremental? Regress on known factors and existing signals.",
+            "Expect shrinkage: in-sample Sharpe usually falls by half or more after costs and OOS. The job is to find out by how much and why."
           ],
           "cards": [
             "BAG-F-06"
           ]
         },
         {
-          "t": "Sample-size rules of thumb",
+          "t": "Train, validation, test",
           "d": [
-            "SE of an annual Sharpe over $Y$ years ≈ $1/\\sqrt Y$. $t\\approx SR\\sqrt{Y}$. Independent bets: $t=SR_{\\text{bet}}\\sqrt{N}$."
+            "Question: how do you split 20 years so that the final number is honest?",
+            "$$\\begin{array}{lll} \\textsf{Part} & \\textsf{Years} & \\textsf{Use} \\\\ \\hline \\textsf{Development} & 2006\\textsf{--}2021 & \\textsf{walk-forward: fit, validate next year} \\\\ \\textsf{Final test} & 2022\\textsf{--}2025 & \\textsf{looked at once} \\end{array}$$",
+            "Why the test cannot be tiny: the standard error of an annual Sharpe over $Y$ years is about $1/\\sqrt Y$. Over 3 years that is 0.58, so S's true Sharpe of 2 could show anywhere from about 0.9 to 3.1 (±2 SE)."
           ],
           "cards": [
-            "BAG-F-07",
+            "BAG-F-07"
+          ]
+        },
+        {
+          "t": "Effective sample size",
+          "d": [
+            "Question: how many independent observations does the backtest really contain?",
+            "Daily returns of positions held for weeks are not independent: one 60-day trade appears in 60 correlated daily returns. What counts is independent bets.",
+            "$$t=SR_{\\text{bet}}\\sqrt{N_{\\text{bets}}}$$ Per-bet Sharpe 0.3 with 30 bets: $t=0.3\\sqrt{30}\\approx1.64$. A smooth curve, but not significant.",
+            "Clustering (same month, same sector) lowers the effective number further."
+          ],
+          "cards": [
             "BAG-F-08"
           ]
         }
@@ -85,19 +145,47 @@
       "h": "Signal metrics",
       "items": [
         {
-          "t": "IC family",
+          "t": "IC, rank IC, ICIR",
           "d": [
-            "IC (Pearson), rank IC (Spearman), ICIR $=\\overline{IC}/s_{IC}$, $t=\\overline{IC}/(s_{IC}/\\sqrt T)$.",
-            "Fundamental law $IR\\approx IC\\sqrt{BR}$ (upper bound)."
+            "Question: how strongly does the signal predict, and how steadily?",
+            "$IC_t$ = cross-sectional correlation, across the $N$ stocks in month $t$, between the signal and next-month returns. Rank IC uses ranks (Spearman), so a few extreme stocks cannot drive it.",
+            "Average over months, then ask whether the average could be luck:",
+            "$$t=\\frac{\\overline{IC}}{s_{IC}/\\sqrt T}=\\frac{0.03}{0.05/\\sqrt{180}}\\approx8.0$$",
+            "ICIR $=\\overline{IC}/s_{IC}=0.6$ per month, $0.6\\sqrt{12}\\approx2.1$ a year: a steadiness measure, close to S's Sharpe of 2."
           ],
           "cards": [
             "BAG-F-09"
           ]
         },
         {
-          "t": "Decay curve",
+          "t": "Fundamental law",
           "d": [
-            "IC vs single-day $r_{t+h}$; half-life; execution-lag sensitivity; horizon set against costs."
+            "Question: why can an IC of only 0.03 be worth a lot?",
+            "$$IR\\approx IC\\times\\sqrt{BR}$$ $BR$ (breadth) = independent bets per year. S: $1000\\times12=12{,}000$, so $IR\\le0.03\\times\\sqrt{12000}\\approx3.3$.",
+            "S actually earns about 2: stocks move together (bets are not independent), and constraints and costs bite. Read the law as an upper bound."
+          ],
+          "cards": [
+            "BAG-F-09"
+          ]
+        },
+        {
+          "t": "Sharpe and t",
+          "d": [
+            "Sharpe is measured on the traded portfolio (after construction, maybe after costs); $t$ asks whether it could be noise.",
+            "$$t\\approx SR_{\\text{annual}}\\times\\sqrt{\\text{years}}$$ S: $2.0\\times\\sqrt{15}\\approx7.7$. A Sharpe 0.6 strategy over 10 years: $0.6\\sqrt{10}\\approx1.9$, not significant.",
+            "None of IC, Sharpe or $t$ is enough alone: high IC can come from a few names, high Sharpe from a factor bet, high $t$ from many tries or overlapping data."
+          ],
+          "cards": [
+            "BAG-F-09"
+          ]
+        },
+        {
+          "t": "Alpha decay",
+          "d": [
+            "Question: for how long after the signal date does it keep predicting?",
+            "Method: IC of S against each later month's return separately (not cumulative, to avoid overlap). Illustrative curve:",
+            "$$\\begin{array}{lcccc} \\textsf{Month ahead} & \\textsf{1} & \\textsf{2} & \\textsf{3} & \\textsf{4} \\\\ \\hline \\textsf{IC} & \\textsf{0.030} & \\textsf{0.020} & \\textsf{0.012} & \\textsf{0.006} \\end{array}$$",
+            "The IC halves within two months, so a monthly rebalance fits. A faster decay would need faster trading (more cost); a slower one would let you trade less. The best horizon balances decay against costs."
           ],
           "cards": [
             "BAG-F-10"
@@ -109,18 +197,23 @@
       "h": "Diagnosing signals",
       "items": [
         {
-          "t": "Size dependence",
+          "t": "Works only in small caps",
           "d": [
-            "Within-bucket IC, price and liquidity filters, execution lag, borrow, net capacity."
+            "Question: is the small-cap effect a real mechanism or an artefact?",
+            "Split the universe into size quintiles and compute IC within each. Illustrative:",
+            "$$\\begin{array}{lccccc} \\textsf{Size quintile} & \\textsf{small} & \\textsf{2} & \\textsf{3} & \\textsf{4} & \\textsf{large} \\\\ \\hline \\textsf{IC} & \\textsf{0.050} & \\textsf{0.035} & \\textsf{0.025} & \\textsf{0.015} & \\textsf{0.010} \\end{array}$$",
+            "Then remove the artefacts: drop prices below 5 and the least liquid names, add a one-day execution lag (kills bid-ask bounce), check borrow on the short side. Whatever survives after costs is real but small-capacity."
           ],
           "cards": [
             "BAG-F-11"
           ]
         },
         {
-          "t": "Breakdown over time",
+          "t": "Stopped working after 2020",
           "d": [
-            "Pipeline changes → IC series → exposures → costs → crowding → regime. Don't refit and re-test on the failure window."
+            "Question: why did performance change?",
+            "Order of suspicion: (1) your own pipeline (vendor, field or universe changes: look for jumps in the signal's mean, spread, missing rate); (2) the IC series (fell to zero, or reversed? gradually, or a cliff?); (3) factor exposures (value and momentum swung hard after 2020); (4) costs; (5) crowding (published anomalies lose about half their returns after publication); (6) regime.",
+            "Discipline: a fix designed on the failure period must be tested on other data."
           ],
           "cards": [
             "BAG-F-12"
@@ -129,7 +222,11 @@
         {
           "t": "Neutralisation",
           "d": [
-            "Residual of a per-date cross-sectional regression on exposures, or $w^\\top X=0$ constraints. May remove real rotation alpha."
+            "Question: how much of S is just a known factor?",
+            "Each month, regress S across stocks on industry dummies, log size and momentum; keep the residual:",
+            "$$S_{i}=a+\\sum_k b_k\\,\\mathrm{Ind}_{ik}+c\\log\\mathrm{MCap}_i+d\\,\\mathrm{Mom}_i+e_i,\\qquad S^{\\text{neutral}}_i=e_i$$",
+            "Example: if S's IC falls from 0.03 to 0.022 after neutralisation, about a quarter of its prediction came from known exposures.",
+            "Cost: if part of the alpha is real industry rotation, neutralising industry removes it too. Look at both versions and explain the gap."
           ],
           "cards": [
             "BAG-F-13"
@@ -141,21 +238,38 @@
       "h": "Costs & capacity",
       "items": [
         {
-          "t": "Turnover",
+          "t": "Turnover and break-even cost",
           "d": [
-            "One-way $\\frac12\\sum|\\Delta w_i|$; break-even cost = gross return / turnover."
+            "Question: does the edge survive trading?",
+            "One-way turnover per rebalance $=\\frac12\\sum_i|w_{i,t}-w_{i,t-1}|$. Annual cost = amount traded × cost per unit.",
+            "S: trades 10× capital a year at 10 bp ⇒ cost 1%. Net return $8\\%-1\\%=7\\%$, net Sharpe $7/4=1.75$.",
+            "Break-even cost $=8\\%/10=80$ bp per unit traded: the cost level at which S earns nothing. Far above 10 bp, so S has room. A fast signal with high turnover can still be fine if its break-even cost is well above the real cost."
           ],
           "cards": [
             "BAG-F-14"
           ]
         },
         {
-          "t": "Square-root impact",
+          "t": "Cost components",
           "d": [
-            "impact $\\approx Y\\sigma\\sqrt{Q/V}$; total cost $\\propto\\text{AUM}^{1.5}$; profit-maximising $A^*=(2\\alpha/3c)^2$; participation cap 5–10% ADV."
+            "Fees and taxes; half the bid-ask spread; market impact; borrow and financing on shorts; delay between signal and fill.",
+            "Impact grows with the square root of the trade's share of daily volume:",
+            "$$\\text{impact}\\approx Y\\,\\sigma_{\\text{daily}}\\sqrt{Q/V}$$ $Q$ = shares traded, $V$ = average daily volume, $Y\\approx1$. Example: $\\sigma=2\\%$, trading 4% of ADV ⇒ impact $\\approx2\\%\\times0.2=0.4\\%$ (40 bp)."
           ],
           "cards": [
-            "BAG-F-15",
+            "BAG-F-15"
+          ]
+        },
+        {
+          "t": "Capacity",
+          "d": [
+            "Question: how much money can run the strategy before costs eat it?",
+            "Each trade scales with AUM $A$, so impact per unit scales with $\\sqrt A$: impact cost as a share of capital is $k\\sqrt A$, in dollars $kA^{1.5}$. Gross profit only grows like $A$.",
+            "S: net of spreads 7%, and suppose impact costs 1% a year at USD 100M, so $k\\sqrt{100}=1\\%$, $k=0.1\\%$ ($A$ in USD millions):",
+            "$$\\begin{array}{lcccc} A\\ (\\textsf{USD}) & \\textsf{10M} & \\textsf{100M} & \\textsf{1B} & \\textsf{2.2B} \\\\ \\hline \\textsf{net return} & \\textsf{6.7\\%} & \\textsf{6.0\\%} & \\textsf{3.8\\%} & \\textsf{2.3\\%} \\\\ \\textsf{net Sharpe} & \\textsf{1.67} & \\textsf{1.50} & \\textsf{0.96} & \\textsf{0.58} \\end{array}$$",
+            "Dollar profit $0.07A-0.001A^{1.5}$ peaks at $A^*=(2\\times0.07/(3\\times0.001))^2\\approx2.2$B, but by then the Sharpe is 0.58. Capacity defined as net Sharpe ≥ 1 is about USD 900M. Going from 10M to 1B also forces slower trading in more liquid names, which changes S itself."
+          ],
+          "cards": [
             "BAG-F-16"
           ]
         }
@@ -167,20 +281,58 @@
         {
           "t": "Combining correlated signals",
           "d": [
-            "Equal Sharpe, equal weight: $S\\sqrt{2/(1+\\rho)}$. Orthogonalise B on A; shrink $\\Sigma^{-1}\\mu$ weights."
+            "Question: a second signal R is 0.8 correlated with S. Is it worth adding?",
+            "Two signals with equal Sharpe $SR$ and correlation $\\rho$, equally weighted:",
+            "$$SR_{\\text{comb}}=SR\\sqrt{\\frac{2}{1+\\rho}}$$ $\\rho=0.8$: $2.0\\to2.11$ (+5%). $\\rho=0$: $2.0\\to2.83$ (+41%).",
+            "Better test: regress R on S each month and check the residual's IC. If it is 0.005 with the same spread 0.05: $t=0.005/(0.05/\\sqrt{180})\\approx1.3$, not significant, so R is mostly a copy of S.",
+            "Optimised weights $\\propto\\Sigma^{-1}\\mu$ are unstable when $\\rho$ is high (big offsetting positions), so shrink toward equal weights."
           ],
           "cards": [
             "BAG-F-17"
           ]
         },
         {
-          "t": "Alternative data checklist",
+          "t": "Evaluating new data",
           "d": [
-            "Compliance & timestamps (veto) → mechanism & uniqueness → incremental net value, capacity, decay."
+            "Question: is a new dataset worth paying for?",
+            "Three gates, in order. (1) Veto checks: legal source, true point-in-time history (not backfilled), coverage over time, dead companies kept. (2) Mechanism: what does it measure, why would it lead prices, who else has it? (3) Increment: extra IC or return beyond existing signals, under the same OOS protocol, after data fees and trading costs, and its expected decay as the vendor sells to more funds."
           ],
           "cards": [
             "BAG-F-18"
           ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "IC vs IR vs ICIR",
+          "d": [
+            "IC: one month's correlation. ICIR: mean IC / sd of IC (steadiness). IR: active return / active risk of the portfolio. The fundamental law links IC and IR."
+          ],
+          "cards": []
+        },
+        {
+          "t": "Annualising",
+          "d": [
+            "Monthly Sharpe × $\\sqrt{12}$, daily × $\\sqrt{252}$. Valid only without autocorrelation in returns."
+          ],
+          "cards": []
+        },
+        {
+          "t": "Turnover conventions",
+          "d": [
+            "One-way ($\\frac12\\sum|\\Delta w|$) vs two-way ($\\sum|\\Delta w|$) differ by a factor of 2; costs are quoted per unit traded. Always say which."
+          ],
+          "cards": []
+        },
+        {
+          "t": "\"Alpha\"",
+          "d": [
+            "Either a forecast of expected (excess) return, or the intercept left after regressing returns on factors. The second is what survives neutralisation."
+          ],
+          "cards": []
         }
       ]
     }
@@ -241,7 +393,7 @@
       "pts": [
         "(1) Building the history from stocks that still exist today, dropping those delisted, bankrupt or acquired along the way.",
         "(2a) Returns are overstated, most for strategies tilted to cheap, distressed, small or levered stocks, since the dropped names are mostly bad performers.",
-        "(2b) Characteristic relations are distorted (\\\"high leverage earns more\\\" because the levered firms that failed are missing). On the short side the effect flips: missing delisted shorts understates short profits.",
+        "(2b) Characteristic relations are distorted (\"high leverage earns more\" because the levered firms that failed are missing). On the short side the effect flips: missing delisted shorts understates short profits.",
         "(3) Point-in-time universe including dead securities (e.g. CRSP), and delisting returns, often very negative; estimate them by delisting reason when missing."
       ],
       "pit": "",
@@ -360,7 +512,7 @@
         "(1) Your own pipeline: vendor, field definitions, coverage or universe rules changing around 2020; a jump in the signal's mean, variance or missing rate.",
         "(2) The IC series (to zero or negative? gradual or a cliff?); factor exposures (value, momentum, size had violent swings then: P&L may be exposure, not alpha); breakdown by sector, size, long vs short.",
         "(3) Costs (turnover, spreads, impact); crowding (published around then? anomaly returns fall about 58% after publication, McLean-Pontiff; rising correlation with common factors); regime (vol, rates, retail participation).",
-        "(4) Do not change the model on the failure period and then \\\"validate\\\" on that same period: validate on new or held-out data, or write the reason for the change first."
+        "(4) Do not change the model on the failure period and then \"validate\" on that same period: validate on new or held-out data, or write the reason for the change first."
       ],
       "pit": "",
       "src": "Q77",

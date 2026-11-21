@@ -241,7 +241,7 @@
         "(1) SELECT ticker, date, close, LAG(close) OVER (PARTITION BY ticker ORDER BY date) AS prev_close, close / LAG(close) OVER (PARTITION BY ticker ORDER BY date) - 1 AS ret FROM prices;",
         "(2) Keeps the lag within each ticker; each ticker's first row gets NULL.",
         "(3) Two rows for one (ticker, date) give a zero or misaligned return. Find them: SELECT ticker, date, COUNT(*) FROM prices GROUP BY ticker, date HAVING COUNT(*) > 1;",
-        "(4) LAG takes the previous row, not the previous trading day: after a halt the \\\"daily\\\" return spans several days. Join a trading calendar, or record the gap. Use adjusted prices."
+        "(4) LAG takes the previous row, not the previous trading day: after a halt the \"daily\" return spans several days. Join a trading calendar, or record the gap. Use adjusted prices."
       ],
       "pit": "",
       "src": "Q66",
@@ -270,7 +270,7 @@
       "pts": [
         "(1) Key uniqueness on both sides: prices.duplicated(['ticker','date']).sum(), the same for fund, and look at the duplicated rows; compare row counts; merge(..., validate='m:1').",
         "(2) Version and point-in-time fields: original and restated versions of a period, several filing dates, annual and quarterly records together, multiple share classes, recycled tickers.",
-        "(3) A business rule such as \\\"latest version already published at that date\\\" via merge_asof on the announcement date; permanent security IDs instead of tickers.",
+        "(3) A business rule such as \"latest version already published at that date\" via merge_asof on the announcement date; permanent security IDs instead of tickers.",
         "(4) Blindly drop_duplicates(): you may keep a revision published later, which is look-ahead bias."
       ],
       "pit": "",

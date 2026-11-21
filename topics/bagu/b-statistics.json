@@ -323,7 +323,7 @@
       "pts": [
         "(1) $$\\tilde\\beta_1\\to\\beta_1+\\beta_2\\,\\frac{\\mathrm{Cov}(x_1,x_2)}{\\mathrm{Var}(x_1)}$$",
         "(2) Bias needs both: $x_2$ matters for $y$ ($\\beta_2\\ne0$) and $x_2$ is correlated with $x_1$. Sign = sign($\\beta_2$) × sign(correlation).",
-        "(3) \\\"Low analyst coverage\\\" predicts higher returns, but low-coverage stocks are small caps and size earns a premium: part of the alpha is size exposure. A large $t$ does not fix this.",
+        "(3) \"Low analyst coverage\" predicts higher returns, but low-coverage stocks are small caps and size earns a premium: part of the alpha is size exposure. A large $t$ does not fix this.",
         "(4) Control for or neutralise size, sector, beta. Do not over-control: if the signal works through liquidity, controlling for liquidity removes the real effect."
       ],
       "pit": "",
