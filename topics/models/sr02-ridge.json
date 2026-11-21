@@ -134,7 +134,7 @@
         {
           "t": "Implementation",
           "d": [
-            "scikit-learn `alpha` = $\\lambda$; intercept not penalised; standardise features, optionally $y$ (then $\\lambda \\approx 1/\\tau^2$, typically $10^3$–$10^6$). No random/LOO CV on panels. $p > n$: dual form $X^\\top(XX^\\top + \\lambda I)^{-1}y$."
+            "scikit-learn alpha = $\\lambda$; intercept not penalised; standardise features, optionally $y$ (then $\\lambda \\approx 1/\\tau^2$, typically $10^3$–$10^6$). No random/LOO CV on panels. $p > n$: dual form $X^\\top(XX^\\top + \\lambda I)^{-1}y$."
           ],
           "cards": [
             "MOD-SR02-13"
@@ -203,7 +203,7 @@
         {
           "t": "alpha vs λ",
           "d": [
-            "scikit-learn calls $\\lambda$ `alpha`. Ridge has no $1/n$ in its objective; Lasso uses $\\tfrac{1}{2n}$, so the same number is a different penalty."
+            "scikit-learn calls $\\lambda$ alpha. Ridge has no $1/n$ in its objective; Lasso uses $\\tfrac{1}{2n}$, so the same number is a different penalty."
           ],
           "cards": [
             "MOD-SR02-13"
@@ -259,10 +259,10 @@
       "id": "MOD-SR02-03",
       "g": "Properties",
       "k": "Condition number",
-      "q": "(1) How does Ridge change the condition number of the matrix being inverted? (2) The eigenvalues of $X^\\top X$ are 17.06 and 0.94. Compute the condition number for OLS and for Ridge with $\\lambda = 2$.",
+      "q": "(1) How does Ridge change the condition number of the matrix being inverted? (2) The eigenvalues of $X^\\top X$ are 17.06 and 0.938. Compute the condition number for OLS and for Ridge with $\\lambda = 2$.",
       "pts": [
         "(1) From $d_{\\max}^2/d_{\\min}^2$ to $(d_{\\max}^2 + \\lambda)/(d_{\\min}^2 + \\lambda)$.",
-        "(2) OLS: $17.06/0.94 = 18.2$. Ridge: $19.06/2.94 = 6.49$."
+        "(2) OLS: $17.06/0.938 = 18.2$. Ridge: $19.06/2.938 = 6.49$."
       ],
       "pit": "",
       "src": "Guide B2",
@@ -322,7 +322,7 @@
       "id": "MOD-SR02-07",
       "g": "Properties",
       "k": "Effective df",
-      "q": "(1) Define the effective degrees of freedom $\\mathrm{df}(\\lambda)$ of Ridge. (2) What are its limits? (3) Compute it for eigenvalues 17.06 and 0.94 with $\\lambda = 2$.",
+      "q": "(1) Define the effective degrees of freedom $\\mathrm{df}(\\lambda)$ of Ridge. (2) What are its limits? (3) Compute it for eigenvalues 17.06 and 0.938 with $\\lambda = 2$.",
       "pts": [
         "(1) $$\\mathrm{df}(\\lambda) = \\sum_j \\frac{d_j^2}{d_j^2 + \\lambda}$$ the trace of the hat matrix $X(X^\\top X + \\lambda I)^{-1}X^\\top$: roughly how many coefficients the model is free to fit.",
         "(2) $p$ at $\\lambda = 0$ (OLS), falling towards 0 as $\\lambda \\to \\infty$.",
@@ -414,14 +414,14 @@
       "id": "MOD-SR02-13",
       "g": "Use",
       "k": "Implementation",
-      "q": "Implementing Ridge in scikit-learn on a stock panel. (1) What is `alpha`, and is the intercept penalised? (2) How are features prepared, and why standardise $y$ too? (3) Why not use `RidgeCV`'s default leave-one-out? (4) Complexity, and what to do when $p > n$?",
+      "q": "Implementing Ridge in scikit-learn on a stock panel. (1) What is alpha, and is the intercept penalised? (2) How are features prepared, and why standardise $y$ too? (3) Why not use RidgeCV's default leave-one-out? (4) Complexity, and what to do when $p > n$?",
       "pts": [
-        "(1) `alpha` $= \\lambda$. The intercept is not penalised.",
+        "(1) alpha $= \\lambda$. The intercept is not penalised.",
         "(2) Standardise features cross-sectionally each date, since the penalty is scale-dependent. Dividing $y$ by its training sd makes $\\lambda$ scale-free: then $\\lambda \\approx 1/\\tau^2$ in label-sd units, so weak return signals need large values ($10^3$ to $10^6$).",
         "(3) It drops one row at a time, ignoring time order and the many rows that share a date: leakage and over-optimistic scores. Use time-ordered validation periods.",
         "(4) $O(np^2 + p^3)$. For $p > n$ use the dual form $X^\\top(XX^\\top + \\lambda I)^{-1}y$, cost $O(n^2p + n^3)$."
       ],
-      "pit": "scikit-learn's Ridge objective has no $1/n$ factor, while its Lasso uses $\\tfrac{1}{2n}$. The same `alpha` means a different penalty in the two.",
+      "pit": "scikit-learn's Ridge objective has no $1/n$ factor, while its Lasso uses $\\tfrac{1}{2n}$. The same alpha means a different penalty in the two.",
       "src": "Ridge §8; Guide 2.2",
       "seen": []
     },
@@ -459,10 +459,10 @@
       "id": "MOD-SR02-16",
       "g": "Worked example",
       "k": "Perturb + shrinkage",
-      "q": "Same data, $\\lambda = 2$. Raise stock F's return by 0.2 (F has $(x_1, x_2) = (2, 1)$), so $X^\\top y = (4.5,\\ 3.9)$. (1) New $\\hat\\beta_{\\text{ridge}}$ and the % changes, against OLS's $+50\\%$ / $-29\\%$. (2) Shrinkage factors for the eigenvalues 17.06 and 0.94. (3) What is the price?",
+      "q": "Same data, $\\lambda = 2$. Raise stock F's return by 0.2 (F has $(x_1, x_2) = (2, 1)$), so $X^\\top y = (4.5,\\ 3.9)$. (1) New $\\hat\\beta_{\\text{ridge}}$ and the % changes, against OLS's $+50\\%$ / $-29\\%$. (2) Shrinkage factors for the eigenvalues 17.06 and 0.938. (3) What is the price?",
       "pts": [
         "(1) $\\frac{1}{56}(45 - 31.2,\\ -36 + 46.8) = (0.2464,\\ 0.1929)$: $+21\\%$ / $-7\\%$, against OLS $+50\\%$ / $-29\\%$.",
-        "(2) $17.06/19.06 = 0.895$ for the strong direction; $0.94/2.94 = 0.319$ for the weak $x_1 - x_2$ direction, which loses about 70%.",
+        "(2) $17.06/19.06 = 0.895$ for the strong direction; $0.938/2.938 = 0.319$ for the weak $x_1 - x_2$ direction, which loses about 70%.",
         "(3) Bias: even the true coefficients come out too small and are pulled towards each other."
       ],
       "pit": "",

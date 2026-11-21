@@ -54,7 +54,7 @@
         {
           "t": "Violations in finance",
           "d": [
-            "Fat tails, same-date clustering, overlapping labels ⇒ use Newey–West (HAC) or clustered SEs. These change the SEs, not $\\hat\\beta$."
+            "Heteroskedasticity (seen as fat tails), same-date clustering, overlapping labels ⇒ use Newey–West (HAC) or clustered SEs. These change the SEs, not $\\hat\\beta$."
           ],
           "cards": [
             "MOD-SR01-05"
@@ -269,11 +269,11 @@
       "q": "Assumption (4), homoskedastic and uncorrelated errors, routinely fails on a stock panel. (1) Does the failure bias $\\hat\\beta$? (2) Name three ways financial data violates it. (3) What do you use for inference instead? (4) Do Newey–West standard errors change $\\hat\\beta$?",
       "pts": [
         "(1) No. Unbiasedness needs only linearity and exogeneity; the failure affects the standard errors (and efficiency).",
-        "(2) Fat tails (extreme returns far more frequent than normal); clustering (stocks on the same date share common shocks); overlapping labels (multi-month returns that share months, so errors are serially correlated).",
+        "(2) Heteroskedasticity (volatility differs across stocks and over time, one source of the fat tails in returns); clustering (stocks on the same date share common shocks); overlapping labels (multi-month returns that share months, so errors are serially correlated).",
         "(3) Newey–West (HAC) standard errors for serial correlation; standard errors clustered by date and/or firm for common shocks.",
         "(4) No. They replace $\\sigma^2 (X^\\top X)^{-1}$ by a robust covariance; the point estimate is unchanged."
       ],
-      "pit": "Robust standard errors fix inference only. Outliers still pull the point estimate through the squared loss; that needs a robust loss (Huber) or a winsorised label.",
+      "pit": "Robust standard errors fix inference only. Outliers still pull the point estimate through the squared loss; that needs a robust loss (Huber) or a winsorised label. Fat tails alone do not violate assumption (4): i.i.d. fat-tailed errors still have covariance $\\sigma^2 I$. They hurt through outliers, not through the standard-error formula.",
       "src": "OLS §4, §12 Q3; Guide 2.1",
       "seen": []
     },
