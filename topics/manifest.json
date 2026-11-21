@@ -80,6 +80,10 @@
         {
           "title": "Finite Markov chains",
           "file": "stochastic/ch01-finite-markov-chains.json"
+        },
+        {
+          "title": "Countable Markov chains",
+          "file": "stochastic/ch02-countable-markov-chains.json"
         }
       ]
     },

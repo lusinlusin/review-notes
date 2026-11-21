@@ -1,0 +1,1171 @@
+{
+  "title": "Countable Markov chains",
+  "notes": [
+    {
+      "h": "Big picture",
+      "items": [
+        {
+          "t": "Where it sits",
+          "d": [
+            "Before: with finitely many states an irreducible chain always comes back to every state, has a unique invariant distribution $\\bar\\pi$, and the mean return time is $1/\\pi(x)$. The preliminaries gave the solution $c_1 + c_2\\rho^x$ of the random-walk equation.",
+            "This chapter: infinite state spaces and three model chains (2.1); recurrent or transient, with two tests and the walk on $\\mathbb{Z}^d$ (2.2); positive or null recurrent, decided by an invariant probability (2.3); branching processes and extinction (2.4).",
+            "After: the same chains with jumps at random times (continuous time), including the continuous-time version of this chapter's queue."
+          ],
+          "cards": [
+            "STO-02-01"
+          ]
+        },
+        {
+          "t": "The question",
+          "d": [
+            "What changes when a Markov chain has infinitely many states? For a finite chain, irreducible was enough for the chain to keep coming back and settle into an equilibrium. With infinitely many states the chain can drift off for ever, or come back but take so long on average that no equilibrium exists.",
+            "Returns to every state? Finite: always. Infinite: not necessarily (transient).",
+            "Mean return time: finite for a finite chain; possibly infinite even when the chain returns (null recurrent).",
+            "Invariant probability: always for a finite chain; only for positive recurrent chains here.",
+            "Main tool: linear algebra on a finite matrix before; now infinite sums, difference equations and generating functions."
+          ],
+          "cards": [
+            "STO-02-01",
+            "STO-02-02"
+          ]
+        },
+        {
+          "t": "The three types",
+          "d": [
+            "Start at $x$, $T$ = first return time. This comparison is the thread of the chapter.",
+            "Transient: $\\mathbb{P}\\{T < \\infty\\} < 1$; $\\mathbb{E}(T) = \\infty$; $\\sum_n p_n(x, x) < \\infty$; $p_n(y, x) \\to 0$; no invariant probability.",
+            "Null recurrent: $\\mathbb{P}\\{T < \\infty\\} = 1$; $\\mathbb{E}(T) = \\infty$; $\\sum_n p_n(x, x) = \\infty$; $p_n(y, x) \\to 0$; no invariant probability.",
+            "Positive recurrent: $\\mathbb{P}\\{T < \\infty\\} = 1$; $\\mathbb{E}(T) = 1/\\pi(x)$; $\\sum_n p_n(x, x) = \\infty$; $p_n(y, x) \\to \\pi(x) > 0$ (aperiodic case); exactly one invariant probability.",
+            "Section 2.2 separates transient from recurrent; section 2.3 separates null from positive."
+          ],
+          "cards": [
+            "STO-02-12"
+          ]
+        },
+        {
+          "t": "Running example",
+          "d": [
+            "A walker on $\\{0, 1, 2, \\dots\\}$ steps right with probability $p$ and left with probability $1 - p$; at 0 a step left is blocked and the walker stays.",
+            "$p = \\tfrac13$ (drift towards 0): positive recurrent, $\\pi(x) = (\\tfrac12)^{x+1}$, mean return time to 0 equal to 2.",
+            "$p = \\tfrac12$ (no drift): null recurrent; $\\pi$ would have to be constant and cannot sum to 1.",
+            "$p = \\tfrac23$ (drift away from 0): transient, probability of ever reaching 0 from $x$ equal to $(\\tfrac12)^x$.",
+            "The two outer cases mirror each other: the same $(\\tfrac12)^x$ appears as an equilibrium distribution on one side and as a hitting probability on the other."
+          ],
+          "cards": [
+            "STO-02-11",
+            "STO-02-14",
+            "STO-02-16"
+          ]
+        },
+        {
+          "t": "Insights",
+          "d": [
+            "Whether the chain comes back is decided by how fast $p_n(x, x)$ goes to 0: like $n^{-1/2}$ ($d = 1$) or $n^{-1}$ ($d = 2$) the sum diverges; like $n^{-3/2}$ ($d = 3$) it converges.",
+            "Recurrence and positive recurrence are tested with the same difference equation; what changes is the condition imposed on its solution (between 0 and 1 with infimum 0, or summing to 1).",
+            "In a branching process the mean $\\mu$ alone decides extinction; at $\\mu = 1$ the population dies out with probability 1 although its expected size stays 1."
+          ],
+          "cards": [
+            "STO-02-07",
+            "STO-02-16",
+            "STO-02-24"
+          ]
+        },
+        {
+          "t": "Key symbols",
+          "d": [
+            "$p(x, y)$, $p_n(x, y)$: one-step and $n$-step transition probabilities. $R$: total number of visits to the start, time 0 included. $T$: first return time, $\\min\\{n > 0 : X_n = x\\}$.",
+            "$q$ (in 2.2): $\\mathbb{P}\\{T < \\infty\\}$. $\\alpha(x)$: probability of ever hitting a fixed state $z$ from $x$. $\\pi(x)$: invariant or limiting probability.",
+            "$p_k$, $\\mu$: offspring distribution and its mean. $\\phi(s)$: its generating function. $a$: extinction probability.",
+            "Flow: $p(x, y) \\to p_n(x, x) \\to \\sum_n p_n(x, x) = \\mathbb{E}(R) = \\tfrac{1}{1-q}$ (recurrent or transient?) $\\to$ if recurrent look for $\\bar\\pi$ (positive or null?) $\\to$ if positive, $\\mathbb{E}(T) = 1/\\pi(x)$."
+          ],
+          "cards": [
+            "STO-02-05",
+            "STO-02-09",
+            "STO-02-18"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "2.1 Introduction",
+      "items": [
+        {
+          "t": "Countable state space",
+          "d": [
+            "A set is countably infinite if it can be listed as a sequence. Examples: $\\mathbb{Z}$, $\\mathbb{Z}^2$. The real numbers are not countable.",
+            "The transition “matrix” is infinite, so it is written as a function $p(x, y)$ with $\\sum_y p(x, y) = 1$. The $n$-step probabilities satisfy $p_{m+n}(x, y) = \\sum_z p_m(x, z)p_n(z, y)$: split on where the chain is at time $m$."
+          ],
+          "cards": [
+            "STO-02-02"
+          ]
+        },
+        {
+          "t": "Three examples",
+          "d": [
+            "1. Walk with partially reflecting boundary at 0: $p(x, x+1) = p$, $p(x, x-1) = 1 - p$ for $x > 0$; $p(0, 0) = 1 - p$, $p(0, 1) = p$. Aperiodic. The running example of 2.2 and 2.3.",
+            "2. Simple random walk on $\\mathbb{Z}^d$: probability $\\tfrac{1}{2d}$ to each of the $2d$ nearest neighbours. Period 2.",
+            "3. Queue: in each interval a customer arrives with probability $p$ and the one being served leaves with probability $q$; $p(x, x-1) = q(1-p)$, $p(x, x) = qp + (1-q)(1-p)$, $p(x, x+1) = p(1-q)$ for $x > 0$; $p(0, 0) = 1 - p$, $p(0, 1) = p$. The same logic as the queue with one hold slot, but with no cap on the line.",
+            "What carries over: communication classes, irreducibility, period. What does not: an irreducible aperiodic chain need not converge to an equilibrium. The next two sections show the two ways this fails."
+          ],
+          "cards": [
+            "STO-02-03",
+            "STO-02-02"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "2.2 Recurrence and transience",
+      "items": [
+        {
+          "t": "Definitions",
+          "d": [
+            "An irreducible chain is recurrent if $\\mathbb{P}\\{X_n = x \\text{ for infinitely many } n\\} = 1$ for each $x$, and transient otherwise; then every state is visited only finitely often.",
+            "One state infinitely often forces all states infinitely often: from $x$ there is a fixed probability $\\varepsilon > 0$ of reaching $y$ before coming back, and each visit to $x$ is a fresh attempt."
+          ],
+          "cards": [
+            "STO-02-04"
+          ]
+        },
+        {
+          "t": "Test 1: counting returns",
+          "d": [
+            "$R$ = total number of visits to the start $x$. Way 1, sum over time: $\\mathbb{E}(R) = \\sum_{n \\ge 0}p_n(x, x)$.",
+            "Way 2, count returns: with $q = \\mathbb{P}\\{T < \\infty\\}$, $\\mathbb{P}\\{R = m\\} = q^{m-1}(1-q)$; so $R = \\infty$ if $q = 1$ and $\\mathbb{E}(R) = \\tfrac{1}{1-q}$ if $q < 1$.",
+            "Fact: an irreducible chain is transient if and only if $\\sum_n p_n(x, x) < \\infty$."
+          ],
+          "cards": [
+            "STO-02-05"
+          ]
+        },
+        {
+          "t": "Walk on Z",
+          "d": [
+            "$p_{2n}(0, 0) = \\binom{2n}{n}(\\tfrac12)^{2n}$: $n$ steps right and $n$ left. With Stirling's formula $n! \\sim \\sqrt{2\\pi n}\\,n^ne^{-n}$: $$p_{2n}(0, 0) \\sim \\frac{1}{\\sqrt{\\pi n}}$$",
+            "$n = 10$: exact $0.1762$, approximation $0.1784$ (ratio $0.988$). Since $\\sum_n n^{-1/2} = \\infty$ the walk is recurrent."
+          ],
+          "cards": [
+            "STO-02-06"
+          ]
+        },
+        {
+          "t": "Walk on Z^d",
+          "d": [
+            "Heuristic: about $\\tfrac{2n}{d}$ steps go to each coordinate; all coordinates must receive an even number of steps, probability about $(\\tfrac12)^{d-1}$; then each coordinate is back at 0 with probability about $(\\tfrac{d}{\\pi n})^{1/2}$.",
+            "$$p_{2n}(0, 0) \\sim \\Big(\\frac12\\Big)^{d-1}\\Big(\\frac{d}{n\\pi}\\Big)^{d/2}$$",
+            "$d = 1$: decay $n^{-1/2}$, sum infinite, recurrent. $d = 2$: $n^{-1}$, infinite, recurrent. $d = 3$: $n^{-3/2}$, finite, transient. At $n = 10$ exact against asymptotic: $0.1762 / 0.1784$, $0.0310 / 0.0318$, $0.00711 / 0.00738$.",
+            "How transient is $d = 3$? $\\mathbb{E}(R) \\approx 1.516$, so the probability of ever returning is $q = 1 - 1/\\mathbb{E}(R) \\approx 0.34$."
+          ],
+          "cards": [
+            "STO-02-07",
+            "STO-02-08"
+          ]
+        },
+        {
+          "t": "Test 2: the hitting function",
+          "d": [
+            "Fix $z$ and let $\\alpha(x)$ be the probability of ever hitting $z$ from $x$. For $x \\ne z$, one step gives $\\alpha(x) = \\sum_y p(x, y)\\alpha(y)$ (the chain is not at $z$ at time 0; split on the first step; Markov property).",
+            "A transient chain's $\\alpha$ satisfies (2.2) $0 \\le \\alpha(x) \\le 1$; (2.3) $\\alpha(z) = 1$, $\\inf_x\\alpha(x) = 0$; (2.4) $\\alpha(x) = \\sum_y p(x, y)\\alpha(y)$ for $x \\ne z$. A recurrent chain has $\\alpha \\equiv 1$ and no function satisfying all three.",
+            "Fact: transient if and only if for some $z$ a function satisfying (2.2)–(2.4) exists.",
+            "The book calls the solution unique; in general the hitting probability is only the smallest solution. Example: walk on $\\mathbb{Z}$ drifting away from 0 on both sides, where every $h_1 + c\\,h_2$ ($0 \\le c \\le 1$) works."
+          ],
+          "cards": [
+            "STO-02-09",
+            "STO-02-10"
+          ]
+        },
+        {
+          "t": "Running example",
+          "d": [
+            "With $z = 0$, (2.4) for $x > 0$ is the random-walk equation: $\\alpha(x) = c_1 + c_2\\rho^x$ with $\\rho = \\tfrac{1-p}{p}$, or $c_1 + c_2x$ for $p = \\tfrac12$; $\\alpha(0) = 1$ gives $(1 - c_2) + c_2\\rho^x$, or $1 + c_2x$.",
+            "$p < \\tfrac12$ ($\\rho > 1$) and $p = \\tfrac12$: $c_2 = 0$ gives $\\alpha \\equiv 1$ (infimum not 0), $c_2 \\ne 0$ is unbounded. No solution: recurrent.",
+            "$p > \\tfrac12$ ($\\rho < 1$): $c_2 = 1$ gives $\\alpha(x) = \\rho^x \\to 0$. Transient; for $p = \\tfrac23$, $\\alpha(x) = (\\tfrac12)^x$ and from 3 the walker ever reaches 0 with probability $\\tfrac18$.",
+            "This section cannot tell $p = \\tfrac13$ from $p = \\tfrac12$. The next one does."
+          ],
+          "cards": [
+            "STO-02-11"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "2.3 Positive and null recurrence",
+      "items": [
+        {
+          "t": "Three kinds of behaviour",
+          "d": [
+            "A limiting probability is a distribution $\\pi$ with $\\lim_n p_n(y, x) = \\pi(x)$ for all $x, y$ (irreducible aperiodic chain).",
+            "Transient: $p_n(y, x) \\to 0$, because $x$ is visited finitely often. Null recurrent: $p_n(y, x) \\to 0$ by definition; $T < \\infty$ for sure but $\\mathbb{E}(T) = \\infty$. Positive recurrent: $p_n(y, x) \\to \\pi(x) > 0$ and $\\mathbb{E}(T \\mid X_0 = x) = 1/\\pi(x)$.",
+            "For a positive recurrent chain the limits form an invariant probability: $\\sum_y\\pi(y)p(y, x) = \\pi(x)$ (2.8)."
+          ],
+          "cards": [
+            "STO-02-12"
+          ]
+        },
+        {
+          "t": "The test",
+          "d": [
+            "An irreducible chain is positive recurrent if and only if a probability distribution satisfying (2.8) exists; it is then unique. If none exists, the chain is null recurrent or transient.",
+            "The equation is the same as for finite chains. What can go wrong now is that its solutions cannot be normalised."
+          ],
+          "cards": [
+            "STO-02-13"
+          ]
+        },
+        {
+          "t": "Running example",
+          "d": [
+            "Flow into $x > 0$: $\\pi(x) = \\pi(x+1)(1-p) + \\pi(x-1)p$ (2.10). At 0: $\\pi(0) = \\pi(1)(1-p) + \\pi(0)(1-p)$ (2.11), i.e. $p\\,\\pi(0) = (1-p)\\pi(1)$.",
+            "General solution of (2.10): $c_1 + c_2(\\tfrac{p}{1-p})^x$, or $c_1 + c_2x$ for $p = \\tfrac12$. The equation at 0 forces $c_1 = 0$, respectively $c_2 = 0$.",
+            "$p < \\tfrac12$: $\\pi(x) = \\tfrac{1-2p}{1-p}(\\tfrac{p}{1-p})^x$. $p > \\tfrac12$: the terms grow. $p = \\tfrac12$: a constant cannot sum to 1.",
+            "$p = \\tfrac13$: $\\pi(x) = (\\tfrac12)^{x+1}$; mean return time to 0 is 2; mean position in equilibrium is 1."
+          ],
+          "cards": [
+            "STO-02-14",
+            "STO-02-15"
+          ]
+        },
+        {
+          "t": "Mirror images and the classification",
+          "d": [
+            "$p = \\tfrac13$: the flow equation with roots $1, \\tfrac12$, conditions $\\sum\\pi = 1$ and (2.11), answer $\\pi(x) = (\\tfrac12)^{x+1}$.",
+            "$p = \\tfrac23$: the first-step equation with the same roots, conditions $\\alpha(0) = 1$ and $\\inf\\alpha = 0$, answer $\\alpha(x) = (\\tfrac12)^x$.",
+            "Positive recurrent for $p < \\tfrac12$, null recurrent for $p = \\tfrac12$, transient for $p > \\tfrac12$."
+          ],
+          "cards": [
+            "STO-02-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "2.4 Branching process",
+      "items": [
+        {
+          "t": "Model and mean",
+          "d": [
+            "$X_n$ = size of generation $n$; each individual independently has $k$ children with probability $p_k$ and then dies. 0 is absorbing. $\\mu = \\sum_i ip_i$.",
+            "$\\mathbb{E}(X_n) = \\mu\\,\\mathbb{E}(X_{n-1}) = \\mu^n\\mathbb{E}(X_0)$. For $\\mu < 1$: $\\mathbb{P}\\{X_n \\ge 1\\} \\le \\mathbb{E}(X_n) \\to 0$, so the population dies out. For $\\mu \\ge 1$ the mean alone does not decide.",
+            "Assumptions (2.12): $p_0 > 0$ and $p_0 + p_1 < 1$."
+          ],
+          "cards": [
+            "STO-02-17"
+          ]
+        },
+        {
+          "t": "Extinction probability",
+          "d": [
+            "$a(k)$ = extinction probability from $k$ individuals $= a^k$. Conditioning on the first generation: $a = \\sum_k p_ka^k = \\phi(a)$, with $\\phi(s) = \\mathbb{E}(s^X)$ the generating function of the offspring number.",
+            "Properties: $\\phi(0) = p_0$, $\\phi(1) = 1$, $\\phi$ increasing; $\\phi'(1) = \\mu$ (2.13); $\\phi'' > 0$ (2.14), strictly convex; the generating function of a sum of independent variables is the product."
+          ],
+          "cards": [
+            "STO-02-18",
+            "STO-02-19"
+          ]
+        },
+        {
+          "t": "Which root",
+          "d": [
+            "$a = 1$ always solves $a = \\phi(a)$. The generating function of $X_n$ is the $n$-fold composition $\\phi^n$, so $a_n = \\mathbb{P}\\{X_n = 0\\}$ satisfies $a_0 = 0$, $a_n = \\phi(a_{n-1})$, $a = \\lim a_n$.",
+            "The extinction probability is the smallest positive root $\\hat a$: by induction $a_n \\le \\hat a$ because $\\phi$ is increasing, so $a \\le \\hat a$, and $a$ is a root."
+          ],
+          "cards": [
+            "STO-02-20"
+          ]
+        },
+        {
+          "t": "Three examples",
+          "d": [
+            "$(\\tfrac14, \\tfrac14, \\tfrac12)$: $\\mu = \\tfrac54$, $2a^2 - 3a + 1 = 0$, roots $1, \\tfrac12$, extinction probability $\\tfrac12$; $a_1, a_2, a_5 = 0.25, 0.344, 0.448$; $\\mathbb{E}(X_{10}) \\approx 9.31$.",
+            "$(\\tfrac12, \\tfrac14, \\tfrac14)$: $\\mu = \\tfrac34$, $a^2 - 3a + 2 = 0$, roots $1, 2$, extinction probability 1; $a_1, a_2, a_5 = 0.5, 0.688, 0.896$.",
+            "$(\\tfrac14, \\tfrac12, \\tfrac14)$: $\\mu = 1$, $a^2 - 2a + 1 = 0$, double root 1, extinction probability 1; $a_{10}, a_{20}, a_{100} = 0.741, 0.846, 0.963$.",
+            "In the critical case the iterates creep up to 1 slowly ($1 - a_n \\approx \\tfrac4n$); the other two converge geometrically."
+          ],
+          "cards": [
+            "STO-02-21",
+            "STO-02-22"
+          ]
+        },
+        {
+          "t": "When is a < 1",
+          "d": [
+            "$\\mu < 1$: $\\mathbb{P}\\{X_n \\ge 1\\} \\le \\mu^n \\to 0$. $\\mu = 1$: $\\phi'(s) < 1$ for $s < 1$, so $\\phi(s) > s$ and there is no root below 1. $\\mu > 1$: $\\phi(s) < s$ just below 1 and $\\phi(0) = p_0 > 0$, so there is a root in $(0, 1)$, unique by convexity.",
+            "Theorem: if $\\mu \\le 1$ (and $p_0 > 0$) the extinction probability is 1. If $\\mu > 1$ it is the unique root of $t = \\phi(t)$ in $(0, 1)$.",
+            "The critical case: $\\mathbb{E}(X_n) = 1$ for every $n$, yet extinction is certain; the populations that survive to time $n$ must be large."
+          ],
+          "cards": [
+            "STO-02-23",
+            "STO-02-24"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Exercise map",
+      "items": [
+        {
+          "t": "After 2.2",
+          "d": [
+            "2.4 (steps $+2$ and $-1$): transient exactly when $p > \\tfrac13$.",
+            "2.5 (walk on $\\mathbb{Z}$ with $p > \\tfrac12$): $\\mathbb{P}\\{Y = -k\\} = (1 - \\tfrac qp)(\\tfrac qp)^k$; $e(k) = k\\,e(1)$, $e(1) = \\tfrac{1}{2p-1}$; $e(1) = \\infty$ at $p = \\tfrac12$.",
+            "2.15: a walk with independent integer steps of mean 0 is recurrent. 2.17: a superharmonic witness function proves transience. 2.18: Stirling's formula."
+          ],
+          "cards": [
+            "STO-02-29",
+            "STO-02-30",
+            "STO-02-38",
+            "STO-02-40",
+            "STO-02-41"
+          ]
+        },
+        {
+          "t": "After 2.3",
+          "d": [
+            "2.1 (queue): positive recurrent for $p < q$, null for $p = q$, transient for $p > q$; $\\pi(0) = 1 - \\tfrac pq$, $\\pi(x) = \\tfrac{q-p}{q(1-q)}r^x$ with $r = \\tfrac{p(1-q)}{q(1-p)}$; mean $\\tfrac{p(1-p)}{q-p}$; $\\alpha(x) = r^{-x}$.",
+            "2.2 (jump to $x$, walk down): positive recurrent exactly when $\\mu = \\sum xp_x < \\infty$; $\\pi(0) = \\tfrac{1}{1+\\mu}$, $\\pi(x) = \\tfrac{\\mathbb{P}\\{Y \\ge x\\}}{1+\\mu}$.",
+            "2.3: $\\pi(x) = \\tfrac13(\\tfrac23)^x$, mean return time to 0 equal to 3. 2.6 (runs): $\\pi(x) = (1-p)p^x$, $\\mathbb{E}[T_k] = \\tfrac{p^{-k} - 1}{1-p}$.",
+            "2.7: (a) null recurrent; (b) positive recurrent, $\\pi(x) = \\tfrac{1}{(e-1)(x+1)!}$; (c) transient. 2.16: geometric invariant distribution $(1 - \\alpha)\\alpha^n$."
+          ],
+          "cards": [
+            "STO-02-25",
+            "STO-02-26",
+            "STO-02-27",
+            "STO-02-31",
+            "STO-02-28",
+            "STO-02-39"
+          ]
+        },
+        {
+          "t": "After 2.4",
+          "d": [
+            "2.8: (a) $\\tfrac57$; (b) $\\tfrac{\\sqrt6 - 1}{2} \\approx 0.7247$; (c) 1; (d) 1 if $q \\le \\tfrac12$, else $\\tfrac{1-q}{q}$. 2.9: $a_1, a_2, a_3 = .5, .6, .6464$; answers $0.2$ and $0.116$.",
+            "2.10 (restart after extinction): positive recurrent for $\\mu < 1$, null for $\\mu = 1$, transient for $\\mu > 1$. 2.11 (death with probability $q$ each period): extinction certain exactly when $\\mu \\le q$.",
+            "2.12: critical $1 - a_n \\approx \\tfrac3n$; subcritical reaches 1 to five decimals by $n = 1000$; supercritical stops at $\\tfrac{32}{35}$. 2.13: $q \\le \\tfrac23$; survival probability $\\tfrac{6545}{6561}$.",
+            "2.14: for $\\mu > 1$, $\\mathbb{P}\\{\\text{extinction} \\mid X_n \\ne 0\\} \\le c\\,e^{-bn}$."
+          ],
+          "cards": [
+            "STO-02-32",
+            "STO-02-33",
+            "STO-02-34",
+            "STO-02-36",
+            "STO-02-35",
+            "STO-02-37"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Decision flow",
+      "items": [
+        {
+          "t": "Steps",
+          "d": [
+            "1. Irreducible? Period? As for finite chains.",
+            "2. Recurrent or transient? (a) Is $\\sum_n p_n(x, x)$ finite? Natural when $p_n(x, x)$ has a formula. (b) Does a function with (2.2)–(2.4) exist? Natural for walks that move by $\\pm1$. (c) Drift and the law of large numbers.",
+            "3. If recurrent: positive or null? Solve $\\bar\\pi P = \\bar\\pi$ and see whether it can be normalised, or compute $\\mathbb{E}(T)$ directly. Normalisable means positive recurrent with $\\mathbb{E}(T) = 1/\\pi(x)$.",
+            "4. Branching process: compute $\\mu$; if $\\mu > 1$ solve $a = \\phi(a)$ for the root in $(0, 1)$; if $\\mu \\le 1$ then $a = 1$."
+          ],
+          "cards": [
+            "STO-02-42",
+            "STO-02-43"
+          ]
+        },
+        {
+          "t": "Template: up or reset",
+          "d": [
+            "For a chain that from $x$ goes to $x + 1$ or back to 0, let $\\rho(x) = \\prod_{j < x}p(j, j+1) = \\mathbb{P}\\{T > x\\}$. Recurrent exactly when $\\rho(x) \\to 0$; positive recurrent exactly when $\\sum_x\\rho(x) < \\infty$; then $\\pi(x) = \\rho(x)/\\mathbb{E}(T)$."
+          ],
+          "cards": [
+            "STO-02-27",
+            "STO-02-28"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "q",
+          "d": [
+            "In 2.2 the probability of ever returning. In the queue the probability that the customer in service leaves. In the exercises also a death probability, a survival probability, the parameter of a geometric law, and $1 - p$."
+          ],
+          "cards": [
+            "STO-02-05",
+            "STO-02-25"
+          ]
+        },
+        {
+          "t": "p and p_n",
+          "d": [
+            "$p(x, y)$, $p_n(x, y)$: transition probabilities. $p$: probability of a step right. $p_k$ with one index: the offspring distribution, not an $n$-step probability."
+          ],
+          "cards": [
+            "STO-02-17"
+          ]
+        },
+        {
+          "t": "φ and φ^n",
+          "d": [
+            "Here $\\phi$ is a generating function and $\\phi^n$ its $n$-fold composition. For finite chains $\\phi$ was the initial distribution."
+          ],
+          "cards": [
+            "STO-02-20"
+          ]
+        },
+        {
+          "t": "α and a",
+          "d": [
+            "$\\alpha(x)$: probability of ever hitting $z$. $a$, $a(k)$, $a_n$: extinction probabilities. In one exercise $\\alpha$ is the root of a generating-function equation."
+          ],
+          "cards": [
+            "STO-02-09",
+            "STO-02-18",
+            "STO-02-39"
+          ]
+        },
+        {
+          "t": "T and T_k",
+          "d": [
+            "$T$: first return time, $\\min\\{n > 0\\}$. In the exercises $T_k$ are hitting times of the level $k$."
+          ],
+          "cards": [
+            "STO-02-30",
+            "STO-02-31"
+          ]
+        },
+        {
+          "t": "ρ",
+          "d": [
+            "$\\rho = \\tfrac{1-p}{p}$ for the running example; in the template $\\rho(x)$ is a product of up-probabilities; in one proof $\\rho$ is a contraction factor."
+          ],
+          "cards": [
+            "STO-02-11",
+            "STO-02-27",
+            "STO-02-37"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Errata",
+      "items": [
+        {
+          "t": "LW p51",
+          "d": [
+            "Kac's formula is printed as $\\mathbb{E}(T \\mid X_n = x) = 1/\\pi(x)$; it should be $X_0 = x$. On the same page $T = \\min\\{n > 0 \\mid X_n = x\\}$ should read $\\min\\{n > 0 : X_n = x\\}$."
+          ],
+          "cards": [
+            "STO-02-13"
+          ]
+        },
+        {
+          "t": "LW p50",
+          "d": [
+            "“There is a unique solution to (2.2)–(2.4)” for a transient chain: not unique in general; the hitting probability is the smallest solution. The test itself is unaffected."
+          ],
+          "cards": [
+            "STO-02-10"
+          ]
+        },
+        {
+          "t": "LW p59",
+          "d": [
+            "In one of the exercises “the the time” has one word too many."
+          ],
+          "cards": [
+            "STO-02-31"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "STO-02-01",
+      "g": "2.1 Introduction",
+      "k": "What is new",
+      "q": "An irreducible Markov chain on a countably infinite state space is compared with one on a finite state space. (1) Does it return to every state? (2) Is the mean return time finite? (3) Does an invariant probability exist? (4) Name the three types of irreducible chains this leads to.",
+      "pts": [
+        "(1) Finite: always. Infinite: not necessarily; a transient chain visits each state only finitely often.",
+        "(2) Finite: always. Infinite: it can be infinite even when the chain returns with probability 1.",
+        "(3) Finite: always (unique if irreducible). Infinite: only for positive recurrent chains.",
+        "(4) Transient (may never return); null recurrent (returns, but the mean return time is infinite); positive recurrent (returns, finite mean return time)."
+      ],
+      "pit": "With infinitely many states the chain can drift off for ever, or come back so slowly that no equilibrium exists.",
+      "src": "LW p43–45",
+      "seen": []
+    },
+    {
+      "id": "STO-02-02",
+      "g": "2.1 Introduction",
+      "k": "Countable state space",
+      "q": "(1) Define “countably infinite” and give examples. (2) How is the transition “matrix” written for a countable state space $S$, and which property replaces “rows sum to 1”? (3) State the Chapman–Kolmogorov identity. (4) What carries over from finite chains, and what does not?",
+      "pts": [
+        "(1) The set can be listed as a sequence, i.e. put in one-to-one correspondence with $\\{0, 1, 2, \\dots\\}$. Examples: $\\mathbb{Z}$ (list $0, 1, -1, 2, -2, \\dots$), $\\mathbb{Z}^2$. The real numbers are not countable.",
+        "(2) As a function $p(x, y) = \\mathbb{P}\\{X_1 = y \\mid X_0 = x\\}$ with $\\sum_{y \\in S}p(x, y) = 1$ for each $x$.",
+        "(3) $p_{m+n}(x, y) = \\sum_{z \\in S}p_m(x, z)p_n(z, y)$: split on where the chain is at time $m$; now an infinite sum.",
+        "(4) Communication classes, irreducibility and the period are defined in the same way. What fails: an irreducible aperiodic chain need not converge to an equilibrium."
+      ],
+      "pit": "",
+      "src": "LW p43–45",
+      "seen": []
+    },
+    {
+      "id": "STO-02-03",
+      "g": "2.1 Introduction",
+      "k": "Three model chains",
+      "q": "Give the state space, the transition probabilities and the period of: (1) the random walk with partially reflecting boundary at 0 (step right with probability $p$); (2) the simple random walk on $\\mathbb{Z}^d$; (3) the queue in which, in each time interval, a customer arrives with probability $p$ and the customer being served leaves with probability $q$, independently, with no limit on the length of the line.",
+      "pts": [
+        "(1) $\\{0, 1, 2, \\dots\\}$; $p(x, x+1) = p$, $p(x, x-1) = 1 - p$ for $x > 0$; $p(0, 1) = p$, $p(0, 0) = 1 - p$ (a step left at 0 is blocked). Aperiodic because $p(0, 0) > 0$.",
+        "(2) $\\mathbb{Z}^d$; $p(x, y) = \\tfrac{1}{2d}$ for each of the $2d$ nearest neighbours $y$ of $x$. Period 2: each step changes the parity of $z_1 + \\dots + z_d$.",
+        "(3) $\\{0, 1, 2, \\dots\\}$; for $x > 0$: $p(x, x-1) = q(1-p)$, $p(x, x) = qp + (1-q)(1-p)$, $p(x, x+1) = p(1-q)$; $p(0, 0) = 1 - p$, $p(0, 1) = p$. Aperiodic."
+      ],
+      "pit": "All three are irreducible. The first is the running example of the chapter.",
+      "src": "LW p44–45",
+      "seen": []
+    },
+    {
+      "id": "STO-02-04",
+      "g": "2.2 Recurrence",
+      "k": "Recurrent, transient",
+      "q": "Irreducible Markov chain on a countable state space. (1) Define recurrent. (2) Define transient and say what it implies for every state. (3) Why does “one state is visited infinitely often” force every state to be visited infinitely often?",
+      "pts": [
+        "(1) For each state $x$: $\\mathbb{P}\\{X_n = x \\text{ for infinitely many } n\\} = 1$.",
+        "(2) Not recurrent; then every state is visited only finitely often.",
+        "(3) From $x$ there is a fixed probability $\\varepsilon > 0$ of reaching $y$ before coming back to $x$. Each of the infinitely many visits to $x$ is a fresh, independent attempt with success probability at least $\\varepsilon$, so infinitely many attempts succeed."
+      ],
+      "pit": "",
+      "src": "LW p45",
+      "seen": []
+    },
+    {
+      "id": "STO-02-05",
+      "g": "2.2 Recurrence",
+      "k": "Test 1: count returns",
+      "q": "A chain starts at $X_0 = x$. Let $R = \\sum_{n \\ge 0}I\\{X_n = x\\}$ be the total number of visits to $x$ (time 0 counts), $T$ the first return time and $q = \\mathbb{P}\\{T < \\infty\\}$. (1) Compute $\\mathbb{E}(R)$ by summing over time. (2) Give the distribution of $R$ in terms of $q$. (3) Compute $\\mathbb{E}(R)$ when $q < 1$. (4) State the resulting test.",
+      "pts": [
+        "(1) $\\mathbb{E}(R) = \\sum_{n \\ge 0}p_n(x, x)$: the expectation of an indicator is a probability.",
+        "(2) Each return is a fresh start. $R = m$ means $m - 1$ returns and then no further return: $\\mathbb{P}\\{R = m\\} = q^{m-1}(1 - q)$, a geometric distribution. If $q = 1$ then $R = \\infty$.",
+        "(3) $\\sum_{m \\ge 1}mq^{m-1}(1-q) = \\dfrac{1}{1-q}$, using $\\sum_{m \\ge 1}mq^{m-1} = \\tfrac{d}{dq}\\sum_{m \\ge 0}q^m = \\tfrac{1}{(1-q)^2}$.",
+        "(4) An irreducible chain is transient if and only if $\\sum_{n=0}^\\infty p_n(x, x) < \\infty$."
+      ],
+      "pit": "Here $q$ is the return probability. It has nothing to do with the $q$ of the queue.",
+      "src": "LW p46",
+      "seen": []
+    },
+    {
+      "id": "STO-02-06",
+      "g": "2.2 Recurrence",
+      "k": "Walk on Z",
+      "q": "Simple random walk on $\\mathbb{Z}$ started at 0: $p(x, x+1) = p(x, x-1) = \\tfrac12$. (1) Give $p_{2n}(0, 0)$ exactly, and $p_n(0, 0)$ for odd $n$. (2) State Stirling's formula and apply it to $\\tfrac{(2n)!}{(n!)^2}$. (3) Give the asymptotic form of $p_{2n}(0, 0)$. (4) Conclude, and compare exact and approximate values for $n = 10$.",
+      "pts": [
+        "(1) The walk must take $n$ steps right and $n$ left: $p_{2n}(0, 0) = \\dbinom{2n}{n}\\big(\\tfrac12\\big)^{2n}$. For odd $n$ it is 0 (period 2).",
+        "(2) $n! \\sim \\sqrt{2\\pi n}\\,n^ne^{-n}$ (the ratio tends to 1). So $$\\frac{(2n)!}{(n!)^2} \\sim \\frac{\\sqrt{4\\pi n}\\,(2n)^{2n}e^{-2n}}{2\\pi n\\,n^{2n}e^{-2n}} = \\frac{2^{2n}}{\\sqrt{\\pi n}}$$",
+        "(3) $p_{2n}(0, 0) \\sim \\dfrac{1}{\\sqrt{\\pi n}}$.",
+        "(4) $\\sum_n n^{-1/2} = \\infty$, so the expected number of returns is infinite: recurrent. $n = 10$: exact $\\tfrac{184756}{1048576} \\approx 0.1762$, approximation $\\tfrac{1}{\\sqrt{10\\pi}} \\approx 0.1784$."
+      ],
+      "pit": "",
+      "src": "LW p46–48",
+      "seen": [
+        "Ex 2.18"
+      ]
+    },
+    {
+      "id": "STO-02-07",
+      "g": "2.2 Recurrence",
+      "k": "Walk in d dimensions",
+      "q": "Simple random walk on $\\mathbb{Z}^d$ started at 0 (each of the $2d$ moves has probability $\\tfrac{1}{2d}$). Give the heuristic for $p_{2n}(0, 0)$: (1) how many steps go to each coordinate; (2) the parity condition; (3) the chance that one coordinate is back at 0; (4) the result and the classification.",
+      "pts": [
+        "(1) By the law of large numbers about $\\tfrac{2n}{d}$ of the $2n$ steps go to each coordinate.",
+        "(2) Each coordinate must have received an even number of steps. For the first $d - 1$ coordinates these are roughly independent fair coin flips, probability $\\big(\\tfrac12\\big)^{d-1}$; the last one is then even automatically because the total $2n$ is even.",
+        "(3) Each coordinate is a one-dimensional walk with $2m$ steps, $m = \\tfrac nd$: back at 0 with probability about $\\tfrac{1}{\\sqrt{\\pi m}} = \\big(\\tfrac{d}{\\pi n}\\big)^{1/2}$.",
+        "(4) $p_{2n}(0, 0) \\sim \\big(\\tfrac12\\big)^{d-1}\\Big(\\dfrac{d}{n\\pi}\\Big)^{d/2}$. Since $\\sum_n n^{-a} < \\infty$ exactly when $a > 1$, and here $a = \\tfrac d2$: recurrent for $d = 1, 2$, transient for $d \\ge 3$."
+      ],
+      "pit": "Decay $n^{-1/2}$, $n^{-1}$, $n^{-3/2}$ for $d = 1, 2, 3$: the first two sums diverge, the third converges.",
+      "src": "LW p48–49",
+      "seen": []
+    },
+    {
+      "id": "STO-02-08",
+      "g": "2.2 Recurrence",
+      "k": "How transient is d = 3",
+      "q": "For the simple random walk on $\\mathbb{Z}^3$ the expected number of visits to the starting point, counting time 0, is $\\mathbb{E}(R) = \\sum_n p_n(0, 0) \\approx 1.516$. (1) Find the probability of ever returning. (2) Give $p_2(0, 0)$ exactly in dimension $d$. (3) Compare the exact and asymptotic values of $p_{20}(0, 0)$ in $d = 1, 2, 3$.",
+      "pts": [
+        "(1) $\\mathbb{E}(R) = \\tfrac{1}{1-q}$, so $q = 1 - \\tfrac{1}{1.516} \\approx 0.34$: a walker in three dimensions returns home only about one time in three.",
+        "(2) Go to a neighbour and come straight back: $p_2(0, 0) = \\tfrac{1}{2d}$.",
+        "(3) $d = 1$: $0.1762$ against $0.1784$. $d = 2$: $0.0310$ against $\\tfrac{1}{10\\pi} \\approx 0.0318$ (the exact value is the square of the one-dimensional one). $d = 3$: $0.00711$ against $0.00738$."
+      ],
+      "pit": "The value 1.516 is not in the book; it comes from summing the exact probabilities.",
+      "src": "LW p49",
+      "seen": []
+    },
+    {
+      "id": "STO-02-09",
+      "g": "2.2 Recurrence",
+      "k": "Test 2: function α",
+      "q": "Irreducible chain on a countable state space $S$. Fix a state $z$ and let $\\alpha(x) = \\mathbb{P}\\{X_n = z \\text{ for some } n \\ge 0 \\mid X_0 = x\\}$. (1) What are $\\alpha(z)$, $\\alpha$ for a recurrent chain, and $\\alpha$ for a transient chain? (2) Derive the equation satisfied at $x \\ne z$. (3) List the three conditions (2.2)–(2.4). (4) State the test.",
+      "pts": [
+        "(1) $\\alpha(z) = 1$. Recurrent: $\\alpha \\equiv 1$. Transient: some $\\alpha(x) < 1$, and states farther and farther from $z$ have $\\alpha(x)$ as small as we like.",
+        "(2) Since $x \\ne z$, “some $n \\ge 0$” is the same as “some $n \\ge 1$”. Split on the first step and use the Markov property: $\\alpha(x) = \\sum_{y \\in S}p(x, y)\\alpha(y)$.",
+        "(3) (2.2): $0 \\le \\alpha(x) \\le 1$. (2.3): $\\alpha(z) = 1$ and $\\inf\\{\\alpha(x) : x \\in S\\} = 0$. (2.4): $\\alpha(x) = \\sum_y p(x, y)\\alpha(y)$ for $x \\ne z$.",
+        "(4) An irreducible chain is transient if and only if for some state $z$ there is a function $\\alpha$ satisfying (2.2)–(2.4)."
+      ],
+      "pit": "That a recurrent chain has no such function is proved later in the book.",
+      "src": "LW p49–50",
+      "seen": [
+        "Ex 2.17"
+      ]
+    },
+    {
+      "id": "STO-02-10",
+      "g": "2.2 Recurrence",
+      "k": "“Unique” solution?",
+      "q": "The book says that for a transient chain the solution of (2.2)–(2.4) is unique; the conditions are $0 \\le \\alpha \\le 1$, $\\alpha(z) = 1$, $\\inf\\alpha = 0$ and $\\alpha(x) = \\sum_y p(x, y)\\alpha(y)$ for $x \\ne z$. Test this on the walk on $\\mathbb{Z}$ with steps $\\pm1$ and $p(x, x+1) = \\tfrac23$ for $x > 0$, $\\tfrac13$ for $x < 0$, $\\tfrac12$ at 0, with $z = 0$. (1) Give the hitting probability $h_1(x)$ of 0. (2) Give $h_2(x)$ = probability of escaping to $+\\infty$ without hitting 0. (3) Which functions built from them satisfy the conditions? (4) State the correct version.",
+      "pts": [
+        "(1) $h_1(x) = \\big(\\tfrac12\\big)^{|x|}$.",
+        "(2) $h_2(x) = 1 - \\big(\\tfrac12\\big)^x$ for $x > 0$ and 0 for $x \\le 0$.",
+        "(3) Every $h_1 + c\\,h_2$ with $0 \\le c \\le 1$: for $x > 0$ it equals $c + (1 - c)\\big(\\tfrac12\\big)^x$, a solution of the random-walk equation with values in $[0, 1]$; the infimum 0 is reached as $x \\to -\\infty$.",
+        "(4) The solution need not be unique; the hitting probability is the smallest one. The test “a solution exists if and only if the chain is transient” is unaffected."
+      ],
+      "pit": "",
+      "src": "LW p50",
+      "seen": []
+    },
+    {
+      "id": "STO-02-11",
+      "g": "2.2 Recurrence",
+      "k": "Running example: α",
+      "q": "Random walk on $\\{0, 1, 2, \\dots\\}$ with partially reflecting boundary: for $x > 0$, $p(x, x+1) = p$ and $p(x, x-1) = 1 - p$; at 0, $p(0, 1) = p$ and $p(0, 0) = 1 - p$. Decide for which $p$ the chain is transient, using $z = 0$. (1) Write (2.4) for $x > 0$ and its general solution. (2) Impose $\\alpha(0) = 1$. (3) Test the remaining conditions for $p \\le \\tfrac12$. (4) Test them for $p > \\tfrac12$ and give the numbers for $p = \\tfrac23$.",
+      "pts": [
+        "(1) $\\alpha(x) = (1-p)\\alpha(x-1) + p\\alpha(x+1)$, the random-walk equation: with $\\rho = \\tfrac{1-p}{p}$, $\\alpha(x) = c_1 + c_2\\rho^x$ for $p \\ne \\tfrac12$ and $c_1 + c_2x$ for $p = \\tfrac12$.",
+        "(2) $\\alpha(x) = (1 - c_2) + c_2\\rho^x$, respectively $\\alpha(x) = 1 + c_2x$.",
+        "(3) $c_2 = 0$ gives $\\alpha \\equiv 1$, which violates $\\inf\\alpha = 0$. $c_2 \\ne 0$: $\\rho^x$ (with $\\rho > 1$) or $1 + c_2x$ is unbounded, which violates $0 \\le \\alpha \\le 1$. No solution: recurrent.",
+        "(4) $\\rho < 1$: $c_2 = 1$ works, $\\alpha(x) = \\rho^x \\to 0$: transient. For $p = \\tfrac23$: $\\alpha(x) = \\big(\\tfrac12\\big)^x$; check at $x = 1$: $\\tfrac13 \\cdot 1 + \\tfrac23 \\cdot \\tfrac14 = \\tfrac12$. From 3 the walker ever reaches 0 with probability $\\tfrac18$."
+      ],
+      "pit": "The equation is not required at $x = z = 0$, so the rule at the boundary plays no role in this test. It cannot tell $p = \\tfrac13$ from $p = \\tfrac12$.",
+      "src": "LW p50",
+      "seen": []
+    },
+    {
+      "id": "STO-02-12",
+      "g": "2.3 Positive vs null",
+      "k": "Three types",
+      "q": "Irreducible, aperiodic chain on a countable state space; $T$ is the first return time to the starting state $x$. Compare transient, null recurrent and positive recurrent chains: (1) $\\mathbb{P}\\{T < \\infty\\}$ and $\\mathbb{E}(T)$; (2) $\\sum_n p_n(x, x)$; (3) $\\lim_n p_n(y, x)$; (4) invariant probability; (5) one example of each.",
+      "pts": [
+        "(1) Transient: $\\mathbb{P}\\{T < \\infty\\} < 1$, $\\mathbb{E}(T) = \\infty$. Null recurrent: $\\mathbb{P}\\{T < \\infty\\} = 1$ but $\\mathbb{E}(T) = \\infty$. Positive recurrent: $\\mathbb{P}\\{T < \\infty\\} = 1$ and $\\mathbb{E}(T) = \\tfrac{1}{\\pi(x)} < \\infty$.",
+        "(2) Finite; infinite; infinite.",
+        "(3) 0; 0 (this is the definition of null recurrent); $\\pi(x) > 0$, the same for every start $y$.",
+        "(4) None; none; exactly one.",
+        "(5) Walk with partially reflecting boundary and $p = \\tfrac23$, or the walk on $\\mathbb{Z}^3$; the same walk with $p = \\tfrac12$ (and the walk on $\\mathbb{Z}$, where $p_{2n}(0, 0) \\sim \\tfrac{1}{\\sqrt{\\pi n}} \\to 0$); the same walk with $p = \\tfrac13$, and every irreducible finite chain."
+      ],
+      "pit": "The recurrence tests separate the first column from the other two; the invariant-probability test separates the last two.",
+      "src": "LW p50–51",
+      "seen": []
+    },
+    {
+      "id": "STO-02-13",
+      "g": "2.3 Positive vs null",
+      "k": "Test for positive rec.",
+      "q": "Irreducible chain on a countable state space $S$. (1) Write the equation (2.8) for an invariant probability. (2) State the criterion for positive recurrence. (3) What follows if no invariant probability exists? (4) Compared with a finite chain, what can go wrong? (5) State the mean return time for a positive recurrent chain.",
+      "pts": [
+        "(1) $\\sum_{y \\in S}\\pi(y)p(y, x) = \\pi(x)$ for all $x$, with $\\pi(x) \\ge 0$ and $\\sum_x\\pi(x) = 1$.",
+        "(2) The chain is positive recurrent if and only if such a probability distribution exists; it is then unique.",
+        "(3) The chain is null recurrent or transient; a recurrence test decides which.",
+        "(4) The equation is the same, but its solutions may not be normalisable: $\\sum_x\\pi(x) = \\infty$.",
+        "(5) $\\mathbb{E}(T \\mid X_0 = x) = \\dfrac{1}{\\pi(x)}$ with $T = \\min\\{n > 0 : X_n = x\\}$."
+      ],
+      "pit": "The book prints the last formula as $\\mathbb{E}(T \\mid X_n = x)$; it should be $X_0 = x$.",
+      "src": "LW p51–52",
+      "seen": []
+    },
+    {
+      "id": "STO-02-14",
+      "g": "2.3 Positive vs null",
+      "k": "Running example: π",
+      "q": "Random walk on $\\{0, 1, 2, \\dots\\}$ with partially reflecting boundary: for $x > 0$, $p(x, x+1) = p$ and $p(x, x-1) = 1 - p$; at 0, $p(0, 1) = p$ and $p(0, 0) = 1 - p$. Look for an invariant probability. (1) Write the equations at $x > 0$ and at $x = 0$. (2) Give the general solution for $x > 0$. (3) Use the equation at 0. (4) Decide for which $p$ the solution can be normalised and give $\\pi$.",
+      "pts": [
+        "(1) $\\pi(x) = \\pi(x+1)(1-p) + \\pi(x-1)p$ for $x > 0$ (flow into $x$ from both neighbours); $\\pi(0) = \\pi(1)(1-p) + \\pi(0)(1-p)$.",
+        "(2) The random-walk equation with the roles of $p$ and $1 - p$ exchanged: roots 1 and $\\tfrac{p}{1-p}$. $\\pi(x) = c_1 + c_2\\big(\\tfrac{p}{1-p}\\big)^x$ for $p \\ne \\tfrac12$; $c_1 + c_2x$ for $p = \\tfrac12$.",
+        "(3) It reads $p\\,\\pi(0) = (1-p)\\pi(1)$. Substituting gives $c_1 = 0$ for $p \\ne \\tfrac12$, and $c_2 = 0$ for $p = \\tfrac12$.",
+        "(4) $p < \\tfrac12$: ratio below 1, and $\\sum_{y \\ge 0}\\big(\\tfrac{p}{1-p}\\big)^y = \\tfrac{1-p}{1-2p}$, so $$\\pi(x) = \\frac{1-2p}{1-p}\\Big(\\frac{p}{1-p}\\Big)^x$$ $p > \\tfrac12$: the terms grow, no. $p = \\tfrac12$: a constant cannot sum to 1."
+      ],
+      "pit": "",
+      "src": "LW p52",
+      "seen": []
+    },
+    {
+      "id": "STO-02-15",
+      "g": "2.3 Positive vs null",
+      "k": "Running ex.: p = 1/3",
+      "q": "Random walk on $\\{0, 1, 2, \\dots\\}$ that steps right with probability $p$ and left with probability $1 - p$; at 0 a step left is blocked and the walker stays. For $p < \\tfrac12$ the invariant probability is $\\pi(x) = \\tfrac{1-2p}{1-p}\\big(\\tfrac{p}{1-p}\\big)^x$. Take $p = \\tfrac13$. (1) Give $\\pi(x)$. (2) Check the equation at 0. (3) Give the mean return time to 0. (4) Give the mean position in equilibrium. (5) For $p = \\tfrac14$ give $\\pi(0)$ and the mean return time to 0.",
+      "pts": [
+        "(1) $\\tfrac{p}{1-p} = \\tfrac12$ and $\\tfrac{1-2p}{1-p} = \\tfrac12$: $\\pi(x) = \\big(\\tfrac12\\big)^{x+1}$, i.e. $\\tfrac12, \\tfrac14, \\tfrac18, \\dots$",
+        "(2) $\\pi(1)\\tfrac23 + \\pi(0)\\tfrac23 = \\tfrac16 + \\tfrac13 = \\tfrac12 = \\pi(0)$.",
+        "(3) $1/\\pi(0) = 2$ steps.",
+        "(4) $\\sum_x x\\big(\\tfrac12\\big)^{x+1} = 1$.",
+        "(5) $\\pi(0) = \\tfrac{1/2}{3/4} = \\tfrac23$; mean return time $\\tfrac32$."
+      ],
+      "pit": "",
+      "src": "LW p52",
+      "seen": []
+    },
+    {
+      "id": "STO-02-16",
+      "g": "2.3 Positive vs null",
+      "k": "Mirror images",
+      "q": "Random walk on $\\{0, 1, 2, \\dots\\}$ with partially reflecting boundary: for $x > 0$, $p(x, x+1) = p$ and $p(x, x-1) = 1 - p$; at 0, $p(0, 1) = p$ and $p(0, 0) = 1 - p$. (1) Give the complete classification by $p$. (2) For $p = \\tfrac13$ and for $p = \\tfrac23$, which equation is solved, and what are its roots? (3) Give the extra conditions and the answers. (4) Why do the two equations have the same roots?",
+      "pts": [
+        "(1) Positive recurrent for $p < \\tfrac12$, null recurrent for $p = \\tfrac12$, transient for $p > \\tfrac12$.",
+        "(2) $p = \\tfrac13$: $\\pi(x) = \\tfrac23\\pi(x+1) + \\tfrac13\\pi(x-1)$ (flow into $x$). $p = \\tfrac23$: $\\alpha(x) = \\tfrac13\\alpha(x-1) + \\tfrac23\\alpha(x+1)$ (first step from $x$). Both have the roots 1 and $\\tfrac12$.",
+        "(3) $\\sum\\pi = 1$ and the equation at 0 give $\\pi(x) = \\big(\\tfrac12\\big)^{x+1}$, the long-run fraction of time at $x$. $\\alpha(0) = 1$ and $\\inf\\alpha = 0$ give $\\alpha(x) = \\big(\\tfrac12\\big)^x$, the probability of ever getting back to 0 from $x$.",
+        "(4) Exchanging $p$ and $1 - p$ exchanges “flow into $x$” with “first step from $x$”."
+      ],
+      "pit": "Both tests use the same difference equation; what changes is the condition imposed on the solution (sums to 1, or lies between 0 and 1 with infimum 0).",
+      "src": "LW p52",
+      "seen": []
+    },
+    {
+      "id": "STO-02-17",
+      "g": "2.4 Branching",
+      "k": "Model and mean",
+      "q": "Branching process: each individual, independently, has $k$ children with probability $p_k$ ($k = 0, 1, 2, \\dots$) and then dies; $X_n$ is the number of individuals in generation $n$ and $\\mu = \\sum_k kp_k$. (1) Describe $X_{n+1}$ given $X_n = k$, the state space and the special state. (2) Show $\\mathbb{E}(X_n) = \\mu^n\\mathbb{E}(X_0)$. (3) Show that the population dies out with probability 1 when $\\mu < 1$. (4) Which assumptions does the book make to avoid trivial cases?",
+      "pts": [
+        "(1) $X_{n+1} = Y_1 + \\dots + Y_k$ with $Y_i$ independent with distribution $\\{p_j\\}$. State space $\\{0, 1, 2, \\dots\\}$; 0 is absorbing.",
+        "(2) Conditioning on the current size: $\\mathbb{E}(X_n) = \\sum_k\\mathbb{P}\\{X_{n-1} = k\\}\\,k\\mu = \\mu\\,\\mathbb{E}(X_{n-1})$; repeat $n$ times.",
+        "(3) $\\mathbb{P}\\{X_n \\ge 1\\} \\le \\mathbb{E}(X_n) = \\mu^n\\mathbb{E}(X_0) \\to 0$.",
+        "(4) $p_0 > 0$ (extinction is possible) and $p_0 + p_1 < 1$ (an individual can have two or more children)."
+      ],
+      "pit": "For $\\mu = 1$ the mean stays constant and for $\\mu > 1$ it grows; whether the population dies out is then not visible from the mean.",
+      "src": "LW p53–54",
+      "seen": []
+    },
+    {
+      "id": "STO-02-18",
+      "g": "2.4 Branching",
+      "k": "Extinction equation",
+      "q": "Branching process: each individual, independently, has $k$ children with probability $p_k$ ($k = 0, 1, 2, \\dots$) and then dies; $X_n$ is the number of individuals in generation $n$ and $\\mu = \\sum_k kp_k$. Let $a(k)$ be the probability of eventual extinction starting from $k$ individuals and $a = a(1)$. (1) Express $a(k)$ through $a$. (2) Derive an equation for $a$. (3) Define the generating function and rewrite the equation. (4) Which solution always exists?",
+      "pts": [
+        "(1) $a(k) = a^k$: each of the $k$ family lines must die out, independently.",
+        "(2) Start with one individual and condition on the number of children: $a = \\sum_{k \\ge 0}p_k\\,a^k$.",
+        "(3) $\\phi(s) = \\mathbb{E}(s^X) = \\sum_k s^k\\,\\mathbb{P}\\{X = k\\}$ for the offspring number $X$; the equation is $a = \\phi(a)$.",
+        "(4) $a = 1$, because $\\phi(1) = 1$. There may be another root, and one has to decide which is the extinction probability."
+      ],
+      "pit": "",
+      "src": "LW p54–55",
+      "seen": []
+    },
+    {
+      "id": "STO-02-19",
+      "g": "2.4 Branching",
+      "k": "Generating function",
+      "q": "$X$ is a random variable with values in $\\{0, 1, 2, \\dots\\}$ and $\\phi(s) = \\mathbb{E}(s^X) = \\sum_k s^k\\,\\mathbb{P}\\{X = k\\}$. Give (1) $\\phi(0)$, $\\phi(1)$ and the monotonicity on $[0, 1]$; (2) $\\phi'(1)$; (3) the sign of $\\phi''$; (4) the generating function of a sum of independent variables.",
+      "pts": [
+        "(1) $\\phi(0) = \\mathbb{P}\\{X = 0\\}$, $\\phi(1) = 1$, and $\\phi$ is increasing: all coefficients are nonnegative and sum to 1.",
+        "(2) $\\phi'(1) = \\sum_k k\\,\\mathbb{P}\\{X = k\\} = \\mathbb{E}(X)$.",
+        "(3) $\\phi''(s) = \\sum_{k \\ge 2}k(k-1)s^{k-2}\\,\\mathbb{P}\\{X = k\\} > 0$ for $s > 0$ if $\\mathbb{P}\\{X \\ge 2\\} > 0$: $\\phi$ is strictly convex.",
+        "(4) $\\phi_{X_1 + \\dots + X_m} = \\phi_{X_1}\\cdots\\phi_{X_m}$, because $\\mathbb{E}(s^{X_1 + \\dots + X_m}) = \\prod_i\\mathbb{E}(s^{X_i})$."
+      ],
+      "pit": "",
+      "src": "LW p55",
+      "seen": []
+    },
+    {
+      "id": "STO-02-20",
+      "g": "2.4 Branching",
+      "k": "Which root",
+      "q": "Branching process started from one individual, offspring generating function $\\phi$, $a_n = \\mathbb{P}\\{X_n = 0\\}$, extinction probability $a$. (1) Give the generating function of $X_n$. (2) Give the recursion for $a_n$ and the relation to $a$. (3) Prove that $a$ is the smallest positive root of $a = \\phi(a)$. (4) What is the difference between $\\phi^n(s)$ in this context and the power $\\phi(s)^n$?",
+      "pts": [
+        "(1) The $n$-fold composition $\\phi^n(s) = \\phi(\\phi^{n-1}(s))$: $X_n$ is the sum of $X_1$ independent copies of “generation $n - 1$ started from one individual”, so given $X_1 = j$ its generating function is $[\\phi^{n-1}(s)]^j$; average over $j$ with weights $p_j$.",
+        "(2) $a_n = \\phi^n(0)$: $a_0 = 0$, $a_n = \\phi(a_{n-1})$, and $a = \\lim_n a_n$.",
+        "(3) Let $\\hat a$ be the smallest positive root. $a_0 = 0 \\le \\hat a$, and if $a_{n-1} \\le \\hat a$ then $a_n = \\phi(a_{n-1}) \\le \\phi(\\hat a) = \\hat a$ because $\\phi$ is increasing. So $a \\le \\hat a$; since $a$ is itself a root, $a = \\hat a$.",
+        "(4) $\\phi^n$ is $\\phi$ composed $n$ times, the generating function of $X_n$ from one individual. $\\phi(s)^n$ is a power, the generating function of the next generation from $n$ individuals."
+      ],
+      "pit": "",
+      "src": "LW p55–56",
+      "seen": []
+    },
+    {
+      "id": "STO-02-21",
+      "g": "2.4 Branching",
+      "k": "Three examples",
+      "q": "Branching processes with offspring distributions $(p_0, p_1, p_2)$ equal to (a) $(\\tfrac14, \\tfrac14, \\tfrac12)$, (b) $(\\tfrac12, \\tfrac14, \\tfrac14)$, (c) $(\\tfrac14, \\tfrac12, \\tfrac14)$. For each give (1) the mean; (2) the equation $a = \\phi(a)$ multiplied out, and its roots; (3) the extinction probability; (4) $\\mathbb{E}(X_{10})$ starting from one individual.",
+      "pts": [
+        "(1) $\\mu = p_1 + 2p_2$: $\\tfrac54$, $\\tfrac34$, $1$.",
+        "(2) (a) $2a^2 - 3a + 1 = 0$: $1, \\tfrac12$. (b) $a^2 - 3a + 2 = 0$: $1, 2$. (c) $a^2 - 2a + 1 = 0$: $1$ (double).",
+        "(3) $\\tfrac12$; $1$; $1$.",
+        "(4) $\\mu^{10}$: about $9.31$; about $0.056$; $1$."
+      ],
+      "pit": "Supercritical, subcritical, critical.",
+      "src": "LW p56–57",
+      "seen": []
+    },
+    {
+      "id": "STO-02-22",
+      "g": "2.4 Branching",
+      "k": "Iterating φ",
+      "q": "Branching process with $(p_0, p_1, p_2) = (\\tfrac14, \\tfrac14, \\tfrac12)$ started from one individual; $a_n = \\mathbb{P}\\{X_n = 0\\}$. (1) Compute $a_1$ and $a_2$. (2) Where do the $a_n$ go, and how fast? (3) How do the iterates behave in the critical case $(\\tfrac14, \\tfrac12, \\tfrac14)$? (4) Here $\\mathbb{E}(X_{10}) \\approx 9.3$. What does the comparison with the extinction probability show?",
+      "pts": [
+        "(1) $\\phi(s) = \\tfrac14 + \\tfrac14s + \\tfrac12s^2$: $a_1 = \\phi(0) = \\tfrac14$, $a_2 = \\phi(\\tfrac14) = \\tfrac14 + \\tfrac{1}{16} + \\tfrac{1}{32} = \\tfrac{11}{32} \\approx 0.344$.",
+        "(2) They increase to $\\tfrac12$ geometrically: $a_5 \\approx 0.448$, $a_{10} \\approx 0.4888$, $a_{20} \\approx 0.4994$.",
+        "(3) They creep up to 1 slowly: $a_{10} \\approx 0.741$, $a_{20} \\approx 0.846$, $a_{100} \\approx 0.963$; $1 - a_n \\approx \\tfrac4n$.",
+        "(4) A growing mean does not prevent extinction with probability $\\tfrac12$."
+      ],
+      "pit": "",
+      "src": "LW p56–57",
+      "seen": []
+    },
+    {
+      "id": "STO-02-23",
+      "g": "2.4 Branching",
+      "k": "Extinction theorem",
+      "q": "Branching process with offspring mean $\\mu$, generating function $\\phi$, $p_0 > 0$ and $p_0 + p_1 < 1$. Give the argument for the extinction probability $a$ when (1) $\\mu < 1$; (2) $\\mu = 1$; (3) $\\mu > 1$. (4) State the theorem.",
+      "pts": [
+        "(1) $\\mathbb{P}\\{X_n \\ge 1\\} \\le \\mu^n \\to 0$, so $a = 1$.",
+        "(2) $\\phi'(1) = 1$ and $\\phi'' > 0$ give $\\phi'(s) < 1$ for $s < 1$, hence $1 - \\phi(s) = \\int_s^1\\phi'(u)\\,du < 1 - s$: $\\phi(s) > s$ on $[0, 1)$, no root below 1, so $a = 1$.",
+        "(3) $\\phi'(1) > 1$ gives $\\phi(s) < s$ just below 1, while $\\phi(0) = p_0 > 0$. So $\\phi(s) - s$ changes sign: there is a root in $(0, 1)$, and only one by convexity.",
+        "(4) If $\\mu \\le 1$, the extinction probability is 1. If $\\mu > 1$, it is less than 1 and equals the unique root of $t = \\phi(t)$ with $0 < t < 1$."
+      ],
+      "pit": "",
+      "src": "LW p57",
+      "seen": []
+    },
+    {
+      "id": "STO-02-24",
+      "g": "2.4 Branching",
+      "k": "Critical case",
+      "q": "Branching process with $\\mu = 1$, $p_0 > 0$, $p_0 + p_1 < 1$, started from one individual. (1) What is $\\mathbb{E}(X_n)$? (2) What is the extinction probability? (3) How do the two facts fit together? (4) Give two degenerate cases that the assumptions exclude.",
+      "pts": [
+        "(1) 1 for every $n$.",
+        "(2) 1.",
+        "(3) The populations that have not died out by time $n$ must be large: $\\mathbb{E}(X_n \\mid X_n > 0) = \\tfrac{1}{\\mathbb{P}\\{X_n > 0\\}} \\to \\infty$.",
+        "(4) $p_1 = 1$: every individual has exactly one child, $\\mu = 1$ but the population never dies out. $p_0 = 0$: extinction is impossible whatever $\\mu$ is."
+      ],
+      "pit": "",
+      "src": "LW p57",
+      "seen": []
+    },
+    {
+      "id": "STO-02-25",
+      "g": "Exercises",
+      "k": "Ex 2.1: queue",
+      "q": "Queue on $\\{0, 1, 2, \\dots\\}$: in each interval a customer arrives with probability $p$ and the customer in service leaves with probability $q$, independently. For $x > 0$ the chain goes up with probability $a = p(1-q)$ and down with probability $b = q(1-p)$; $p(0, 1) = p$. Put $r = \\tfrac ab$. (1) Balance the flow across each edge and express $\\pi(x)$ through $\\pi(0)$. (2) Classify the chain by $p$ and $q$. (3) Give $\\pi$ and the mean queue length in the positive recurrent case. (4) In the transient case, give the probability $\\alpha(x)$ of ever reaching 0 from $x$.",
+      "pts": [
+        "(1) $\\pi(0)p = \\pi(1)b$ and $\\pi(x)a = \\pi(x+1)b$ for $x \\ge 1$: $\\pi(x) = \\dfrac{\\pi(0)}{1-q}\\,r^x$ for $x \\ge 1$.",
+        "(2) $r < 1$ exactly when $p < q$: positive recurrent. $p = q$: null recurrent. $p > q$: transient.",
+        "(3) $\\pi(0) = 1 - \\tfrac pq$, $\\pi(x) = \\dfrac{q-p}{q(1-q)}\\,r^x$; mean $\\dfrac{p(1-p)}{q-p}$ (e.g. $0.8$ for $p = .2$, $q = .4$).",
+        "(4) Staying in place does not affect which neighbour is reached first, so this is gambler's ruin with up-probability $\\tfrac{a}{a+b}$: $\\alpha(x) = \\big(\\tfrac ba\\big)^x = r^{-x}$."
+      ],
+      "pit": "Only arrival rate against service rate matters. The mean length blows up as p approaches q.",
+      "src": "LW p57",
+      "seen": [
+        "Ex 2.1"
+      ]
+    },
+    {
+      "id": "STO-02-26",
+      "g": "Exercises",
+      "k": "Ex 2.2: jump down",
+      "q": "Chain on $\\{0, 1, 2, \\dots\\}$: from 0 it jumps to $x \\ge 1$ with probability $p_x$ ($\\sum_x p_x = 1$); from $x > 0$ it steps to $x - 1$ with probability 1. Let $\\mu = \\sum_x xp_x$ and let $Y$ have the distribution $\\{p_x\\}$. (1) Find the return time $T$ to 0 and $\\mathbb{E}(T)$. (2) When is the chain positive recurrent? (3) Find the expected number of visits to $x$ during one excursion from 0. (4) Give $\\pi$, and its values for $p_x = 2^{-x}$.",
+      "pts": [
+        "(1) A jump to $x$ is followed by $x$ steps down: $T = 1 + x$, so $\\mathbb{E}(T) = 1 + \\mu$.",
+        "(2) The chain is always recurrent; it is positive recurrent exactly when $\\mu < \\infty$.",
+        "(3) $x$ is visited once if the jump lands at some $y \\ge x$, otherwise not at all: $\\mathbb{P}\\{Y \\ge x\\}$.",
+        "(4) $\\pi(0) = \\dfrac{1}{1+\\mu}$, $\\pi(x) = \\dfrac{\\mathbb{P}\\{Y \\ge x\\}}{1+\\mu}$. For $p_x = 2^{-x}$: $\\mu = 2$ and $\\bar\\pi = (\\tfrac13, \\tfrac13, \\tfrac16, \\tfrac{1}{12}, \\dots)$."
+      ],
+      "pit": "$\\pi$ is proportional to the tail of the jump distribution, not to $p_x$: the chain passes $x$ only when it jumps far enough.",
+      "src": "LW p57",
+      "seen": [
+        "Ex 2.2"
+      ]
+    },
+    {
+      "id": "STO-02-27",
+      "g": "Exercises",
+      "k": "Up-or-reset template",
+      "q": "Chain on $\\{0, 1, 2, \\dots\\}$ that from each state $x$ either moves up to $x + 1$ or falls back to 0: $p(x, x+1) = u_x$ and $p(x, 0) = 1 - u_x$. Let $\\rho(x) = u_0u_1\\cdots u_{x-1}$ with $\\rho(0) = 1$, and let $T$ be the return time to 0. (1) Give $\\mathbb{P}\\{T > x\\}$. (2) When is the chain recurrent? (3) When is it positive recurrent, and what is $\\pi$? (4) Apply this to $u_x = \\tfrac23$ for all $x$.",
+      "pts": [
+        "(1) $\\rho(x)$: the first $x$ steps must all go up.",
+        "(2) Exactly when $\\lim_{x \\to \\infty}\\rho(x) = 0$.",
+        "(3) Exactly when $\\mathbb{E}(T) = \\sum_{x \\ge 0}\\rho(x) < \\infty$; then $\\pi(x) = \\dfrac{\\rho(x)}{\\mathbb{E}(T)}$ (the expected number of visits to $x$ per excursion is $\\rho(x)$).",
+        "(4) $\\rho(x) = \\big(\\tfrac23\\big)^x$, $\\mathbb{E}(T) = 3$: positive recurrent with $\\pi(x) = \\tfrac13\\big(\\tfrac23\\big)^x$."
+      ],
+      "pit": "",
+      "src": "LW p58",
+      "seen": [
+        "Ex 2.3"
+      ]
+    },
+    {
+      "id": "STO-02-28",
+      "g": "Exercises",
+      "k": "Ex 2.7: three chains",
+      "q": "Chain on $\\{0, 1, 2, \\dots\\}$ that from each state $x$ either moves up to $x + 1$ or falls back to 0; $\\rho(x) = \\prod_{j=0}^{x-1}p(j, j+1)$ is the probability that an excursion from 0 reaches $x$. Classify: (1) $p(x, 0) = \\tfrac{1}{x+2}$, $p(x, x+1) = \\tfrac{x+1}{x+2}$; (2) $p(x, 0) = \\tfrac{x+1}{x+2}$, $p(x, x+1) = \\tfrac{1}{x+2}$; (3) $p(x, 0) = \\tfrac{1}{x^2+2}$, $p(x, x+1) = \\tfrac{x^2+1}{x^2+2}$. (4) What is the dividing line between recurrent and transient?",
+      "pts": [
+        "(1) $\\rho(x) = \\tfrac12\\cdot\\tfrac23\\cdots\\tfrac{x}{x+1} = \\tfrac{1}{x+1} \\to 0$ but $\\sum_x\\tfrac{1}{x+1} = \\infty$: null recurrent.",
+        "(2) $\\rho(x) = \\tfrac{1}{(x+1)!}$ and $\\sum_{x \\ge 0}\\tfrac{1}{(x+1)!} = e - 1$: positive recurrent with $\\pi(x) = \\dfrac{1}{(e-1)(x+1)!}$.",
+        "(3) $\\rho(x) = \\prod_{j < x}\\big(1 - \\tfrac{1}{j^2+2}\\big)$ tends to a positive limit (about $0.192$) because $\\sum_j\\tfrac{1}{j^2+2} < \\infty$: with positive probability the chain never returns, transient.",
+        "(4) Recurrent exactly when $\\sum_x p(x, 0) = \\infty$: reset probabilities like $\\tfrac1x$ are just enough, like $\\tfrac{1}{x^2}$ are not."
+      ],
+      "pit": "",
+      "src": "LW p59",
+      "seen": [
+        "Ex 2.7"
+      ]
+    },
+    {
+      "id": "STO-02-29",
+      "g": "Exercises",
+      "k": "Ex 2.4: steps +2, −1",
+      "q": "Chain on $\\{0, 1, 2, \\dots\\}$: for $x > 0$, $p(x, x+2) = p$ and $p(x, x-1) = 1 - p$; $p(0, 2) = p$, $p(0, 0) = 1 - p$. (1) Find the mean displacement per step away from 0. (2) For which $p$ is the chain transient, and why? (3) What happens for the other values of $p$? (4) State the trap.",
+      "pts": [
+        "(1) $2p - (1 - p) = 3p - 1$.",
+        "(2) For $p > \\tfrac13$: by the law of large numbers the position divided by $n$ tends to $3p - 1 > 0$, so the walk goes to infinity and visits 0 only finitely often.",
+        "(3) $p < \\tfrac13$: the drift pushes the walk back to the wall, positive recurrent. $p = \\tfrac13$: mean-zero steps, recurrent but null.",
+        "(4) The threshold is $\\tfrac13$, not $\\tfrac12$: the mean displacement decides, not the probability of stepping up."
+      ],
+      "pit": "",
+      "src": "LW p58",
+      "seen": [
+        "Ex 2.4",
+        "Ex 2.15"
+      ]
+    },
+    {
+      "id": "STO-02-30",
+      "g": "Exercises",
+      "k": "Ex 2.5: minimum",
+      "q": "Walk on $\\mathbb{Z}$ started at 0 with $p(n, n+1) = p > \\tfrac12$ and $p(n, n-1) = q = 1 - p$. Let $Y$ be the minimum of the walk over all time, $T_k$ the first time it is at $k > 0$, and $e(k) = \\mathbb{E}[T_k]$. (1) Find the distribution of $Y$. (2) Why is $e(k) = k\\,e(1)$? (3) Find $e(1)$. (4) What does the same equation say for $p = \\tfrac12$?",
+      "pts": [
+        "(1) By gambler's ruin the walk ever goes down $k$ levels with probability $\\big(\\tfrac qp\\big)^k$: $\\mathbb{P}\\{Y \\le -k\\} = \\big(\\tfrac qp\\big)^k$ and $\\mathbb{P}\\{Y = -k\\} = \\big(1 - \\tfrac qp\\big)\\big(\\tfrac qp\\big)^k$.",
+        "(2) With steps $\\pm1$ the walk passes $1, 2, \\dots, k$ in order, and $T_1, T_2 - T_1, \\dots, T_k - T_{k-1}$ are independent copies of $T_1$.",
+        "(3) First step: $e(1) = p \\cdot 1 + q\\big(1 + e(2)\\big) = 1 + 2q\\,e(1)$, so $e(1) = \\dfrac{1}{1 - 2q} = \\dfrac{1}{2p-1}$.",
+        "(4) If $e(1)$ were finite it would satisfy $e(1) = 1 + e(1)$, which is impossible: $e(1) = \\infty$, although $T_1 < \\infty$ with probability 1."
+      ],
+      "pit": "Returning for sure but with infinite mean time: this is what null recurrence looks like.",
+      "src": "LW p58",
+      "seen": [
+        "Ex 2.5"
+      ]
+    },
+    {
+      "id": "STO-02-31",
+      "g": "Exercises",
+      "k": "Ex 2.6: runs",
+      "q": "Independent trials, each a success with probability $p$. $X_n$ is the current run of consecutive successes ($X_0 = 0$) and $T_k$ the first time the run reaches $k$. (1) Give the transition probabilities and the invariant distribution. (2) Write a recursion for $\\mathbb{E}[T_k]$ and solve it. (3) Derive the same result from Kac's formula. (4) Evaluate for $p = \\tfrac12$, $k = 4$.",
+      "pts": [
+        "(1) $p(x, x+1) = p$, $p(x, 0) = 1 - p$; $\\pi(x) = (1-p)p^x$.",
+        "(2) Reach $k - 1$, then one more trial; on failure (probability $1 - p$) start again: $\\mathbb{E}[T_k] = \\mathbb{E}[T_{k-1}] + 1 + (1-p)\\mathbb{E}[T_k]$, so $\\mathbb{E}[T_k] = \\dfrac{\\mathbb{E}[T_{k-1}] + 1}{p} = \\sum_{j=1}^kp^{-j} = \\dfrac{p^{-k} - 1}{1-p}$.",
+        "(3) From $k$ the chain must first fall to 0 (mean time $\\tfrac{1}{1-p}$) and then climb to $k$. The return time to $k$ has mean $\\tfrac{1}{\\pi(k)} = \\tfrac{1}{(1-p)p^k}$, so $\\mathbb{E}[T_k] = \\tfrac{1}{(1-p)p^k} - \\tfrac{1}{1-p}$.",
+        "(4) $\\tfrac{16 - 1}{1/2} = 30$, the four-heads-in-a-row answer."
+      ],
+      "pit": "The factor $p^{-k}$ is $1/\\pi(k)$: that is where the exponential growth comes from.",
+      "src": "LW p58",
+      "seen": [
+        "Ex 2.6"
+      ]
+    },
+    {
+      "id": "STO-02-32",
+      "g": "Exercises",
+      "k": "Ex 2.8: four laws",
+      "q": "Find the extinction probability of the branching process with offspring distribution (1) $p_0 = .25$, $p_1 = .4$, $p_2 = .35$; (2) $p_0 = .5$, $p_1 = .1$, $p_3 = .4$; (3) $p_0 = .91$, $p_1 = .05$, $p_2 = p_3 = p_6 = p_{13} = .01$; (4) $p_i = (1-q)q^i$ for $i \\ge 0$, with $0 < q < 1$.",
+      "pts": [
+        "(1) $\\mu = 1.1 > 1$. $.35t^2 + .4t + .25 = t$ gives $7t^2 - 12t + 5 = (7t - 5)(t - 1) = 0$: $a = \\tfrac57$.",
+        "(2) $\\mu = 1.3 > 1$. $4t^3 - 9t + 5 = (t - 1)(4t^2 + 4t - 5) = 0$: $a = \\tfrac{\\sqrt6 - 1}{2} \\approx 0.7247$.",
+        "(3) $\\mu = .05 + .02 + .03 + .06 + .13 = 0.29 < 1$: $a = 1$.",
+        "(4) $\\mu = \\tfrac{q}{1-q}$ and $\\phi(t) = \\tfrac{1-q}{1-qt}$, so $qt^2 - t + (1 - q) = 0$ with roots $1$ and $\\tfrac{1-q}{q}$: $a = 1$ for $q \\le \\tfrac12$ and $a = \\tfrac{1-q}{q}$ for $q > \\tfrac12$."
+      ],
+      "pit": "$t = 1$ is always a root, so factor out $(t - 1)$ first. In the third law the occasional family of 13 does not help: only the mean matters.",
+      "src": "LW p59",
+      "seen": [
+        "Ex 2.8"
+      ]
+    },
+    {
+      "id": "STO-02-33",
+      "g": "Exercises",
+      "k": "Ex 2.9: conditional",
+      "q": "Branching process with $p_0 = .5$, $p_1 = .1$, $p_3 = .4$, started from one individual; $a_n = \\mathbb{P}\\{X_n = 0\\}$ and the extinction probability is $a \\approx 0.7247$. (1) Compute $a_1, a_2, a_3$. (2) Express $\\mathbb{P}\\{X_{n+1} = 0 \\mid X_n \\ne 0\\}$ through the $a_n$. (3) Evaluate it for $n = 1$ and $n = 2$. (4) What happens to $\\mathbb{P}\\{\\text{extinction} \\mid X_n \\ne 0\\}$ as $n$ grows?",
+      "pts": [
+        "(1) $\\phi(t) = .5 + .1t + .4t^3$: $a_1 = .5$, $a_2 = .5 + .05 + .05 = .6$, $a_3 = .5 + .06 + .0864 = .6464$.",
+        "(2) The events $\\{X_n = 0\\}$ increase with $n$, so it equals $\\dfrac{a_{n+1} - a_n}{1 - a_n}$.",
+        "(3) $\\tfrac{0.1}{0.5} = 0.2$ and $\\tfrac{0.0464}{0.4} = 0.116$.",
+        "(4) It equals $\\tfrac{a - a_n}{1 - a_n}$ and decays geometrically, at most $c\\rho^n$ with $\\rho = \\phi'(a) \\approx 0.73$: a supercritical population that is going to die out does so early."
+      ],
+      "pit": "",
+      "src": "LW p59–60",
+      "seen": [
+        "Ex 2.9",
+        "Ex 2.14"
+      ]
+    },
+    {
+      "id": "STO-02-34",
+      "g": "Exercises",
+      "k": "Ex 2.10/2.11: variants",
+      "q": "Two variants of a branching process with offspring mean $\\mu$ ($p_0 > 0$, $p_0 + p_1 < 1$). Variant A: after extinction the population restarts with one individual, $p(0, 1) = 1$. Variant B: in every period each individual has offspring according to the offspring distribution and then dies with probability $q$, so it may reproduce several times. (1) Classify the chain of variant A. (2) Justify the case $\\mu < 1$. (3) When is extinction certain in variant B? (4) Check that answer through the lifetime of an individual.",
+      "pts": [
+        "(1) Positive recurrent for $\\mu < 1$, null recurrent for $\\mu = 1$, transient for $\\mu > 1$.",
+        "(2) The return time to 0 is governed by the extinction time $T$, and $\\mathbb{P}\\{T > n\\} = \\mathbb{P}\\{X_n \\ge 1\\} \\le \\mu^n$, so $\\mathbb{E}(T) \\le \\sum_n\\mu^n < \\infty$.",
+        "(3) Count “survives the period” as one more child: the effective offspring mean is $\\mu + 1 - q$, so extinction is certain exactly when $\\mu \\le q$.",
+        "(4) The lifetime is geometric with mean $\\tfrac1q$, so an individual has $\\tfrac\\mu q$ children on average over its life: $\\tfrac\\mu q \\le 1$."
+      ],
+      "pit": "That $\\mu = 1$ gives null (not positive) recurrence uses $\\mathbb{P}\\{X_n > 0\\}$ of order $\\tfrac1n$, which is quoted, not derived.",
+      "src": "LW p59",
+      "seen": [
+        "Ex 2.10",
+        "Ex 2.11"
+      ]
+    },
+    {
+      "id": "STO-02-35",
+      "g": "Exercises",
+      "k": "Ex 2.13: population",
+      "q": "An individual survives to reproduce with probability $q$; if it does, it has 1 or 2 offspring with equal probability and then reproduces no more. The population starts with four individuals. (1) Give the offspring distribution and its mean. (2) For which $q$ is extinction certain? (3) For $q = .9$ find the extinction probability of one family line. (4) Find the probability that the population survives for ever.",
+      "pts": [
+        "(1) $p_0 = 1 - q$, $p_1 = p_2 = \\tfrac q2$; $\\mu = \\tfrac{3q}{2}$.",
+        "(2) $\\mu \\le 1$: $q \\le \\tfrac23$.",
+        "(3) $.45t^2 + .45t + .1 = t$ gives $9t^2 - 11t + 2 = (9t - 2)(t - 1) = 0$: $a = \\tfrac29$.",
+        "(4) The four lines are independent: $1 - \\big(\\tfrac29\\big)^4 = \\tfrac{6545}{6561} \\approx 0.9976$."
+      ],
+      "pit": "",
+      "src": "LW p60",
+      "seen": [
+        "Ex 2.13"
+      ]
+    },
+    {
+      "id": "STO-02-36",
+      "g": "Exercises",
+      "k": "Ex 2.12: three speeds",
+      "q": "Branching processes with $(p_0, p_1, p_2)$ equal to $(\\tfrac13, \\tfrac13, \\tfrac13)$, $(.35, .33, .32)$ and $(.32, .33, .35)$, each started from one individual; $a_n = \\mathbb{P}\\{X_n = 0\\}$. (1) Give the means and name the regimes. (2) Give $\\lim_n a_n$ in each case. (3) How fast is each limit approached? (4) At $n = 20$ the values are $0.882$, $0.918$, $0.839$. What is the lesson?",
+      "pts": [
+        "(1) $1$ (critical), $0.97$ (subcritical), $1.03$ (supercritical).",
+        "(2) $1$; $1$; $\\tfrac{32}{35} \\approx 0.9143$, the root of $.35t^2 - .67t + .32 = 0$ below 1.",
+        "(3) Critical: only like $1 - a_n \\approx \\tfrac3n$ ($a_{1000} \\approx 0.99703$). Subcritical: geometrically, like $0.97^n$. Supercritical: geometrically; the value $0.91429$ is reached by $n = 1000$.",
+        "(4) After 20 generations the three look alike, yet two die out for sure and one survives with probability about $8.6\\%$. The regime is read off from $\\mu$ against 1, not from a finite run."
+      ],
+      "pit": "",
+      "src": "LW p60",
+      "seen": [
+        "Ex 2.12"
+      ]
+    },
+    {
+      "id": "STO-02-37",
+      "g": "Proofs",
+      "k": "Ex 2.14: dies early",
+      "q": "Branching process with $\\mu > 1$ started from one individual; $\\phi$ is the offspring generating function, $a < 1$ the extinction probability and $a_n = \\mathbb{P}\\{X_n = 0\\}$. (1) Show $\\phi'(a) < 1$. (2) Show $a - a_{n+1} \\le \\rho(a - a_n)$ with $\\rho = \\phi'(a)$. (3) Bound $\\mathbb{P}\\{\\text{extinction} \\mid X_n \\ne 0\\}$.",
+      "pts": [
+        "(1) Mean value theorem on $[a, 1]$: some $c \\in (a, 1)$ has $\\phi'(c) = \\tfrac{\\phi(1) - \\phi(a)}{1 - a} = 1$. Since $\\phi'' > 0$, $\\phi'$ is strictly increasing, so $\\phi'(a) < \\phi'(c) = 1$.",
+        "(2) $a - a_{n+1} = \\phi(a) - \\phi(a_n) = \\phi'(\\xi)(a - a_n)$ for some $\\xi \\in (a_n, a)$, and $\\phi'(\\xi) \\le \\phi'(a) = \\rho$. Iterating: $a - a_n \\le \\rho^na$.",
+        "(3) $\\{X_n = 0\\}$ is contained in the extinction event, so the probability is $\\dfrac{a - a_n}{1 - a_n} \\le \\dfrac{a}{1-a}\\rho^n = c\\,e^{-bn}$ with $b = -\\ln\\rho > 0$."
+      ],
+      "pit": "A supercritical population has two fates that separate quickly: die out in the first generations, or take off.",
+      "src": "LW p60",
+      "seen": [
+        "Ex 2.14"
+      ]
+    },
+    {
+      "id": "STO-02-38",
+      "g": "Proofs",
+      "k": "Ex 2.15: mean zero",
+      "q": "$X_1, X_2, \\dots$ are independent, identically distributed, integer-valued with mean 0; $S_0 = 0$, $S_n = X_1 + \\dots + X_n$, and $G_n(x)$ is the expected number of visits to $x$ at the times $0, \\dots, n$. Prove that the walk is recurrent. (1) Show $G_n(0) \\ge G_n(x)$. (2) Compute $\\sum_x G_n(x)$ and use the law of large numbers on the window $|x| \\le \\varepsilon n$. (3) Bound $G_n(0)$ from below. (4) Conclude.",
+      "pts": [
+        "(1) Split on the first time $\\tau$ the walk is at $x$. After $\\tau$ the visits to $x$ are distributed like visits to 0 of a walk started at 0 with at most $n$ steps: $G_n(x) \\le G_n(0)$.",
+        "(2) $\\sum_x G_n(x) = n + 1$ (each time counts once). $\\sum_{|x| \\le \\varepsilon n}G_n(x) = \\sum_{j \\le n}\\mathbb{P}\\{|S_j| \\le \\varepsilon n\\} \\ge \\sum_{j \\le n}\\mathbb{P}\\{|S_j| \\le \\varepsilon j\\}$, and these probabilities tend to 1: nearly all $n + 1$ visits fall in the window.",
+        "(3) The window has at most $2\\varepsilon n + 1$ points, each with $G_n(x) \\le G_n(0)$: for large $n$, $G_n(0) \\ge \\dfrac{n/2}{2\\varepsilon n + 1} \\to \\dfrac{1}{4\\varepsilon}$. As $\\varepsilon$ is arbitrary, $G_n(0) \\to \\infty$.",
+        "(4) The expected number of visits to 0 is infinite, so the walk is recurrent by test 1."
+      ],
+      "pit": "",
+      "src": "LW p60",
+      "seen": [
+        "Ex 2.15"
+      ]
+    },
+    {
+      "id": "STO-02-39",
+      "g": "Proofs",
+      "k": "Ex 2.16: geometric π",
+      "q": "Let $p_1, p_0, p_{-1}, p_{-2}, \\dots$ be a distribution on $\\{\\dots, -2, -1, 0, 1\\}$ with mean $\\mu < 0$. A walk on $\\{0, 1, 2, \\dots\\}$ has these increments, except that a move below 0 ends at 0. Show that it is positive recurrent. (1) Write the invariance equation at $n > 0$. (2) With $q_n = p_{1-n}$, show that $\\alpha = \\sum_{n \\ge 0}q_n\\alpha^n$ has a root in $(0, 1)$. (3) Try a geometric solution. (4) Conclude.",
+      "pts": [
+        "(1) Steps are at most $+1$, so mass reaches $n$ only from $m \\ge n - 1$: $\\pi(n) = \\sum_{m \\ge n-1}\\pi(m)p_{n-m}$.",
+        "(2) $\\{q_n\\}$ is a distribution on $\\{0, 1, 2, \\dots\\}$ with mean $\\sum_n nq_n = 1 - \\mu > 1$: it is a supercritical offspring distribution, so by the extinction theorem the equation has a unique root $\\alpha \\in (0, 1)$ (this needs $q_0 = p_1 > 0$).",
+        "(3) With $\\pi(m) = C\\alpha^m$ and $k = m - (n-1)$: $\\sum_{m \\ge n-1}C\\alpha^mp_{n-m} = C\\alpha^{n-1}\\sum_{k \\ge 0}q_k\\alpha^k = C\\alpha^n$.",
+        "(4) $\\pi(n) = (1 - \\alpha)\\alpha^n$ is an invariant probability, so the chain is positive recurrent."
+      ],
+      "pit": "The queue is the special case $p_1 = p(1-q)$, $p_{-1} = q(1-p)$, where $\\alpha$ is the ratio $r$.",
+      "src": "LW p61",
+      "seen": [
+        "Ex 2.16"
+      ]
+    },
+    {
+      "id": "STO-02-40",
+      "g": "Proofs",
+      "k": "Ex 2.17: witness f",
+      "q": "Irreducible chain and a fixed state $z$. A function $f$ is superharmonic at $x$ if $\\sum_y p(x, y)f(y) \\le f(x)$. Let $A$ be the set of all $f$ with $f(z) = 1$, $0 \\le f \\le 1$, superharmonic at every $x \\ne z$, and $g(x) = \\inf_{f \\in A}f(x)$. Show: if some $f \\in A$ has $f(x) < 1$ at some point, the chain is transient. (1) Show $g \\in A$. (2) Show $\\sum_y p(x, y)g(y) = g(x)$ for $x \\ne z$. (3) Show $\\inf g = 0$. (4) Conclude.",
+      "pts": [
+        "(1) For every $f \\in A$: $\\sum_y p(x, y)g(y) \\le \\sum_y p(x, y)f(y) \\le f(x)$; take the infimum over $f$ on the right.",
+        "(2) If the inequality were strict at some $x_0 \\ne z$, lower $g$ at $x_0$ to $\\sum_y p(x_0, y)g(y)$. The new function is still in $A$ but smaller than $g$ at $x_0$, contradicting the definition of $g$.",
+        "(3) $g \\le f$, so $g < 1$ somewhere. If $\\varepsilon = \\inf g$ were positive, $h = \\tfrac{g - \\varepsilon}{1 - \\varepsilon}$ would be in $A$ with $\\inf h = 0 < \\varepsilon$, contradicting $h \\ge g$.",
+        "(4) $g$ satisfies (2.2)–(2.4), so the chain is transient by test 2."
+      ],
+      "pit": "To prove transience it is enough to exhibit one witness function. For the walk with steps $+2$, $-1$ and $p > \\tfrac13$: $f(x) = \\theta^x$ with $\\theta \\in (0, 1)$ solving $p\\theta^2 + (1-p)\\theta^{-1} = 1$.",
+      "src": "LW p62",
+      "seen": [
+        "Ex 2.17"
+      ]
+    },
+    {
+      "id": "STO-02-41",
+      "g": "Proofs",
+      "k": "Ex 2.18: Stirling",
+      "q": "$Y_n$ has the Poisson distribution with mean $n$ and $p(n, k) = \\mathbb{P}\\{Y_n = k\\} = e^{-n}\\tfrac{n^k}{k!}$. Prove $n! \\sim \\sqrt{2\\pi}\\,n^{n+1/2}e^{-n}$. (1) What does the central limit theorem give? (2) Compare $p(n, k)$ with $p(n, n)$ for $n \\le k < n + a\\sqrt n$. (3) Squeeze. (4) Conclude.",
+      "pts": [
+        "(1) $Y_n$ is a sum of $n$ independent Poisson variables of mean 1, with mean $n$ and variance $n$: $\\sum_{n \\le k < n + a\\sqrt n}p(n, k) \\to \\int_0^a\\tfrac{1}{\\sqrt{2\\pi}}e^{-x^2/2}\\,dx$.",
+        "(2) $\\dfrac{p(n, k)}{p(n, n)} = \\prod_{j=n+1}^k\\dfrac nj$, which is at most 1 and at least $\\big(1 + \\tfrac{a}{\\sqrt n}\\big)^{-a\\sqrt n} \\ge e^{-a^2}$.",
+        "(3) The sum has about $a\\sqrt n$ terms: $e^{-a^2}a\\sqrt n\\,p(n, n) \\le \\text{sum} \\le (a\\sqrt n + 1)\\,p(n, n)$. Divide by $a\\sqrt n$, let $n \\to \\infty$ and then $a \\to 0$: $\\sqrt n\\,p(n, n) \\to \\tfrac{1}{\\sqrt{2\\pi}}$.",
+        "(4) $p(n, n) = e^{-n}\\tfrac{n^n}{n!} \\sim \\tfrac{1}{\\sqrt{2\\pi n}}$, which is Stirling's formula."
+      ],
+      "pit": "",
+      "src": "LW p62–63",
+      "seen": [
+        "Ex 2.18"
+      ]
+    },
+    {
+      "id": "STO-02-42",
+      "g": "Recipe",
+      "k": "Decision flow",
+      "q": "An irreducible chain on a countably infinite state space is to be classified. (1) In which order are the questions asked? (2) Which tools decide recurrent against transient, and when is each natural? (3) Which tools decide positive against null recurrent? (4) What is the procedure for a branching process?",
+      "pts": [
+        "(1) Irreducible, and which period? Then recurrent or transient? If recurrent: positive or null? If positive: $\\mathbb{E}(T) = 1/\\pi(x)$.",
+        "(2) The sum $\\sum_n p_n(x, x)$, natural when $p_n(x, x)$ has a formula (walks on $\\mathbb{Z}^d$); a function $\\alpha$ with (2.2)–(2.4), natural for walks that move by $\\pm1$; the drift and the law of large numbers.",
+        "(3) Solve $\\sum_y\\pi(y)p(y, x) = \\pi(x)$ and see whether the solution can be normalised; or compute $\\mathbb{E}(T)$ directly.",
+        "(4) Compute $\\mu$. If $\\mu \\le 1$ the extinction probability is 1; if $\\mu > 1$ solve $a = \\phi(a)$ for the root in $(0, 1)$, after factoring out $(a - 1)$."
+      ],
+      "pit": "For walks that move by ±1, both tests are the random-walk difference equation; one asks for a solution in [0, 1] with infimum 0, the other for a solution that sums to 1.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-02-43",
+      "g": "Recipe",
+      "k": "Practice",
+      "q": "(1) In both null recurrent and transient chains $p_n(x, x) \\to 0$. What tells them apart? (2) A chain returns to its starting state with probability $\\tfrac12$. What is the expected number of visits, counting time 0? (3) Walk on $\\{0, 1, 2, \\dots\\}$ stepping right with probability $\\tfrac34$ and left with probability $\\tfrac14$ (blocked at 0): starting at 2, find the probability of ever reaching 0. (4) Branching process with Poisson offspring of mean 2, $\\phi(s) = e^{2(s-1)}$: is the extinction probability below 1, and what is it? (5) In one line, why is the simple random walk recurrent for $d = 2$ and transient for $d = 3$?",
+      "pts": [
+        "(1) Whether the chain comes back: $\\sum_n p_n(x, x) = \\infty$ for null recurrent (the terms go to 0 slowly), finite for transient.",
+        "(2) $\\tfrac{1}{1-q} = 2$.",
+        "(3) $\\rho = \\tfrac{1-p}{p} = \\tfrac13$, so $\\alpha(2) = \\tfrac19$.",
+        "(4) $\\mu = \\phi'(1) = 2 > 1$, so yes; iterating $a_n = e^{2(a_{n-1} - 1)}$ from $a_0 = 0$ gives $a \\approx 0.2032$.",
+        "(5) $p_{2n}(0, 0)$ decays like $n^{-d/2}$: $n^{-1}$ sums to infinity, $n^{-3/2}$ does not."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}
