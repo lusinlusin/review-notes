@@ -1,95 +1,611 @@
 {
   "title": "Core concepts",
+  "notes": [
+    {
+      "h": "How to use",
+      "items": [
+        {
+          "t": "Half an hour",
+          "d": [
+            "First pass: twelve cards, one or two per topic."
+          ],
+          "cards": [
+            "MDP-00-01",
+            "MDP-00-12"
+          ]
+        },
+        {
+          "t": "One hour",
+          "d": [
+            "Add Second pass: twelve more."
+          ],
+          "cards": [
+            "MDP-00-13",
+            "MDP-00-24"
+          ]
+        },
+        {
+          "t": "Two hours",
+          "d": [
+            "Then the Overview group and the Worked examples section of each topic."
+          ],
+          "cards": [
+            "MDP-00-24"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Markov chains",
+      "items": [
+        {
+          "t": "In time",
+          "d": [
+            "$p_t = qP^t$; $P^{s+u} = P^sP^u$; $\\pi P = \\pi$, $\\sum_i \\pi_i = 1$."
+          ],
+          "cards": [
+            "MDP-00-01"
+          ]
+        },
+        {
+          "t": "Long run",
+          "d": [
+            "Unique $\\pi$: one recurrent class. Limit: also aperiodic. Two states: $\\pi = \\big(\\tfrac{\\beta}{\\alpha+\\beta}, \\tfrac{\\alpha}{\\alpha+\\beta}\\big)$, $\\lambda_2 = 1 - \\alpha - \\beta$."
+          ],
+          "cards": [
+            "MDP-00-14"
+          ]
+        },
+        {
+          "t": "First step",
+          "d": [
+            "$h = Ph$ with boundary values; $m_i = 1 + \\sum_j P_{ij}m_j$; $V = r + \\gamma PV$."
+          ],
+          "cards": [
+            "MDP-00-02",
+            "MDP-00-15"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Dynamic programming",
+      "items": [
+        {
+          "t": "Algorithm",
+          "d": [
+            "$V_T = G$; $V_t(x) = \\min_u\\{g(x, u) + E\\,V_{t+1}(f(x, u, Z_{t+1}))\\}$; $\\hat\\mu_t$ = minimizer."
+          ],
+          "cards": [
+            "MDP-00-03",
+            "MDP-00-05"
+          ]
+        },
+        {
+          "t": "Information",
+          "d": [
+            "history-dependent $\\le$ memoryless $\\le$ open-loop; $E\\min \\le \\min E$; equal without noise."
+          ],
+          "cards": [
+            "MDP-00-04"
+          ]
+        },
+        {
+          "t": "Structure and variants",
+          "d": [
+            "$\\mathcal{T}$ order-preserving; discount $\\gamma$ in front of the future value; worst case: $\\min_u\\max_z$."
+          ],
+          "cards": [
+            "MDP-00-16",
+            "MDP-00-17"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Linear quadratic control",
+      "items": [
+        {
+          "t": "Scalar",
+          "d": [
+            "$k_t = b + \\tfrac{a^2ck_{t+1}}{k_{t+1} + c}$, $\\ell_t = k_{t+1} + \\ell_{t+1}$, $m_t = -\\tfrac{ak_{t+1}}{k_{t+1} + c}$; Riccati: $k^2 + (c - b - a^2c)k - bc = 0$; $\\rho = \\tfrac{ac}{k^\\star + c}$."
+          ],
+          "cards": [
+            "MDP-00-06",
+            "MDP-00-07"
+          ]
+        },
+        {
+          "t": "Matrix",
+          "d": [
+            "$L_t = -(R + B^\\top P_{t+1}B)^{-1}B^\\top P_{t+1}A$; $p_t = \\operatorname{trace}(C\\Sigma C^\\top P_{t+1}) + p_{t+1}$."
+          ],
+          "cards": [
+            "MDP-00-18"
+          ]
+        },
+        {
+          "t": "Certainty equivalence",
+          "d": [
+            "Holds for additive noise; fails when the noise term contains the action."
+          ],
+          "cards": [
+            "MDP-00-07",
+            "MDP-00-19"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Portfolio optimization",
+      "items": [
+        {
+          "t": "Log and power",
+          "d": [
+            "$V_t = \\alpha(T - t) + \\log x$, $\\alpha = \\max_u E\\log(u^\\top Z_1)$. $V_t = \\alpha^{T-t}\\tfrac{x^{1-\\gamma}}{1-\\gamma}$. Fixed-mix, myopic."
+          ],
+          "cards": [
+            "MDP-00-08",
+            "MDP-00-21"
+          ]
+        },
+        {
+          "t": "Coin-flip market",
+          "d": [
+            "$u_1^\\star = \\tfrac{11}{18}$, returns $\\tfrac76$, $\\tfrac78$, $\\alpha = 0.0103$; $E\\,Y = 1.0208$ against $1.05$ for asset 1."
+          ],
+          "cards": [
+            "MDP-00-09"
+          ]
+        },
+        {
+          "t": "Utility",
+          "d": [
+            "Concave = risk averse; $e^{E\\ln Y} \\le E\\,Y$; growth rate $E\\log Y$."
+          ],
+          "cards": [
+            "MDP-00-20"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Optimal stopping",
+      "items": [
+        {
+          "t": "Selling",
+          "d": [
+            "$J_t = \\max\\{x, \\alpha_t\\}$, $\\alpha_t = \\tfrac{E\\max\\{Z, \\alpha_{t+1}\\}}{1 + r}$, $\\alpha_T = 0$, falling in $t$; uniform: $\\bar\\alpha = 1 + r - \\sqrt{(1 + r)^2 - 1}$."
+          ],
+          "cards": [
+            "MDP-00-10",
+            "MDP-00-11"
+          ]
+        },
+        {
+          "t": "Buying",
+          "d": [
+            "$V_t = \\min\\{x, \\alpha_t\\}$, $\\alpha_t = E\\min\\{Z, \\alpha_{t+1}\\}$, rising in $t$; correlated: $\\alpha_{T-1} = \\tfrac{\\bar Z}{1 - \\lambda}$."
+          ],
+          "cards": [
+            "MDP-00-11"
+          ]
+        },
+        {
+          "t": "General",
+          "d": [
+            "$V_t = \\min\\{h_t, K_t\\}$; stopping reward in terminal money; marriage problem: $t^* \\approx T/e$."
+          ],
+          "cards": [
+            "MDP-00-22"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Across topics",
+      "items": [
+        {
+          "t": "Value-function shapes",
+          "d": [
+            "$k_tx^2 + \\ell_t$; $\\alpha(T - t) + \\log x$; $\\alpha^{T-t}\\tfrac{x^{1-\\gamma}}{1-\\gamma}$; $(1 + r)^{T-t}\\max\\{x, \\alpha_t\\}$."
+          ],
+          "cards": [
+            "MDP-00-12"
+          ]
+        },
+        {
+          "t": "Tools and traps",
+          "d": [
+            "Probability identities; which tool for which request; symbols that change meaning."
+          ],
+          "cards": [
+            "MDP-00-13",
+            "MDP-00-24",
+            "MDP-00-23"
+          ]
+        }
+      ]
+    }
+  ],
   "cards": [
     {
-      "id": "MDP-01",
-      "k": "Markov property",
-      "q": "What is the Markov property?",
+      "id": "MDP-00-01",
+      "g": "First pass",
+      "k": "Chain in time",
+      "q": "A Markov chain has initial distribution $q$ (a row vector) and transition matrix $P$. (1) State the Markov property in words. (2) Give the distribution $p_t$ of $X_t$ and the meaning of $P^t(i, j)$. (3) Define an invariant distribution and say how it is computed. (4) For $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$ and $q = (1, 0)$ compute $p_1$, $p_2$ and $\\pi$.",
       "pts": [
-        "P(sₜ₊₁, rₜ₊₁ | sₜ, aₜ, full history) = P(sₜ₊₁, rₜ₊₁ | sₜ, aₜ).",
-        "The current state is a sufficient statistic of the past for prediction and control.",
-        "It is a property of how you define the state — often restored by augmenting the state (lagged signals, current holdings, wealth)."
+        "(1) Given the current state, the earlier history adds no information about the next state.",
+        "(2) $p_t = qP^t$ and $P^t(i, j) = P(X_t = j \\mid X_0 = i)$; in particular $P^{s+u} = P^sP^u$.",
+        "(3) $\\pi_i \\ge 0$, $\\sum_i \\pi_i = 1$, $\\pi P = \\pi$. The balance equations are dependent: drop one and add the normalization.",
+        "(4) $p_1 = (0.8, 0.2)$, $p_2 = (0.7, 0.3)$. Flow balance $0.2\\pi_1 = 0.3\\pi_2$ gives $\\pi = (0.6, 0.4)$."
       ],
-      "pit": "Raw prices alone are rarely a Markov state for trading decisions."
+      "pit": "Distributions are rows and multiply $P$ from the left; reward and value vectors are columns.",
+      "src": "See Markov chains 01, 13, 28, 29",
+      "seen": []
     },
     {
-      "id": "MDP-02",
-      "k": "Bellman equations",
-      "q": "Bellman expectation equation vs Bellman optimality equation?",
+      "id": "MDP-00-02",
+      "g": "First pass",
+      "k": "First-step analysis",
+      "q": "First-step analysis conditions on the first transition of a chain with transition matrix $P$. Write the equations for (1) the probability $h_i$ of ever reaching a target set from state $i$; (2) the expected time $m_i$ until the target is reached; (3) the discounted value $V(i) = E\\big[\\sum_{k \\ge 0}\\gamma^k r(X_k) \\mid X_0 = i\\big]$. (4) For the chain on $\\{0, 1, 2\\}$ with $P = \\begin{pmatrix}0.5&0.5&0\\\\0.3&0.5&0.2\\\\0&0.3&0.7\\end{pmatrix}$ find the expected time to reach 2 from 0.",
       "pts": [
-        "Expectation: V^π(s) = Σₐ π(a|s) Σₛ′ P(s′|s,a)[r + γV^π(s′)] — evaluates a fixed policy π.",
-        "Optimality: V*(s) = maxₐ Σₛ′ P(s′|s,a)[r + γV*(s′)] — picks the best action in each state.",
-        "The expectation equation is linear in V (a linear system); the optimality equation is nonlinear because of the max."
+        "(1) $h_i = \\sum_j P_{ij}h_j$ outside the target, $h = 1$ on the target and $h = 0$ on every closed class that misses it. Without these boundary values the solution is not unique ($h \\equiv 1$ also solves $h = Ph$).",
+        "(2) $m_i = 1 + \\sum_j P_{ij}m_j$ outside the target and $m = 0$ on it.",
+        "(3) $V = r + \\gamma PV$, so $V = (I - \\gamma P)^{-1}r$.",
+        "(4) $m_2 = 0$, $m_0 = 1 + 0.5m_0 + 0.5m_1$, $m_1 = 1 + 0.3m_0 + 0.5m_1$: $m_1 = 2 + 0.6m_0$, then $0.5m_0 = 2 + 0.3m_0$ and $m_0 = 10$."
       ],
-      "pit": "Policy evaluation uses the expectation equation; value iteration uses the optimality equation — don't mix them."
+      "pit": "",
+      "src": "See Markov chains 38, 40, 41, 44",
+      "seen": []
     },
     {
-      "id": "MDP-03",
-      "k": "VI vs PI",
-      "q": "What is the difference between value iteration and policy iteration?",
+      "id": "MDP-00-03",
+      "g": "First pass",
+      "k": "DP algorithm",
+      "q": "Finite-horizon problem: $X_{t+1} = f(X_t, U_t, Z_{t+1})$, stage cost $g(x, u)$, terminal cost $G(x)$; the expected total cost is minimized over policies. (1) Write the algorithm. (2) What does it deliver? (3) How is the result used, and what does $V_0(x_0)$ say about one run? (4) Give the idea of the proof.",
       "pts": [
-        "Value iteration: repeatedly apply the Bellman optimality operator V ← TV; extract the greedy policy at the end.",
-        "Policy iteration: evaluate the current policy exactly (solve for V^π), then improve it greedily; repeat until the policy stops changing.",
-        "For finite MDPs PI terminates in finitely many (expensive) iterations; VI has cheap iterations but converges geometrically.",
-        "Modified policy iteration does partial evaluation and interpolates between the two."
+        "(1) $V_T = G$; for $t = T - 1, \\dots, 0$: $Q_t(x, u) = g(x, u) + E\\,V_{t+1}(f(x, u, Z_{t+1}))$, $V_t(x) = \\min_u Q_t(x, u)$, $\\hat\\mu_t(x) \\in \\arg\\min_u Q_t(x, u)$.",
+        "(2) An optimal policy $\\hat\\mu$, and the optimal cost $V_t(x)$ of every tail problem, for all states and times.",
+        "(3) Forward in time: observe $X_t$, apply $\\hat\\mu_t(X_t)$. $V_0(x_0)$ is an expected value; the cost of a single run is random.",
+        "(4) Backward induction: separate the cost of stage $t$ from the tail. The tail policy sees $X_{t+1}$, so its minimization moves inside the expectation and equals $V_{t+1}(X_{t+1})$; the law of $X_{t+1}$ depends only on $(x_t, u_t)$."
       ],
-      "pit": "Exact policy evaluation can be costly for large state spaces."
+      "pit": "For rewards replace min by max. With finitely many states, actions and outcomes one stage costs $O(nmp)$ operations.",
+      "src": "See Dynamic programming 14, 16, 18",
+      "seen": []
     },
     {
-      "id": "MDP-04",
-      "k": "Discount factor",
-      "q": "Why does a discount factor γ < 1 help?",
+      "id": "MDP-00-04",
+      "g": "First pass",
+      "k": "Open and closed loop",
+      "q": "(1) Define open-loop, memoryless and history-dependent policies and order their optimal costs. (2) When does feedback bring nothing? (3) State the inequality behind the value of information and illustrate it with guessing a fair coin (cost 1 for a wrong guess). (4) When is a memoryless policy enough, and what is done otherwise?",
       "pts": [
-        "With bounded rewards, the infinite-horizon value is finite: |V| ≤ R_max / (1 − γ).",
-        "The Bellman operator is a γ-contraction in the sup norm: ‖TV − TU‖∞ ≤ γ‖V − U‖∞.",
-        "By the Banach fixed-point theorem there is a unique V*, and value iteration converges geometrically at rate γ."
+        "(1) Open-loop: all actions fixed at time 0. Memoryless: $U_t = \\mu_t(X_t)$. History-dependent: $U_t = \\mu_t(X_t, \\dots, X_0)$. Costs: history-dependent $\\le$ memoryless $\\le$ open-loop, because the sets of policies are nested.",
+        "(2) Without noise: the state can be predicted exactly, so nothing is learned by observing it.",
+        "(3) $E[\\min_u F(X, u)] \\le \\min_u E[F(X, u)]$. Coin: guessing before the toss costs $\\tfrac12$, after seeing it 0; the gap is the value of information.",
+        "(4) When the disturbance is conditionally independent of the past given state and action. Otherwise augment the state with what is needed from the past."
       ],
-      "pit": "γ = 1 is fine for finite-horizon or episodic problems, but convergence then needs other conditions (e.g. proper policies)."
+      "pit": "",
+      "src": "See Dynamic programming 06–09",
+      "seen": []
     },
     {
-      "id": "MDP-05",
-      "k": "On / off-policy",
-      "q": "What is the difference between on-policy and off-policy learning?",
+      "id": "MDP-00-05",
+      "g": "First pass",
+      "k": "Formulating a problem",
+      "q": "A verbal decision problem is to be written as a finite-horizon Markov decision process. (1) List the items to specify, in order. (2) How is the state chosen? (3) How is “maximize the probability of an event” encoded? (4) How are “sold”, “dead” or “stopped” handled?",
       "pts": [
-        "On-policy: learn the value of the same policy that generates the data (e.g. SARSA).",
-        "Off-policy: learn a target policy from data generated by a different behavior policy (e.g. Q-learning, importance sampling).",
-        "Off-policy lets you reuse historical data — important in finance, where you cannot freely experiment."
+        "(1) Horizon and order of events in a period; state; actions $\\mathbb{U}(x)$; disturbance and its law; dynamics; costs or rewards with min or max; the recursion with its terminal condition.",
+        "(2) The smallest information, seen before the decision, that fixes the law of the next state given the action.",
+        "(3) No running reward and terminal reward $G = \\mathbf{1}\\{\\text{event}\\}$, since $E\\,\\mathbf{1}\\{\\text{event}\\} = P(\\text{event})$.",
+        "(4) By an extra absorbing state whose value is fixed once and for all (0 for the termination state of a stopping problem)."
       ],
-      "pit": "Off-policy + function approximation + bootstrapping (the 'deadly triad') can be unstable or diverge."
+      "pit": "General recursion: $V_t(x) = \\min_{u \\in \\mathbb{U}(x)} E\\big[g_t(x, u, Z_{t+1}) + V_{t+1}(f_t(x, u, Z_{t+1}))\\big]$.",
+      "src": "See Dynamic programming 43, 44",
+      "seen": []
     },
     {
-      "id": "MDP-06",
-      "k": "TD learning",
-      "q": "What does temporal-difference learning update?",
+      "id": "MDP-00-06",
+      "g": "First pass",
+      "k": "LQ recursion",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. (1) Which shapes are guessed for the value function and the policy? (2) Carry out one backward step from $V_{t+1}(y) = ky^2 + \\ell$. (3) Give the three recursions. (4) Compute $k_t$ and $m_t$ for $a = b = c = 1$ and $T = 3$.",
       "pts": [
-        "TD(0): V(sₜ) ← V(sₜ) + α[rₜ₊₁ + γV(sₜ₊₁) − V(sₜ)].",
-        "The target bootstraps on the current estimate V(sₜ₊₁) instead of waiting for the full return Gₜ.",
-        "Versus Monte Carlo: a biased target but lower variance, and it learns online, step by step."
+        "(1) $V_t(x) = k_tx^2 + \\ell_t$ and $u = m_tx$.",
+        "(2) $E\\,V_{t+1}(ax + u + Z) = k(ax + u)^2 + k + \\ell$. Minimize $cu^2 + k(ax + u)^2$ (strictly convex, $k + c > 0$): $u^\\star = -\\dfrac{ak}{k + c}x$ and $V_t(x) = \\Big(b + \\dfrac{a^2ck}{k + c}\\Big)x^2 + k + \\ell$.",
+        "(3) $k_T = b$, $k_t = b + \\dfrac{a^2ck_{t+1}}{k_{t+1} + c}$; $\\ell_T = 0$, $\\ell_t = k_{t+1} + \\ell_{t+1}$; $m_t = -\\dfrac{ak_{t+1}}{k_{t+1} + c}$.",
+        "(4) $k_3, \\dots, k_0 = 1, \\tfrac32, \\tfrac85, \\tfrac{21}{13}$ and $m_2, m_1, m_0 = -\\tfrac12, -\\tfrac35, -\\tfrac{8}{13}$."
       ],
-      "pit": "The bracket rₜ₊₁ + γV(sₜ₊₁) − V(sₜ) is the TD error — the same quantity used as the advantage signal in actor–critic methods."
+      "pit": "The noise enters only the constant $\\ell_t$. The minus sign is inside the gain: $u = m_tx$.",
+      "src": "See Linear quadratic control 05–09",
+      "seen": []
     },
     {
-      "id": "MDP-07",
-      "k": "Transaction costs",
-      "q": "How would transaction costs change an asset-allocation MDP?",
+      "id": "MDP-00-07",
+      "g": "First pass",
+      "k": "Riccati, stability, CE",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$; $k_t = F(k_{t+1})$ with $F(k) = b + \\tfrac{a^2ck}{k + c}$. (1) Give the long-run coefficient and policy. (2) Why is the controlled system stable for every $a$? (3) Define certainty equivalence and say why it holds here. (4) When does it fail? Give the clock-regulation result.",
       "pts": [
-        "The state must include current holdings / weights (and wealth), not just market signals.",
-        "The action is the trade (change in holdings), not only the target weights.",
-        "The reward or transition subtracts a cost that depends on trade size, e.g. c·|Δw|.",
-        "Result: a no-trade region — small deviations from target are not worth rebalancing."
+        "(1) $F$ is increasing, concave and bounded, so $k_t \\to k^\\star$, the positive root of the Riccati equation $k^2 + (c - b - a^2c)k - bc = 0$; stationary policy $u = m^\\star x$, $m^\\star = -\\dfrac{ak^\\star}{k^\\star + c}$.",
+        "(2) $X_{t+1} = \\rho X_t + Z_{t+1}$ with $\\rho = \\dfrac{ac}{k^\\star + c}$: $|\\rho| < |a|$, which settles $|a| < 1$; for $|a| \\ge 1$ use $|\\rho| = \\dfrac{1}{|a|}\\Big(1 - \\dfrac{b}{k^\\star}\\Big) < 1$, since $k^\\star > b > 0$.",
+        "(3) Replacing the noise by its mean leaves the optimal policy unchanged. Here the noise adds $k_{t+1}\\operatorname{Var}Z$ to the function minimized over $u$, a term without $u$.",
+        "(4) When the extra term contains $u$: noise whose variance depends on the action, or random coefficients multiplying it. Clock: $X_{t+1} = X_t - U_t + Z_{t+1}$, $\\operatorname{Var}Z_{t+1} = \\alpha U_t^2$, cost $X_T^2$: $u^\\star = \\dfrac{x}{1 + \\alpha}$ (not $x$), $V_t(x) = \\Big(\\dfrac{\\alpha}{1 + \\alpha}\\Big)^{T-t}x^2$."
       ],
-      "pit": "The relevant state may also need cash, liabilities and risk budgets."
+      "pit": "$a = b = c = 1$: $k^\\star = 1.618$, $m^\\star = -0.618$, $\\rho = 0.382$.",
+      "src": "See Linear quadratic control 12–17, 20–27",
+      "seen": []
     },
     {
-      "id": "MDP-08",
-      "k": "Explore / exploit",
-      "q": "What is the exploration–exploitation tradeoff?",
+      "id": "MDP-00-08",
+      "g": "First pass",
+      "k": "Log utility",
+      "q": "Portfolio problem: wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$ with i.i.d. vectors $Z_t$ of positive gross returns and splits $U_t \\in \\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$; the objective is $\\max E\\,G(X_T)$ with $G(x) = \\log x$. (1) Write the recursion. (2) Carry out the first step. (3) State the theorem. (4) Explain “fixed-mix” and “myopic” and what the i.i.d. assumption is needed for.",
       "pts": [
-        "Exploit: choose the action with the highest current estimated value.",
-        "Explore: try uncertain actions to improve estimates and future decisions.",
-        "Typical methods: ε-greedy, UCB, Thompson sampling."
+        "(1) $V_T(x) = \\log x$ and $V_t(x) = \\max_{u \\in \\mathcal{U}} E\\,V_{t+1}(x\\,u^\\top Z_{t+1})$; no running reward.",
+        "(2) $\\log(x\\,u^\\top Z) = \\log x + \\log(u^\\top Z)$, and $\\log x$ leaves expectation and maximum: $V_{T-1}(x) = \\alpha + \\log x$ with $\\alpha = \\max_u E\\log(u^\\top Z_1)$.",
+        "(3) $V_t(x) = \\alpha(T - t) + \\log x$ and $\\mu_t(x) = u^\\star$, the maximizer of the one-period problem, for all $x > 0$ and $t$.",
+        "(4) Fixed-mix: the same proportions whatever the wealth and the time. Myopic: the one-period optimum is optimal for $T$ periods. Identical distributions give the same $\\alpha$ at every step; without them the policy is still myopic but changes with $t$."
       ],
-      "pit": "In live markets exploration is costly — use offline RL, simulators or conservative / constrained policies."
+      "pit": "",
+      "src": "See Portfolio optimization 14–18",
+      "seen": [
+        "Ex 4.3"
+      ]
+    },
+    {
+      "id": "MDP-00-09",
+      "g": "First pass",
+      "k": "Portfolio in numbers",
+      "q": "Coin-flip market: two assets and one fair coin per period; the gross returns are $(1.4, 0.8)$ on heads and $(0.7, 1.15)$ on tails; $u_1$ is the fraction of wealth in asset 1. (1) Solve the one-period problem of the log-utility investor. (2) Give the portfolio returns and $\\alpha$. (3) Compare expected and typical growth per period for asset 1 alone and for the optimal mix. (4) What does a risk-neutral investor ($G(x) = x$) do, and what is $V_t$?",
+      "pts": [
+        "(1) $\\max_{u_1}\\tfrac12\\log(0.8 + 0.6u_1) + \\tfrac12\\log(1.15 - 0.45u_1)$; $\\dfrac{0.6}{0.8 + 0.6u_1} = \\dfrac{0.45}{1.15 - 0.45u_1}$ gives $u_1^\\star = \\tfrac{11}{18}$ (concave objective, interior root).",
+        "(2) $\\tfrac76$ on heads and $\\tfrac78$ on tails; $\\alpha = \\tfrac12\\ln\\tfrac{49}{48} \\approx 0.0103$.",
+        "(3) Asset 1: expected factor $1.05$, typical factor $\\sqrt{0.98} \\approx 0.990$ (after 100 periods mean $131.5$, median $0.364$). Mix: $1.0208$ and $1.0104$ (mean $7.86$, median $2.80$).",
+        "(4) Everything in the asset with the highest expected return, a vertex of $\\mathcal{U}$: $V_t(x) = 1.05^{T-t}x$."
+      ],
+      "pit": "$E\\,X_T = (E\\,Y)^T$ but typical wealth is $e^{T\\,E\\ln Y}$, and $e^{E\\ln Y} \\le E\\,Y$.",
+      "src": "See Portfolio optimization 20–22, 25–27, 35",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-10",
+      "g": "First pass",
+      "k": "Stopping recursion",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before. (1) Write the recursion and say what happened to the termination state. (2) Define the threshold and the policy, and say why the threshold does not depend on the current offer. (3) Give the recursion of the thresholds. (4) For offers uniform on $[0, 1]$ and $r = 0.1$ give the last two thresholds and the long-run threshold.",
+      "pts": [
+        "(1) $V_T(x) = x$ and $V_t(x) = \\max\\{(1 + r)^{T-t}x,\\ E\\,V_{t+1}(Z_{t+1})\\}$. The termination state has value 0, so “stop” contributes only its own reward.",
+        "(2) $\\alpha_t = \\dfrac{E\\,V_{t+1}(Z_{t+1})}{(1 + r)^{T-t}}$: accept iff $Z_t > \\alpha_t$. The next offer is independent of the current one, so the value of waiting contains no $x$.",
+        "(3) With $J_t = V_t/(1 + r)^{T-t} = \\max\\{x, \\alpha_t\\}$: $\\alpha_t = \\dfrac{E\\max\\{Z, \\alpha_{t+1}\\}}{1 + r}$, $\\alpha_T = 0$.",
+        "(4) $E\\max\\{Z, \\alpha\\} = \\tfrac{1 + \\alpha^2}{2}$: $\\alpha_{T-1} = 0.4545$, $\\alpha_{T-2} = 0.5485$; $\\bar\\alpha = 1.1 - \\sqrt{0.21} = 0.6417$."
+      ],
+      "pit": "Both terms of the max must be in money of the same date.",
+      "src": "See Optimal stopping 09–11, 13, 18–21",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-11",
+      "g": "First pass",
+      "k": "Thresholds in time",
+      "q": "Asset selling and purchasing with a deadline, both with i.i.d. offers or prices. (1) Show that the selling threshold falls as the deadline approaches. (2) What happens far from the deadline? (3) Give the purchasing counterpart. (4) What changes when prices follow $X_{t+1} = \\lambda X_t + Z_{t+1}$ with $\\lambda \\in [0, 1)$?",
+      "pts": [
+        "(1) $J_{T-1}(x) = \\max\\{x, \\alpha_{T-1}\\} \\ge x = J_T(x)$; if $J_{t+1} \\ge J_{t+2}$ then $J_t(x) = \\max\\big\\{x, \\tfrac{E\\,J_{t+1}(Z_{t+1})}{1 + r}\\big\\} \\ge \\max\\big\\{x, \\tfrac{E\\,J_{t+2}(Z_{t+2})}{1 + r}\\big\\} = J_{t+1}(x)$, using identical distributions. Hence $\\alpha_t \\ge \\alpha_{t+1}$.",
+        "(2) The thresholds are monotone and bounded, so they converge to the solution of $\\bar\\alpha = F(\\bar\\alpha)$: a stationary policy.",
+        "(3) $V_t(x) = \\min\\{x, \\alpha_t\\}$ with $\\alpha_{T-1} = E\\,Z$ and $\\alpha_t = E\\min\\{Z, \\alpha_{t+1}\\} \\le \\alpha_{t+1}$: buy below a threshold that rises. Uniform prices: $\\tfrac12, \\tfrac38, \\tfrac{39}{128}$, with limit 0.",
+        "(4) The cost of waiting $E\\,V_{t+1}(\\lambda x + Z)$ depends on $x$. First step: $\\alpha_{T-1} = \\dfrac{\\bar Z}{1 - \\lambda}$. In general $V_t \\le V_{t+1}$ and $V_t$ is non-negative, increasing and concave, which gives a single crossing and $\\alpha_t \\le \\alpha_{t+1}$."
+      ],
+      "pit": "",
+      "src": "See Optimal stopping 14, 15, 26–28, 31, 33–36",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-12",
+      "g": "First pass",
+      "k": "Guess and verify",
+      "q": "For each problem give the form of the value function, the form of the optimal policy and the identity that lets one backward step preserve the form: (1) scalar linear-quadratic control; (2) portfolio with log utility; (3) portfolio with power utility; (4) asset selling; (5) exponential utility with additive wealth $X_{t+1} = X_t + uZ$.",
+      "pts": [
+        "(1) $k_tx^2 + \\ell_t$; $u = m_tx$; a quadratic minimized over $u$ is again a quadratic in $x$.",
+        "(2) $\\alpha(T - t) + \\log x$; constant split $u^\\star$; $\\log(xy) = \\log x + \\log y$.",
+        "(3) $\\alpha^{T-t}\\dfrac{x^{1-\\gamma}}{1-\\gamma}$ with $\\alpha > 0$; constant split; $(xy)^{1-\\gamma} = x^{1-\\gamma}y^{1-\\gamma}$.",
+        "(4) $(1 + r)^{T-t}\\max\\{x, \\alpha_t\\}$; accept above $\\alpha_t$; the continuation value is a constant.",
+        "(5) $-\\beta^{T-t}e^{-x}$ with $\\beta = \\min_u E\\,e^{-uZ}$; constant dollar amount; $e^{-(x+y)} = e^{-x}e^{-y}$."
+      ],
+      "pit": "Recipe: do the last step by hand, guess the family, prove it by backward induction; the proof yields the recursion of the parameters.",
+      "src": "See the Overview group of each topic",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-13",
+      "g": "Second pass",
+      "k": "Probability tools",
+      "q": "State (1) the law of total probability and Bayes' law; (2) the tower property; (3) the decomposition of $E(y + Z)^2$ for a constant $y$; (4) the minimizer of $x^\\top Qx + q^\\top x$.",
+      "pts": [
+        "(1) For a partition $A_1, \\dots, A_n$: $P(B) = \\sum_i P(B \\mid A_i)P(A_i)$, and $P(A \\mid B) = \\dfrac{P(B \\mid A)P(A)}{P(B \\mid A)P(A) + P(B \\mid A^c)P(A^c)}$.",
+        "(2) $E\\,X = E[E(X \\mid Y)] = \\sum_j E(X \\mid Y = y_j)P(Y = y_j)$.",
+        "(3) $E(y + Z)^2 = (y + E\\,Z)^2 + \\operatorname{Var}Z$.",
+        "(4) For $Q$ symmetric positive definite: $x^\\star = -\\tfrac12Q^{-1}q$, with minimal value $-\\tfrac14q^\\top Q^{-1}q$."
+      ],
+      "pit": "The cases in the law of total probability must cover everything; $E(X \\mid Y)$ is a random variable, $E(X \\mid Y = y)$ a number.",
+      "src": "See Probability 04, 13, 15",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-14",
+      "g": "Second pass",
+      "k": "Long-run behaviour",
+      "q": "A finite Markov chain with transition matrix $P$. (1) Define the limiting distribution and relate it to invariant distributions. (2) When is the invariant distribution unique, and when is it the limit? (3) Give three standard counterexamples. (4) For $P = \\begin{pmatrix}1-\\alpha&\\alpha\\\\\\beta&1-\\beta\\end{pmatrix}$ give the second eigenvalue and $P^t$.",
+      "pts": [
+        "(1) $p_\\infty = \\lim_t qP^t$, the same for every $q$ (all rows of $P^t$ tend to $p_\\infty$). A limiting distribution is invariant; an invariant one always exists but need not be unique nor a limit.",
+        "(2) Unique iff the eigenvalue 1 is simple, i.e. there is exactly one recurrent class. A limit iff in addition no other eigenvalue lies on the unit circle, i.e. that class is aperiodic.",
+        "(3) $\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$: unique $\\pi = (\\tfrac12, \\tfrac12)$ but no limit (period 2). $P = I$: every distribution is invariant. Two closed classes: $\\pi$ is not unique and the limit depends on the start.",
+        "(4) $\\lambda_2 = 1 - \\alpha - \\beta$ and $$P^t = \\frac{1}{\\alpha+\\beta}\\begin{pmatrix}\\beta&\\alpha\\\\\\beta&\\alpha\\end{pmatrix} + \\frac{\\lambda_2^t}{\\alpha+\\beta}\\begin{pmatrix}\\alpha&-\\alpha\\\\-\\beta&\\beta\\end{pmatrix}$$ so convergence is geometric at rate $|\\lambda_2|$."
+      ],
+      "pit": "",
+      "src": "See Markov chains 21, 32–35",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-15",
+      "g": "Second pass",
+      "k": "Rewards on a chain",
+      "q": "A chain with initial distribution $q$, transition matrix $P$ and reward vector $r$. (1) Give the expected reward at time $t$. (2) Give the three ways of adding rewards over time and what each needs. (3) For $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$, $r = (1, 0)^\\top$, $\\gamma = 0.9$ give $V$ and the long-run average reward. (4) How does the value equation become dynamic programming?",
+      "pts": [
+        "(1) $E\\,r(X_t) = qP^tr$; component $i$ of $P^tr$ is $E[r(X_t) \\mid X_0 = i]$.",
+        "(2) Finite horizon: $\\sum_{k=0}^t qP^kr$. Discounted: $q(I - \\gamma P)^{-1}r$, needs $\\gamma < 1$. Long-run average: $\\pi r$, needs a unique $\\pi$.",
+        "(3) $0.28V(1) - 0.18V(2) = 1$ and $-0.27V(1) + 0.37V(2) = 0$: $V = (6.727, 4.909)$. Average reward $\\pi r = 0.6$, and $\\tfrac{0.6}{1 - \\gamma} = 6$ lies between the two values.",
+        "(4) Let reward and transition depend on an action and optimize: $V_t(x) = \\min_u\\{g(x, u) + \\sum_y P_u(x, y)V_{t+1}(y)\\}$; $V = r + \\gamma PV$ evaluates one fixed rule."
+      ],
+      "pit": "A probability is the expected value of an indicator reward.",
+      "src": "See Markov chains 42, 44, 46, 48",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-16",
+      "g": "Second pass",
+      "k": "Structure by induction",
+      "q": "Time-invariant problem with $(\\mathcal{T}J)(x) = \\min_u\\{g(x, u) + E\\,J(f(x, u, Z))\\}$ and $V_t = \\mathcal{T}V_{t+1}$. (1) State and prove the order-preserving property. (2) Deduce monotonicity in time. (3) How is a structured policy (a critical state or a threshold) proved? (4) Which rules keep the shape of a value function through one step?",
+      "pts": [
+        "(1) $J \\le \\bar J$ implies $\\mathcal{T}J \\le \\mathcal{T}\\bar J$: take the minimizer $\\bar u$ of $\\mathcal{T}\\bar J$ at $x$; then $(\\mathcal{T}J)(x) \\le g(x, \\bar u) + E\\,J(\\cdot) \\le g(x, \\bar u) + E\\,\\bar J(\\cdot) = (\\mathcal{T}\\bar J)(x)$.",
+        "(2) If $V_{T-1} \\le V_T$ then $V_t \\le V_{t+1}$ for all $t$ (apply $\\mathcal{T}$ repeatedly); likewise with $\\ge$. Example: $G \\equiv 0$ and $g \\ge 0$ give $V_t \\ge V_{t+1}$: more remaining stages cost more.",
+        "(3) Prove by backward induction a property of $V_t$ (increasing in the state, concave, convex); then compare the two actions: one side constant or of smaller slope gives a single crossing.",
+        "(4) Composition with an affine map, expectation, and minimum (for increasing or concave functions) or maximum (for convex ones)."
+      ],
+      "pit": "Time-invariance is essential for monotonicity in time.",
+      "src": "See Dynamic programming 31–34",
+      "seen": [
+        "HW1 P5",
+        "HW2 P2"
+      ]
+    },
+    {
+      "id": "MDP-00-17",
+      "g": "Second pass",
+      "k": "Variants of DP",
+      "q": "How does the recursion $V_t(x) = \\min_u\\{g(x, u) + E\\,V_{t+1}(f(x, u, Z_{t+1}))\\}$ change for (1) a random initial state or a stage cost that depends on the disturbance; (2) discounting with a factor $\\gamma$; (3) a worst-case objective? (4) What limits the algorithm in practice?",
+      "pts": [
+        "(1) Random start: nothing changes, average $V_0$ over the initial distribution at the end. Random cost: the cost goes inside the expectation, $E[g_t(x, u, Z_{t+1}) + V_{t+1}(\\cdot)]$.",
+        "(2) $V_t(x) = \\min_u\\{g(x, u) + \\gamma E\\,V_{t+1}(\\cdot)\\}$ in time-$t$ units; multiplying by $\\gamma^t$ gives time-0 units and the same policy.",
+        "(3) $V_t(x) = \\min_u\\max_z\\{g(x, u, z) + V_{t+1}(f(x, u, z))\\}$: the expectation becomes a max, and the stage cost can no longer be separated from the future value.",
+        "(4) One value per state, a minimization per state and an expectation per (state, action): a $d$-dimensional state on $N$ grid points per coordinate has $N^d$ cells (curse of dimensionality). Closed forms are the way out."
+      ],
+      "pit": "",
+      "src": "See Dynamic programming 36–43, 53",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-18",
+      "g": "Second pass",
+      "k": "Matrix LQR",
+      "q": "$X_{t+1} = AX_t + BU_t + CZ_{t+1}$ with $E\\,Z = 0$ and covariance $\\Sigma$; stage cost $x^\\top Qx + u^\\top Ru$, terminal cost $x^\\top Q_Tx$. Give (1) the value function and the gain; (2) the recursion for $P_t$; (3) the recursion for the constant; (4) the assumptions and what they are needed for, including the long horizon.",
+      "pts": [
+        "(1) $V_t(x) = x^\\top P_tx + p_t$, $P_T = Q_T$, $p_T = 0$; $u = L_tx$ with $L_t = -(R + B^\\top P_{t+1}B)^{-1}B^\\top P_{t+1}A$.",
+        "(2) $$\\begin{aligned}P_t = {}& Q + A^\\top P_{t+1}A\\\\ &- A^\\top P_{t+1}B(R + B^\\top P_{t+1}B)^{-1}B^\\top P_{t+1}A\\end{aligned}$$",
+        "(3) $p_t = \\operatorname{trace}(C\\Sigma C^\\top P_{t+1}) + p_{t+1}$.",
+        "(4) $R \\succ 0$ and $P_{t+1} \\succeq 0$ make $R + B^\\top P_{t+1}B \\succ 0$ (unique minimizer, inverse exists); $Q \\succeq 0$ keeps $P_t \\succeq 0$. Long horizon: $(A, B)$ controllable and $(A, Q)$ observable give $P_t \\to P^\\star$ and a stable $A + BL^\\star$."
+      ],
+      "pit": "The order of the matrix products matters; scalar case: $A = a$, $B = 1$, $Q = b$, $R = c$, $P = k$.",
+      "src": "See Linear quadratic control 29–37",
+      "seen": [
+        "HW2 P4",
+        "Ex 4.1"
+      ]
+    },
+    {
+      "id": "MDP-00-19",
+      "g": "Second pass",
+      "k": "LQ variants",
+      "q": "How does one step of the scalar linear-quadratic recursion change in each variant? (1) Stage cost $qx^2 + 2sxu + ru^2$ with dynamics $ax + bu + Z$. (2) Random coefficients $X_{t+1} = AX_t + BU_t$ with stage cost $x^2 + u^2$ ($a_i$, $b_i$ the $i$-th moments). (3) Noise with a non-zero mean $\\mu$ in $X_{t+1} = aX_t + U_t + Z_{t+1}$; last step, where $cu^2 + bX_T^2$ is minimized. (4) How is certainty equivalence tested in each case?",
+      "pts": [
+        "(1) $m_t = -\\dfrac{s + kab}{r + kb^2}$ and $k_t = q + ka^2 - \\dfrac{(s + kab)^2}{r + kb^2}$ with $k = k_{t+1}$.",
+        "(2) $m_t = -\\dfrac{a_1b_1k}{1 + b_2k}$ and $k_t = 1 + a_2k - \\dfrac{(a_1b_1k)^2}{1 + b_2k}$: second moments replace squared means; $k_t$ converges only if $a_2 - \\tfrac{(a_1b_1)^2}{b_2} < 1$.",
+        "(3) $u^\\star = -\\dfrac{b(ax + \\mu)}{b + c}$: affine instead of linear.",
+        "(4) Write the true objective as the mean-replaced one plus an extra term. Additive noise: the extra term has no $u$ (holds, also with a non-zero mean). Random $B$: extra term $k\\operatorname{Var}B \\cdot u^2$ (fails)."
+      ],
+      "pit": "The minimum of $\\mathcal{A}u^2 + 2\\mathcal{B}xu + \\mathcal{C}x^2$ over $u$ is $(\\mathcal{C} - \\mathcal{B}^2/\\mathcal{A})x^2$ at $u = -\\tfrac{\\mathcal{B}}{\\mathcal{A}}x$.",
+      "src": "See Linear quadratic control 11, 23, 24, 38–41",
+      "seen": [
+        "MkA P5",
+        "Ex 4.2"
+      ]
+    },
+    {
+      "id": "MDP-00-20",
+      "g": "Second pass",
+      "k": "Utility and growth",
+      "q": "(1) How are random wealth levels ranked, and what is a risk-neutral investor? (2) Define risk aversion and state the consequence for a gamble against its sure average. (3) List the common utility functions with their domains. (4) Why does maximizing expected log wealth maximize long-run growth?",
+      "pts": [
+        "(1) By expected utility $E\\,G(X)$. Risk neutral: $G(x) = x$, ranking by expected value only.",
+        "(2) $G$ concave: $G[\\alpha x + (1 - \\alpha)y] \\ge \\alpha G(x) + (1 - \\alpha)G(y)$. The sure average is preferred to the gamble; in general $E\\,G(X) \\le G(E\\,X)$.",
+        "(3) $-e^{-ax}$ ($a > 0$); $\\log x$ ($x > 0$); $\\dfrac{x^{1-\\gamma}}{1-\\gamma}$ ($\\gamma \\ge 0$, $\\gamma \\ne 1$); $x - bx^2$ ($b > 0$, increasing only for $x \\le \\tfrac{1}{2b}$).",
+        "(4) For a fixed split, $\\tfrac1T\\log\\tfrac{X_T}{x_0} = \\tfrac1T\\sum_t\\log Y_t \\to E\\log Y$ by the law of large numbers: typical wealth grows like $e^{T\\,E\\log Y}$ (Kelly criterion)."
+      ],
+      "pit": "This $\\alpha$ is a weight in $[0, 1]$; in the theorems it is the constant of the value function.",
+      "src": "See Portfolio optimization 05–08, 11–13",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-21",
+      "g": "Second pass",
+      "k": "Power utility",
+      "q": "Portfolio problem: wealth $X_{t+1} = X_t\\,U_t^\\top Z_{t+1}$ with i.i.d. vectors $Z_t$ of positive gross returns and splits $U_t \\in \\mathcal{U} = \\{u : u_i \\ge 0, \\sum_i u_i = 1\\}$; the objective is $\\max E\\,G(X_T)$ with $G(x) = \\dfrac{x^{1-\\gamma}}{1-\\gamma}$, $\\gamma \\ge 0$, $\\gamma \\ne 1$. (1) State the theorem. (2) Why is $\\alpha > 0$, and what happens to the one-period problem when $\\gamma > 1$? (3) In the coin-flip market (returns $0.8 + 0.6u_1$ on heads, $1.15 - 0.45u_1$ on tails) give $u_1^\\star$ as a function of $\\gamma$. (4) Name the two special members of the family.",
+      "pts": [
+        "(1) $V_t(x) = \\alpha^{T-t}\\dfrac{x^{1-\\gamma}}{1-\\gamma}$ with $\\alpha = (1 - \\gamma)\\max_u E\\Big[\\dfrac{(u^\\top Z_1)^{1-\\gamma}}{1-\\gamma}\\Big]$ and $\\mu_t(x) = u^\\star$: fixed-mix and myopic.",
+        "(2) $\\alpha = E[(u^{\\star\\top}Z_1)^{1-\\gamma}] > 0$, needed to pull $\\alpha^{T-t-1}$ out of the maximum. For $\\gamma > 1$ the utility is negative and $u^\\star$ minimizes $E[(u^\\top Z_1)^{1-\\gamma}]$.",
+        "(3) $u_1^\\star = \\dfrac{1.15 - 0.8q}{0.45 + 0.6q}$ with $q = 0.75^{1/\\gamma}$, capped at 1: $\\tfrac89$ for $\\gamma = 0.5$, $\\tfrac{11}{18}$ for $\\gamma = 1$, $0.472$ for $\\gamma = 2$, towards $\\tfrac13$ as $\\gamma \\to \\infty$.",
+        "(4) $\\gamma = 0$: linear utility, everything in the asset with the largest mean. $\\gamma \\to 1$: logarithmic utility."
+      ],
+      "pit": "Per step the value is multiplied by $\\alpha$ (power) or increased by $\\alpha$ (log).",
+      "src": "See Portfolio optimization 30–36",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-22",
+      "g": "Second pass",
+      "k": "Stopping: general",
+      "q": "(1) Write the recursion of a stopping problem with stopping cost $h_t$, running cost $g$ and terminal cost $G$. (2) A stock at 100 goes to 120 or 90, then to 144, 108 or 81 (up with probability $\\tfrac23$); strike 105, profits invested at 10% per month until month 2. Decide at month 1 for a call at 120 and a put at 90. (3) A seller pays $0.5$ per rejected offer instead of losing interest: give the recursion of the continuation value. (4) State the optimal rule of the marriage problem with $T$ candidates.",
+      "pts": [
+        "(1) $V_T = G$, $V_t(x) = \\min\\{h_t(x), K_t(x)\\}$ with $K_t(x) = \\min_u\\{g(x, u) + E\\,V_{t+1}(f(x, u, Z_{t+1}))\\}$; stop iff $h_t(x) \\le K_t(x)$. The termination state has value 0.",
+        "(2) Call at 120: exercise $1.1 \\times 15 = 16.5$, continue $\\tfrac23 \\cdot 39 + \\tfrac13 \\cdot 3 = 27$: continue. Put at 90: exercise $16.5$, continue $\\tfrac13 \\cdot 24 = 8$: exercise.",
+        "(3) $V_t(w) = \\max\\{w, c_t\\}$ with $c_t = -0.5 + E\\max\\{W, c_{t+1}\\}$ and, at the last decision, $c = -0.5 + E\\,W$.",
+        "(4) Reject the first $t^* - 1$ candidates, then accept the first one who is better than all before; $t^* = \\min\\{t : \\sum_{s=t}^{T-1}\\tfrac1s \\le 1\\} \\approx \\tfrac{T}{e}$, and the probability of getting the best is about $\\tfrac1e$."
+      ],
+      "pit": "The stopping reward of an option is $(1 + r)^{T-t}$ times the immediate profit, so that both alternatives are in money of time $T$.",
+      "src": "See Optimal stopping 04, 39, 40, 43, 47–49",
+      "seen": [
+        "HW2 P3",
+        "Ex 4.6",
+        "MkB P3"
+      ]
+    },
+    {
+      "id": "MDP-00-23",
+      "g": "Second pass",
+      "k": "Traps",
+      "q": "Name the trap attached to each item. (1) Vectors in a Markov chain. (2) $V_t$ and $J_t$, and the letters of KE. (3) The letters $\\alpha$, $\\gamma$, $a$, $b$. (4) Gains, returns and logarithms. (5) Thresholds.",
+      "pts": [
+        "(1) Distributions are rows ($qP^t$, $\\pi P = \\pi$); rewards and values are columns ($P^tr$, $V = r + \\gamma PV$).",
+        "(2) Slides: $V_t$ everywhere, and in asset selling $J_t = V_t/(1 + r)^{T-t}$. KE: $J_t$ is the value function and $W_t$ the disturbance; in the linear-quadratic part KE's $\\ell_t$ is the gain, the slides' $\\ell_t$ the constant.",
+        "(3) $\\alpha$: a weight in the concavity definition, a constant in the portfolio value function, a threshold in stopping, a variance factor in the clock problem. $\\gamma$: discount factor or risk aversion. $a$, $b$: system coefficient and cost weight, or utility parameters.",
+        "(4) $u = m_tx$ already contains the minus sign; $Z$ is a gross return ($1.4$, not $0.4$); $\\log$ is natural in the theory.",
+        "(5) Sell above, buy below; at the threshold both actions are optimal; no threshold is defined at $T$ unless $\\alpha_T = 0$ is set."
+      ],
+      "pit": "",
+      "src": "See the Notation traps section of each topic",
+      "seen": []
+    },
+    {
+      "id": "MDP-00-24",
+      "g": "Second pass",
+      "k": "Which tool",
+      "q": "Which tool answers each request? (1) “What is the distribution at time $t$ or in the long run?” (2) “What is the probability of reaching a state, or the expected time?” (3) “Find the optimal policy” for a finite problem. (4) The state is continuous. (5) The problem offers the option to stop.",
+      "pts": [
+        "(1) $p_t = qP^t$ (diagonalize for large $t$); long run: solve $\\pi P = \\pi$ and check one recurrent, aperiodic class.",
+        "(2) First-step analysis with the right boundary values.",
+        "(3) Formulate (state, action, disturbance, dynamics, cost), then the backward table $Q_t$, $V_t$, $\\hat\\mu_t$.",
+        "(4) Guess a parametric family that one step preserves: quadratic for linear dynamics with quadratic cost; $\\log x$ or a power of $x$ plus a constant factor for multiplicative wealth; verify by induction.",
+        "(5) Compare stopping now with continuing; look for a threshold, its recursion, its monotonicity in time and its long-run limit."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
     }
   ]
 }
