@@ -1,0 +1,324 @@
+{
+  "title": "Time series",
+  "notes": [
+    {
+      "h": "Stationarity",
+      "items": [
+        {
+          "t": "Weak stationarity",
+          "d": [
+            "Constant mean, finite constant variance, $\\gamma_k$ depends only on $k$."
+          ],
+          "cards": [
+            "BAG-C-01"
+          ]
+        },
+        {
+          "t": "Unit root",
+          "d": [
+            "$\\phi=1$: shocks permanent, $\\mathrm{Var}(x_t)=t\\sigma^2$. ADF $H_0$ unit root; KPSS $H_0$ stationary.",
+            "Spurious regression: high $R^2$, low DW, diverging $t$."
+          ],
+          "cards": [
+            "BAG-C-02"
+          ]
+        },
+        {
+          "t": "Cointegration and ECM",
+          "d": [
+            "$y_t-\\beta x_t\\sim I(0)$. ECM: $\\Delta y_t=\\alpha(y_{t-1}-\\beta x_{t-1})+\\dots$, $\\alpha<0$.",
+            "Engle-Granger needs its own critical values; Johansen for several series."
+          ],
+          "cards": [
+            "BAG-C-03"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "ARMA",
+      "items": [
+        {
+          "t": "Identification",
+          "d": [
+            "AR($p$): PACF cuts at $p$. MA($q$): ACF cuts at $q$. ARMA: both decay. MA(1): $\\rho_1=\\theta/(1+\\theta^2)$, $|\\rho_1|\\le\\frac12$."
+          ],
+          "cards": [
+            "BAG-C-04"
+          ]
+        },
+        {
+          "t": "AR(1)",
+          "d": [
+            "Stationary iff $|\\phi|<1$; $\\mu=c/(1-\\phi)$, $\\mathrm{Var}=\\sigma^2/(1-\\phi^2)$, $\\rho_k=\\phi^k$.",
+            "Half-life $\\ln0.5/\\ln\\phi$ ($\\phi=0.9$: 6.6). Downward bias $\\approx-(1+3\\phi)/T$."
+          ],
+          "cards": [
+            "BAG-C-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Volatility",
+      "items": [
+        {
+          "t": "Clustering",
+          "d": [
+            "$r_t$ uncorrelated, $r_t^2$ autocorrelated: predictable variance, not predictable mean."
+          ],
+          "cards": [
+            "BAG-C-06"
+          ]
+        },
+        {
+          "t": "GARCH(1,1)",
+          "d": [
+            "$\\sigma_t^2=\\omega+\\alpha\\varepsilon_{t-1}^2+\\beta\\sigma_{t-1}^2$; $\\bar\\sigma^2=\\omega/(1-\\alpha-\\beta)$; forecast gap decays as $(\\alpha+\\beta)^{h-1}$.",
+            "Extensions: GJR / EGARCH (asymmetry), Student-$t$ (tails), DCC (many assets)."
+          ],
+          "cards": [
+            "BAG-C-07"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Time-aware CV",
+      "items": [
+        {
+          "t": "Purge and embargo",
+          "d": [
+            "Purge: drop training samples whose label window overlaps the test block. Embargo: skip a gap after the test block.",
+            "Keep a final untouched test period."
+          ],
+          "cards": [
+            "BAG-C-08"
+          ]
+        },
+        {
+          "t": "Window choice",
+          "d": [
+            "Rolling: low bias, high variance. Expanding: the reverse. Window / EWMA half-life is a hyperparameter."
+          ],
+          "cards": [
+            "BAG-C-09"
+          ]
+        },
+        {
+          "t": "Overlapping labels",
+          "d": [
+            "$\\mathrm{Cov}(R_{t,t+h},R_{t+k,t+k+h})=(h-k)\\sigma^2$; effective $n\\approx T/h$; naive $t$ inflated ≈ $\\sqrt h$. NW lag $\\ge h-1$ or Hansen-Hodrick."
+          ],
+          "cards": [
+            "BAG-C-10"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Regimes & reversion",
+      "items": [
+        {
+          "t": "Break tests",
+          "d": [
+            "Chow (known date), sup-F (one unknown), Bai-Perron (several), CUSUM; HMM / Markov switching; Kalman for time-varying parameters."
+          ],
+          "cards": [
+            "BAG-C-11"
+          ]
+        },
+        {
+          "t": "Roll model",
+          "d": [
+            "Bid-ask bounce: $\\mathrm{Cov}(\\Delta p_t,\\Delta p_{t-1})=-s^2/4$ with full spread $s$."
+          ],
+          "cards": [
+            "BAG-C-12"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "BAG-C-01",
+      "g": "Stationarity",
+      "k": "Weak stationarity",
+      "q": "$\\{x_t\\}$ is a time series. (1) State the three conditions for weak (covariance) stationarity. (2) How does it relate to strict stationarity? (3) Why does forecasting need it? (4) How stationary are markets in practice?",
+      "pts": [
+        "(1) $E[x_t]=\\mu$ constant; $\\mathrm{Var}(x_t)=\\gamma_0<\\infty$; $\\mathrm{Cov}(x_t,x_{t-k})=\\gamma_k$ depends only on the lag $k$.",
+        "(2) Strict: the whole joint distribution is shift-invariant. Strict with finite second moments ⇒ weak.",
+        "(3) Parameters estimated on the past must still hold in the future, and sample moments converge to population moments (with ergodicity).",
+        "(4) Prices are not stationary, returns roughly are, but vol and correlations shift with regimes: markets are only locally stationary. Use rolling windows, regime checks, parameter-stability tests."
+      ],
+      "pit": "",
+      "src": "Q34",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-02",
+      "g": "Stationarity",
+      "k": "Unit root & spurious",
+      "q": "AR(1) $x_t=\\phi x_{t-1}+\\varepsilon_t$. (1) What is a unit root and what does it imply? (2) How do you test for it? (3) What goes wrong if you regress one independent random walk on another? (4) What should you do instead?",
+      "pts": [
+        "(1) $\\phi=1$: $x_t=x_0+\\sum_{s\\le t}\\varepsilon_s$. Shocks are permanent and $\\mathrm{Var}(x_t)=t\\sigma^2$ grows: not stationary.",
+        "(2) ADF ($H_0$: unit root); KPSS ($H_0$: stationary).",
+        "(3) Spurious regression: residuals are I(1), the $t$-stat diverges with $T$, $|t|>2$ far more than 5% of the time, $R^2$ is often high. Warning sign: high $R^2$ with a very low Durbin-Watson.",
+        "(4) Difference (regress returns), or test for cointegration if theory suggests a long-run link, then use an error-correction model."
+      ],
+      "pit": "",
+      "src": "Q36",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-03",
+      "g": "Stationarity",
+      "k": "Cointegration",
+      "q": "$y_t$ and $x_t$ are both I(1). (1) Define cointegration. (2) How is it different from correlation? (3) How do you test it? (4) Write the error-correction model and interpret its key coefficient.",
+      "pts": [
+        "(1) There is $\\beta$ with $y_t-\\beta x_t$ stationary, I(0); $(1,-\\beta)$ is the cointegrating vector.",
+        "(2) Correlation is about short-run co-movement of returns; cointegration is a long-run equilibrium of levels. Returns can be 0.9 correlated while the spread drifts forever; weakly correlated series can still be pulled back together. Pairs trading needs cointegration.",
+        "(3) Engle-Granger: OLS for $\\beta$, then ADF on the residual with EG critical values. Several series: Johansen.",
+        "(4) $$\\Delta y_t=\\alpha(y_{t-1}-\\beta x_{t-1})+\\sum_j\\gamma_j\\Delta y_{t-j}+\\sum_j\\delta_j\\Delta x_{t-j}+\\varepsilon_t$$ $\\alpha<0$ is the speed of adjustment back to equilibrium."
+      ],
+      "pit": "Using standard ADF critical values on the EG residual over-rejects: $\\hat\\beta$ was chosen to make the residual look stationary.",
+      "src": "Q37",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-04",
+      "g": "ARMA",
+      "k": "ACF / PACF",
+      "q": "(1) Define the ACF $\\rho_k$ and PACF $\\phi_{kk}$. (2) Give the ACF/PACF signatures of AR($p$), MA($q$) and ARMA. (3) Derive the ACF of AR(1) and MA(1). (4) What are the practical limits?",
+      "pts": [
+        "(1) $\\rho_k=\\gamma_k/\\gamma_0$. $\\phi_{kk}$ = correlation of $x_t$ and $x_{t-k}$ after controlling for lags $1..k-1$ (last coefficient of an AR($k$) regression).",
+        "(2) AR($p$): ACF decays, PACF cuts off after $p$. MA($q$): ACF cuts off after $q$, PACF decays. ARMA: both decay.",
+        "(3) AR(1): $\\rho_k=\\phi^k$, PACF nonzero only at lag 1. MA(1) $x_t=\\varepsilon_t+\\theta\\varepsilon_{t-1}$: $\\rho_1=\\frac{\\theta}{1+\\theta^2}$, so $|\\rho_1|\\le\\frac12$; $\\rho_k=0$ for $k\\ge2$.",
+        "(4) Sample ACFs are noisy (SE $\\approx1/\\sqrt T$ under white noise), so cut-offs blur. Compare models by AIC/BIC and run Ljung-Box on the residuals."
+      ],
+      "pit": "",
+      "src": "Q35",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-05",
+      "g": "ARMA",
+      "k": "AR(1) & half-life",
+      "q": "$x_t=c+\\phi x_{t-1}+\\varepsilon_t$, white noise $\\varepsilon_t$ with variance $\\sigma^2$. (1) When is it stationary, and why? (2) Give its mean, variance and ACF. (3) Derive the half-life of mean reversion; compute it for $\\phi=0.9$ daily. (4) What finite-sample caveat matters?",
+      "pts": [
+        "(1) $|\\phi|<1$: back-substitution gives $x_t-\\mu=\\sum_{j\\ge0}\\phi^j\\varepsilon_{t-j}$, which converges only then. $\\phi=1$ is a unit root.",
+        "(2) $\\mu=\\frac{c}{1-\\phi}$, $\\mathrm{Var}=\\frac{\\sigma^2}{1-\\phi^2}$, $\\rho_k=\\phi^k$.",
+        "(3) $E[x_{t+h}-\\mu\\mid x_t]=\\phi^h(x_t-\\mu)$; set $\\phi^h=\\frac12$: $$h_{1/2}=\\frac{\\ln0.5}{\\ln\\phi}$$ $\\phi=0.9$: 6.6 days. Continuous OU $dx=\\theta(\\mu-x)dt+\\sigma dW$: $\\ln2/\\theta$.",
+        "(4) $\\hat\\phi$ is biased down near 1 (about $-(1+3\\phi)/T$), overstating reversion speed; $\\phi=0.98$ vs 1 is hard to tell apart in a few years (ADF has low power)."
+      ],
+      "pit": "",
+      "src": "Q41",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-06",
+      "g": "Volatility",
+      "k": "Autocorr. of r²",
+      "q": "Daily returns show almost no autocorrelation, but squared returns show strong autocorrelation. (1) What does this tell you? (2) Explain it with conditional moments. (3) What models does it motivate? (4) Why is it useful even without direction?",
+      "pts": [
+        "(1) The mean is hard to predict but volatility is predictable: volatility clustering (conditional heteroskedasticity).",
+        "(2) $E[r_t\\mid\\mathcal F_{t-1}]\\approx$ const, so no autocorrelation in $r_t$; $E[r_t^2\\mid\\mathcal F_{t-1}]=\\sigma_t^2$ varies persistently, so $r_t^2$ and $|r_t|$ are autocorrelated. Uncorrelated but not independent.",
+        "(3) ARCH / GARCH.",
+        "(4) Vol forecasts drive vol targeting, risk models and option pricing."
+      ],
+      "pit": "",
+      "src": "Q40",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-07",
+      "g": "Volatility",
+      "k": "GARCH(1,1)",
+      "q": "(1) Write the GARCH(1,1) model and its constraints. (2) How does it produce clustering, and what is the unconditional variance? (3) How does persistence govern forecasts? Give the half-life for $\\alpha=0.08$, $\\beta=0.9$. (4) What are its limitations?",
+      "pts": [
+        "(1) $$r_t=\\mu+\\varepsilon_t,\\ \\ \\varepsilon_t=\\sigma_tz_t,\\ \\ \\sigma_t^2=\\omega+\\alpha\\varepsilon_{t-1}^2+\\beta\\sigma_{t-1}^2$$ $z_t$ i.i.d. $(0,1)$; $\\omega>0$, $\\alpha,\\beta\\ge0$, $\\alpha+\\beta<1$.",
+        "(2) A big shock yesterday raises today's variance, making another big shock likely. $\\bar\\sigma^2=\\frac{\\omega}{1-\\alpha-\\beta}$.",
+        "(3) $E_t[\\sigma_{t+h}^2]-\\bar\\sigma^2=(\\alpha+\\beta)^{h-1}(\\sigma_{t+1}^2-\\bar\\sigma^2)$. Persistence 0.98: half-life $\\frac{\\ln0.5}{\\ln0.98}\\approx34$ days.",
+        "(4) Symmetric (misses the leverage effect: GJR, EGARCH); normal $z_t$ too thin-tailed (Student-$t$); jumps and overnight gaps; parameters explode for many assets (DCC)."
+      ],
+      "pit": "",
+      "src": "Q44",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-08",
+      "g": "Time-aware CV",
+      "k": "No random split",
+      "q": "(1) Why is a random train/test split wrong for financial time series? Name three leakage channels. (2) What do you do instead?",
+      "pts": [
+        "(1a) Time order: training contains data after the test point, so the model learns future regimes and then \\\"predicts\\\" the past.",
+        "(1b) Serial correlation: a test point's neighbours are almost all in training, so the test set is effectively seen.",
+        "(1c) Overlapping labels: 20-day forward returns at $t$ and $t+1$ share 19 days.",
+        "(2) Walk-forward (rolling or expanding); purge training samples whose label windows overlap the test period, add an embargo after it; keep a final untouched test period."
+      ],
+      "pit": "",
+      "src": "Q38",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-09",
+      "g": "Time-aware CV",
+      "k": "Rolling vs expanding",
+      "q": "(1) Give the pros and cons of a rolling window of fixed length $W$. (2) Of an expanding window. (3) When do you prefer each? (4) How should the window be chosen?",
+      "pts": [
+        "(1) Rolling: adapts to regime change; noisier estimates and discards old information.",
+        "(2) Expanding: more data, lower estimation variance; slow to react to structural change.",
+        "(3) Rolling for parameters that move (vol, correlations); expanding for stable relations with scarce data (monthly factor premia).",
+        "(4) The window is a hyperparameter: choose it on validation data. EWMA is a compromise whose half-life also needs validating. Shorter window = less bias, more variance."
+      ],
+      "pit": "",
+      "src": "Q39",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-10",
+      "g": "Time-aware CV",
+      "k": "Overlapping labels",
+      "q": "Daily data, label $R_{t,t+h}=\\sum_{j=1}^{h}r_{t+j}$ (the $h$-day forward return). (1) Why are residuals autocorrelated even with i.i.d. daily returns? (2) How much is the naive $t$ inflated? (3) What extra bias appears with a persistent predictor? (4) List the fixes.",
+      "pts": [
+        "(1) $\\mathrm{Cov}(R_{t,t+h},R_{t+k,t+k+h})=(h-k)\\sigma^2$ for $k<h$: errors are at least MA($h-1$).",
+        "(2) Effective sample $\\approx T/h$, so the naive $t$ is inflated by about $\\sqrt h$ (4.5× for $h=20$).",
+        "(3) Stambaugh small-sample bias when the predictor is highly persistent (valuation ratios).",
+        "(4) Non-overlapping samples (average over start dates); Newey-West with lag $\\ge h-1$ or Hansen-Hodrick; regress single-period returns and aggregate; in Fama-MacBeth apply NW to $\\hat\\gamma_t$."
+      ],
+      "pit": "",
+      "src": "Q42",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-11",
+      "g": "Regimes & reversion",
+      "k": "Detect regime change",
+      "q": "(1) List four families of methods to detect a regime change. (2) How do you tell a real change from noise? (3) What is the test that matters for trading?",
+      "pts": [
+        "(1) Rolling diagnostics (mean, vol, beta, IC); structural-break tests (Chow for a known date, Quandt-Andrews sup-F for one unknown break, Bai-Perron for several, CUSUM); Markov switching / HMM and state-space (Kalman) models; online change-point detection (BOCPD).",
+        "(2) Rolling IC is noisy: a negative stretch is not failure. Ask for an economic reason (regulation, market structure, crowding) and whether the change exceeds sampling error.",
+        "(3) Whether adapting to regimes detected in real time improves OOS. Regimes are easy to see after the fact; real-time detection lags."
+      ],
+      "pit": "",
+      "src": "Q43",
+      "seen": []
+    },
+    {
+      "id": "BAG-C-12",
+      "g": "Regimes & reversion",
+      "k": "Tradeable reversion?",
+      "q": "A price spread looks mean-reverting. (1) How do you define the signal? (2) Which statistical checks do you run? (3) How do you rule out a microstructure artefact? (4) How do you test it as a strategy, and what are the common failure modes?",
+      "pts": [
+        "(1) Spread $s_t=y_t-\\hat\\beta x_t$ with $\\hat\\beta$ from past data only; z-score $z_t=(s_t-\\bar s_t)/\\hat\\sigma_t$; entry/exit thresholds, max holding period, stop.",
+        "(2) ADF / cointegration; AR(1) half-life, which sets holding period and turnover.",
+        "(3) Bid-ask bounce creates negative first-order autocorrelation (Roll: $\\mathrm{Cov}(\\Delta p_t,\\Delta p_{t-1})=-s^2/4$, $s$ = spread). Use mid quotes and an execution lag; see if the effect survives.",
+        "(4) Walk-forward with costs (spread, impact, borrow), turnover, per-trade return vs cost, parameter and subsample robustness. Failures: reversion smaller than costs; rare permanent breaks (takeover, business change) causing tail losses."
+      ],
+      "pit": "",
+      "src": "Q45",
+      "seen": []
+    }
+  ]
+}

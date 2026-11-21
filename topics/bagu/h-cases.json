@@ -1,0 +1,133 @@
+{
+  "title": "Research cases",
+  "notes": [
+    {
+      "h": "Presenting research",
+      "items": [
+        {
+          "t": "Test-design template",
+          "d": [
+            "Hypothesis + mechanism → timestamps → feature → target/horizon → universe → baselines → main test → falsification → costs/capacity → abandonment rule."
+          ],
+          "cards": [
+            "BAG-H-01"
+          ]
+        },
+        {
+          "t": "Project pitch",
+          "d": [
+            "Conclusion → design → OOS evidence vs baseline → robustness → limitations → next steps."
+          ],
+          "cards": [
+            "BAG-H-02"
+          ]
+        },
+        {
+          "t": "Failed idea",
+          "d": [
+            "Idea → promising start → killing diagnostic → stop decision → process change."
+          ],
+          "cards": [
+            "BAG-H-03"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Live & stopping",
+      "items": [
+        {
+          "t": "Live vs backtest",
+          "d": [
+            "Implementation, data, execution, regime, luck. Reproduce from point-in-time inputs; compare signal → positions → fills → P&L.",
+            "Sharpe SE ≈ $1/\\sqrt{\\text{years}}$."
+          ],
+          "cards": [
+            "BAG-H-04"
+          ]
+        },
+        {
+          "t": "Stopping rules",
+          "d": [
+            "Pre-set evidence bar and variant budget; stop on failed falsification, weak OOS, costs, fragility, redundancy; record it."
+          ],
+          "cards": [
+            "BAG-H-05"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "BAG-H-01",
+      "g": "Presenting research",
+      "k": "Design an idea test",
+      "q": "You are asked for one systematic trading idea and its exact test. (1) What must the hypothesis look like? (2) Which design elements do you specify? (3) Which falsification tests do you plan? (4) How do you close?",
+      "pts": [
+        "(1) One clear, falsifiable hypothesis with a mechanism: who misprices or bears risk, and why the effect is not arbitraged away (e.g. limited attention to information that takes effort to read).",
+        "(2) Data and timestamps (when each input became known, returns from the next tradable time); feature definition; target and horizon (e.g. industry/style-adjusted returns over days +2 to +60); point-in-time universe; baselines (known signals it might proxy); main test (Fama-MacBeth with NW SEs, quintile long-short).",
+        "(3) Does it vanish after controlling for the baselines? Placebo: does it \\\"predict\\\" past returns (timing error)? Does it work only in a suspicious sub-sample?",
+        "(4) Costs and capacity, and the pre-set abandonment rule (e.g. OOS rank IC $t<2$ after controls, or negative net returns with costs ×2)."
+      ],
+      "pit": "",
+      "src": "Q95",
+      "seen": []
+    },
+    {
+      "id": "BAG-H-02",
+      "g": "Presenting research",
+      "k": "Present a project",
+      "q": "You present your strongest research project to someone deciding whether to allocate capital to it. (1) Give the six-part structure. (2) Which numbers must be ready? (3) Which follow-ups should you prepare for?",
+      "pts": [
+        "(1) One-line conclusion (hypothesis + headline result) → data and design (sources, point-in-time handling, sample, universe) → core OOS evidence vs baselines → robustness (subsamples, cost stress, after neutralisation) → limitations, stated by you first → next steps with more resources.",
+        "(2) OOS rank IC and its $t$, long-short net Sharpe and period, the increment over the simplest baseline after controls, correlation with known signals.",
+        "(3) Why this horizon; sensitivity to choices (prompt, parameters, universe); cost per run; the biggest look-ahead risk and how you checked it."
+      ],
+      "pit": "Use only real numbers: invented details do not survive follow-up questions.",
+      "src": "Q96",
+      "seen": []
+    },
+    {
+      "id": "BAG-H-03",
+      "g": "Presenting research",
+      "k": "A failed idea",
+      "q": "You are asked about a research idea that failed. (1) What is the listener looking for? (2) Give the five-step structure.",
+      "pts": [
+        "(1) That you can reject your own idea by criteria set in advance, rather than tuning until it \\\"works\\\".",
+        "(2) Idea and reasoning → initial evidence that looked promising → the diagnostic that killed it (vanished after a known factor, failed OOS, one subperiod only, negative after costs, a data problem) → when and why you stopped instead of searching variants → what you changed in your process afterwards (e.g. running known-factor controls before looking at performance)."
+      ],
+      "pit": "",
+      "src": "Q97",
+      "seen": []
+    },
+    {
+      "id": "BAG-H-04",
+      "g": "Live & stopping",
+      "k": "Live below backtest",
+      "q": "Live performance is much worse than the backtest. (1) Into which five categories do you split the gap? (2) Give the debugging steps in order. (3) How large is the luck band for 3 months of live data?",
+      "pts": [
+        "(1) Implementation mismatch (features, timing, universe, data source); data differences (history revised and clean, live data late or missing); execution (slippage, impact, partial fills, delay); regime change or alpha decay; statistical luck.",
+        "(2) Reproduce live decisions with the point-in-time inputs actually available and the backtest code; compare layer by layer (signal → target positions → fills → P&L) to find where the gap first appears; attribute P&L (IC, exposures, actual vs assumed costs); then act: fix bugs, recalibrate costs and capacity, or de-weight per the pre-set rule.",
+        "(3) The SE of an annualised Sharpe over $Y$ years is about $1/\\sqrt Y$: for 3 months, $1/\\sqrt{0.25}=2$. A large shortfall can still be noise."
+      ],
+      "pit": "",
+      "src": "Q98",
+      "seen": []
+    },
+    {
+      "id": "BAG-H-05",
+      "g": "Live & stopping",
+      "k": "When to stop an idea",
+      "q": "(1) What do you fix before starting research on an idea? (2) What signals tell you to stop? (3) What else should you weigh, and what do you do when you stop?",
+      "pts": [
+        "(1) A minimum evidence bar (e.g. OOS rank IC $t>2$ after known factors, net long-short Sharpe above a level) and a budget for variants and time.",
+        "(2) The mechanism fails its falsification tests (placebo significant too); weak OOS evidence; gross return below costs or capacity too small; works only in a narrow parameter range; highly correlated with existing alpha.",
+        "(3) Opportunity cost of the time. Write a short record (what was tried, why it stopped) so it can be revived with new data or methods."
+      ],
+      "pit": "",
+      "src": "Q99",
+      "seen": []
+    }
+  ]
+}

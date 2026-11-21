@@ -1,0 +1,458 @@
+{
+  "title": "Alpha research",
+  "notes": [
+    {
+      "h": "Research workflow",
+      "items": [
+        {
+          "t": "Pipeline",
+          "d": [
+            "Hypothesis → point-in-time data → feature → target → baselines → validation → portfolio → costs/capacity → robustness → monitoring.",
+            "Pre-register the main definition and success bar; log every variant."
+          ],
+          "cards": [
+            "BAG-F-01"
+          ]
+        },
+        {
+          "t": "Baselines",
+          "d": [
+            "Increment over baseline is the value of complexity; a suspiciously good baseline points to leakage."
+          ],
+          "cards": [
+            "BAG-F-02"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Backtest biases",
+      "items": [
+        {
+          "t": "Look-ahead",
+          "d": [
+            "Use knowledge time, not period time: announcement dates, point-in-time constituents, next-open fills, in-fold preprocessing."
+          ],
+          "cards": [
+            "BAG-F-03"
+          ]
+        },
+        {
+          "t": "Survivorship",
+          "d": [
+            "Include dead securities and delisting returns; bias is largest for distressed, small, levered tilts."
+          ],
+          "cards": [
+            "BAG-F-04"
+          ]
+        },
+        {
+          "t": "Data snooping",
+          "d": [
+            "Count the whole search; holdout once; $t$ bar ≈ 3; deflated Sharpe; replicate elsewhere."
+          ],
+          "cards": [
+            "BAG-F-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Validating results",
+      "items": [
+        {
+          "t": "Order of checks",
+          "d": [
+            "Wrong? → real? → tradeable? → incremental?"
+          ],
+          "cards": [
+            "BAG-F-06"
+          ]
+        },
+        {
+          "t": "Sample-size rules of thumb",
+          "d": [
+            "SE of an annual Sharpe over $Y$ years ≈ $1/\\sqrt Y$. $t\\approx SR\\sqrt{Y}$. Independent bets: $t=SR_{\\text{bet}}\\sqrt{N}$."
+          ],
+          "cards": [
+            "BAG-F-07",
+            "BAG-F-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Signal metrics",
+      "items": [
+        {
+          "t": "IC family",
+          "d": [
+            "IC (Pearson), rank IC (Spearman), ICIR $=\\overline{IC}/s_{IC}$, $t=\\overline{IC}/(s_{IC}/\\sqrt T)$.",
+            "Fundamental law $IR\\approx IC\\sqrt{BR}$ (upper bound)."
+          ],
+          "cards": [
+            "BAG-F-09"
+          ]
+        },
+        {
+          "t": "Decay curve",
+          "d": [
+            "IC vs single-day $r_{t+h}$; half-life; execution-lag sensitivity; horizon set against costs."
+          ],
+          "cards": [
+            "BAG-F-10"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Diagnosing signals",
+      "items": [
+        {
+          "t": "Size dependence",
+          "d": [
+            "Within-bucket IC, price and liquidity filters, execution lag, borrow, net capacity."
+          ],
+          "cards": [
+            "BAG-F-11"
+          ]
+        },
+        {
+          "t": "Breakdown over time",
+          "d": [
+            "Pipeline changes → IC series → exposures → costs → crowding → regime. Don't refit and re-test on the failure window."
+          ],
+          "cards": [
+            "BAG-F-12"
+          ]
+        },
+        {
+          "t": "Neutralisation",
+          "d": [
+            "Residual of a per-date cross-sectional regression on exposures, or $w^\\top X=0$ constraints. May remove real rotation alpha."
+          ],
+          "cards": [
+            "BAG-F-13"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Costs & capacity",
+      "items": [
+        {
+          "t": "Turnover",
+          "d": [
+            "One-way $\\frac12\\sum|\\Delta w_i|$; break-even cost = gross return / turnover."
+          ],
+          "cards": [
+            "BAG-F-14"
+          ]
+        },
+        {
+          "t": "Square-root impact",
+          "d": [
+            "impact $\\approx Y\\sigma\\sqrt{Q/V}$; total cost $\\propto\\text{AUM}^{1.5}$; profit-maximising $A^*=(2\\alpha/3c)^2$; participation cap 5–10% ADV."
+          ],
+          "cards": [
+            "BAG-F-15",
+            "BAG-F-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Combining & new data",
+      "items": [
+        {
+          "t": "Combining correlated signals",
+          "d": [
+            "Equal Sharpe, equal weight: $S\\sqrt{2/(1+\\rho)}$. Orthogonalise B on A; shrink $\\Sigma^{-1}\\mu$ weights."
+          ],
+          "cards": [
+            "BAG-F-17"
+          ]
+        },
+        {
+          "t": "Alternative data checklist",
+          "d": [
+            "Compliance & timestamps (veto) → mechanism & uniqueness → incremental net value, capacity, decay."
+          ],
+          "cards": [
+            "BAG-F-18"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "BAG-F-01",
+      "g": "Research workflow",
+      "k": "Alpha end to end",
+      "q": "Walk through researching a new alpha idea from scratch. (1) What do you pin down before touching performance? (2) What are the evaluation steps? (3) What happens after the backtest? (4) How do you limit researcher degrees of freedom?",
+      "pts": [
+        "(1) Hypothesis and mechanism (who is wrong or bearing risk, why it is not arbitraged away) as one falsifiable sentence; point-in-time data (coverage, history, release timestamps, revisions); the main feature definition; the target (horizon, raw / industry-adjusted / residual return, decision time and fill price).",
+        "(2) Baselines (known related factors, a simple version of the idea); validation: quantile monotonicity, IC / rank IC with NW $t$, walk-forward OOS.",
+        "(3) Portfolio (neutralisation, sizing, rebalance), costs and capacity (net Sharpe), robustness (subsamples, parameters, universes, decay curve), then live monitoring with switch-off rules.",
+        "(4) Write down the main definition and success criteria beforehand; log every variant tried, failures included, and count them when judging the result."
+      ],
+      "pit": "",
+      "src": "Q71",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-02",
+      "g": "Research workflow",
+      "k": "Why simple baselines",
+      "q": "Why should a sophisticated model always be compared with simple baselines? Give five reasons.",
+      "pts": [
+        "(1) Incremental value: the complex model may just reproduce a simple signal (a neural net that mostly learned momentum). Value = complex − baseline.",
+        "(2) Overfitting check: beating the baseline in-sample is easy; no OOS edge means the complexity fits noise.",
+        "(3) Debugging: if the baseline is also suspiciously good, suspect data or leakage.",
+        "(4) Interpretation: the baseline explains what the complex model is doing.",
+        "(5) Production cost: maintenance, compute and model risk must be paid for by the increment."
+      ],
+      "pit": "",
+      "src": "Q85",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-03",
+      "g": "Backtest biases",
+      "k": "Look-ahead bias",
+      "q": "(1) Define look-ahead bias. (2) Give at least four ways it enters an equity backtest. (3) What principle prevents it?",
+      "pts": [
+        "(1) The backtest uses at decision time $t$ information not yet available at $t$.",
+        "(2a) Fundamentals aligned to the fiscal period end (Q4 ends 12/31 but is published in February) instead of the announcement date plus a buffer; restated or revised values (financials, macro data, analyst estimates).",
+        "(2b) Today's index constituents used for the past; later corporate actions (splits, mergers, delistings) used to filter earlier.",
+        "(2c) Signal from the close traded at that same close (use next open / VWAP, or pre-close data); full-sample z-scores, winsorisation cut-offs, PCA, hyperparameters; LLMs whose training data covers the test period.",
+        "(3) Store two times for every value — the time it describes and the time it became known — and use only knowledge time $\\le t$. Pipeline-level look-ahead (alignment, universe) is commoner and subtler than model-level."
+      ],
+      "pit": "",
+      "src": "Q72",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-04",
+      "g": "Backtest biases",
+      "k": "Survivorship bias",
+      "q": "(1) Define survivorship bias. (2) How does it distort a historical stock-selection backtest? Consider returns, characteristics and the short side. (3) How do you correct it?",
+      "pts": [
+        "(1) Building the history from stocks that still exist today, dropping those delisted, bankrupt or acquired along the way.",
+        "(2a) Returns are overstated, most for strategies tilted to cheap, distressed, small or levered stocks, since the dropped names are mostly bad performers.",
+        "(2b) Characteristic relations are distorted (\\\"high leverage earns more\\\" because the levered firms that failed are missing). On the short side the effect flips: missing delisted shorts understates short profits.",
+        "(3) Point-in-time universe including dead securities (e.g. CRSP), and delisting returns, often very negative; estimate them by delisting reason when missing."
+      ],
+      "pit": "",
+      "src": "Q73",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-05",
+      "g": "Backtest biases",
+      "k": "Data snooping",
+      "q": "(1) What is data snooping / p-hacking in quant research? (2) List ways to control it. (3) What must be counted?",
+      "pts": [
+        "(1) Trying many variants (definitions, parameters, periods, universes, horizons) on the same data and keeping the best: noise becomes apparent alpha, and the reported $t$ ignores the search.",
+        "(2) An untouched holdout used once; a research log of every variant; multiple-testing controls (a $t$ bar near 3, BH for FDR, deflated Sharpe for the number of trials and the skew/kurtosis); economic priors first; replication on other markets, periods, data sources; a pre-set main specification with robustness checks as checks, not further selection.",
+        "(3) The trials of the whole search process, not just the final model."
+      ],
+      "pit": "",
+      "src": "Q74",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-06",
+      "g": "Validating results",
+      "k": "In-sample Sharpe 2",
+      "q": "You find a signal with in-sample Sharpe 2.0. (1) In what order do you check it? (2) Give the checks in each stage. (3) What do you expect to happen to the Sharpe?",
+      "pts": [
+        "(1) Is it wrong → is it real → is it tradeable → is it incremental.",
+        "(2a) Wrong: audit data and leakage first (cheapest, commonest): point-in-time stamps, delay between signal and fill, survivorship, full-sample normalisation.",
+        "(2b) Real: count the variants behind it (deflated Sharpe, Bonferroni/BH); untouched OOS with no more tuning; subperiods, sizes, sectors; parameter sensitivity (±50% lookback: a plateau or a spike?).",
+        "(2c) Tradeable and incremental: factor exposures (market, size, value, momentum, industry) and residual alpha; turnover, net Sharpe, capacity; correlation with existing signals.",
+        "(3) It should shrink, often by half or more after costs and OOS. The job is to find out by how much and why."
+      ],
+      "pit": "",
+      "src": "Q70",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-07",
+      "g": "Validating results",
+      "k": "20 years: split",
+      "q": "You have 20 years of daily data (say 2006–2025). (1) What principles govern the split? (2) Propose a concrete scheme. (3) What are the trade-offs on the test length?",
+      "pts": [
+        "(1) No universal ratio; keep time order; each part must span enough regimes; more searching needs more protection.",
+        "(2) Final test: the last 3–4 years (2022–2025), looked at once after every decision is fixed. Development 2006–2021: expanding-window walk-forward, validate on each next year (about 10 OOS years) to choose hyperparameters; include 2008 and 2020; purge/embargo overlapping labels.",
+        "(3) Too short and the result is noise (3 years: Sharpe SE $\\approx1/\\sqrt3\\approx0.58$); too long and training loses the most relevant recent data. More hyperparameter search → longer holdout or higher bar."
+      ],
+      "pit": "",
+      "src": "Q86",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-08",
+      "g": "Validating results",
+      "k": "Only 30 bets",
+      "q": "A backtest has a smooth daily equity curve but only 30 independent bets. (1) How confident are you? Quantify with a per-bet Sharpe of 0.3. (2) Why is the daily $t$-stat misleading? (3) What else lowers the effective sample? (4) What would you do?",
+      "pts": [
+        "(1) Not very: $t=SR_{\\text{bet}}\\sqrt{30}=0.3\\times5.48\\approx1.64$, not significant.",
+        "(2) A 60-day position appears in 60 highly correlated daily returns; using the daily count understates uncertainty (same issue as overlapping labels).",
+        "(3) Bets cluster in time, sector or macro shock, so the effective number is below 30; and no big loss in 30 bets says little about the tail (short-vol-like payoffs).",
+        "(4) Bet-level statistics (per-trade returns, hit rate, win/loss ratio), bootstrap by bet, concentration (share of P&L from the top 5 bets), more independent samples (assets, history)."
+      ],
+      "pit": "",
+      "src": "Q87",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-09",
+      "g": "Signal metrics",
+      "k": "IC, Sharpe, t",
+      "q": "(1) What does each of IC, rank IC, Sharpe ratio and t-stat measure? (2) State the fundamental law and evaluate it for IC 0.03, 500 stocks, monthly. (3) Relate Sharpe and $t$; evaluate for 10 years at Sharpe 0.6. (4) Why is none sufficient alone?",
+      "pts": [
+        "(1) IC: per-period cross-sectional Pearson correlation of signal and next return, averaged — linear predictive strength. Rank IC: Spearman — ordering, robust to outliers. Sharpe: realised portfolio return / vol — after construction and costs. $t$: estimate / SE (e.g. $\\overline{IC}/(s_{IC}/\\sqrt T)$) — could it be sampling noise? ICIR $=\\overline{IC}/s_{IC}$ measures stability.",
+        "(2) $IR\\approx IC\\sqrt{BR}$: $0.03\\sqrt{6000}\\approx2.3$, an upper bound; correlated bets, costs and constraints cut it a lot.",
+        "(3) $t\\approx SR_{\\text{annual}}\\sqrt{\\text{years}}$: $0.6\\sqrt{10}\\approx1.9$.",
+        "(4) High IC can come from a few extreme names (check rank IC); high Sharpe from factor exposure; high $t$ from multiple testing or overlapping samples."
+      ],
+      "pit": "",
+      "src": "Q75",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-10",
+      "g": "Signal metrics",
+      "k": "Alpha decay",
+      "q": "(1) Define alpha decay (two senses). (2) How do you measure it? (3) How do you choose the holding horizon? (4) What inference trap applies?",
+      "pts": [
+        "(1) Predictive power falling with days since the signal; and a signal fading after discovery or publication as it gets crowded.",
+        "(2) IC of the signal with the single-day return $r_{t+h}$ for $h=1..H$ (non-overlapping daily returns); cumulative IC or long-short return vs $h$ and where it flattens; IC half-life; delay execution by 0, 1, 2 days and measure the loss.",
+        "(3) Trade-off with costs: short holds capture more alpha but turn over more; long holds cost less after the alpha has decayed. Or smooth the signal (EWMA) instead of a fixed hold.",
+        "(4) Regressions on cumulative $h$-day returns have overlapping errors: use NW / non-overlapping tests."
+      ],
+      "pit": "",
+      "src": "Q82",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-11",
+      "g": "Diagnosing signals",
+      "k": "Small caps only",
+      "q": "A signal works in small caps but not large caps. (1) Give four possible explanations. (2) How do you investigate? (3) What decides the conclusion?",
+      "pts": [
+        "(1) Genuine mechanism (less coverage, more limits to arbitrage, slower correction); liquidity / microstructure (bid-ask bounce, stale prices, penny stocks); dirtier data; exposure to size or liquidity premia.",
+        "(2) IC and long-short returns within size buckets (e.g. NYSE quintiles) and whether they change monotonically; drop prices below 5 and the least liquid quantile; add a one-day execution lag; evaluate net returns and capacity (small-cap shorts are often hard to borrow).",
+        "(3) The net-of-cost result: often little survives; if it does, accept it as a small-capacity strategy."
+      ],
+      "pit": "",
+      "src": "Q76",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-12",
+      "g": "Diagnosing signals",
+      "k": "Fails after 2020",
+      "q": "A strategy performed well before 2020 and poorly after. (1) What do you rule out first? (2) What signal-level analyses do you run? (3) Which market-side causes do you check? (4) What discipline applies when you fix it?",
+      "pts": [
+        "(1) Your own pipeline: vendor, field definitions, coverage or universe rules changing around 2020; a jump in the signal's mean, variance or missing rate.",
+        "(2) The IC series (to zero or negative? gradual or a cliff?); factor exposures (value, momentum, size had violent swings then: P&L may be exposure, not alpha); breakdown by sector, size, long vs short.",
+        "(3) Costs (turnover, spreads, impact); crowding (published around then? anomaly returns fall about 58% after publication, McLean-Pontiff; rising correlation with common factors); regime (vol, rates, retail participation).",
+        "(4) Do not change the model on the failure period and then \\\"validate\\\" on that same period: validate on new or held-out data, or write the reason for the change first."
+      ],
+      "pit": "",
+      "src": "Q77",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-13",
+      "g": "Diagnosing signals",
+      "k": "Neutralisation",
+      "q": "(1) Describe the regression method for neutralising a cross-sectional signal to industry, size and other factors. (2) Describe the portfolio-constraint method. (3) What must you specify? (4) What is the cost of neutralising?",
+      "pts": [
+        "(1) Each date: $$s_{i,t}=a_t+\\sum_k\\beta_{k,t}\\mathrm{Ind}_{i,k}+\\gamma_t\\log\\mathrm{MCap}_{i,t}+\\dots+\\epsilon_{i,t}$$ use the residual $\\epsilon_{i,t}$ (orthogonal to the exposures).",
+        "(2) In the optimiser, constrain portfolio exposures to industry, beta and size to zero ($w^\\top X=0$).",
+        "(3) Timing (exposures known at $t$); weighting (equal or e.g. square-root cap weighted); order relative to winsorising; and check exposures at the portfolio level, since other constraints can reintroduce them.",
+        "(4) It removes genuine alpha too if part of it is industry rotation: compare performance before and after and understand the gap."
+      ],
+      "pit": "",
+      "src": "Q78",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-14",
+      "g": "Costs & capacity",
+      "k": "High-turnover alpha",
+      "q": "(1) Define one-way turnover. (2) What does high turnover cost? (3) Why can a high-turnover signal still be useful? Give three reasons. (4) What quantity helps judge it?",
+      "pts": [
+        "(1) $\\frac12\\sum_i|w_{i,t}-w_{i,t-1}|$; it rises as the signal's autocorrelation falls.",
+        "(2) Spread and impact costs proportional to turnover, operational load, lower capacity.",
+        "(3) Gross alpha per trade can be large enough (1–5 day reversal); low correlation with slow signals (value, quality) raises the combined Sharpe; inside a combined book the fast signal can time the slow signal's trades, cutting net turnover.",
+        "(4) Break-even cost = gross return / turnover, compared with actual cost; judge net alpha and capacity, not turnover alone."
+      ],
+      "pit": "",
+      "src": "Q79",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-15",
+      "g": "Costs & capacity",
+      "k": "Cost model",
+      "q": "(1) Break transaction costs into components. (2) Write the square-root impact model and define its terms. (3) How should costs be used in a backtest beyond subtracting them?",
+      "pts": [
+        "(1) Explicit fees and taxes; half spread (vs mid); market impact; borrow and financing for shorts; delay / opportunity cost between signal and fill.",
+        "(2) $$\\text{impact}\\approx Y\\,\\sigma_{\\text{daily}}\\sqrt{\\frac{Q}{V}}$$ $Q$ = traded quantity, $V$ = ADV, $Y\\approx1$. Higher participation and vol mean more impact; not one constant across stocks.",
+        "(3) Stress-test (costs ×1.5, ×2; higher in volatile periods) and put costs into the sizing decision (cost term in the optimiser, no-trade buffers)."
+      ],
+      "pit": "",
+      "src": "Q80",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-16",
+      "g": "Costs & capacity",
+      "k": "Capacity 10M → 1B",
+      "q": "(1) Define capacity. (2) How do you estimate it across AUM levels? (3) Under square-root impact, gross profit $\\propto$ AUM and cost $=c\\,\\text{AUM}^{1.5}$; find the profit-maximising AUM. (4) What else changes as you scale?",
+      "pts": [
+        "(1) Capital deployable before impact materially erodes returns: e.g. AUM where net Sharpe drops below a bar, or where net dollar profit peaks.",
+        "(2) For each AUM: trade sizes $Q_i=\\text{AUM}\\,|\\Delta w_i|$; participation $Q_i/\\text{ADV}_i$ against a 5–10% limit (beyond it, trading takes days and the alpha decays); impact model for costs; breadth of names carrying the alpha.",
+        "(3) Impact per unit $\\propto\\sqrt{\\text{AUM}}$, so total cost $\\propto\\text{AUM}^{1.5}$. Profit $\\alpha A-cA^{1.5}$: $\\alpha=1.5c\\sqrt A$, $$A^*=\\Big(\\frac{2\\alpha}{3c}\\Big)^2$$",
+        "(4) At 100× capital you must trade slower, cut turnover and stay in liquid names, which changes the alpha itself."
+      ],
+      "pit": "",
+      "src": "Q81",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-17",
+      "g": "Combining & new data",
+      "k": "Combine at ρ = 0.8",
+      "q": "Two signals' returns have correlation 0.8. (1) What else do you need to know? (2) With equal Sharpe $S$, what is the Sharpe of the equal-weight combination? Evaluate at $\\rho=0.8$ and $0$. (3) Why are mean-variance weights dangerous here? (4) What do you do in practice?",
+      "pts": [
+        "(1) Each signal's expected alpha (IC or Sharpe), vol, stability, turnover and capacity, and conditional complementarity (different regimes or stocks).",
+        "(2) $$S_{\\text{comb}}=S\\sqrt{\\frac{2}{1+\\rho}}$$ $\\rho=0.8$: $1.054S$ (+5%); $\\rho=0$: $1.414S$ (+41%).",
+        "(3) $w\\propto\\Sigma^{-1}\\mu$ with near-singular $\\Sigma$ reacts violently to small differences in $\\mu$ (large long-short weights): shrink toward equal weight or shrink $\\Sigma$.",
+        "(4) Regress B on A, test the residual $B^\\perp$ for its own IC: if yes combine A and $B^\\perp$; if not keep the cleaner or cheaper one. Judge the combination by OOS net portfolio performance."
+      ],
+      "pit": "",
+      "src": "Q83",
+      "seen": []
+    },
+    {
+      "id": "BAG-F-18",
+      "g": "Combining & new data",
+      "k": "Alt-data evaluation",
+      "q": "You are offered an alternative dataset. (1) What data-quality and compliance checks can veto it? (2) What economic questions come next? (3) How do you measure its value?",
+      "pts": [
+        "(1) Provenance and legality (personal data, site terms, MNPI, legal review); timestamp integrity (true point-in-time history or backfilled; vendor revisions); coverage and history length, and whether coverage changes over time; survivorship (dead companies kept?).",
+        "(2) What economic quantity does it measure and why does it lead prices? How widely is it already used (correlation with existing factors)?",
+        "(3) Incremental IC / returns over existing factors and signals under the same OOS protocol; net of data fees, processing and trading costs; capacity; decay as the vendor sells to more clients."
+      ],
+      "pit": "",
+      "src": "Q84",
+      "seen": []
+    }
+  ]
+}

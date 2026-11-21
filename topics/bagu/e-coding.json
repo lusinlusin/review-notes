@@ -1,0 +1,297 @@
+{
+  "title": "Python / SQL / data",
+  "notes": [
+    {
+      "h": "pandas panels",
+      "items": [
+        {
+          "t": "Returns per ticker",
+          "d": [
+            "Sort by ticker, date; groupby('ticker') then pct_change(20, fill_method=None) or shift(-20) for forward returns; adjusted prices; rows ≠ trading days."
+          ],
+          "cards": [
+            "BAG-E-01"
+          ]
+        },
+        {
+          "t": "Cross-sectional z-score",
+          "d": [
+            "groupby(['date','sector']).transform('mean'/'std'/'count'); neutral value for small or zero-variance groups; winsorise → z-score → clip, order fixed in advance."
+          ],
+          "cards": [
+            "BAG-E-02"
+          ]
+        },
+        {
+          "t": "Joins",
+          "d": [
+            "merge (columns), join (index), concat (stack), groupby (aggregate). validate='m:1'; merge_asof(direction='backward') for point-in-time."
+          ],
+          "cards": [
+            "BAG-E-03"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Performance",
+      "items": [
+        {
+          "t": "Memory",
+          "d": [
+            "Profile → read fewer columns/rows (Parquet) → smaller dtypes, category → fewer copies → chunk → DuckDB / Polars / Spark."
+          ],
+          "cards": [
+            "BAG-E-04"
+          ]
+        },
+        {
+          "t": "Complexity",
+          "d": [
+            "Sort $O(n\\log n)$; dict/set lookup $O(1)$ average; list membership $O(n)$. Running sum gives an $O(n)$ rolling mean; two heaps for rolling median, monotone deque for rolling max."
+          ],
+          "cards": [
+            "BAG-E-05",
+            "BAG-E-06"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Python semantics",
+      "items": [
+        {
+          "t": "Copies",
+          "d": [
+            "Assignment shares; copy.copy copies the outer container only; copy.deepcopy recurses. Mutable defaults persist across calls."
+          ],
+          "cards": [
+            "BAG-E-07"
+          ]
+        },
+        {
+          "t": "Lazy iteration",
+          "d": [
+            "Iterator: __iter__ / __next__ / StopIteration. Generator: yield, pauses with state. Single pass, no indexing."
+          ],
+          "cards": [
+            "BAG-E-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "SQL & data hygiene",
+      "items": [
+        {
+          "t": "Window functions",
+          "d": [
+            "LAG(x) OVER (PARTITION BY ticker ORDER BY date); NTILE(10) / PERCENT_RANK() OVER (PARTITION BY date ORDER BY signal DESC)."
+          ],
+          "cards": [
+            "BAG-E-09",
+            "BAG-E-10"
+          ]
+        },
+        {
+          "t": "Duplicates",
+          "d": [
+            "Check key uniqueness on both sides; cause is usually versions or IDs; fix with a point-in-time rule, never blind drop_duplicates."
+          ],
+          "cards": [
+            "BAG-E-11"
+          ]
+        },
+        {
+          "t": "Reproducibility",
+          "d": [
+            "Code, data version, config, environment, seeds, experiment log; pure-function pipeline."
+          ],
+          "cards": [
+            "BAG-E-12"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "BAG-E-01",
+      "g": "pandas panels",
+      "k": "20-day returns",
+      "q": "A long DataFrame df has columns ticker, date, adj_close (one row per stock per day). (1) Write vectorised code for the past 20-day return and the forward 20-day return. (2) Why must it be done within ticker? (3) What do fill_method=None and adj_close guard against? (4) What does pct_change(20) actually count, and how do you fix that?",
+      "pts": [
+        "(1) df = df.sort_values(['ticker','date']); g = df.groupby('ticker')['adj_close']; df['ret_20d'] = g.pct_change(20, fill_method=None); df['fwd_20d'] = g.shift(-20) / df['adj_close'] - 1",
+        "(2) Otherwise the last rows of one stock are divided by the first rows of the next.",
+        "(3) fill_method=None: no silent forward-fill of missing prices. Adjusted prices: splits and dividends would create fake returns.",
+        "(4) 20 rows, not 20 trading days: with halted days it spans more time. Pivot to a date × ticker table, reindex to the trading calendar, then pct_change(20)."
+      ],
+      "pit": "Avoid groupby().apply(lambda ...) calling Python per group: built-in pct_change / shift / rolling are much faster.",
+      "src": "Q58",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-02",
+      "g": "pandas panels",
+      "k": "Sector z-score",
+      "q": "df has date, sector, signal. (1) Write code for the within-date, within-sector z-score. (2) Why transform rather than agg? (3) How do you handle tiny or zero-variance groups? (4) How do you handle outliers, and what ordering question must you settle?",
+      "pts": [
+        "(1) g = df.groupby(['date','sector'])['signal']; mu, sd, n = g.transform('mean'), g.transform('std'), g.transform('count'); df['z'] = (df['signal'] - mu) / sd",
+        "(2) transform returns a series aligned with the original rows; agg returns one row per group and would need a merge.",
+        "(3) With 1–2 names std is NaN or 0: set z to 0 (or NaN) when n < 5 or sd == 0, and record the rule.",
+        "(4) Mean and sd are themselves hit by outliers: winsorise by date first, then z-score within sector, then clip at ±3 (or use ranks or median/MAD). Winsorise before or after neutralisation give different results: fix one order in advance."
+      ],
+      "pit": "",
+      "src": "Q59",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-03",
+      "g": "pandas panels",
+      "k": "merge, join, concat",
+      "q": "(1) What does each of merge, join, concat and groupby do? Give an investment-data example for each. (2) What check prevents the most common merge bug? (3) How do you attach fundamentals point-in-time?",
+      "pts": [
+        "(1) merge: relational join on key columns (prices + fundamentals on ticker, date). join: same, on the index (two date-indexed wide tables side by side). concat: stack along an axis without key matching (yearly panel files). groupby: split-apply-combine (daily sector mean return, within-sector rank).",
+        "(2) Row counts before and after, and validate='m:1' (raises if the right-hand keys are not unique).",
+        "(3) pd.merge_asof(prices, fund, left_on='date', right_on='announce_date', by='ticker', direction='backward'): latest value already published (both sorted by date)."
+      ],
+      "pit": "",
+      "src": "Q60",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-04",
+      "g": "Performance",
+      "k": "200M rows: memory",
+      "q": "A pandas pipeline on 200 million rows runs out of memory. (1) What do you do first? (2) List the main fixes in roughly the order you would try them.",
+      "pts": [
+        "(1) Profile: df.memory_usage(deep=True), tracemalloc; find the largest columns and the step where memory peaks.",
+        "(2a) Read less: Parquet with columns=[...] and row filters (predicate pushdown).",
+        "(2b) Smaller dtypes: float64 → float32, int64 → int32, strings (ticker, sector) → category. One float64 column of 200M rows is 1.6 GB.",
+        "(2c) Fewer copies: chain operations, del intermediates, avoid apply(axis=1).",
+        "(2d) Chunk by date or ticker; or switch tools: DuckDB (SQL on Parquet, out-of-core), Polars (lazy, multithreaded), Spark/Dask (distributed)."
+      ],
+      "pit": "",
+      "src": "Q61",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-05",
+      "g": "Performance",
+      "k": "Big-O: sort, dict",
+      "q": "(1) What is the complexity of sorting $n$ items, of dict/set lookup, and of x in list? (2) Why should a researcher care? Give an example.",
+      "pts": [
+        "(1) Comparison sort $O(n\\log n)$ (a lower bound); Python's Timsort is worst-case $O(n\\log n)$, near $O(n)$ on partly sorted data. Hash lookup: average $O(1)$, worst $O(n)$ with many collisions. x in list: $O(n)$.",
+        "(2) A membership test against a list inside a loop over 5000 stocks × 5000 days turns $O(n)$ into $O(n^2)$; a set fixes it. Constant factors matter too (numpy is 10–100× a Python loop). Backtest runtime sets how many ideas you can test per day."
+      ],
+      "pit": "",
+      "src": "Q62",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-06",
+      "g": "Performance",
+      "k": "O(n) rolling mean",
+      "q": "Implement a rolling mean over a list xs with window w without recomputing each window. (1) Describe the algorithm and its complexity. (2) How do you handle the first $w-1$ points and NaNs? (3) What numerical issue arises on long series? (4) What would you use in production?",
+      "pts": [
+        "(1) Keep a running sum s and count of non-NaN values: add the new value, subtract the value leaving the window (index i − w). Total $O(n)$ vs naive $O(nw)$.",
+        "(2) Output NaN until the window is full. Sum only non-NaN values and divide by their count (output NaN if none) — state the rule; pandas with min_periods=w returns NaN if any value in the window is NaN.",
+        "(3) Floating-point drift from repeated add/subtract: recompute the sum periodically or use Kahan summation.",
+        "(4) pd.Series.rolling(w).mean() (same algorithm, tested). Custom only when needed: rolling median with two heaps, rolling max with a monotone deque."
+      ],
+      "pit": "",
+      "src": "Q63",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-07",
+      "g": "Python semantics",
+      "k": "Shallow vs deep copy",
+      "q": "cfg = {'universe': ['AAPL','MSFT'], 'lookback': 20}. (1) What do b = cfg, copy.copy(cfg) and copy.deepcopy(cfg) give? (2) What happens if you append to the universe list in a shallow copy? (3) Name three ways this bites research code. (4) What habits prevent it?",
+      "pts": [
+        "(1) Assignment: the same object under two names. Shallow: a new outer dict whose values are the same objects. Deep: everything copied recursively.",
+        "(2) The original's list changes too: cfg['universe'] now includes the new ticker. With deepcopy it does not.",
+        "(3) Experiments sharing one config dict silently inherit a mutated list; functions modifying a passed-in DataFrame change the caller's data (and slices may be views: SettingWithCopyWarning, eased by Copy-on-Write in pandas 3); mutable default arguments def f(x=[]) persist across calls.",
+        "(4) Copy at function boundaries, immutable configs (frozen dataclass, tuples), functions that return new objects instead of mutating inputs."
+      ],
+      "pit": "",
+      "src": "Q64",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-08",
+      "g": "Python semantics",
+      "k": "Generators",
+      "q": "(1) Define an iterator and a generator. (2) When do they help with market data? Give an example. (3) What are the costs?",
+      "pts": [
+        "(1) Iterator: object with __iter__ and __next__, raising StopIteration when exhausted. Generator: a function with yield; calling it returns an iterator that pauses at each yield and keeps its local state (lazy evaluation).",
+        "(2) Memory depends on the chunk size, not the file size: stream tick files with pd.read_csv(path, chunksize=10**6), clean each chunk, yield it, aggregate per chunk (e.g. sum price×size and size per date), then combine for VWAP. Also event-by-event backtests, file-by-file filings.",
+        "(3) One pass only, no random access (gen[5] fails), opaque state when debugging; materialise or recreate to reuse."
+      ],
+      "pit": "",
+      "src": "Q65",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-09",
+      "g": "SQL & data hygiene",
+      "k": "SQL: LAG and returns",
+      "q": "Table prices(ticker, date, close). (1) Write SQL for the prior close and daily return. (2) What does PARTITION BY do here? (3) How do duplicate rows break it, and how do you find them? (4) What about missing dates?",
+      "pts": [
+        "(1) SELECT ticker, date, close, LAG(close) OVER (PARTITION BY ticker ORDER BY date) AS prev_close, close / LAG(close) OVER (PARTITION BY ticker ORDER BY date) - 1 AS ret FROM prices;",
+        "(2) Keeps the lag within each ticker; each ticker's first row gets NULL.",
+        "(3) Two rows for one (ticker, date) give a zero or misaligned return. Find them: SELECT ticker, date, COUNT(*) FROM prices GROUP BY ticker, date HAVING COUNT(*) > 1;",
+        "(4) LAG takes the previous row, not the previous trading day: after a halt the \\\"daily\\\" return spans several days. Join a trading calendar, or record the gap. Use adjusted prices."
+      ],
+      "pit": "",
+      "src": "Q66",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-10",
+      "g": "SQL & data hygiene",
+      "k": "SQL: top decile",
+      "q": "Tables signals(date, ticker, signal) and universe(date, ticker). (1) Write SQL that selects each date's top signal decile. (2) Why and where must the universe filter apply? (3) How do NTILE and ties interact? (4) What about NULLs?",
+      "pts": [
+        "(1) WITH ranked AS (SELECT s.date, s.ticker, s.signal, NTILE(10) OVER (PARTITION BY s.date ORDER BY s.signal DESC) AS decile FROM signals s JOIN universe u ON u.ticker = s.ticker AND u.date = s.date WHERE s.signal IS NOT NULL) SELECT date, ticker, signal FROM ranked WHERE decile = 1;",
+        "(2) Before ranking, using that date's universe: otherwise deciles are computed on the wrong set and survivorship creeps in.",
+        "(3) NTILE splits equal values arbitrarily across adjacent buckets (non-deterministic). Use PERCENT_RANK() or RANK() with a threshold so ties move together, or add a deterministic tie-break (ticker).",
+        "(4) Exclude them first; databases differ on where NULLs sort."
+      ],
+      "pit": "",
+      "src": "Q67",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-11",
+      "g": "SQL & data hygiene",
+      "k": "Join duplicates",
+      "q": "After joining fundamentals to prices on (ticker, date) the row count grows. (1) What do you check first? (2) What usually causes it? (3) How do you fix it properly? (4) What must you not do?",
+      "pts": [
+        "(1) Key uniqueness on both sides: prices.duplicated(['ticker','date']).sum(), the same for fund, and look at the duplicated rows; compare row counts; merge(..., validate='m:1').",
+        "(2) Version and point-in-time fields: original and restated versions of a period, several filing dates, annual and quarterly records together, multiple share classes, recycled tickers.",
+        "(3) A business rule such as \\\"latest version already published at that date\\\" via merge_asof on the announcement date; permanent security IDs instead of tickers.",
+        "(4) Blindly drop_duplicates(): you may keep a revision published later, which is look-ahead bias."
+      ],
+      "pit": "",
+      "src": "Q68",
+      "seen": []
+    },
+    {
+      "id": "BAG-E-12",
+      "g": "SQL & data hygiene",
+      "k": "Reproducibility",
+      "q": "(1) What must be fixed or recorded so a backtest can be reproduced six months later? List six items. (2) How should the code be structured?",
+      "pts": [
+        "(1a) Code: git, commit hash recorded per run; no hidden notebook state.",
+        "(1b) Data: snapshots or versioned datasets (vendor vintage, download date, file hash); point-in-time queries by as-of date.",
+        "(1c) Config: every parameter (universe, dates, hyperparameters, cost assumptions) in a config file archived with the results.",
+        "(1d) Environment (lock file or Docker), all random seeds, and an experiment log of {commit, data version, config, seed, metrics}, failed runs included.",
+        "(2) Load → features → signal → portfolio → evaluation as pure functions (same input, same output), with no global mutable state, no datetime.today(), no live API calls."
+      ],
+      "pit": "",
+      "src": "Q69",
+      "seen": []
+    }
+  ]
+}

@@ -1,0 +1,539 @@
+{
+  "title": "Probability",
+  "notes": [
+    {
+      "h": "Optimal stopping",
+      "items": [
+        {
+          "t": "Bellman equation (stationary game)",
+          "d": [
+            "$V=E[\\max(X,\\,V-c)]$; stop iff $x\\ge V-c$.",
+            "Indifference: $c=E[(X-m)^+]$ at $m=V-c$. Uniform $\\{1..N\\}$: $N-m\\approx\\sqrt{2Nc}$.",
+            "$N=100$: $c=1\\to k^*=87,\\ V=87.357$; $c=0.5\\to91$; $c=2\\to81$; $c=5\\to69$."
+          ],
+          "cards": [
+            "BAG-A-01",
+            "BAG-A-02"
+          ]
+        },
+        {
+          "t": "Finite horizon",
+          "d": [
+            "Backward induction; threshold falls as rolls run out. 6-sided, 3 rolls: 3.5 → stop $\\ge4$ (4.25) → stop $\\ge5$ ($14/3$)."
+          ],
+          "cards": [
+            "BAG-A-02"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Distributions",
+      "items": [
+        {
+          "t": "Linear combination of jointly normal",
+          "d": [
+            "$X-Y\\sim N(\\mu_X-\\mu_Y,\\ \\sigma_X^2+\\sigma_Y^2-2\\rho\\sigma_X\\sigma_Y)$; needs joint normality."
+          ],
+          "cards": [
+            "BAG-A-03"
+          ]
+        },
+        {
+          "t": "Order statistics of uniforms",
+          "d": [
+            "$P(\\max\\le x)=x^n$, $E\\max=\\frac{n}{n+1}$, $E\\min=\\frac1{n+1}$, $U_{(j)}\\sim\\mathrm{Beta}(j,n-j+1)$, mean $\\frac{j}{n+1}$.",
+            "Tail formula: $X\\ge0 \\Rightarrow E[X]=\\int_0^\\infty P(X>x)\\,dx$."
+          ],
+          "cards": [
+            "BAG-A-04"
+          ]
+        },
+        {
+          "t": "Indicators + symmetry",
+          "d": [
+            "First ace: $P(k)=\\binom{52-k}{3}/\\binom{52}{4}$; $E[\\text{position}]=1+48/5=10.6$.",
+            "General: $w$ special, $b$ other items, expected others before the first special $=b/(w+1)$."
+          ],
+          "cards": [
+            "BAG-A-05"
+          ]
+        },
+        {
+          "t": "Poisson process",
+          "d": [
+            "$N_t\\sim\\mathrm{Pois}(\\lambda t)$, disjoint intervals independent.",
+            "$T_1\\sim\\mathrm{Expo}(\\lambda)$, $T_k\\sim\\mathrm{Gamma}(k,\\lambda)$ (mean $k/\\lambda$, var $k/\\lambda^2$); $P(T_k>t)=P(N_t<k)$.",
+            "Memoryless: $P(T>s+t\\mid T>s)=P(T>t)$. Inspection paradox: the gap containing a random time has mean $2/\\lambda$."
+          ],
+          "cards": [
+            "BAG-A-06"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Patterns & walks",
+      "items": [
+        {
+          "t": "First-step analysis",
+          "d": [
+            "State = longest matched prefix; $e_i=1+\\sum_j P_{ij}e_j$.",
+            "HH: $e_0=6$; HT: 4. Pattern formula: $\\sum_k 2^k\\mathbf 1\\{\\text{prefix}_k=\\text{suffix}_k\\}$ (HHH 14, THH 8, HHTTHH 70)."
+          ],
+          "cards": [
+            "BAG-A-07",
+            "BAG-A-08"
+          ]
+        },
+        {
+          "t": "Optional stopping",
+          "d": [
+            "Martingale $Z_n$, stopping time $\\tau$: $E[Z_\\tau]=Z_0$ if $\\tau<\\infty$ a.s. and $Z_{\\tau\\wedge n}$ bounded (or $E\\tau<\\infty$ with bounded increments).",
+            "Symmetric: $P(+a\\text{ first})=\\frac{b}{a+b}$, $E\\tau=ab$ (via $S_n^2-n$).",
+            "Drift: martingale $(q/p)^{S_n}$, $P=\\frac{1-(q/p)^b}{1-(q/p)^{a+b}}$; Wald $E S_\\tau=(p-q)E\\tau$."
+          ],
+          "cards": [
+            "BAG-A-09",
+            "BAG-A-10"
+          ]
+        },
+        {
+          "t": "Matching problem",
+          "d": [
+            "Fixed points: $E=1$, $\\mathrm{Var}=1$, limit Poisson(1), $P(\\text{none})\\to1/e$."
+          ],
+          "cards": [
+            "BAG-A-11"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Bayes & estimation",
+      "items": [
+        {
+          "t": "Beta-Binomial",
+          "d": [
+            "Prior $\\mathrm{Beta}(a,b)$ + $h$ heads, $t$ tails → $\\mathrm{Beta}(a+h,b+t)$.",
+            "Mean $\\frac{a+h}{a+b+n}$ (weight $\\frac{n}{a+b+n}$ on the MLE); MAP $\\frac{a+h-1}{a+b+n-2}$."
+          ],
+          "cards": [
+            "BAG-A-12"
+          ]
+        },
+        {
+          "t": "Odds form of Bayes",
+          "d": [
+            "Posterior odds = prior odds × likelihood ratio; in logs each observation adds a term (SPRT).",
+            "Sequential updating = updating once with all data (coherency)."
+          ],
+          "cards": [
+            "BAG-A-13"
+          ]
+        },
+        {
+          "t": "p-value vs posterior",
+          "d": [
+            "$p=P(\\text{data at least this extreme}\\mid H_0)$, not $P(H_0\\mid\\text{data})$.",
+            "$P(H_0\\mid D)=\\frac{\\pi L_0}{\\pi L_0+(1-\\pi)L_1}$."
+          ],
+          "cards": [
+            "BAG-A-14"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Dependence",
+      "items": [
+        {
+          "t": "Zero corr ≠ indep.",
+          "d": [
+            "Independent ⇒ $\\mathrm{Cov}=0$; converse holds for jointly normal vectors and for two Bernoullis.",
+            "Counterexamples: $Y=X^2$; $Y=SX$ (normal marginals, not jointly normal)."
+          ],
+          "cards": [
+            "BAG-A-15"
+          ]
+        },
+        {
+          "t": "Conditional mean under joint normality",
+          "d": [
+            "$E[X\\mid S=s]=\\mu_X+\\frac{\\mathrm{Cov}(X,S)}{\\mathrm{Var}(S)}(s-\\mu_S)$; i.i.d. sum: $s/2$ by symmetry."
+          ],
+          "cards": [
+            "BAG-A-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Returns & LLN",
+      "items": [
+        {
+          "t": "LLN",
+          "d": [
+            "$\\bar X_n\\to\\mu$ for i.i.d. (or stationary ergodic) data. Says nothing about drifting $\\mu$, selection or costs.",
+            "Days needed for $t=2$: $n=(2\\sigma/\\mu)^2$."
+          ],
+          "cards": [
+            "BAG-A-17"
+          ]
+        },
+        {
+          "t": "Jensen",
+          "d": [
+            "Convex $g$: $E g(X)\\ge g(EX)$. Log growth $\\approx\\mu-\\sigma^2/2$."
+          ],
+          "cards": [
+            "BAG-A-18"
+          ]
+        },
+        {
+          "t": "Multi-period moments",
+          "d": [
+            "Sum: mean $T\\mu$, var $T\\sigma^2$ (independent); with autocorrelation add $2\\sigma^2\\sum_{k}(T-k)\\rho_k$.",
+            "Compounded mean $(1+\\mu)^T-1$; log returns add."
+          ],
+          "cards": [
+            "BAG-A-19"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Edge & sizing",
+      "items": [
+        {
+          "t": "Kelly",
+          "d": [
+            "Maximise $g(f)=E\\log(1+fR)$. Binary bet, odds $b$, win prob $p$: $f^*=p-\\frac{1-p}{b}$ = edge / odds.",
+            "$+2/-1$ game, $p=0.4$: $f^*=0.1$, $g\\approx0.0097$; $g(2f^*)\\approx0$; half Kelly keeps ≈ 3/4 of the growth."
+          ],
+          "cards": [
+            "BAG-A-20",
+            "BAG-A-21"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "BAG-A-01",
+      "g": "Optimal stopping",
+      "k": "Die reroll: Bellman",
+      "q": "A fair 100-sided die shows $1,\\dots,100$. After each roll you may stop and take the face value, or pay 1 point and roll again, with no limit on rolls. (1) Define the value $V$ and write the Bellman equation. (2) Why is the optimal policy a threshold, and what is the rule in terms of $V$? (3) Under the policy \\\"stop at $k$ or above\\\", write the expected payoff $f(k)$. (4) Give the optimal $k$ and $V$.",
+      "pts": [
+        "(1) $V$ = expected payoff just before a roll, playing optimally. After seeing $x$: stopping gives $x$; rerolling puts you back in the same situation minus the fee, $V-1$. $$V = E\\big[\\max(X,\\,V-1)\\big]$$",
+        "(2) $V-1$ is a constant, so stop iff $x \\ge V-1$: keep high faces, reroll low ones.",
+        "(3) Stop probability per roll $p=\\frac{101-k}{100}$; the accepted face is uniform on $\\{k,\\dots,100\\}$ with mean $\\frac{k+100}{2}$; the number of rolls is geometric with mean $1/p$, so paid rerolls average $1/p-1$. $$f(k)=\\frac{k+100}{2}-\\Big(\\frac{100}{101-k}-1\\Big)$$",
+        "(4) $k=87$: $p=0.14$, $f(87)=93.5-(7.143-1)=87.357$ (vs $f(86)=87.333$, $f(88)=87.308$). Check: $V-1=86.36$, so \\\"stop at 87 or above\\\" matches (2)."
+      ],
+      "pit": "The threshold is $V-1$, not $V$; and maximising the average accepted face alone ignores the fees.",
+      "src": "Q1",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-02",
+      "g": "Optimal stopping",
+      "k": "Indifference rule",
+      "q": "Same game with an $N$-sided die and reroll cost $c$. Let $m=V-c$ be the continuation value. (1) Derive the indifference condition at $m$. (2) Solve it for the uniform die and give the approximate gap $N-m$. (3) For $N=100$, how does the optimal threshold move for $c=0.5,\\,2,\\,5$? (4) What changes if you may roll at most $n$ times?",
+      "pts": [
+        "(1) Subtract $m$ from both sides of $V=E[\\max(X,m)]$: $$c = E\\big[(X-m)^+\\big]$$ At the threshold the expected gain from one more roll equals its cost.",
+        "(2) $$E[(X-m)^+]=\\frac{(N-m)(N-m+1)}{2N}=c \\;\\Rightarrow\\; N-m\\approx\\sqrt{2Nc}$$ $N=100,\\ c=1$: $m\\approx 86.35$, $V\\approx 87.35$.",
+        "(3) $c=0.5 \\to k^*=91$; $c=1 \\to 87$; $c=2 \\to 81$; $c=5 \\to 69$. Higher cost, lower threshold; the gap grows like $\\sqrt{c}$.",
+        "(4) The state must include rolls left; solve by backward induction from the last roll, and the threshold falls as rolls run out. 6-sided die, 3 rolls: last roll worth 3.5; second roll stop at $\\ge 4$ (worth 4.25); first roll stop at $\\ge 5$ (worth $14/3$)."
+      ],
+      "pit": "",
+      "src": "Q1",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-03",
+      "g": "Distributions",
+      "k": "P(X > Y) for normals",
+      "q": "$X, Y$ are standard normal. (1) Find $P(X>Y)$ when they are independent. (2) What if they are jointly normal with correlation $\\rho<1$? (3) What happens at $\\rho=1$? (4) If instead $\\mu_X-\\mu_Y=0.5$ with unit variances, how does $\\rho$ change $P(X>Y)$? (5) What assumption does the correlated case need?",
+      "pts": [
+        "(1) $D=X-Y\\sim N(0,2)$: continuous and symmetric about 0, so $P(D>0)=1/2$.",
+        "(2) $\\mathrm{Var}(D)=1+1-2\\rho=2-2\\rho>0$ and the mean is still 0, so still $1/2$. Correlation changes the scale of $D$, not its centre.",
+        "(3) $X=Y$ almost surely, $D=0$: $P(X>Y)=0$ and $P(X\\ge Y)=1$.",
+        "(4) $$P(X>Y)=\\Phi\\Big(\\frac{\\mu_X-\\mu_Y}{\\sqrt{2-2\\rho}}\\Big)$$ $\\rho=0$: 0.638; $\\rho=0.5$: 0.691; $\\rho=0.9$: 0.868. High correlation shrinks the noise in the difference, so the mean gap shows through.",
+        "(5) Joint normality. Normal marginals alone do not make $X-Y$ normal."
+      ],
+      "pit": "",
+      "src": "Q2",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-04",
+      "g": "Distributions",
+      "k": "Max of uniforms",
+      "q": "$U_1,\\dots,U_n$ are i.i.d. $U(0,1)$ and $M=\\max_i U_i$. (1) Find the CDF of $M$. (2) Find $E[M]$, and give the value for $n=2$. (3) Find $E[\\min_i U_i]$. (4) Give $E[U_{(j)}]$ for the $j$-th smallest and the intuition.",
+      "pts": [
+        "(1) $M\\le x$ iff every $U_i\\le x$; by independence $P(M\\le x)=x^n$ on $[0,1]$.",
+        "(2) Integrate the tail: $$E[M]=\\int_0^1(1-x^n)\\,dx=\\frac{n}{n+1}$$ (or use the density $nx^{n-1}$). $n=2$: $2/3$.",
+        "(3) $P(\\min>x)=(1-x)^n$, so $E[\\min]=\\int_0^1(1-x)^n dx=\\frac{1}{n+1}$.",
+        "(4) $U_{(j)}\\sim\\mathrm{Beta}(j,\\,n-j+1)$ with mean $\\frac{j}{n+1}$: the $n$ points cut $[0,1]$ into $n+1$ gaps of equal expected length."
+      ],
+      "pit": "Selection bias is the same effect: the best of $n$ zero-skill backtests looks better as $n$ grows.",
+      "src": "Q4",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-05",
+      "g": "Distributions",
+      "k": "First ace on draw k",
+      "q": "A shuffled 52-card deck contains 4 aces; cards are drawn without replacement. (1) Find $P(\\text{first ace on draw }k)$ and its support. (2) Check $k=1$. (3) Find the expected position of the first ace using indicators. (4) Compare with drawing with replacement.",
+      "pts": [
+        "(1) Only the 4 ace positions matter, and all $\\binom{52}{4}$ sets are equally likely. Position $k$ is an ace and the other 3 are among the $52-k$ later positions: $$P=\\frac{\\binom{52-k}{3}}{\\binom{52}{4}},\\qquad k=1,\\dots,49$$",
+        "(2) $\\binom{51}{3}/\\binom{52}{4}=4/52=0.0769$, the chance the top card is an ace.",
+        "(3) $I_j=1$ if non-ace $j$ comes before all 4 aces; its 5 relative orders are equally likely, so $P(I_j=1)=1/5$. Expected non-aces before the first ace $=48/5=9.6$, position $=10.6$. Linearity needs no independence.",
+        "(4) With replacement the wait is geometric with $p=1/13$, mean 13. Without replacement it is shorter: the share of aces rises as non-aces are used up."
+      ],
+      "pit": "",
+      "src": "Q5",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-06",
+      "g": "Distributions",
+      "k": "Poisson waiting times",
+      "q": "Arrivals follow a Poisson process with rate $\\lambda$: $N_t$ = number of arrivals in $[0,t]$, $T_k$ = time of the $k$-th arrival. (1) Derive the distribution of $T_1$. (2) Give the distribution, mean and variance of $T_k$. (3) State the memoryless property. (4) What is the inspection paradox?",
+      "pts": [
+        "(1) Count-time duality: $P(T_1>t)=P(N_t=0)=e^{-\\lambda t}$, so $T_1\\sim\\mathrm{Expo}(\\lambda)$, mean $1/\\lambda$.",
+        "(2) Interarrival times are i.i.d. $\\mathrm{Expo}(\\lambda)$ (independent increments), so $T_k\\sim\\mathrm{Gamma}(k,\\lambda)$: mean $k/\\lambda$, variance $k/\\lambda^2$. Equivalently $P(T_k>t)=P(N_t<k)$, a Poisson tail.",
+        "(3) $P(T>s+t\\mid T>s)=P(T>t)$: time already waited does not change the remaining wait.",
+        "(4) Show up at a random time: the gap you land in has mean $2/\\lambda$, not $1/\\lambda$, because long gaps are more likely to be hit."
+      ],
+      "pit": "",
+      "src": "Q12",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-07",
+      "g": "Patterns & walks",
+      "k": "Wait for HH",
+      "q": "A fair coin is tossed until HH appears. (1) Define the states. (2) Write the first-step equations. (3) Solve for the expected number of tosses. (4) Why is the answer for HT only 4?",
+      "pts": [
+        "(1) State = how much of HH the latest tosses match: 0 (start or last toss T), 1 (last toss H), 2 (done). $e_i$ = expected remaining tosses, $e_2=0$.",
+        "(2) $$e_0=1+\\tfrac12 e_1+\\tfrac12 e_0,\\qquad e_1=1+\\tfrac12\\cdot 0+\\tfrac12 e_0$$",
+        "(3) The first gives $e_0=2+e_1$; substituting, $e_1=2+\\tfrac12 e_1$, so $e_1=4$ and $e_0=6$.",
+        "(4) For HT a failure after H (another H) keeps the progress: $e_1=1+\\tfrac12 e_1=2$, $e_0=4$ (wait for the first H, 2, then for a T, 2). For HH a failure resets to state 0."
+      ],
+      "pit": "",
+      "src": "Q3",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-08",
+      "g": "Patterns & walks",
+      "k": "General patterns",
+      "q": "Fair coin, target pattern $A$ of length $n$. (1) Give the formula for the expected waiting time. (2) Apply it to HHH, THH and HHTTHH. (3) Which appears first, HH or HT, and why is that a different question from (1)?",
+      "pts": [
+        "(1) Gamblers martingale (a new gambler bets on $A$ before each toss): $$E[T_A]=\\sum_{k=1}^{n}2^{k}\\,\\mathbf 1\\{\\text{first }k\\text{ letters of }A=\\text{last }k\\text{ letters}\\}$$",
+        "(2) HHH: $k=1,2,3$, $2+4+8=14$. THH: only $k=3$, 8. HHTTHH: $k=1,2,6$, $2+4+64=70$. Self-overlapping patterns take longer.",
+        "(3) Probability 1/2 each: after the first H, the next toss decides. The expected waiting times differ (6 vs 4), but \\\"which comes first\\\" is a race, not a waiting time."
+      ],
+      "pit": "",
+      "src": "Q3",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-09",
+      "g": "Patterns & walks",
+      "k": "Hit +a before -b",
+      "q": "A symmetric random walk $S_n$ starts at 0 and moves $\\pm1$ with probability 1/2. $\\tau$ = first time it hits $+a$ or $-b$ ($a,b$ positive integers). (1) Why is $S_n$ a martingale? (2) Use optional stopping to find $P(\\text{hit }+a\\text{ first})$, stating the conditions. (3) Find $E[\\tau]$. (4) Give a case where optional stopping fails.",
+      "pts": [
+        "(1) $E[S_{n+1}\\mid S_n,\\dots,S_1]=S_n+E[X_{n+1}]=S_n$.",
+        "(2) $\\tau$ is finite with $E\\tau<\\infty$, and $|S_{\\tau\\wedge n}|\\le\\max(a,b)$, so $E[S_\\tau]=S_0=0$: $aP-b(1-P)=0$, $$P=\\frac{b}{a+b}$$",
+        "(3) $S_n^2-n$ is also a martingale, so $E[\\tau]=E[S_\\tau^2]=a^2\\frac{b}{a+b}+b^2\\frac{a}{a+b}=ab$.",
+        "(4) No lower barrier, $\\tau$ = first time at $+1$: $S_\\tau=1$, so $E[S_\\tau]=1\\ne0$. Here $E\\tau=\\infty$ and the walk is unbounded below."
+      ],
+      "pit": "",
+      "src": "Q10",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-10",
+      "g": "Patterns & walks",
+      "k": "Walk with drift",
+      "q": "Same walk, but it moves up with probability $p\\ne\\tfrac12$ and down with $q=1-p$; barriers $+a$ and $-b$. (1) Find a martingale to use. (2) Derive $P(\\text{hit }+a\\text{ first})$. (3) Give the values for $a=b=10$ with $p=0.51$ and $p=0.55$, and for $a=b=50$ with $p=0.51$. (4) How do you get the expected duration?",
+      "pts": [
+        "(1) $Z_n=(q/p)^{S_n}$: $E[(q/p)^{X}]=p\\frac qp+q\\frac pq=1$, so $E[Z_{n+1}\\mid Z_n]=Z_n$.",
+        "(2) $E[Z_\\tau]=1$: $P(q/p)^a+(1-P)(q/p)^{-b}=1$, so $$P=\\frac{1-(q/p)^{b}}{1-(q/p)^{a+b}}$$ (gambler's ruin starting at $b$ out of $a+b$).",
+        "(3) $a=b=10$: 0.599 at $p=0.51$, 0.882 at $p=0.55$. $a=b=50$, $p=0.51$: 0.881. A small drift accumulates over distant barriers.",
+        "(4) Wald: $E[S_\\tau]=(p-q)E[\\tau]$, so $E\\tau=\\dfrac{aP-b(1-P)}{p-q}$."
+      ],
+      "pit": "",
+      "src": "Q10",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-11",
+      "g": "Patterns & walks",
+      "k": "Fixed points",
+      "q": "$\\sigma$ is a uniformly random permutation of $n$ elements and $X$ is its number of fixed points. (1) Find $E[X]$. (2) Find $\\mathrm{Var}(X)$. (3) What is the limiting distribution, and the limit of $P(X=0)$?",
+      "pts": [
+        "(1) $X=\\sum_j I_j$, $I_j=\\mathbf 1\\{\\sigma(j)=j\\}$, $E[I_j]=1/n$, so $E[X]=1$ for every $n$. The $I_j$ are dependent, but linearity does not care.",
+        "(2) $\\mathrm{Cov}(I_i,I_j)=\\frac{1}{n(n-1)}-\\frac1{n^2}=\\frac{1}{n^2(n-1)}$. $$\\mathrm{Var}(X)=n\\cdot\\tfrac1n\\big(1-\\tfrac1n\\big)+n(n-1)\\cdot\\frac{1}{n^2(n-1)}=1\\quad(n\\ge2)$$",
+        "(3) Poisson(1) (many rare, weakly dependent events). $P(X=0)\\to 1/e\\approx 0.368$, from inclusion-exclusion $P(X\\ge1)=1-\\frac1{2!}+\\frac1{3!}-\\cdots$."
+      ],
+      "pit": "",
+      "src": "Q9",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-12",
+      "g": "Bayes & estimation",
+      "k": "Coin: MLE vs Bayes",
+      "q": "A coin has unknown head probability $p$; you see $h$ heads and $t$ tails, $n=h+t$. (1) Derive the MLE. (2) With a $\\mathrm{Beta}(a,b)$ prior, find the posterior. (3) Write the posterior mean as a weighted average, and give the MAP. (4) Evaluate both approaches for 3 heads, 0 tails with a uniform prior.",
+      "pts": [
+        "(1) $\\ell(p)=h\\log p+t\\log(1-p)$; $\\ell'(p)=\\frac hp-\\frac{t}{1-p}=0$ gives $\\hat p=\\frac{h}{h+t}$.",
+        "(2) Posterior $\\propto p^{h}(1-p)^{t}\\cdot p^{a-1}(1-p)^{b-1}$, i.e. $\\mathrm{Beta}(a+h,\\,b+t)$: Beta is conjugate to the Binomial.",
+        "(3) $$\\tilde p=\\frac{a+h}{a+b+n}=w\\,\\frac hn+(1-w)\\frac{a}{a+b},\\qquad w=\\frac{n}{a+b+n}$$ MAP $=\\frac{a+h-1}{a+b+n-2}$; under the uniform prior MAP = MLE.",
+        "(4) MLE $=1$ (absurd after 3 tosses); posterior mean $=4/5=0.8$. With lots of data $w\\to1$ and the two agree."
+      ],
+      "pit": "Short-history hit rates, ICs and Sharpe ratios need the same shrinkage toward a sensible prior.",
+      "src": "Q6",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-13",
+      "g": "Bayes & estimation",
+      "k": "Which box? (Bayes)",
+      "q": "A box is chosen with prior $P(A)=\\pi$. Box A's coin has head probability $p_A$, box B's $p_B$. You see $h$ heads and $t$ tails. (1) What independence assumption gives the likelihood? (2) Write the posterior odds. (3) Why work in logs? (4) Fair coin vs a $3/4$ coin, prior 1/2, three heads: find $P(\\text{fair})$. (5) If a box holds several coins, what must you ask?",
+      "pts": [
+        "(1) Given the box, flips are independent: $P(D\\mid A)=p_A^h(1-p_A)^t$. Unconditionally they are not (early heads shift belief).",
+        "(2) $$\\frac{P(A\\mid D)}{P(B\\mid D)}=\\frac{\\pi}{1-\\pi}\\Big(\\frac{p_A}{p_B}\\Big)^{h}\\Big(\\frac{1-p_A}{1-p_B}\\Big)^{t}$$ posterior odds = prior odds × likelihood ratio.",
+        "(3) Each flip adds one term ($\\log\\frac{p_A}{p_B}$ or $\\log\\frac{1-p_A}{1-p_B}$), in any order; avoids underflow; the running sum is the SPRT statistic.",
+        "(4) $\\dfrac{(1/2)^3}{(1/2)^3+(3/4)^3}=\\dfrac{8}{35}=0.229$.",
+        "(5) Is a coin redrawn each flip (each flip has the mixture probability) or drawn once and kept (likelihood is a mixture of products $\\sum_c w_c\\,p_c^h(1-p_c)^t$)?"
+      ],
+      "pit": "",
+      "src": "Q8",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-14",
+      "g": "Bayes & estimation",
+      "k": "10 heads in a row",
+      "q": "A coin claimed to be fair shows 10 heads in a row. (1) Compute the p-value under the fair-coin null. (2) Why is that not the probability the coin is fair? (3) With a prior of 99% fair and 1% two-headed, find $P(\\text{fair}\\mid\\text{data})$; repeat with 99.9%. (4) What would you ask about how the data arose?",
+      "pts": [
+        "(1) One-sided $2^{-10}\\approx 0.00098$: reject fairness at any usual level.",
+        "(2) The p-value is $P(\\text{data}\\mid H_0)$. $P(H_0\\mid\\text{data})$ needs a prior and an alternative.",
+        "(3) $$P(\\text{fair}\\mid D)=\\frac{\\pi\\,2^{-10}}{\\pi\\,2^{-10}+(1-\\pi)}$$ $\\pi=0.99$: 0.088; $\\pi=0.999$: 0.494.",
+        "(4) Was this coin picked out of many because it looked streaky (multiple testing)? Was $n=10$ fixed in advance, or did someone stop at the streak?"
+      ],
+      "pit": "",
+      "src": "Q14",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-15",
+      "g": "Dependence",
+      "k": "Zero corr ≠ indep.",
+      "q": "(1) Does zero correlation imply independence? (2) Give two counterexamples. (3) Under what conditions does it? (4) Give the trap where both variables are normal. (5) What does this mean for signal research?",
+      "pts": [
+        "(1) No. Independence ⇒ zero covariance, not the converse: covariance only measures linear dependence.",
+        "(2) $X\\sim N(0,1)$, $Y=X^2$: $\\mathrm{Cov}=E[X^3]=0$, yet $Y$ is a function of $X$. Discrete: $X$ uniform on $\\{-1,0,1\\}$, $Y=X^2$.",
+        "(3) $(X,Y)$ jointly normal: with $\\rho=0$ the joint density factors into the marginals. Also two 0/1 variables.",
+        "(4) $Y=SX$ with an independent random sign $S$: both $N(0,1)$, $\\mathrm{Cov}=0$, but $|Y|=|X|$. $X+Y=0$ with probability 1/2, so not jointly normal.",
+        "(5) An IC near 0 does not mean no relation: returns can be U-shaped in the signal. Check quantile returns, $|s|$ or $s^2$, ranks, mutual information."
+      ],
+      "pit": "",
+      "src": "Q7",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-16",
+      "g": "Dependence",
+      "k": "E[X | X+Y=s]",
+      "q": "$X, Y$ are i.i.d. normal and $S=X+Y$. (1) Find $E[X\\mid S=s]$ by symmetry. (2) Give a second proof that uses normality. (3) Generalise to independent $X\\sim N(\\mu_X,\\sigma_X^2)$, $Y\\sim N(\\mu_Y,\\sigma_Y^2)$. (4) Apply it: true alpha $\\sim N(0,1\\%^2)$, noise $\\sim N(0,4\\%^2)$, observed return 10%.",
+      "pts": [
+        "(1) $(X,S)$ and $(Y,S)$ have the same law, so $E[X\\mid S]=E[Y\\mid S]$; they sum to $E[S\\mid S]=S$, hence $s/2$. Only i.i.d. is used.",
+        "(2) $S$ and $D=X-Y$ are jointly normal with $\\mathrm{Cov}=\\mathrm{Var}X-\\mathrm{Var}Y=0$, hence independent: $E[X\\mid S]=\\tfrac12(S+E[D])=S/2$.",
+        "(3) $$E[X\\mid S=s]=\\mu_X+\\frac{\\sigma_X^2}{\\sigma_X^2+\\sigma_Y^2}\\,(s-\\mu_X-\\mu_Y)$$ The surprise is split in proportion to the variances.",
+        "(4) Weight $=\\frac{1}{1+16}=\\frac1{17}$: estimated alpha $=10\\%/17=0.59\\%$. Noisy observations are shrunk hard."
+      ],
+      "pit": "",
+      "src": "Q11",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-17",
+      "g": "Returns & LLN",
+      "k": "LLN ≠ profit",
+      "q": "A strategy has a positive sample mean return. (1) What does the law of large numbers actually guarantee, and under what assumptions? (2) Why may there be no fixed mean to converge to? (3) How much data does a 2 bp daily edge with 1% daily vol need for $t=2$? (4) What does selection do to the sample mean? (5) What else does LLN say nothing about?",
+      "pts": [
+        "(1) $\\bar X_n\\to\\mu$ if returns are i.i.d. (or stationary and ergodic) with a fixed $\\mu$, as $n\\to\\infty$.",
+        "(2) Non-stationarity: the true mean drifts across regimes.",
+        "(3) $t=\\frac{\\mu}{\\sigma}\\sqrt n=2 \\Rightarrow n=(2\\sigma/\\mu)^2=(2\\cdot100/2)^2=10{,}000$ days, about 40 years.",
+        "(4) The strategy was chosen because its sample mean was high, so that mean is biased upward (winner's curse, multiple testing).",
+        "(5) Costs, capacity and crowding: a real positive mean can still be eaten after it is traded."
+      ],
+      "pit": "",
+      "src": "Q13",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-18",
+      "g": "Returns & LLN",
+      "k": "Jensen's inequality",
+      "q": "(1) State Jensen's inequality and the equality condition. (2) Give an option-pricing example. (3) Give the compounding example, with numbers for a 10% arithmetic mean and 30% vol.",
+      "pts": [
+        "(1) Convex $g$: $E[g(X)]\\ge g(E[X])$; concave flips it. Equality iff $g$ is linear on the support of $X$ (e.g. $X$ constant).",
+        "(2) The payoff $(S_T-K)^+$ is convex, so uncertainty in $S_T$ adds value: options have time value.",
+        "(3) $\\log$ is concave: $E[\\log(1+R)]<\\log(1+E[R])$. Growth $\\approx\\mu-\\sigma^2/2=10\\%-4.5\\%=5.5\\%$ a year (volatility drag)."
+      ],
+      "pit": "",
+      "src": "Q15",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-19",
+      "g": "Returns & LLN",
+      "k": "T-day return moments",
+      "q": "Daily returns $r_t$ are independent with mean $\\mu$ and variance $\\sigma^2$. (1) Give the mean, variance and vol of the $T$-day sum. (2) What changes for the compounded return? (3) What if returns are autocorrelated with $\\rho_k$? (4) What does this imply for $\\sqrt{252}$ annualisation?",
+      "pts": [
+        "(1) Mean $T\\mu$ (linearity); variance $T\\sigma^2$ (independence removes covariances); vol $\\sigma\\sqrt T$.",
+        "(2) $E\\big[\\prod(1+r_t)\\big]-1=(1+\\mu)^T-1\\ne T\\mu$; only log returns add exactly.",
+        "(3) $$\\mathrm{Var}\\Big(\\sum_t r_t\\Big)=T\\sigma^2+2\\sigma^2\\sum_{k=1}^{T-1}(T-k)\\rho_k$$ Momentum ($\\rho>0$) makes long-horizon risk larger than $\\sigma\\sqrt T$, mean reversion smaller.",
+        "(4) Scaling a daily Sharpe by $\\sqrt{252}$ assumes no autocorrelation."
+      ],
+      "pit": "",
+      "src": "Q16",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-20",
+      "g": "Edge & sizing",
+      "k": "+2/-1 game: EV",
+      "q": "A game pays $+2$ with probability 0.4 and $-1$ with probability 0.6 per unit staked. (1) Compute the expected value and standard deviation. (2) Should you stake all your capital each round? (3) What information beyond EV matters?",
+      "pts": [
+        "(1) $E=0.8-0.6=0.2$; $E[X^2]=1.6+0.6=2.2$, $\\mathrm{Var}=2.16$, sd $\\approx1.47$.",
+        "(2) No: one loss wipes you out, and over many rounds a loss is certain (ruin with probability 1). Playing and sizing are separate decisions.",
+        "(3) Capital and ruin constraints, number of rounds, independence across rounds, how reliable 0.4 is, drawdown limits, your utility."
+      ],
+      "pit": "",
+      "src": "Q17",
+      "seen": []
+    },
+    {
+      "id": "BAG-A-21",
+      "g": "Edge & sizing",
+      "k": "Kelly fraction",
+      "q": "Same game: you stake a fraction $f$ of capital each round. (1) Write the long-run growth rate $g(f)$. (2) Find the Kelly fraction. (3) Give $g$ at $f^*$ and at $2f^*$. (4) Why bet less in practice?",
+      "pts": [
+        "(1) $g(f)=0.4\\log(1+2f)+0.6\\log(1-f)$, the expected log growth per round.",
+        "(2) $g'(f)=\\frac{0.8}{1+2f}-\\frac{0.6}{1-f}=0 \\Rightarrow f^*=0.1$ (edge / odds $=0.2/2$).",
+        "(3) $g(0.1)\\approx0.0097$ per round; $g(0.2)\\approx0.0007$, essentially zero: over-betting by 2× kills the growth.",
+        "(4) $p$ is estimated, and the growth curve falls steeply right of $f^*$; full Kelly has brutal drawdowns. Half Kelly ($f=0.05$) keeps about 76% of the growth."
+      ],
+      "pit": "",
+      "src": "Q17",
+      "seen": []
+    }
+  ]
+}

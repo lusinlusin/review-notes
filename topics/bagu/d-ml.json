@@ -1,0 +1,322 @@
+{
+  "title": "Machine learning",
+  "notes": [
+    {
+      "h": "Bias & variance",
+      "items": [
+        {
+          "t": "Decomposition",
+          "d": [
+            "$E(y-\\hat f)^2=\\text{bias}^2+\\text{variance}+\\sigma_\\varepsilon^2$. Low SNR → variance dominates → prefer biased, stable models."
+          ],
+          "cards": [
+            "BAG-D-01"
+          ]
+        },
+        {
+          "t": "Ridge, lasso, elastic net",
+          "d": [
+            "Orthonormal $X$: ridge $\\hat\\beta/(1+\\lambda)$; lasso soft threshold $(|\\hat\\beta|-\\lambda/2)^+$. Elastic net: sparse + grouping."
+          ],
+          "cards": [
+            "BAG-D-02"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Leakage & CV",
+      "items": [
+        {
+          "t": "Leakage channels",
+          "d": [
+            "Labels, preprocessing, universe. Store knowledge time for every value."
+          ],
+          "cards": [
+            "BAG-D-03"
+          ]
+        },
+        {
+          "t": "Purged CV",
+          "d": [
+            "train | purge (label horizon) | validate | embargo | train; final untouched test; preprocessing inside folds."
+          ],
+          "cards": [
+            "BAG-D-04"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Model comparison",
+      "items": [
+        {
+          "t": "Deploying a complex model",
+          "d": [
+            "Proper CV → significance (DM) → strong baseline → stability → net Sharpe & correlation → complexity cost."
+          ],
+          "cards": [
+            "BAG-D-05"
+          ]
+        },
+        {
+          "t": "Ensembles",
+          "d": [
+            "Average of $B$ correlated models: $\\rho\\sigma^2+(1-\\rho)\\sigma^2/B$. Bagging cuts variance; boosting cuts bias."
+          ],
+          "cards": [
+            "BAG-D-06"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Features",
+      "items": [
+        {
+          "t": "PCA",
+          "d": [
+            "Maximum-variance directions; unsupervised (variance ≠ prediction); standardise; fit inside training data; loadings unstable when eigenvalues are close."
+          ],
+          "cards": [
+            "BAG-D-07"
+          ]
+        },
+        {
+          "t": "Importance under correlation",
+          "d": [
+            "MDI, permutation, SHAP all split or hide credit. Use grouped permutation, ablation, conditional permutation, stability checks."
+          ],
+          "cards": [
+            "BAG-D-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Objectives",
+      "items": [
+        {
+          "t": "Discrimination vs calibration",
+          "d": [
+            "Ranking (AUC, rank IC) vs level (reliability, Brier). Sizing by magnitude needs calibration."
+          ],
+          "cards": [
+            "BAG-D-09"
+          ]
+        },
+        {
+          "t": "Trading objectives",
+          "d": [
+            "Prefer rank IC, net Sharpe, magnitude-weighted or portfolio-utility losses over accuracy."
+          ],
+          "cards": [
+            "BAG-D-10"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Live models",
+      "items": [
+        {
+          "t": "Drift",
+          "d": [
+            "Concept drift: $P(y\\mid x)$ moves; covariate shift: $P(x)$ moves. PSI $=\\sum(a-e)\\ln(a/e)$, >0.25 large. Pre-set de-weighting and retraining rules."
+          ],
+          "cards": [
+            "BAG-D-11"
+          ]
+        },
+        {
+          "t": "Evaluating text features",
+          "d": [
+            "Baseline ladder, point-in-time stamps, LLM training-cutoff check, residual IC over baselines, ablations, cost."
+          ],
+          "cards": [
+            "BAG-D-12"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "BAG-D-01",
+      "g": "Bias & variance",
+      "k": "Bias-variance",
+      "q": "$y=f(x)+\\varepsilon$ and $\\hat f$ is fit on a random training set. (1) Write the bias-variance decomposition of expected squared error at $x$. (2) What is special about financial prediction? (3) Which side of the trade-off do you lean to, and with what tools?",
+      "pts": [
+        "(1) $$E\\big[(y-\\hat f(x))^2\\big]=\\big(E\\hat f(x)-f(x)\\big)^2+\\mathrm{Var}(\\hat f(x))+\\sigma_\\varepsilon^2$$ bias², variance, irreducible noise.",
+        "(2) Noise is over 99% of return variance ($R^2<1\\%$), so flexible models fit noise and variance dominates; and the relation itself drifts (non-stationarity), so detailed fits break first.",
+        "(3) High bias, low variance: linear or regularised models, rank-transformed features, ensembles, strong shrinkage, early stopping, shallow trees, conservative validation (longer OOS, fewer hyperparameter searches)."
+      ],
+      "pit": "",
+      "src": "Q47",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-02",
+      "g": "Bias & variance",
+      "k": "L1 vs L2",
+      "q": "(1) Write the L1 and L2 penalties and their qualitative effect. (2) With an orthonormal design ($X^\\top X=I$) and objective $\\lVert y-X\\beta\\rVert^2+$ penalty, give both solutions in terms of $\\hat\\beta^{OLS}$. (3) Which do you prefer with many correlated predictors? (4) How do you decide in the end?",
+      "pts": [
+        "(1) L1: $\\lambda\\sum|\\beta_j|$, sparse (some coefficients exactly 0, feature selection). L2: $\\lambda\\sum\\beta_j^2$, smooth shrinkage, all nonzero.",
+        "(2) Ridge: $\\hat\\beta^{OLS}/(1+\\lambda)$ (proportional). Lasso: $\\mathrm{sign}(\\hat\\beta^{OLS})\\big(|\\hat\\beta^{OLS}|-\\lambda/2\\big)^+$ (soft threshold).",
+        "(3) Lasso tends to pick one member of a correlated group, and which one changes with the sample. Ridge spreads weight (identical columns get identical coefficients). Elastic net $\\lambda_1\\lVert\\beta\\rVert_1+\\lambda_2\\lVert\\beta\\rVert_2^2$ gives sparsity with a grouping effect.",
+        "(4) OOS performance and coefficient stability over time, not prior taste."
+      ],
+      "pit": "",
+      "src": "Q56",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-03",
+      "g": "Leakage & CV",
+      "k": "Feature leakage",
+      "q": "(1) Define feature leakage. (2) Give three finance-specific examples. (3) At which levels of a pipeline can it occur? (4) What is the guiding principle?",
+      "pts": [
+        "(1) Using information not available at the decision time, so the backtest beats what live trading can achieve.",
+        "(2) Revised or restated fundamentals, or aligning by fiscal period end instead of announcement date; today's index members or later delistings used to pick the past universe; full-sample z-scores, winsorisation, scalers or PCA. (Also: signal from the close traded at the same close; overlapping labels.)",
+        "(3) Label construction, preprocessing, universe construction. Model-level leakage is easy to spot; pipeline-level leakage is subtler.",
+        "(4) Point-in-time data: store for every value its knowledge time, not just the period it describes."
+      ],
+      "pit": "",
+      "src": "Q48",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-04",
+      "g": "Leakage & CV",
+      "k": "CV for 20-day labels",
+      "q": "Daily observations; the label at $t$ is the forward return $r_{t+1:t+20}$. (1) What is the problem with standard K-fold? (2) Describe the splitting scheme. (3) Explain purging and embargo. (4) What else must stay inside each fold?",
+      "pts": [
+        "(1) It shuffles time, and neighbouring labels share 19 days, so validation and training share information.",
+        "(2) Time-ordered splits: walk-forward, or K-fold over contiguous time blocks; plus a final test period (e.g. the last 2–3 years) touched once.",
+        "(3) Purge: drop training samples whose label window $[t+1,t+20]$ overlaps the validation block (about 20 days before it). Embargo: leave a further gap after the block so feature autocorrelation cannot carry information back. Layout: train | purge | validate | embargo | train.",
+        "(4) Standardisation, feature selection and hyperparameter tuning are fit within each training fold only."
+      ],
+      "pit": "",
+      "src": "Q49",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-05",
+      "g": "Model comparison",
+      "k": "RF beats LR: deploy?",
+      "q": "A random forest beats a linear regression in cross-validation. (1) Do you deploy it? (2) List the checks you would run. (3) What could you do if the forest's edge comes from a few nonlinearities?",
+      "pts": [
+        "(1) Not automatically: first confirm the win is real, stable and economically meaningful after costs.",
+        "(2a) Validity: was CV time-aware with purge/embargo (trees memorise local patterns, so leak more)? Is the gain significant (DM test on paired OOS losses, $t$ of the IC difference)?",
+        "(2b) Fair fight: was the linear baseline strong (rank / winsorised features, regularised)? Is the win stable by year, size, sector and regime?",
+        "(2c) Economics: net Sharpe after the extra turnover, correlation with existing signals, and the cost of complexity (interpretability, maintenance, drift sensitivity).",
+        "(3) Add those nonlinearities (e.g. a threshold term) to the linear model explicitly: more stable and interpretable."
+      ],
+      "pit": "",
+      "src": "Q46",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-06",
+      "g": "Model comparison",
+      "k": "Bagging vs boosting",
+      "q": "(1) Describe bagging and what it reduces; give the variance of an average of $B$ models with variance $\\sigma^2$ and pairwise correlation $\\rho$. (2) Describe boosting and what it reduces. (3) Why does gradient boosting work well on tabular financial data? (4) Risks and controls?",
+      "pts": [
+        "(1) Train high-variance models (deep trees) in parallel on bootstrap samples and average: $$\\mathrm{Var}=\\rho\\sigma^2+\\frac{1-\\rho}{B}\\sigma^2$$ Random forests also subsample features to lower $\\rho$.",
+        "(2) Fit weak learners (shallow trees) sequentially, each to the negative gradient of the loss (residuals for MSE), added with learning rate $\\eta$. Mainly reduces bias.",
+        "(3) Captures nonlinearities and interactions (cheap × high quality), invariant to monotone transforms (no scaling), handles missing values, fast.",
+        "(4) Overfits noise with many rounds or deep trees; fragile across regimes. Small $\\eta$ + early stopping on a time-aware validation set, depth limits, row/column subsampling, larger minimum leaf size."
+      ],
+      "pit": "",
+      "src": "Q51",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-07",
+      "g": "Features",
+      "k": "PCA: uses & pitfalls",
+      "q": "$\\Sigma=V\\Lambda V^\\top$ is a covariance matrix. (1) What is the $k$-th principal component? (2) Where is PCA useful in quant research? (3) What can go wrong? List at least four.",
+      "pts": [
+        "(1) The eigenvector of the $k$-th largest eigenvalue: the direction of maximum variance orthogonal to the first $k-1$.",
+        "(2) Compressing correlated features (50 valuation ratios → 3 components); statistical risk models (top components ≈ market, sectors); denoising by dropping small-eigenvalue directions (random-matrix theory).",
+        "(3) Variance ≠ predictive power (unsupervised; signal can sit in low-variance components; consider PLS); unstable loadings when eigenvalues are close, and arbitrary signs; hard to interpret; leakage if fit on the full sample; scale-sensitive, so standardise first."
+      ],
+      "pit": "",
+      "src": "Q50",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-08",
+      "g": "Features",
+      "k": "Importance, corr. X",
+      "q": "Predictors are highly correlated. (1) Why are impurity (MDI), permutation and SHAP importances each misleading? (2) What more reliable approaches would you use?",
+      "pts": [
+        "(1a) MDI favours continuous, many-valued features and splits credit randomly among correlated ones.",
+        "(1b) Permutation: the model recovers the same information from a correlated partner, so each looks unimportant; permuting also creates unrealistic feature combinations.",
+        "(1c) SHAP also splits credit among correlated features and depends on the background distribution.",
+        "(2) Cluster correlated features and permute or drop whole groups; ablation (retrain without a group, measure the OOS drop); conditional permutation; check rank stability across periods and seeds."
+      ],
+      "pit": "",
+      "src": "Q53",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-09",
+      "g": "Objectives",
+      "k": "Calibration vs rank",
+      "q": "(1) Define discrimination and calibration, with a metric for each. (2) Show they are separate properties. (3) When does a trading model need each?",
+      "pts": [
+        "(1) Discrimination: are outcomes ranked correctly? (AUC = probability a random positive outscores a random negative; rank IC for continuous.) Calibration: do predicted levels match realised frequencies or sizes? (reliability plot, Brier score).",
+        "(2) Multiply every prediction by 0.5: the ranking is unchanged, calibration is broken.",
+        "(3) A cross-sectional long-short on deciles needs only ranking (rank IC). Sizing by magnitude (mean-variance $\\mu$, Kelly, trade-or-not vs costs) needs calibration: a predicted 5 bp must really be 5 bp to compare with 3 bp of cost."
+      ],
+      "pit": "",
+      "src": "Q52",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-10",
+      "g": "Objectives",
+      "k": "Accuracy as target",
+      "q": "(1) Why can maximising prediction accuracy be the wrong objective for trading? Give four reasons. (2) What objectives or metrics are better?",
+      "pts": [
+        "(1) Ignores magnitude (55% right but the misses are the big drops); ignores ranking and portfolio construction (cross-sectional strategies need relative order); ignores costs (flipping predictions churn); class imbalance (predicting \\\"flat\\\" scores well).",
+        "(2) Rank IC, net-of-cost long-short Sharpe, magnitude-weighted losses, or a loss built from the downstream portfolio utility (decision-focused learning), with strong regularisation."
+      ],
+      "pit": "",
+      "src": "Q55",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-11",
+      "g": "Live models",
+      "k": "Concept drift",
+      "q": "(1) Define concept drift and distinguish covariate shift. (2) What would you monitor in a live model? (3) Give the PSI formula. (4) How should retraining or switching off be decided?",
+      "pts": [
+        "(1) Concept drift: $P(y\\mid x)$ changes over time. Covariate shift: $P(x)$ changes while $P(y\\mid x)$ does not.",
+        "(2) Inputs (feature means, quantiles, missing rates); prediction quality (rolling IC / rank IC, hit rate, calibration error, residual mean); portfolio (P&L vs the backtest band, exposures, turnover, costs); all split by regime.",
+        "(3) $$\\mathrm{PSI}=\\sum_b(a_b-e_b)\\ln\\frac{a_b}{e_b}$$ $a_b$, $e_b$ = actual and expected bin shares; above about 0.25 is a large shift.",
+        "(4) By rules fixed in advance (e.g. rolling 12-month IC $t$ below a threshold → half weight; lower → switch off and review), and a fixed retraining schedule. Deciding in the middle of a drawdown is a fresh round of data snooping."
+      ],
+      "pit": "",
+      "src": "Q54",
+      "seen": []
+    },
+    {
+      "id": "BAG-D-12",
+      "g": "Live models",
+      "k": "LLM text features",
+      "q": "An LLM scores financial text (filings, call transcripts) into a signal. (1) Which baselines would you compare against? (2) How do you handle timestamps? (3) What look-ahead risk is specific to LLMs, and how do you check it? (4) How do you measure incremental value? (5) Which ablations and costs matter?",
+      "pts": [
+        "(1) Dictionary sentiment (Loughran-McDonald), TF-IDF + regularised linear model, pretrained embeddings + linear model, and known non-text signals (earnings surprise, analyst revisions, momentum).",
+        "(2) Use the actual release time (filing acceptance, call end); returns start at the next tradable time. Same universe, rebalance, neutralisation and cost model for every method.",
+        "(3) The training corpus may contain information from after the test date. Check: test only after the model's training cutoff, compare performance before vs after the cutoff, anonymise names and dates.",
+        "(4) Regress the LLM score on the baselines and earnings surprise; test the residual's rank IC and long-short returns, or its coefficient in a joint regression.",
+        "(5) Change the prompt or model, shuffle or truncate the text: sensitivity suggests a tuned result. Weigh API cost, latency and reproducibility (fixed model version, temperature)."
+      ],
+      "pit": "",
+      "src": "Q57",
+      "seen": []
+    }
+  ]
+}

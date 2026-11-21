@@ -79,6 +79,43 @@
           "file": "quant/coding.json"
         }
       ]
+    },
+    {
+      "name": "Bagu",
+      "topics": [
+        {
+          "title": "Probability",
+          "file": "bagu/a-probability.json"
+        },
+        {
+          "title": "Statistics & inference",
+          "file": "bagu/b-statistics.json"
+        },
+        {
+          "title": "Time series",
+          "file": "bagu/c-time-series.json"
+        },
+        {
+          "title": "Machine learning",
+          "file": "bagu/d-ml.json"
+        },
+        {
+          "title": "Python / SQL / data",
+          "file": "bagu/e-coding.json"
+        },
+        {
+          "title": "Alpha research",
+          "file": "bagu/f-alpha.json"
+        },
+        {
+          "title": "Portfolio & risk",
+          "file": "bagu/g-portfolio.json"
+        },
+        {
+          "title": "Research cases",
+          "file": "bagu/h-cases.json"
+        }
+      ]
     }
   ]
 }

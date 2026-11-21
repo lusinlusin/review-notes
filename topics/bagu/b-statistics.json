@@ -1,0 +1,454 @@
+{
+  "title": "Statistics & inference",
+  "notes": [
+    {
+      "h": "Testing basics",
+      "items": [
+        {
+          "t": "Errors and power",
+          "d": [
+            "Type I: reject true $H_0$ (≤ α). Type II: keep false $H_0$ (β). Power $1-\\beta\\approx\\Phi(\\delta\\sqrt n/\\sigma-z_{1-\\alpha/2})$.",
+            "80% power at 5%: $n\\approx(2.8\\sigma/\\delta)^2$. Annual SR 0.5 → ≈31 years."
+          ],
+          "cards": [
+            "BAG-B-01"
+          ]
+        },
+        {
+          "t": "Statistical vs economic significance",
+          "d": [
+            "$t$ grows like $\\sqrt n$; size decides whether costs are covered. Daily cost ≈ turnover × 2 sides × cost per side."
+          ],
+          "cards": [
+            "BAG-B-02"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Multiple testing",
+      "items": [
+        {
+          "t": "FWER and Bonferroni",
+          "d": [
+            "FWER $=P(V\\ge1)$. Bonferroni: reject if $p_i\\le\\alpha/m$. For $m$ independent nulls, $P(\\text{some }p\\le\\alpha)=1-(1-\\alpha)^m$."
+          ],
+          "cards": [
+            "BAG-B-03",
+            "BAG-B-05"
+          ]
+        },
+        {
+          "t": "FDR and Benjamini-Hochberg",
+          "d": [
+            "FDR $=E[V/\\max(R,1)]$. BH: largest $k$ with $p_{(k)}\\le kq/m$; reject $1..k$."
+          ],
+          "cards": [
+            "BAG-B-04"
+          ]
+        },
+        {
+          "t": "Reading a t-stat",
+          "d": [
+            "$|t|=3$: $p\\approx0.0027$ for one test. 100 tries: 24% chance of a false $|t|\\ge3$; Bonferroni bar ≈3.5."
+          ],
+          "cards": [
+            "BAG-B-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "OLS assumptions",
+      "items": [
+        {
+          "t": "Which assumption does what",
+          "d": [
+            "Unbiased: linearity, random sampling, no perfect collinearity, $E(u\\mid X)=0$.",
+            "Usual variance / BLUE: + homoskedastic, uncorrelated errors. Exact $t$: + normal errors (dropped in large samples)."
+          ],
+          "cards": [
+            "BAG-B-06"
+          ]
+        },
+        {
+          "t": "Heteroskedasticity",
+          "d": [
+            "$\\mathrm{Var}(\\hat\\beta_1)=\\sum(x_i-\\bar x)^2\\sigma_i^2/SST_x^2$. Fix: White SE, or WLS."
+          ],
+          "cards": [
+            "BAG-B-07"
+          ]
+        },
+        {
+          "t": "Serial correlation",
+          "d": [
+            "Unbiased under strict exogeneity; usual SE omits $\\sum\\rho^jx_tx_{t+j}$ terms. Fix: Newey-West, lag ≥ overlap; non-overlapping samples."
+          ],
+          "cards": [
+            "BAG-B-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Regression pitfalls",
+      "items": [
+        {
+          "t": "Omitted variables",
+          "d": [
+            "Short-regression slope $\\to\\beta_1+\\beta_2\\,\\mathrm{Cov}(x_1,x_2)/\\mathrm{Var}(x_1)$; needs both $\\beta_2\\ne0$ and correlation."
+          ],
+          "cards": [
+            "BAG-B-09"
+          ]
+        },
+        {
+          "t": "Partial correlation",
+          "d": [
+            "Correlate residuals after regressing both on controls. One control: $\\frac{\\rho_{xy}-\\rho_{xz}\\rho_{yz}}{\\sqrt{(1-\\rho_{xz}^2)(1-\\rho_{yz}^2)}}$."
+          ],
+          "cards": [
+            "BAG-B-10"
+          ]
+        },
+        {
+          "t": "Multicollinearity",
+          "d": [
+            "$\\mathrm{Var}(\\hat\\beta_j)=\\sigma^2/[SST_j(1-R_j^2)]$, VIF $=1/(1-R_j^2)$. Sums of coefficients are well identified; splits are not."
+          ],
+          "cards": [
+            "BAG-B-11"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Fit & regularization",
+      "items": [
+        {
+          "t": "R² and OOS R²",
+          "d": [
+            "Noise: $E[R^2]\\approx k/(n-1)$. $R^2_{OOS}=1-\\sum(r-\\hat r)^2/\\sum(r-\\bar r)^2$ against the historical mean.",
+            "One signal: $R^2=IC^2$; $IR\\approx IC\\sqrt{BR}$."
+          ],
+          "cards": [
+            "BAG-B-12"
+          ]
+        },
+        {
+          "t": "Ridge, lasso",
+          "d": [
+            "Penalties $\\lambda\\lVert\\beta\\rVert_2^2$, $\\lambda\\lVert\\beta\\rVert_1$; tune $\\lambda$ with time-ordered CV inside training data."
+          ],
+          "cards": [
+            "BAG-B-13"
+          ]
+        },
+        {
+          "t": "Bootstrap",
+          "d": [
+            "Plug-in: resample from $\\hat F_n$. Fails with dependence: AR(1) mean variance factor $\\frac{1+\\rho}{1-\\rho}$. Use block bootstrap / resample dates."
+          ],
+          "cards": [
+            "BAG-B-14"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Asset pricing",
+      "items": [
+        {
+          "t": "Time series vs cross-section",
+          "d": [
+            "TS: $r_{it}=\\alpha_i+\\beta_i^\\top f_t+\\varepsilon_{it}$ (exposures, pricing errors). CS: $r_{it}=\\gamma_{0t}+\\lambda_t^\\top z_{it}+u_{it}$ (premia).",
+            "CS slope = long-short portfolio, weights $\\propto z_i-\\bar z$."
+          ],
+          "cards": [
+            "BAG-B-15"
+          ]
+        },
+        {
+          "t": "Fama-MacBeth",
+          "d": [
+            "$\\bar\\lambda=\\frac1T\\sum\\hat\\lambda_t$, SE $=s(\\hat\\lambda_t)/\\sqrt T$; Newey-West if $\\hat\\lambda_t$ autocorrelated; Shanken for estimated betas; cluster for firm effects."
+          ],
+          "cards": [
+            "BAG-B-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Forecast comparison",
+      "items": [
+        {
+          "t": "Diebold-Mariano",
+          "d": [
+            "$d_t=L(e_{A,t})-L(e_{B,t})$; $DM=\\bar d/\\sqrt{\\widehat{LRV}/T}$ with HAC. Nested models: Clark-West. Many models: MCS, reality check, SPA."
+          ],
+          "cards": [
+            "BAG-B-17"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "BAG-B-01",
+      "g": "Testing basics",
+      "k": "Errors, power, n",
+      "q": "A two-sided z-test at level $\\alpha$ checks whether a mean equals 0; the true effect is $\\delta$, noise sd $\\sigma$, $n$ observations. (1) Define Type I error, Type II error and power. (2) Write the approximate power. (3) What raises power at fixed $\\alpha$? (4) What $n$ gives 80% power at 5%, and what does that mean for a strategy with annual Sharpe 0.5?",
+      "pts": [
+        "(1) Type I: reject a true null (false positive), probability $\\le\\alpha$. Type II: fail to reject a false null (false negative), probability $\\beta$. Power $=1-\\beta$.",
+        "(2) $$\\text{power}\\approx\\Phi\\Big(\\frac{\\delta\\sqrt n}{\\sigma}-z_{1-\\alpha/2}\\Big)$$",
+        "(3) Larger $\\delta$, larger $n$, smaller $\\sigma$. Lowering $\\alpha$ lowers power.",
+        "(4) $n\\approx\\big((z_{0.975}+z_{0.8})\\sigma/\\delta\\big)^2=(2.8\\,\\sigma/\\delta)^2$. Annual Sharpe 0.5: $(2.8/0.5)^2\\approx31$ years. Single weak signals are underpowered; lean on breadth, priors and OOS checks."
+      ],
+      "pit": "",
+      "src": "Q21",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-02",
+      "g": "Testing basics",
+      "k": "Stat. vs economic",
+      "q": "(1) What question does statistical significance answer, and what does economic significance answer? (2) Why can a tiny effect be significant? Use 1 bp a day, 0.2% daily vol, 20 years. (3) Same signal turns over 20% of the book a day at 5 bp per side: is it worth trading? (4) What would you look at besides the t-stat?",
+      "pts": [
+        "(1) Statistical: could the effect be zero? ($t$ = estimate / SE). Economic: is it big enough to matter after costs? (the size of the estimate).",
+        "(2) SE shrinks like $1/\\sqrt n$: $t=\\frac{0.01\\%}{0.2\\%}\\sqrt{5040}\\approx3.5$.",
+        "(3) Cost $=0.2\\times2\\times5$ bp $=2$ bp a day > 1 bp gross: net negative.",
+        "(4) Effect size, turnover and net returns, capacity, drawdowns, correlation with existing factors. A signal must be both real and worth trading."
+      ],
+      "pit": "",
+      "src": "Q20",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-03",
+      "g": "Multiple testing",
+      "k": "1000 tests, 50 hits",
+      "q": "You test 1,000 candidate signals and 50 have p-values below 5%. (1) What would pure noise produce? (2) What diagnostic would you look at first? (3) Which corrections apply, and what do they control? (4) What must survivors still pass?",
+      "pts": [
+        "(1) Under the null p-values are $U(0,1)$: expect $1000\\times5\\%=50$, sd $\\sqrt{1000\\cdot0.05\\cdot0.95}\\approx6.9$. 50 is exactly the noise level.",
+        "(2) The p-value histogram: flat means noise; a spike near 0 means some real signals.",
+        "(3) Bonferroni ($p<0.05/1000$) controls the family-wise error rate; Benjamini-Hochberg controls the false discovery rate and is more powerful.",
+        "(4) OOS tests, an economic story, subperiod stability, and not being fifty variants of one factor."
+      ],
+      "pit": "",
+      "src": "Q18",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-04",
+      "g": "Multiple testing",
+      "k": "FWER, FDR, BH",
+      "q": "$m$ hypotheses are tested with p-values $p_{(1)}\\le\\dots\\le p_{(m)}$. (1) Define FWER and FDR. (2) Give the Benjamini-Hochberg procedure at level $q$. (3) When do you prefer Bonferroni and when BH? (4) What is special about factor research?",
+      "pts": [
+        "(1) FWER $=P(\\text{at least one false rejection})$. FDR $=E[V/R]$, false rejections over all rejections (0 if none).",
+        "(2) Find the largest $k$ with $p_{(k)}\\le\\frac{k}{m}q$ and reject hypotheses $1,\\dots,k$. FDR $\\le q$ under independence (or positive dependence).",
+        "(3) Bonferroni when a single false positive is costly; BH when building a pool where a known share of false discoveries is acceptable.",
+        "(4) Signals are correlated variants, so tests are dependent and the real number of trials is unclear: record every trial, and expect Bonferroni to be conservative."
+      ],
+      "pit": "",
+      "src": "Q18",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-05",
+      "g": "Multiple testing",
+      "k": "Reject t = 3?",
+      "q": "A predictor has $t=3$ in your backtest. (1) What p-value does that mean for one pre-specified test? (2) What if you searched over 100 independent null signals? (3) List other reasons to reject it. (4) How would you get convincing evidence?",
+      "pts": [
+        "(1) Two-sided $p\\approx0.0027$.",
+        "(2) $P(\\text{some }|t|\\ge3)=1-(1-0.0027)^{100}\\approx0.24$. Bonferroni for 100 tests at 5% needs $|t|\\gtrsim3.5$.",
+        "(3) Leakage (point-in-time, restatements, survivorship); unstable across subperiods, sectors or small parameter changes; a known factor in disguise (size, industry, momentum); costs and capacity; overlapping returns inflating $t$.",
+        "(4) Pre-specify the test, count all trials, and replicate on untouched data (a new period or market), not more tuning on the same sample."
+      ],
+      "pit": "",
+      "src": "Q32",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-06",
+      "g": "OLS assumptions",
+      "k": "OLS: bias vs SE",
+      "q": "Linear model $y=X\\beta+u$. (1) Which assumptions make OLS unbiased? (2) Which extra assumption does the usual variance formula need? (3) Which does the exact t distribution need, and what changes in large samples? (4) What do you do in finance, and which assumption usually fails?",
+      "pts": [
+        "(1) Linear in parameters, random sampling, no perfect collinearity ($X^\\top X$ invertible), and zero conditional mean $E(u\\mid X)=0$.",
+        "(2) Homoskedastic, serially uncorrelated errors: then $\\mathrm{Var}(\\hat\\beta\\mid X)=\\sigma^2(X^\\top X)^{-1}$ and OLS is BLUE (Gauss-Markov).",
+        "(3) Normal errors for exact $t$/$F$ in small samples. In large samples the CLT removes the need for normality, but not for (2).",
+        "(4) White or Newey-West standard errors. $E(u\\mid X)=0$ is what usually fails: omitted factors and look-ahead bias."
+      ],
+      "pit": "",
+      "src": "Q19",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-07",
+      "g": "OLS assumptions",
+      "k": "Heteroskedasticity",
+      "q": "Simple regression $y=\\beta_0+\\beta_1x+u$ with $\\mathrm{Var}(u_i\\mid x)=\\sigma_i^2$ varying across observations. (1) Is OLS biased? (2) What is the true variance of $\\hat\\beta_1$, and what goes wrong? (3) How do you fix inference?",
+      "pts": [
+        "(1) No: unbiasedness only uses $E(u\\mid x)=0$; the variance never enters that proof.",
+        "(2) $$\\mathrm{Var}(\\hat\\beta_1\\mid x)=\\frac{\\sum_i(x_i-\\bar x)^2\\sigma_i^2}{SST_x^2}$$ The usual $\\sigma^2/SST_x$ is wrong even in large samples, so $t$ and $F$ tests are invalid; OLS is no longer BLUE.",
+        "(3) White robust SEs (plug in $\\hat u_i^2$ for $\\sigma_i^2$), or WLS if you trust a model for the variance."
+      ],
+      "pit": "",
+      "src": "Q26",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-08",
+      "g": "OLS assumptions",
+      "k": "Residual autocorr.",
+      "q": "Time-series regression $y_t=\\beta_0+\\beta_1x_t+u_t$ with $\\mathrm{Corr}(u_t,u_{t-k})\\ne0$. (1) Where does residual autocorrelation come from? (2) Is OLS biased, and what happens to the usual SE? (3) How do you fix it? (4) What caveat remains?",
+      "pts": [
+        "(1) Omitted dynamics, overlapping return horizons, omitted persistent state variables.",
+        "(2) Unbiased under strict exogeneity, but the usual SE drops the cross terms $\\sum_t\\sum_j\\rho^j x_tx_{t+j}$. With both $x$ and $u$ positively autocorrelated it is far too small.",
+        "(3) Newey-West (HAC) SEs with lag at least the overlap; non-overlapping data; or model the dynamics.",
+        "(4) Newey-West still over-rejects in small samples with very persistent regressors: also check non-overlapping or simulation-based p-values."
+      ],
+      "pit": "",
+      "src": "Q27",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-09",
+      "g": "Regression pitfalls",
+      "k": "Omitted variables",
+      "q": "True model $y=\\beta_0+\\beta_1x_1+\\beta_2x_2+u$, but you regress $y$ on $x_1$ only. (1) What does the slope converge to? (2) When is there no bias? (3) Give a cross-sectional return example. (4) How do you fix it, and what is the risk of the fix?",
+      "pts": [
+        "(1) $$\\tilde\\beta_1\\to\\beta_1+\\beta_2\\,\\frac{\\mathrm{Cov}(x_1,x_2)}{\\mathrm{Var}(x_1)}$$",
+        "(2) Bias needs both: $x_2$ matters for $y$ ($\\beta_2\\ne0$) and $x_2$ is correlated with $x_1$. Sign = sign($\\beta_2$) × sign(correlation).",
+        "(3) \\\"Low analyst coverage\\\" predicts higher returns, but low-coverage stocks are small caps and size earns a premium: part of the alpha is size exposure. A large $t$ does not fix this.",
+        "(4) Control for or neutralise size, sector, beta. Do not over-control: if the signal works through liquidity, controlling for liquidity removes the real effect."
+      ],
+      "pit": "",
+      "src": "Q22",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-10",
+      "g": "Regression pitfalls",
+      "k": "Partial correlation",
+      "q": "(1) Define correlation and partial correlation. (2) Give the formula with one control $z$. (3) A new signal has IC 0.04, correlation 0.6 with momentum, and momentum has IC 0.05: what is its IC net of momentum? (4) What does partial correlation not tell you?",
+      "pts": [
+        "(1) Correlation: linear co-movement. Partial: regress both variables on the controls and correlate the residuals (Frisch-Waugh).",
+        "(2) $$\\rho_{xy\\cdot z}=\\frac{\\rho_{xy}-\\rho_{xz}\\rho_{yz}}{\\sqrt{(1-\\rho_{xz}^2)(1-\\rho_{yz}^2)}}$$",
+        "(3) $\\frac{0.04-0.6\\times0.05}{\\sqrt{0.64\\times0.9975}}\\approx0.0125$: most of the 0.04 was momentum.",
+        "(4) It removes only linear effects of the controls you chose; it says nothing about causality or whether the residual signal survives costs."
+      ],
+      "pit": "",
+      "src": "Q28",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-11",
+      "g": "Regression pitfalls",
+      "k": "Collinearity & VIF",
+      "q": "OLS under Gauss-Markov; $R_j^2$ is from regressing $x_j$ on the other regressors and $SST_j=\\sum_i(x_{ij}-\\bar x_j)^2$. (1) Write $\\mathrm{Var}(\\hat\\beta_j)$ and the VIF. (2) Compute the VIF when two regressors have correlation 0.95. (3) Why can predictions still be fine? (4) When does it bite, and what are the fixes?",
+      "pts": [
+        "(1) $$\\mathrm{Var}(\\hat\\beta_j)=\\frac{\\sigma^2}{SST_j\\,(1-R_j^2)},\\qquad \\mathrm{VIF}_j=\\frac{1}{1-R_j^2}$$",
+        "(2) $R_j^2=0.95^2=0.9025$: VIF $\\approx10.3$.",
+        "(3) The data pin down $\\beta_1+\\beta_2$ but not the split: many coefficient pairs give nearly the same fitted values (a long valley in the RSS). Fine as long as new data keep the same collinear structure.",
+        "(4) Out of sample, when the features decouple. Fixes: ridge, PCA or averaging the group into one feature, and interpret only the group coefficient."
+      ],
+      "pit": "",
+      "src": "Q29",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-12",
+      "g": "Fit & regularization",
+      "k": "In-sample R²",
+      "q": "(1) Why is in-sample $R^2$ a weak guide? Give its value under pure noise for 20 features and 240 months. (2) What should you use instead? (3) Why can a tiny $R^2$ still be valuable? (4) What do you judge a return model by?",
+      "pts": [
+        "(1) $R^2$ never falls when regressors are added; under pure noise $E[R^2]\\approx k/(n-1)=20/239\\approx8\\%$.",
+        "(2) Out-of-sample $R^2$ against the historical-mean forecast: $$R^2_{OOS}=1-\\frac{\\sum_t(r_t-\\hat r_t)^2}{\\sum_t(r_t-\\bar r_t)^2}$$ It can be negative.",
+        "(3) For one linear signal $R^2=IC^2$: IC 0.05 is $R^2=0.25\\%$. Fundamental law $IR\\approx IC\\sqrt{BR}$: 500 stocks monthly, $BR=6000$, theoretical IR $\\approx3.9$ (less in practice: bets are correlated, costs).",
+        "(4) OOS $R^2$, IC and the net-of-cost Sharpe, not in-sample fit."
+      ],
+      "pit": "",
+      "src": "Q23",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-13",
+      "g": "Fit & regularization",
+      "k": "Ridge & lasso",
+      "q": "(1) Write the ridge and lasso objectives. (2) Why do they help in return prediction? (3) How do they treat correlated features? (4) What leakage risk comes with them?",
+      "pts": [
+        "(1) Ridge: $\\min_\\beta \\lVert y-X\\beta\\rVert^2+\\lambda\\sum_j\\beta_j^2$. Lasso: $+\\lambda\\sum_j|\\beta_j|$.",
+        "(2) They trade a little bias for a large cut in variance; with a tiny signal-to-noise ratio, variance is the dominant error. OLS with many features often has negative OOS $R^2$; shrinkage brings it back near zero or slightly positive.",
+        "(3) Ridge spreads weight across correlated features; lasso sets some coefficients exactly to 0 (selection), picking somewhat arbitrarily within a correlated group.",
+        "(4) $\\lambda$ and the standardisation must be fit on training folds only, with purging if labels overlap."
+      ],
+      "pit": "",
+      "src": "Q24",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-14",
+      "g": "Fit & regularization",
+      "k": "Block bootstrap",
+      "q": "(1) What does the bootstrap do, and when would you use it? (2) Why does the naive bootstrap fail for financial time series? (3) For AR(1) returns with $\\rho=0.5$, how wrong is the naive SE of the mean? (4) What do you use instead?",
+      "pts": [
+        "(1) Replace the unknown distribution by the empirical one (mass $1/n$ per observation), resample with replacement, recompute the statistic. Use it when there is no clean formula: SE of a Sharpe ratio, median, max drawdown, a difference of Sharpes.",
+        "(2) Resampling single observations assumes i.i.d.; it destroys autocorrelation and volatility clustering.",
+        "(3) True $\\mathrm{Var}(\\bar r)\\approx\\frac{\\sigma^2}{n}\\frac{1+\\rho}{1-\\rho}=3\\frac{\\sigma^2}{n}$, so the naive SE is $\\sqrt{1/3}\\approx58\\%$ of the truth.",
+        "(4) Moving-block or stationary bootstrap with blocks longer than the dependence; for panels resample whole dates."
+      ],
+      "pit": "",
+      "src": "Q25",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-15",
+      "g": "Asset pricing",
+      "k": "TS vs cross-section",
+      "q": "Panel of returns $r_{it}$ for assets $i$ and periods $t$. (1) Write the time-series regression and interpret its coefficients. (2) Write the cross-sectional regression and interpret its slope. (3) What portfolio is the cross-sectional slope? (4) Summarise the difference in one line each.",
+      "pts": [
+        "(1) For each asset: $$r_{it}=\\alpha_i+\\beta_i^\\top f_t+\\varepsilon_{it}$$ $\\beta_i$ = exposure, $\\alpha_i$ = pricing error; natural when factors are traded returns (Fama-French).",
+        "(2) For each date: $$r_{it}=\\gamma_{0t}+\\lambda_t^\\top z_{it}+u_{it}$$ $\\lambda_t$ = return earned per unit of characteristic that period (factor premium).",
+        "(3) $\\hat\\lambda_t=\\sum_i w_i r_{it}$ with $w_i=\\frac{z_i-\\bar z}{\\sum_j(z_j-\\bar z)^2}$: a long-short portfolio with weights proportional to the demeaned characteristic.",
+        "(4) Time series: how sensitive is this asset to the factor? Cross-section: do high-characteristic stocks earn more? Fama-MacBeth runs the cross-section each period and averages."
+      ],
+      "pit": "",
+      "src": "Q30",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-16",
+      "g": "Asset pricing",
+      "k": "Fama-MacBeth",
+      "q": "(1) Describe the two Fama-MacBeth steps and the standard error. (2) What does it handle automatically? (3) What problem arises when $\\hat\\lambda_t$ is autocorrelated? (4) What problems arise when the regressors are estimated betas, or firms have persistent effects?",
+      "pts": [
+        "(1) Each period, cross-sectional regression → $\\hat\\lambda_t$. Then $\\bar\\lambda=\\frac1T\\sum_t\\hat\\lambda_t$ with SE $=s(\\hat\\lambda_t)/\\sqrt T$.",
+        "(2) Same-period cross-sectional correlation: it lives inside each $\\hat\\lambda_t$. Pooled OLS treating $NT$ observations as independent can overstate $t$ several-fold.",
+        "(3) Persistent characteristics or overlapping returns make the simple SE too small: use Newey-West on the $\\hat\\lambda_t$ series.",
+        "(4) Errors-in-variables: estimated betas bias $\\lambda$ toward zero and the SE ignores first-stage noise (Shanken correction, portfolio betas). Persistent firm effects are not handled: cluster by firm."
+      ],
+      "pit": "",
+      "src": "Q31",
+      "seen": []
+    },
+    {
+      "id": "BAG-B-17",
+      "g": "Forecast comparison",
+      "k": "Diebold-Mariano",
+      "q": "Two models A and B produce $h$-step forecasts with errors $e_{A,t}, e_{B,t}$. (1) What do you fix first? (2) Why work with paired loss differentials? (3) Write the DM statistic and say why it needs HAC. (4) What complications remain?",
+      "pts": [
+        "(1) The loss (MSE, MAE, or one tied to use: rank IC, portfolio P&L), and genuinely OOS forecasts from both models on the same rolling or expanding windows.",
+        "(2) $d_t=L(e_{A,t})-L(e_{B,t})$: pairing cancels the shocks both models face.",
+        "(3) $$DM=\\frac{\\bar d}{\\sqrt{\\widehat{\\mathrm{LRV}}(d_t)/T}}\\ \\approx N(0,1)$$ $h$-step forecasts make $d_t$ at least MA($h-1$), so the long-run variance needs HAC.",
+        "(4) Nested models distort DM's null (use Clark-West); tuning on validation data adds uncertainty; many models need a model confidence set or White's reality check / SPA. In practice: test the difference of two IC series with Newey-West."
+      ],
+      "pit": "",
+      "src": "Q33",
+      "seen": []
+    }
+  ]
+}

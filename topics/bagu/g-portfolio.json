@@ -1,0 +1,205 @@
+{
+  "title": "Portfolio & risk",
+  "notes": [
+    {
+      "h": "Construction",
+      "items": [
+        {
+          "t": "Construction problem",
+          "d": [
+            "$\\max_w w^\\top\\hat\\mu-\\frac\\gamma2 w^\\top\\Sigma w-\\mathrm{TC}(\\Delta w)$ s.t. exposure, leverage, position limits."
+          ],
+          "cards": [
+            "BAG-G-01"
+          ]
+        },
+        {
+          "t": "Scores to alphas",
+          "d": [
+            "Grinold: $\\hat\\alpha_i=IC\\cdot\\sigma_i\\cdot z_i$. Dollar neutral $\\sum w_i=0$; beta neutral $w^\\top\\beta=0$ (not the same)."
+          ],
+          "cards": [
+            "BAG-G-02"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Risk estimation",
+      "items": [
+        {
+          "t": "Diversification",
+          "d": [
+            "Equal weight: $\\sigma_p^2=\\sigma^2/N+\\frac{N-1}{N}\\rho\\sigma^2\\to\\rho\\sigma^2$."
+          ],
+          "cards": [
+            "BAG-G-03"
+          ]
+        },
+        {
+          "t": "Covariance fixes",
+          "d": [
+            "Factor model $B\\Sigma_fB^\\top+D$; Ledoit-Wolf shrinkage; eigenvalue clipping; EWMA."
+          ],
+          "cards": [
+            "BAG-G-03"
+          ]
+        },
+        {
+          "t": "Mean-variance",
+          "d": [
+            "$w^*=\\Sigma^{-1}\\mu/\\gamma$; unstable through $\\Sigma^{-1}$ and noisy $\\mu$. Fixes: shrink $\\mu$ and $\\Sigma$, constraints, robust optimisation, $\\lVert w\\rVert^2$ penalty."
+          ],
+          "cards": [
+            "BAG-G-04"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Sizing & drawdowns",
+      "items": [
+        {
+          "t": "Continuous Kelly",
+          "d": [
+            "$f^*=\\mu/\\sigma^2$, $g^*=SR^2/2$; $g(f^*/2)=\\frac34g^*$; $g(2f^*)=0$.",
+            "Full Kelly: $P(\\text{ever at fraction }x\\text{ of start})=x$."
+          ],
+          "cards": [
+            "BAG-G-05"
+          ]
+        },
+        {
+          "t": "Drawdown diagnostics",
+          "d": [
+            "Duration, skew/kurtosis, leverage, event concentration; Calmar = annual return / max drawdown; Sortino; CVaR."
+          ],
+          "cards": [
+            "BAG-G-06"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Short side",
+      "items": [
+        {
+          "t": "Borrow",
+          "d": [
+            "Fees, availability, recalls; correlated with short signals; use point-in-time lending data and cap shorts by supply."
+          ],
+          "cards": [
+            "BAG-G-07"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "BAG-G-01",
+      "g": "Construction",
+      "k": "Forecast vs book",
+      "q": "(1) Define alpha forecasting and portfolio construction; write a typical construction problem. (2) Why think about them separately? Give three reasons.",
+      "pts": [
+        "(1) Forecasting estimates expected (excess) returns or scores $\\hat\\mu_i$. Construction turns them into positions under risk, cost and constraints: $$\\max_w\\ w^\\top\\hat\\mu-\\frac{\\gamma}{2}w^\\top\\Sigma w-\\mathrm{TC}(w-w_{\\text{prev}})$$ subject to exposure, leverage and position limits.",
+        "(2a) A good signal can be ruined by sizing: concentration in a few volatile names, over-trading, unintended factor bets.",
+        "(2b) Only the portfolio layer sees interactions across assets (covariance) and across signals (combination, correlation).",
+        "(2c) Optimisers amplify forecast errors, so construction needs regularisation and constraints. Predict-then-optimise also trains on MSE, not the portfolio objective (decision-focused learning targets this gap)."
+      ],
+      "pit": "",
+      "src": "Q88",
+      "seen": []
+    },
+    {
+      "id": "BAG-G-02",
+      "g": "Construction",
+      "k": "Market-neutral book",
+      "q": "Build a market-neutral long-short equity book from cross-sectional scores. (1) Universe and score processing? (2) How do you turn scores into expected returns? (3) Simple and optimised sizing? (4) Rebalancing and checks? (5) What is the classic neutrality trap?",
+      "pts": [
+        "(1) Point-in-time filters on ADV, price, cap; winsorise / rank → neutralise industry and style → z-score.",
+        "(2) Grinold: $\\hat\\alpha_i=IC\\cdot\\sigma_i\\cdot z_i$, putting scores on a return scale.",
+        "(3) Simple: long top 10%, short bottom 10%, equal or score weighted, 50/50 for zero net. Optimised: mean-variance with $\\sum w_i=0$, $w^\\top\\beta=0$, zero industry exposure, position caps, participation caps.",
+        "(4) Rebalance frequency matched to signal decay, no-trade buffers; check gross / net exposure, beta, factor exposures, concentration, turnover, net return.",
+        "(5) Dollar-neutral ≠ beta-neutral: long low-beta, short high-beta names is net short the market."
+      ],
+      "pit": "",
+      "src": "Q89",
+      "seen": []
+    },
+    {
+      "id": "BAG-G-03",
+      "g": "Risk estimation",
+      "k": "Diversification",
+      "q": "$N$ equally weighted assets, each with vol $\\sigma$ and pairwise correlation $\\rho$. (1) Derive the portfolio variance and its limit. (2) Why is a correlation matrix hard to estimate? Give four reasons. (3) What are the fixes?",
+      "pts": [
+        "(1) $$\\sigma_p^2=\\frac{\\sigma^2}{N}+\\frac{N-1}{N}\\rho\\sigma^2\\ \\to\\ \\rho\\sigma^2$$ Lower correlation diversifies more; with $\\rho>0$ risk cannot fall below $\\sqrt\\rho\\,\\sigma$.",
+        "(2) Too many parameters ($N(N-1)/2$: 124,750 for 500 stocks vs about 756 daily observations in 3 years; $T<N$ makes the sample matrix singular); noise (extreme eigenvalues biased: smallest too small, largest too big); non-stationarity; tail dependence (correlations jump in crises).",
+        "(3) Factor models $\\Sigma=B\\Sigma_fB^\\top+D$ ($O(NK)$ parameters); Ledoit-Wolf shrinkage; eigenvalue clipping; EWMA; robust constraints."
+      ],
+      "pit": "",
+      "src": "Q90",
+      "seen": []
+    },
+    {
+      "id": "BAG-G-04",
+      "g": "Risk estimation",
+      "k": "Unstable MVO",
+      "q": "(1) Solve $\\max_w\\ w^\\top\\mu-\\frac\\gamma2w^\\top\\Sigma w$ and give the intuition. (2) Why is the unconstrained solution unstable? (3) What does instability look like? (4) List the fixes.",
+      "pts": [
+        "(1) $w^*=\\frac1\\gamma\\Sigma^{-1}\\mu$: money per unit of risk-adjusted expected return, accounting for hedges between assets.",
+        "(2) $\\Sigma^{-1}$ blows up small-eigenvalue directions (spreads between highly correlated assets), which estimation error makes look low-risk and high-return (an \\\"error maximiser\\\"); and $\\mu$ is the noisiest input (Chopra-Ziemba: mean errors cost about 10× variance errors and 20× covariance errors).",
+        "(3) Extreme long-short weights, hypersensitivity to small input changes, poor OOS, often worse than $1/N$.",
+        "(4) Shrink $\\mu$ (Black-Litterman, toward 0 or a common value); shrink $\\Sigma$ or use a factor model; constraints (long-only is itself a covariance shrinkage, Jagannathan-Ma); robust optimisation over a set for $\\mu$; an $\\lVert w\\rVert^2$ penalty."
+      ],
+      "pit": "",
+      "src": "Q91",
+      "seen": []
+    },
+    {
+      "id": "BAG-G-05",
+      "g": "Sizing & drawdowns",
+      "k": "Fractional Kelly",
+      "q": "A strategy has excess mean $\\mu$ and variance $\\sigma^2$; you hold leverage $f$. (1) Define Kelly and give the continuous-time solution and growth rate. (2) What happens if you over-bet? (3) What does half Kelly give? (4) Why do funds stay below full Kelly?",
+      "pts": [
+        "(1) Maximise $g(f)=E\\log(1+fR)\\approx f\\mu-\\frac12f^2\\sigma^2$: $$f^*=\\frac{\\mu}{\\sigma^2},\\qquad g(f^*)=\\frac{\\mu^2}{2\\sigma^2}=\\frac{SR^2}{2}$$",
+        "(2) $g$ falls fast right of $f^*$: $g(2f^*)=0$, and negative beyond. Overestimating $\\mu$ pushes you there.",
+        "(3) $g(f^*/2)=\\frac34 g(f^*)$ at half the volatility. Full Kelly has a 50% chance of halving wealth at some point (probability of ever falling to fraction $x$ is $x$).",
+        "(4) Uncertain inputs, brutal drawdowns, mandates (drawdown limits, risk budgets, redemptions), and fat-tailed, dependent returns that break Kelly's assumptions."
+      ],
+      "pit": "",
+      "src": "Q92",
+      "seen": []
+    },
+    {
+      "id": "BAG-G-06",
+      "g": "Sizing & drawdowns",
+      "k": "Sharpe 1.5, 35% DD",
+      "q": "A strategy shows Sharpe 1.5 and a 35% maximum drawdown. (1) Why are the two numbers in tension? Calibrate with 10% vol over 10 years. (2) What would explain the gap? (3) What do you inspect? (4) Is it acceptable?",
+      "pts": [
+        "(1) With 10% vol, Sharpe 1.5 and normal daily returns, simulated 10-year max drawdowns have a median of about 12–13% and a 99th percentile near 23%; 35% essentially never happens.",
+        "(2) Much higher vol (leverage), a fat left tail / negative skew (short options or short vol), or losses concentrated in one regime.",
+        "(3) Drawdown duration and recovery; skew, kurtosis, worst month/week; leverage and liquidity (forced deleveraging?); whether the drawdown is one event (March 2020, 2008); Calmar, Sortino, CVaR.",
+        "(4) Depends on the mandate: multi-manager books usually stop out a sleeve well before 35%. Even with high Sharpe it needs less leverage or tail hedging."
+      ],
+      "pit": "Sharpe ignores path and tail: two strategies with the same Sharpe can have very different drawdowns.",
+      "src": "Q93",
+      "seen": []
+    },
+    {
+      "id": "BAG-G-07",
+      "g": "Short side",
+      "k": "Short borrow",
+      "q": "(1) What changes for hard-to-borrow names? (2) Why does ignoring borrow bias a long-short backtest, and in which direction? (3) How do borrow conditions behave over time? (4) How do you model it, and what other short-side costs exist?",
+      "pts": [
+        "(1) Fees can rise from about 0.25% a year to 10%+, shares may be unavailable, and loans can be recalled, forcing you out.",
+        "(2) Short signals (rich valuation, retail attention, accounting red flags, recent IPOs) pick exactly the in-demand, hard-to-borrow names: ignoring borrow overstates short-side alpha and capacity. Many anomalies earn mostly on the short leg, concentrated in such stocks.",
+        "(3) Time-varying, spiking in squeezes.",
+        "(4) Point-in-time securities-lending data (fees, availability); exclude hard-to-borrow names or charge the fee; cap shorts at a share of available supply; compare with a long-only version. Also margin, financing and rebate-rate spreads."
+      ],
+      "pit": "",
+      "src": "Q94",
+      "seen": []
+    }
+  ]
+}
