@@ -1,0 +1,1213 @@
+{
+  "title": "Convergence, gradient methods",
+  "notes": [
+    {
+      "h": "Convergence rates",
+      "items": [
+        {
+          "t": "Definitions",
+          "d": [
+            "With $e_i = |s_i - \\bar s|$: linear if $e_{i+1}/e_i \\to \\delta < 1$; superlinear if $\\delta = 0$; quadratic if $e_{i+1}/e_i^2 \\to \\delta < \\infty$.",
+            "Quadratic ⇒ superlinear ⇒ linear."
+          ],
+          "cards": [
+            "NLO-04-01",
+            "NLO-04-04"
+          ]
+        },
+        {
+          "t": "Model sequences",
+          "d": [
+            "$(1/10)^i$ linear;  $1/i!$ superlinear;  $10^{-2^i}$ quadratic;  $1/i^2$ sublinear."
+          ],
+          "cards": [
+            "NLO-04-02",
+            "NLO-04-03"
+          ]
+        },
+        {
+          "t": "7x − log x",
+          "d": [
+            "Newton map $2x - 7x^2$, $e_{k+1} = -7e_k^2$, converges iff $0 < x_0 < \\tfrac27$."
+          ],
+          "cards": [
+            "NLO-04-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Key Lemma",
+      "items": [
+        {
+          "t": "Lipschitz continuity",
+          "d": [
+            "$|l(x) - l(y)| \\le \\gamma|x - y|$ on $X$. Sufficient: $|l'| \\le \\gamma$ on an interval."
+          ],
+          "cards": [
+            "NLO-04-06"
+          ]
+        },
+        {
+          "t": "Key Lemma",
+          "d": [
+            "$l'$ $\\gamma$-Lipschitz on an open interval $D$ ⇒ $$|l(y) - l(x) - l'(x)(y - x)| \\le \\tfrac{\\gamma}{2}(y - x)^2$$",
+            "Proof: $\\int_0^1 [l'(x + t(y - x)) - l'(x)](y - x)\\,dt$, bound by $\\gamma t|y - x|^2$, integrate."
+          ],
+          "cards": [
+            "NLO-04-07",
+            "NLO-04-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Newton in 1-D",
+      "items": [
+        {
+          "t": "Theorem",
+          "d": [
+            "$f'$ $\\gamma$-Lipschitz and $|f'| \\ge \\rho > 0$ on $D$, root $x^* \\in D$, $|x^{(0)} - x^*| < \\eta = \\min\\{\\bar\\eta, \\tau\\tfrac{2\\rho}{\\gamma}\\}$:",
+            "$$e_{k+1} \\le \\frac{\\gamma}{2\\rho}\\,e_k^2,\\qquad e_{k+1} \\le \\tau e_k$$"
+          ],
+          "cards": [
+            "NLO-04-09"
+          ]
+        },
+        {
+          "t": "Proof",
+          "d": [
+            "1. $e_k < \\bar\\eta$: iterate in $D$, step defined.  2. Error identity + Key Lemma + $\\rho$.  3. $e_{k+1} \\le (\\tfrac{\\gamma}{2\\rho}e_k)e_k \\le \\tau e_k$.  4. Induction, $e_k \\le \\tau^k e_0 \\to 0$."
+          ],
+          "cards": [
+            "NLO-04-10",
+            "NLO-04-11"
+          ]
+        },
+        {
+          "t": "Constant",
+          "d": [
+            "True asymptotic constant $|f''(x^*)/(2f'(x^*))| \\le \\tfrac{\\gamma}{2\\rho}$. The radius is a guarantee, usually very conservative."
+          ],
+          "cards": [
+            "NLO-04-12",
+            "NLO-04-15",
+            "NLO-04-13",
+            "NLO-04-14"
+          ]
+        },
+        {
+          "t": "Failures",
+          "d": [
+            "Multiple root: linear, ratio $\\tfrac{m-1}{m}$.  Far start: cycle or divergence.  $f'$ not Lipschitz: order below $2$."
+          ],
+          "cards": [
+            "NLO-04-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Matrix norms",
+      "items": [
+        {
+          "t": "2-norm",
+          "d": [
+            "$\\lVert A \\rVert_2 = \\max_{x \\ne 0}\\lVert Ax \\rVert/\\lVert x \\rVert = \\sqrt{\\lambda_{\\max}(A^\\top A)}$; for symmetric $A$: $\\max_i|\\lambda_i|$."
+          ],
+          "cards": [
+            "NLO-04-17",
+            "NLO-04-18"
+          ]
+        },
+        {
+          "t": "Properties",
+          "d": [
+            "$\\lVert Ax \\rVert \\le \\lVert A \\rVert\\lVert x \\rVert$;  $\\lVert AB \\rVert \\le \\lVert A \\rVert\\lVert B \\rVert$;  $\\lVert A \\rVert\\lVert A^{-1} \\rVert \\ge 1$;  $\\kappa(A) = \\lVert A \\rVert\\lVert A^{-1} \\rVert$."
+          ],
+          "cards": [
+            "NLO-04-19"
+          ]
+        },
+        {
+          "t": "Perturbation lemma",
+          "d": [
+            "$A$ invertible, $q = \\lVert A^{-1}(B - A) \\rVert < 1$ ⇒ $B$ invertible and $\\lVert B^{-1} \\rVert \\le \\dfrac{\\lVert A^{-1} \\rVert}{1 - q}$."
+          ],
+          "cards": [
+            "NLO-04-20"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Newton in Rⁿ",
+      "items": [
+        {
+          "t": "Theorem",
+          "d": [
+            "$F(x^*) = 0$, $\\lVert J(x^*)^{-1} \\rVert \\le \\beta$, $J$ $\\gamma$-Lipschitz on $N(x^*, r)$, $x^{(0)} \\in N(x^*, \\varepsilon)$ with $\\varepsilon = \\min\\{r, \\tfrac{1}{2\\beta\\gamma}\\}$:",
+            "$$\\lVert x^{(k+1)} - x^* \\rVert \\le \\beta\\gamma\\,\\lVert x^{(k)} - x^* \\rVert^2$$"
+          ],
+          "cards": [
+            "NLO-04-21",
+            "NLO-04-22"
+          ]
+        },
+        {
+          "t": "Proof",
+          "d": [
+            "1. $\\lVert J(x^*)^{-1}[J(x^{(0)}) - J(x^*)] \\rVert \\le \\tfrac12$.  2. Perturbation lemma: $\\lVert J(x^{(0)})^{-1} \\rVert \\le 2\\beta$.  3. $x^{(1)} - x^* = J(x^{(0)})^{-1}[\\text{linearization error}]$.  4. $\\le 2\\beta \\cdot \\tfrac{\\gamma}{2}\\lVert e_0 \\rVert^2$, and $\\le \\tfrac12\\lVert e_0 \\rVert$."
+          ],
+          "cards": [
+            "NLO-04-23",
+            "NLO-04-24"
+          ]
+        },
+        {
+          "t": "Minimization",
+          "d": [
+            "Apply to $F = \\nabla f$: Hessian Lipschitz near $x^*$ and invertible at $x^*$. Positive definiteness is needed for descent, not for the rate."
+          ],
+          "cards": [
+            "NLO-04-26",
+            "NLO-04-25"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Steepest descent",
+      "items": [
+        {
+          "t": "Direction",
+          "d": [
+            "$-\\nabla f/\\lVert \\nabla f \\rVert$ is the unique minimizer of $\\nabla f^\\top d$ over $\\lVert d \\rVert_2 = 1$ (Cauchy–Schwarz)."
+          ],
+          "cards": [
+            "NLO-04-27"
+          ]
+        },
+        {
+          "t": "Method of Steepest Descent",
+          "d": [
+            "$d = -\\nabla f$ with exact line search; $\\phi_k(\\alpha) = f(x^k + \\alpha d^k)$, $\\phi_k'(\\alpha) = \\nabla f(x^k + \\alpha d^k)^\\top d^k$."
+          ],
+          "cards": [
+            "NLO-04-28",
+            "NLO-04-29",
+            "NLO-04-30"
+          ]
+        },
+        {
+          "t": "Zig-zag and improvement",
+          "d": [
+            "Consecutive steps are orthogonal: $\\nabla f(x^{(k)})^\\top\\nabla f(x^{(k+1)}) = 0$.  If $\\nabla f(x^{(k)}) \\ne 0$ then $f(x^{(k+1)}) < f(x^{(k)})$."
+          ],
+          "cards": [
+            "NLO-04-31",
+            "NLO-04-32"
+          ]
+        },
+        {
+          "t": "Coercive functions",
+          "d": [
+            "A subsequence converges and every limit point is critical; with strict convexity the whole sequence converges to the global minimizer."
+          ],
+          "cards": [
+            "NLO-04-32",
+            "NLO-04-33"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Gradient methods",
+      "items": [
+        {
+          "t": "Convergence theorem",
+          "d": [
+            "$f$ bounded below, $\\nabla f$ $L$-Lipschitz; step constant in $(0, \\tfrac2L)$, exact, or backtracking ⇒ $\\nabla f(x^{(k)}) \\to 0$."
+          ],
+          "cards": [
+            "NLO-04-34",
+            "NLO-04-38"
+          ]
+        },
+        {
+          "t": "Descent lemma",
+          "d": [
+            "$$f(y) \\le f(x) + \\nabla f(x)^\\top(y - x) + \\tfrac{L}{2}\\lVert y - x \\rVert^2$$",
+            "Hence $f(x - \\alpha\\nabla f) \\le f(x) - \\alpha(1 - \\tfrac{L\\alpha}{2})\\lVert \\nabla f \\rVert^2$; best $\\alpha = \\tfrac1L$ gives $\\tfrac{1}{2L}\\lVert \\nabla f \\rVert^2$."
+          ],
+          "cards": [
+            "NLO-04-35",
+            "NLO-04-36"
+          ]
+        },
+        {
+          "t": "Proof",
+          "d": [
+            "Decrease $\\ge c\\lVert g_k \\rVert^2$ with $c = \\bar\\alpha(1 - \\tfrac{L\\bar\\alpha}{2})$, $\\tfrac{1}{2L}$, or $\\gamma\\min\\{s, \\tfrac{2\\beta(1 - \\gamma)}{L}\\}$; then telescope."
+          ],
+          "cards": [
+            "NLO-04-37"
+          ]
+        },
+        {
+          "t": "Rate on quadratics",
+          "d": [
+            "Exact steepest descent on $x^\\top Q x$: factor $\\big(\\tfrac{\\kappa - 1}{\\kappa + 1}\\big)^2$ per step in $f$, $\\kappa = M/m$."
+          ],
+          "cards": [
+            "NLO-04-39",
+            "NLO-04-40",
+            "NLO-04-41"
+          ]
+        },
+        {
+          "t": "Constant step on a quadratic",
+          "d": [
+            "Coordinate factors $|1 - \\alpha\\mu_i|$; converges iff $0 < \\alpha < 2/\\mu_{\\max}$; best $\\alpha = \\tfrac{2}{M + m}$ with rate $\\tfrac{\\kappa - 1}{\\kappa + 1}$."
+          ],
+          "cards": [
+            "NLO-04-42",
+            "NLO-04-44"
+          ]
+        },
+        {
+          "t": "Not always linear",
+          "d": [
+            "$x^2 - \\tfrac13x^3$ with step $0.5$: $x^+ = \\tfrac12x^2$, quadratic."
+          ],
+          "cards": [
+            "NLO-04-43"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Overview",
+      "items": [
+        {
+          "t": "Guarantees",
+          "d": [
+            "Newton: local, quadratic. Steepest descent: linear on quadratics, rate set by the condition number. Gradient methods: gradient tends to zero."
+          ],
+          "cards": [
+            "NLO-04-45"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "Radius",
+          "d": [
+            "$x^2 - 1$ on $(\\tfrac12, \\tfrac32)$: $\\rho = 1$, $\\gamma = 2$, $\\eta = \\tfrac12$; from $\\tfrac65$: $\\tfrac{61}{60}$.   $x^2 - 4$ on $(1,3)$: $\\rho = 2$, $\\gamma = 2$, $\\eta = 1$."
+          ],
+          "cards": [
+            "NLO-04-13",
+            "NLO-04-15"
+          ]
+        },
+        {
+          "t": "Newton iterates",
+          "d": [
+            "$x^2 - 1$ from $\\tfrac32$: $\\tfrac{13}{12}, \\tfrac{313}{312}$; $e_{k+1}/e_k^2 \\to \\tfrac12$."
+          ],
+          "cards": [
+            "NLO-04-14"
+          ]
+        },
+        {
+          "t": "Norms",
+          "d": [
+            "$\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$: $1.618$.   $\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}$: $\\lVert A \\rVert = 3$, $\\lVert A^{-1} \\rVert = 1$, $\\kappa = 3$."
+          ],
+          "cards": [
+            "NLO-04-18",
+            "NLO-04-19"
+          ]
+        },
+        {
+          "t": "Steepest descent",
+          "d": [
+            "$4x_1^2 - 4x_1x_2 + 2x_2^2$ from $(2,3)$: $(0,1)$, $(\\tfrac25,\\tfrac35)$; steps $\\tfrac12, \\tfrac{1}{10}$.   $x^2 + 4y^2$ from $(1,1)$: $\\alpha = \\tfrac{17}{130}$, $(\\tfrac{48}{65}, -\\tfrac{3}{65})$."
+          ],
+          "cards": [
+            "NLO-04-30",
+            "NLO-04-41"
+          ]
+        },
+        {
+          "t": "Gradient steps",
+          "d": [
+            "Rosenbrock, step $0.05$ from $(0,0)$: $(0.1, 0)$, $(0.17, 0.1)$; $f$: $1, 0.82, 1.194$."
+          ],
+          "cards": [
+            "NLO-04-38"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Proofs to know",
+      "items": [
+        {
+          "t": "From a blank page",
+          "d": [
+            "Key Lemma; the one-variable theorem with the induction; the zig-zag theorem; the descent lemma with the guaranteed decrease."
+          ],
+          "cards": [
+            "NLO-04-08",
+            "NLO-04-10",
+            "NLO-04-11",
+            "NLO-04-31",
+            "NLO-04-35",
+            "NLO-04-36"
+          ]
+        },
+        {
+          "t": "Short ones",
+          "d": [
+            "Steepest direction by Cauchy–Schwarz; norm properties; the two halves of the $n$-variable proof; the improvement theorem."
+          ],
+          "cards": [
+            "NLO-04-27",
+            "NLO-04-19",
+            "NLO-04-23",
+            "NLO-04-24",
+            "NLO-04-32"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "γ and β",
+          "d": [
+            "Newton theorems: $\\gamma$ = Lipschitz constant, $\\beta$ = bound on the inverse Jacobian, $\\rho$ = lower bound on $|f'|$. Gradient methods: $L$ = Lipschitz constant, $\\gamma$ = Armijo constant, $\\beta$ = backtracking factor."
+          ],
+          "cards": [
+            "NLO-04-34",
+            "NLO-04-21"
+          ]
+        },
+        {
+          "t": "f",
+          "d": [
+            "In the Newton theorems $f$ (or $F$) is the function whose root is sought. For $\\min f$ apply them to $f'$ or $\\nabla f$."
+          ],
+          "cards": [
+            "NLO-04-26"
+          ]
+        },
+        {
+          "t": "Steepest descent",
+          "d": [
+            "The name includes the exact line search."
+          ],
+          "cards": [
+            "NLO-04-28"
+          ]
+        },
+        {
+          "t": "½xᵀQx versus xᵀQx",
+          "d": [
+            "The rate theorem is stated for $x^\\top Q x$ (Hessian $2Q$); the example is $\\tfrac12x^\\top Qx$. The condition number is the same, the exact-step formula is not."
+          ],
+          "cards": [
+            "NLO-04-39",
+            "NLO-04-30"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Positive definite Jacobians",
+          "d": [
+            "Not needed for the rate; invertibility near the root is."
+          ],
+          "cards": [
+            "NLO-04-26"
+          ]
+        },
+        {
+          "t": "1/125",
+          "d": [
+            "$1/5! = 1/120$."
+          ],
+          "cards": [
+            "NLO-04-02"
+          ]
+        },
+        {
+          "t": "p for ρ",
+          "d": [
+            "$\\tfrac{\\gamma}{2p}$ should be $\\tfrac{\\gamma}{2\\rho}$; the start condition is strict."
+          ],
+          "cards": [
+            "NLO-04-09"
+          ]
+        },
+        {
+          "t": "Proof for k = 0 only",
+          "d": [
+            "The induction and the convergence claim are missing."
+          ],
+          "cards": [
+            "NLO-04-11"
+          ]
+        },
+        {
+          "t": "Lipschitz Jacobian",
+          "d": [
+            "It is the map $x \\mapsto J(x)$ that is Lipschitz."
+          ],
+          "cards": [
+            "NLO-04-21"
+          ]
+        },
+        {
+          "t": "H ⪯ LI",
+          "d": [
+            "A Lipschitz gradient means $-LI \\preceq H \\preceq LI$."
+          ],
+          "cards": [
+            "NLO-04-35"
+          ]
+        },
+        {
+          "t": "Any α < 2/L",
+          "d": [
+            "The decrease $\\tfrac{1}{2L}\\lVert \\nabla f \\rVert^2$ holds only at $\\alpha = \\tfrac1L$; and only $\\nabla f \\to 0$ is proved."
+          ],
+          "cards": [
+            "NLO-04-36",
+            "NLO-04-33"
+          ]
+        },
+        {
+          "t": "M − m",
+          "d": [
+            "The rate depends on the ratio $M/m$, not on the difference."
+          ],
+          "cards": [
+            "NLO-04-39"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "NLO-04-01",
+      "g": "Convergence rates",
+      "k": "Rate definitions",
+      "q": "Let $s_i \\to \\bar s$ and $e_i = |s_i - \\bar s|$. (1) Define linear convergence. (2) Define superlinear convergence. (3) Define quadratic convergence. (4) How are the three related?",
+      "pts": [
+        "(1) $\\lim_{i \\to \\infty} e_{i+1}/e_i = \\delta < 1$.",
+        "(2) The same limit equals $0$.",
+        "(3) $\\lim_{i \\to \\infty} e_{i+1}/e_i^2 = \\delta < \\infty$. The limit only has to be finite, not below $1$.",
+        "(4) Quadratic ⇒ superlinear, since $e_{i+1}/e_i = (e_{i+1}/e_i^2)\\,e_i \\to \\delta \\cdot 0 = 0$; superlinear ⇒ linear in this definition ($\\delta = 0 < 1$). The classes are nested, not alternatives."
+      ],
+      "pit": "",
+      "src": "N p5, 8, 11",
+      "seen": [
+        "T4 P1"
+      ]
+    },
+    {
+      "id": "NLO-04-02",
+      "g": "Convergence rates",
+      "k": "Classify sequences",
+      "q": "Classify each error sequence by computing $e_{i+1}/e_i$ and $e_{i+1}/e_i^2$: (1) $e_i = (1/10)^i$, (2) $e_i = 1/i!$, (3) $e_i = 10^{-2^i}$, (4) $e_i = 1/i^2$.",
+      "pts": [
+        "(1) Ratio $0.1$; second ratio $0.1 \\times 10^i \\to \\infty$. Linear with $\\delta = 0.1$: one more correct digit per step.",
+        "(2) Ratio $\\frac{1}{i+1} \\to 0$; second ratio $\\frac{i!}{i+1} \\to \\infty$. Superlinear, not quadratic.",
+        "(3) Ratio $e_i \\to 0$; second ratio exactly $1$. Quadratic with $\\delta = 1$: the number of correct digits doubles each step.",
+        "(4) Ratio $\\big(\\tfrac{i}{i+1}\\big)^2 \\to 1$. Not linear, because $\\delta < 1$ is required: sublinear."
+      ],
+      "pit": "The slide lists $1/5!$ as $1/125$; it is $1/120$.",
+      "src": "N p6–13",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-03",
+      "g": "Convergence rates",
+      "k": "Linear vs quadratic",
+      "q": "Two error sequences: A with $e_k = 0.1 \\times (\\tfrac12)^k$, and B with $e_0 = 0.1$, $e_{k+1} = e_k^2$. (1) List the first four terms of each. (2) Compute both ratios for A and classify it. (3) Do the same for B. (4) When does squaring the error help?",
+      "pts": [
+        "(1) A: $0.1, 0.05, 0.025, 0.0125$. B: $0.1, 0.01, 10^{-4}, 10^{-8}$.",
+        "(2) $e_{k+1}/e_k = \\tfrac12$ and $e_{k+1}/e_k^2 = \\frac{1}{2e_k} \\to \\infty$: linear with factor $\\tfrac12$, not quadratic.",
+        "(3) $e_{k+1}/e_k = e_k \\to 0$ and $e_{k+1}/e_k^2 = 1$: quadratic with constant $1$, and also superlinear.",
+        "(4) Only when $e < 1$. At $e_0 = 1$ it stays at $1$; for $e_0 > 1$ it blows up. That is why quadratic convergence is a local statement."
+      ],
+      "pit": "For a linear sequence show both limits: the first is in $(0,1)$ and the second is $\\infty$.",
+      "src": "",
+      "seen": [
+        "T4 P1"
+      ]
+    },
+    {
+      "id": "NLO-04-04",
+      "g": "Convergence rates",
+      "k": "Definition quirks",
+      "q": "The rate definitions use limits of $e_{k+1}/e_k$ and $e_{k+1}/e_k^2$. (1) The error is multiplied alternately by $\\tfrac12$ and $\\tfrac14$. What does the definition say? (2) How is $e_{k+1} = e_k^3$ classified? (3) How many correct digits per step does a linear rate $\\delta$ give, and a quadratic rate?",
+      "pts": [
+        "(1) Nothing: the ratio alternates between $\\tfrac12$ and $\\tfrac14$, so the limit does not exist, although the sequence clearly converges at least as fast as $(\\tfrac12)^k$.",
+        "(2) $e_{k+1}/e_k^2 = e_k \\to 0 < \\infty$: “quadratic with $\\delta = 0$”. It is really cubic. The definition gives a lower bound on the speed, not the exact order.",
+        "(3) Linear: a fixed $-\\log_{10}\\delta$ digits per step (one for $\\delta = 0.1$, about $0.3$ for $\\delta = \\tfrac12$). Quadratic with constant $C$: the number of correct digits roughly doubles once $Ce_k < 1$."
+      ],
+      "pit": "",
+      "src": "N p5–13",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-05",
+      "g": "Convergence rates",
+      "k": "Newton on 7x − log x",
+      "q": "Minimize $f(x) = 7x - \\log x$ on $x > 0$ with pure Newton. (1) Find $x^*$ and simplify the Newton map. (2) With $x = \\tfrac17 + e$ derive the exact error recursion. (3) For which starting points does it converge? (4) What happens from $x_0 = 1$, and which of $x_0 = 0.1$ and $x_0 = 0.01$ is faster?",
+      "pts": [
+        "(1) $f' = 7 - \\tfrac1x$, $f'' = \\tfrac{1}{x^2}$, $x^* = \\tfrac17$. Newton map: $x - (7 - \\tfrac1x)x^2 = 2x - 7x^2$.",
+        "(2) $2x - 7x^2 - \\tfrac17 = -7e^2$, so $e_{k+1} = -7e_k^2$: quadratic with constant exactly $7$.",
+        "(3) $|e_k| = \\tfrac17(7|e_0|)^{2^k} \\to 0$ iff $7|e_0| < 1$, i.e. $0 < x_0 < \\tfrac27$.",
+        "(4) From $1$: $-5, -185, \\dots$ diverges. $x_0 = 0.1$ is faster (4 steps to $10^{-9}$ against 9), because it is closer to $\\tfrac17$: $7|e_0| = 0.30$ against $0.93$."
+      ],
+      "pit": "$x_0 = 0$ is a fixed point of the polynomial $2x - 7x^2$, but $f$ is not defined there.",
+      "src": "N p3",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-06",
+      "g": "Key Lemma",
+      "k": "Lipschitz continuity",
+      "q": "(1) Define “$l$ is Lipschitz continuous on $X$ with constant $\\gamma$”. (2) Give a practical test using $l'$ and prove it. (3) Find $\\gamma$ for $l(x) = \\sqrt{x^2 + 5}$ on $\\mathbb{R}$. (4) Is $x^2$ Lipschitz on $\\mathbb{R}$? On $[-R, R]$? (5) Give a continuous function that is not Lipschitz.",
+      "pts": [
+        "(1) $|l(x) - l(y)| \\le \\gamma|x - y|$ for all $x, y \\in X$: every difference quotient is bounded by $\\gamma$.",
+        "(2) If $l$ is differentiable on an interval $X$ with $|l'| \\le \\gamma$, then $l$ is $\\gamma$-Lipschitz: by the mean value theorem $l(x) - l(y) = l'(\\xi)(x - y)$.",
+        "(3) $l'(x) = \\frac{x}{\\sqrt{x^2 + 5}}$, so $|l'| < 1$ and $\\gamma = 1$.",
+        "(4) Not on $\\mathbb{R}$: the quotient $|x^2 - y^2|/|x - y| = |x + y|$ is unbounded. On $[-R, R]$ yes, with $\\gamma = 2R$.",
+        "(5) $\\sqrt{|x|}$ on $[-1, 1]$: at $0$ the quotient is $h^{-1/2}$, unbounded."
+      ],
+      "pit": "Lipschitz continuity depends on the set. That is why the Newton theorem is stated on a set $D$ and not on $\\mathbb{R}$.",
+      "src": "N p15–16",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-07",
+      "g": "Key Lemma",
+      "k": "Key Lemma",
+      "q": "(1) State the Key Lemma for a function $l$ on an open interval $D$. (2) What does its left-hand side measure? (3) How does it compare with Taylor's theorem? (4) Show that the constant cannot be improved, using $l(x) = x^2 - 1$.",
+      "pts": [
+        "(1) If $l'$ is Lipschitz on $D$ with constant $\\gamma$, then for all $x, y \\in D$: $$|l(y) - l(x) - l'(x)(y - x)| \\le \\tfrac{\\gamma}{2}(y - x)^2$$",
+        "(2) The error of the tangent-line approximation of $l(y)$ from $x$, which is exactly the error Newton makes when it replaces the curve by its tangent.",
+        "(3) It is a Taylor bound that needs only a Lipschitz first derivative, not a second derivative.",
+        "(4) $l' = 2x$ has $\\gamma = 2$, and the remainder is $y^2 - x^2 - 2x(y - x) = (y - x)^2 = \\tfrac{\\gamma}{2}(y - x)^2$: equality."
+      ],
+      "pit": "",
+      "src": "N p17–18",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-08",
+      "g": "Key Lemma",
+      "k": "Key Lemma proof",
+      "q": "Prove: if $l'$ is $\\gamma$-Lipschitz on an open interval $D$, then $|l(y) - l(x) - l'(x)(y - x)| \\le \\tfrac{\\gamma}{2}(y - x)^2$ for $x, y \\in D$. Give (1) the integral representation, (2) the subtraction of the tangent term, (3) the bound on the integrand, (4) the integration. (5) Where is “$D$ is an interval” used?",
+      "pts": [
+        "(1) $l(y) - l(x) = \\int_x^y l'(z)\\,dz$; substituting $z = x + t(y - x)$: $l(y) - l(x) = \\int_0^1 l'(x + t(y - x))(y - x)\\,dt$.",
+        "(2) Since $l'(x)(y - x) = \\int_0^1 l'(x)(y - x)\\,dt$, the left side equals $\\int_0^1 [l'(x + t(y - x)) - l'(x)](y - x)\\,dt$.",
+        "(3) $|l'(x + t(y - x)) - l'(x)| \\le \\gamma\\,t\\,|y - x|$.",
+        "(4) $\\int_0^1 \\gamma t\\,|y - x|^2\\,dt = \\gamma(y - x)^2\\int_0^1 t\\,dt = \\tfrac{\\gamma}{2}(y - x)^2$.",
+        "(5) All points $x + t(y - x)$ must lie in $D$, where the Lipschitz bound holds. In $\\mathbb{R}^n$ this becomes “$D$ convex”."
+      ],
+      "pit": "The factor $\\tfrac12$ comes from $\\int_0^1 t\\,dt$. It is lost if you bound $t \\le 1$.",
+      "src": "N p17",
+      "seen": [
+        "HW2 P2"
+      ]
+    },
+    {
+      "id": "NLO-04-09",
+      "g": "Newton in 1-D",
+      "k": "1-D theorem",
+      "q": "State the quadratic convergence theorem for Newton's method on $f(x) = 0$ in one variable: (1) the three hypotheses on an open interval $D$, (2) the conclusion, (3) a valid radius $\\eta$. (4) What is each hypothesis for?",
+      "pts": [
+        "(1) $f'$ is Lipschitz on $D$ with constant $\\gamma$; $|f'(x)| \\ge \\rho > 0$ on $D$; there is a root $x^* \\in D$.",
+        "(2) There is $\\eta > 0$ such that for $|x^{(0)} - x^*| < \\eta$ the Newton sequence exists, converges to $x^*$, and $$|x^{(k+1)} - x^*| \\le \\frac{\\gamma}{2\\rho}\\,|x^{(k)} - x^*|^2$$",
+        "(3) $\\eta = \\min\\{\\bar\\eta,\\ \\tau\\tfrac{2\\rho}{\\gamma}\\}$ for any $\\tau \\in (0,1)$, where $\\bar\\eta$ is the radius of the largest open interval centered at $x^*$ inside $D$.",
+        "(4) Lipschitz: allows the Key Lemma. $|f'| \\ge \\rho$: keeps the Newton denominator away from $0$, so every step is defined. Root: something to converge to. Start within $\\eta$: the radius of convergence."
+      ],
+      "pit": "The slides write $p$ for $\\rho$ in places. And the start condition is strict: $< \\eta$.",
+      "src": "N p19–24",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-10",
+      "g": "Newton in 1-D",
+      "k": "Proof: error bound",
+      "q": "Newton step $x^{(k+1)} = x^{(k)} - f(x^{(k)})/f'(x^{(k)})$ with $f(x^*) = 0$, $f'$ $\\gamma$-Lipschitz and $|f'| \\ge \\rho$ on the interval $D$; write $e_k = |x^{(k)} - x^*|$ and assume $x^{(k)} \\in D$. (1) Derive the error identity. (2) Bound it with the Key Lemma. (3) Finish with $\\rho$.",
+      "pts": [
+        "(1) Subtract $x^*$ and insert $f(x^*) = 0$: $$x^{(k+1)} - x^* = \\frac{f(x^*) - f(x^{(k)}) - f'(x^{(k)})(x^* - x^{(k)})}{f'(x^{(k)})}$$",
+        "(2) The numerator is a tangent-line error from $x^{(k)}$ to $x^*$, both in $D$: its absolute value is at most $\\tfrac{\\gamma}{2}e_k^2$.",
+        "(3) $|f'(x^{(k)})| \\ge \\rho$ gives $e_{k+1} \\le \\frac{\\gamma}{2\\rho}e_k^2$."
+      ],
+      "pit": "Name the hypothesis at each inequality: Key Lemma (Lipschitz), then $\\rho$.",
+      "src": "N p30–36",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-11",
+      "g": "Newton in 1-D",
+      "k": "Proof: induction",
+      "q": "Continue the proof with $\\eta = \\min\\{\\bar\\eta,\\ \\tau\\tfrac{2\\rho}{\\gamma}\\}$, $\\tau \\in (0,1)$, and $e_k < \\eta$. (1) Why is the Newton step defined? (2) Show $e_{k+1} \\le \\tau e_k < \\eta$. (3) Complete the argument for all $k$ and prove convergence. (4) Why is $\\eta$ a minimum of two radii?",
+      "pts": [
+        "(1) $e_k < \\eta \\le \\bar\\eta$ puts $x^{(k)}$ in $D$, where $|f'| \\ge \\rho > 0$.",
+        "(2) $e_{k+1} \\le \\big(\\tfrac{\\gamma}{2\\rho}e_k\\big)e_k \\le \\big(\\tfrac{\\gamma}{2\\rho}\\cdot\\tau\\tfrac{2\\rho}{\\gamma}\\big)e_k = \\tau e_k < \\eta$.",
+        "(3) Induction: $e_0 < \\eta$, and $e_k < \\eta$ implies $e_{k+1} < \\eta$. So every iterate is defined and the quadratic bound holds for all $k$; iterating (2) gives $e_k \\le \\tau^k e_0 \\to 0$.",
+        "(4) $\\eta \\le \\bar\\eta$ keeps the iterates where the hypotheses hold. $\\eta \\le \\tau\\tfrac{2\\rho}{\\gamma}$ makes the multiplier $\\tfrac{\\gamma}{2\\rho}e_k$ at most $\\tau < 1$: the quadratic bound alone does not shrink the error when $e_k > \\tfrac{2\\rho}{\\gamma}$."
+      ],
+      "pit": "The slides do the case $k = 0$ only. Writing the induction line and $e_k \\le \\tau^k e_0$ is what actually proves convergence.",
+      "src": "N p23–29, 37–38",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-12",
+      "g": "Newton in 1-D",
+      "k": "The constant γ/(2ρ)",
+      "q": "The theorem gives $e_{k+1} \\le \\tfrac{\\gamma}{2\\rho}e_k^2$. (1) What does $\\tfrac{\\gamma}{2\\rho}$ measure, and what happens for $\\gamma = 0$? (2) How does it affect the guaranteed radius? (3) What is the true asymptotic constant for a $C^2$ function with $f'(x^*) \\ne 0$? (4) Evaluate it for $f = x^2 - 1$ at $1$ and for $g(x) = 7 - \\tfrac1x$ at $\\tfrac17$.",
+      "pts": [
+        "(1) Nonlinearity relative to slope; smaller is faster. If $\\gamma = 0$, $f$ is affine and Newton hits the root in one step.",
+        "(2) The radius is at most $\\tau\\tfrac{2\\rho}{\\gamma}$, its reciprocal: a more nonlinear $f$ has a smaller guaranteed neighborhood.",
+        "(3) $\\dfrac{e_{k+1}}{e_k^2} \\to \\left|\\dfrac{f''(x^*)}{2f'(x^*)}\\right|$, and $\\tfrac{\\gamma}{2\\rho}$ is an upper bound for it.",
+        "(4) $\\tfrac{2}{2 \\times 2} = \\tfrac12$. For $g$: $g' = \\tfrac{1}{x^2} = 49$ and $|g''| = \\tfrac{2}{x^3} = 686$, so $\\tfrac{686}{2 \\times 49} = 7$."
+      ],
+      "pit": "",
+      "src": "N p20–21, 24",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-13",
+      "g": "Newton in 1-D",
+      "k": "Computing ρ, γ, η",
+      "q": "$f(x) = x^2 - 1$ on $D = (\\tfrac12, \\tfrac32)$ with $\\tau = \\tfrac12$. (1) Find $\\rho$, $\\gamma$ and the constant. (2) Find $\\bar\\eta$ and $\\eta$. (3) Take one Newton step from $x_0 = \\tfrac65$ and check the bound. (4) $x_0 = \\tfrac85$ lies outside the radius. Does Newton fail from there?",
+      "pts": [
+        "(1) $|f'| = 2x > 1$ on $D$, so $\\rho = 1$; $|f'(x) - f'(y)| = 2|x - y|$, so $\\gamma = 2$; $\\tfrac{\\gamma}{2\\rho} = 1$, i.e. $e_{k+1} \\le e_k^2$.",
+        "(2) $\\bar\\eta = \\tfrac12$ and $\\tau\\tfrac{2\\rho}{\\gamma} = \\tfrac12$, so $\\eta = \\tfrac12$.",
+        "(3) $x_1 = \\tfrac12(x_0 + \\tfrac{1}{x_0}) = \\tfrac{61}{60}$; $e_1 = \\tfrac{1}{60} \\le e_0^2 = \\tfrac{1}{25}$.",
+        "(4) No. $e_0 = \\tfrac35 > \\eta$, so the theorem says nothing; in fact Newton converges from every $x_0 > 1$. The radius is sufficient, not necessary."
+      ],
+      "pit": "$\\rho = 1$ is an infimum that is not attained on the open interval; the theorem only needs $|f'| \\ge \\rho$.",
+      "src": "",
+      "seen": [
+        "T4 P3"
+      ]
+    },
+    {
+      "id": "NLO-04-14",
+      "g": "Newton in 1-D",
+      "k": "Seeing the rate",
+      "q": "Newton's method on $f(x) = x^2 - 1$ from $x_0 = \\tfrac32$ (root $x^* = 1$). (1) Write the iteration and the first two iterates. (2) Derive an identity for $x_{k+1} - 1$. (3) Prove convergence from any $x_0 > 1$. (4) Find $\\lim e_{k+1}/e_k^2$.",
+      "pts": [
+        "(1) $x_{k+1} = \\tfrac12\\big(x_k + \\tfrac{1}{x_k}\\big)$: $\\tfrac{13}{12}$, $\\tfrac{313}{312}$.",
+        "(2) $x_{k+1} - 1 = \\dfrac{(x_k - 1)^2}{2x_k}$.",
+        "(3) If $x_k > 1$ then $x_{k+1} > 1$ by (2), and $x_{k+1} - x_k = -\\tfrac{x_k^2 - 1}{2x_k} < 0$: decreasing and bounded below, hence convergent. The limit $L \\ge 1$ satisfies $L = \\tfrac12(L + \\tfrac1L)$, so $L = 1$.",
+        "(4) $\\dfrac{e_{k+1}}{e_k^2} = \\dfrac{1}{2x_k} \\to \\tfrac12$: quadratic with constant $\\tfrac12$."
+      ],
+      "pit": "Small errors after three steps do not prove quadratic convergence. You need the identity or the limit.",
+      "src": "",
+      "seen": [
+        "T4 P2"
+      ]
+    },
+    {
+      "id": "NLO-04-15",
+      "g": "Newton in 1-D",
+      "k": "Radius is conservative",
+      "q": "(1) For $f(x) = x^2 - 4$ on $D = (1, 3)$ with $\\tau = \\tfrac12$, find $\\rho$, $\\gamma$, $\\tfrac{\\gamma}{2\\rho}$, $\\bar\\eta$ and $\\eta$. (2) For $g(x) = 7 - \\tfrac1x$ on $D = (\\tfrac{1}{14}, \\tfrac{3}{14})$, with root $\\tfrac17$, find $\\rho$, $\\gamma$ and the constant. (3) Compare that guaranteed radius with the true region of convergence $|e_0| < \\tfrac17$.",
+      "pts": [
+        "(1) $|2x| > 2$, so $\\rho = 2$; $\\gamma = 2$; constant $\\tfrac12$. $x^* = 2$, $\\bar\\eta = 1$, $\\tau\\tfrac{2\\rho}{\\gamma} = 1$: $\\eta = 1$.",
+        "(2) $g' = \\tfrac{1}{x^2} \\ge (\\tfrac{14}{3})^2 = \\tfrac{196}{9} = \\rho$; $|g''| = \\tfrac{2}{x^3} \\le 2 \\times 14^3 = 5488 = \\gamma$; constant $\\tfrac{\\gamma}{2\\rho} = 126$, while the true one is $7$.",
+        "(3) $\\eta = \\min\\{\\tfrac{1}{14}, \\tfrac{\\tau}{126}\\} < 0.008$ against a true radius of $0.143$. The theorem is a guarantee, not an estimate."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-16",
+      "g": "Newton in 1-D",
+      "k": "Dropping a hypothesis",
+      "q": "What happens to Newton's method, and which hypothesis fails, in each case? (1) $g(x) = (x - 1)^2$ from $x_0 = 2$. (2) $h(x) = x^3 - 2x + 2$ from $x_0 = 0$. (3) $f(x) = x + |x|^{3/2}$ near its root $0$. (4) A root of multiplicity $m$ in general.",
+      "pts": [
+        "(1) $x_{k+1} = \\tfrac{x_k + 1}{2}$, $e_k = 2^{-k}$: linear with factor $\\tfrac12$. $g'(1) = 0$, so no $\\rho > 0$ works near the root (double root).",
+        "(2) $x_1 = 0 - \\tfrac{2}{-2} = 1$, $x_2 = 1 - \\tfrac11 = 0$: the cycle $0, 1, 0, 1, \\dots$ Every step exists, but the start is not close to the root, which lies in $(-2, -1)$.",
+        "(3) $f'$ is not Lipschitz at $0$. For $x > 0$, $xf' - f = \\tfrac12 x^{3/2}$, so $e_{k+1} \\approx \\tfrac12 e_k^{3/2}$: superlinear of order $1.5$, not quadratic.",
+        "(4) Linear with ratio $\\tfrac{m - 1}{m}$."
+      ],
+      "pit": "“The derivative is nonzero at every iterate” is not one of the theorem's conditions; closeness to the root is.",
+      "src": "",
+      "seen": [
+        "T4 P4"
+      ]
+    },
+    {
+      "id": "NLO-04-17",
+      "g": "Matrix norms",
+      "k": "Matrix 2-norm",
+      "q": "(1) State the three properties of a vector norm. (2) Define the matrix 2-norm and interpret it. (3) Give $\\lVert A \\rVert_2$ for $A = 0$, $A = I$, a diagonal matrix, and a matrix with orthonormal columns.",
+      "pts": [
+        "(1) $\\lVert x \\rVert \\ge 0$ with equality iff $x = 0$; $\\lVert \\lambda x \\rVert = |\\lambda|\\,\\lVert x \\rVert$; $\\lVert x + y \\rVert \\le \\lVert x \\rVert + \\lVert y \\rVert$.",
+        "(2) $\\lVert A \\rVert_2 = \\max_{x \\ne 0}\\dfrac{\\lVert Ax \\rVert}{\\lVert x \\rVert} = \\max_{\\lVert x \\rVert = 1}\\lVert Ax \\rVert$: the largest gain of $A$ over all directions.",
+        "(3) $0$; $1$; $\\max_i |A_{ii}|$; $1$ (lengths are preserved)."
+      ],
+      "pit": "",
+      "src": "N p40–44",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-18",
+      "g": "Matrix norms",
+      "k": "Computing the norm",
+      "q": "(1) Give the formula for $\\lVert A \\rVert_2$ of a general matrix and prove it. (2) What does it become for symmetric $A$? (3) Compute it for $\\operatorname{diag}(3, -5, 1)$ and for $A = \\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$. (4) Is $\\lVert A \\rVert_2$ the largest eigenvalue in absolute value?",
+      "pts": [
+        "(1) $\\lVert A \\rVert_2 = \\sqrt{\\lambda_{\\max}(A^\\top A)}$: $\\lVert Ax \\rVert^2 = x^\\top A^\\top A x \\le \\lambda_{\\max}(A^\\top A)\\lVert x \\rVert^2$ by the Rayleigh-quotient bound, with equality at a top eigenvector.",
+        "(2) $\\max_i |\\lambda_i(A)|$.",
+        "(3) $5$. For the second: $A^\\top A = \\begin{pmatrix}1&1\\\\1&2\\end{pmatrix}$ has eigenvalues $\\tfrac{3 \\pm \\sqrt5}{2}$, so $\\lVert A \\rVert_2 = \\sqrt{\\tfrac{3 + \\sqrt5}{2}} = \\tfrac{1 + \\sqrt5}{2} \\approx 1.618$.",
+        "(4) Only for symmetric matrices. The triangular $A$ above has eigenvalues $1, 1$ but norm $1.618$."
+      ],
+      "pit": "",
+      "src": "N p43–44",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-19",
+      "g": "Matrix norms",
+      "k": "Norm properties",
+      "q": "For the matrix 2-norm prove in one line each: (1) $\\lVert Ax \\rVert \\le \\lVert A \\rVert\\,\\lVert x \\rVert$, (2) $\\lVert AB \\rVert \\le \\lVert A \\rVert\\,\\lVert B \\rVert$, (3) $\\lVert A \\rVert\\,\\lVert A^{-1} \\rVert \\ge 1$. (4) What does a bound $\\lVert A^{-1} \\rVert \\le \\beta$ say about $A$? (5) Define the condition number and compute $\\lVert A \\rVert_2$, $\\lVert A^{-1} \\rVert_2$, $\\kappa(A)$ for $A = \\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}$.",
+      "pts": [
+        "(1) It is the definition of the largest gain.",
+        "(2) $\\lVert ABx \\rVert \\le \\lVert A \\rVert\\,\\lVert Bx \\rVert \\le \\lVert A \\rVert\\,\\lVert B \\rVert\\,\\lVert x \\rVert$.",
+        "(3) $1 = \\lVert I \\rVert = \\lVert AA^{-1} \\rVert \\le \\lVert A \\rVert\\,\\lVert A^{-1} \\rVert$.",
+        "(4) $1/\\lVert A^{-1} \\rVert$ is the smallest gain of $A$: no vector is shrunk by more than the factor $1/\\beta$. In $\\mathbb{R}^n$ this plays the role of $|f'| \\ge \\rho$.",
+        "(5) $\\kappa(A) = \\lVert A \\rVert_2\\lVert A^{-1} \\rVert_2 \\ge 1$, largest gain over smallest gain. Here $A$ is symmetric with eigenvalues $3$ and $-1$: $\\lVert A \\rVert_2 = 3$, $\\lVert A^{-1} \\rVert_2 = 1$, $\\kappa = 3$."
+      ],
+      "pit": "$\\kappa(I) = 1$ is ideal; $\\kappa(\\operatorname{diag}(1, 10^{-5})) = 10^5$ is invertible in theory but numerically close to singular.",
+      "src": "N p45–46",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-20",
+      "g": "Matrix norms",
+      "k": "Perturbation lemma",
+      "q": "Lemma: if $A$ is invertible and $q = \\lVert A^{-1}(B - A) \\rVert < 1$, then $B$ is invertible and $\\lVert B^{-1} \\rVert \\le \\dfrac{\\lVert A^{-1} \\rVert}{1 - q}$. (1) Prove it with $E = A^{-1}(B - A)$. (2) What is it used for in the Newton theorem? (3) Apply it to $A = I$, $B = \\begin{pmatrix}1&0.5\\\\0&1\\end{pmatrix}$. (4) Why is $q = 1$ not enough?",
+      "pts": [
+        "(1) $B = A(I + E)$ with $\\lVert E \\rVert = q$. For every $v$: $\\lVert (I + E)v \\rVert \\ge (1 - q)\\lVert v \\rVert$, so $I + E$ has trivial kernel and is invertible, with $\\lVert (I + E)^{-1} \\rVert \\le \\tfrac{1}{1 - q}$. Then $B^{-1} = (I + E)^{-1}A^{-1}$.",
+        "(2) With $A = J(x^*)$ and $B = J(x^{(k)})$: invertibility is assumed only at the root, and the lemma transfers it, with a bound on the inverse, to nearby iterates.",
+        "(3) $q = \\lVert B - I \\rVert_2 = 0.5$, so $\\lVert B^{-1} \\rVert \\le 2$. The true value is about $1.281$.",
+        "(4) $A = I$, $B = \\operatorname{diag}(1, 0)$ has $q = 1$ and $B$ is singular."
+      ],
+      "pit": "",
+      "src": "HW2 P1",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-21",
+      "g": "Newton in Rⁿ",
+      "k": "n-D theorem",
+      "q": "State the quadratic convergence theorem for Newton's method on $F(x) = 0$, $F: \\mathbb{R}^n \\to \\mathbb{R}^n$, with Jacobian $J$: (1) the setting, (2) the two quantitative hypotheses with their constants, (3) the conclusion, (4) a valid radius.",
+      "pts": [
+        "(1) $F$ is continuously differentiable on an open convex set $D$; $F(x^*) = 0$ and the ball $N(x^*, r) \\subset D$.",
+        "(2) $J(x^*)^{-1}$ exists with $\\lVert J(x^*)^{-1} \\rVert \\le \\beta$; and $\\lVert J(x) - J(y) \\rVert \\le \\gamma\\lVert x - y \\rVert$ on $N(x^*, r)$.",
+        "(3) There is $\\varepsilon > 0$ such that for $x^{(0)} \\in N(x^*, \\varepsilon)$ the Newton sequence is well defined, converges to $x^*$, and $$\\lVert x^{(k+1)} - x^* \\rVert \\le \\beta\\gamma\\,\\lVert x^{(k)} - x^* \\rVert^2$$",
+        "(4) $\\varepsilon = \\min\\{r,\\ \\tfrac{1}{2\\beta\\gamma}\\}$."
+      ],
+      "pit": "The slide says “$J(x^*)$ is Lipschitz”; a fixed matrix cannot be. It is the map $x \\mapsto J(x)$ that is Lipschitz, in the matrix norm induced by the vector norm.",
+      "src": "N p47",
+      "seen": [
+        "HW2 P1"
+      ]
+    },
+    {
+      "id": "NLO-04-22",
+      "g": "Newton in Rⁿ",
+      "k": "1-D versus n-D",
+      "q": "Match the ingredients of the one-variable Newton theorem with the $n$-variable one: (1) the smoothness hypothesis, (2) the non-degeneracy hypothesis, (3) the constant, (4) the radius. (5) Why does the $n$-variable proof need the perturbation lemma when the one-variable proof did not?",
+      "pts": [
+        "(1) $f'$ $\\gamma$-Lipschitz ↔ the Jacobian map $\\gamma$-Lipschitz in the induced matrix norm.",
+        "(2) $|f'(x)| \\ge \\rho$ on all of $D$ ↔ $\\lVert J(x^*)^{-1} \\rVert \\le \\beta$ at the root only (so $\\beta \\leftrightarrow 1/\\rho$).",
+        "(3) $\\tfrac{\\gamma}{2\\rho}$ ↔ $\\beta\\gamma$. The direct translation would be $\\tfrac{\\beta\\gamma}{2}$; the extra factor $2$ arises because $J(x^{(k)})^{-1}$ is only controlled up to $2\\beta$.",
+        "(4) $\\eta = \\min\\{\\bar\\eta, \\tau\\tfrac{2\\rho}{\\gamma}\\}$ ↔ $\\varepsilon = \\min\\{r, \\tfrac{1}{2\\beta\\gamma}\\}$, which gives the contraction factor $\\tfrac12$.",
+        "(5) In one variable the derivative bound is assumed on all of $D$. In $\\mathbb{R}^n$ invertibility is assumed only at $x^*$, so invertibility of $J(x^{(k)})$ and a bound on its inverse must be derived from Lipschitz continuity plus closeness."
+      ],
+      "pit": "",
+      "src": "N p47",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-23",
+      "g": "Newton in Rⁿ",
+      "k": "Proof: step is defined",
+      "q": "$n$-variable Newton theorem with $\\lVert J(x^*)^{-1} \\rVert \\le \\beta$, $J$ $\\gamma$-Lipschitz on $N(x^*, r)$, and $x^{(0)} \\in N(x^*, \\varepsilon)$, $\\varepsilon = \\min\\{r, \\tfrac{1}{2\\beta\\gamma}\\}$. Use: if $A$ is invertible and $\\lVert A^{-1}(B - A) \\rVert < 1$ then $\\lVert B^{-1} \\rVert \\le \\frac{\\lVert A^{-1} \\rVert}{1 - \\lVert A^{-1}(B - A) \\rVert}$. (1) Show $\\lVert J(x^*)^{-1}[J(x^{(0)}) - J(x^*)] \\rVert \\le \\tfrac12$. (2) Conclude that $J(x^{(0)})^{-1}$ exists. (3) Show $\\lVert J(x^{(0)})^{-1} \\rVert \\le 2\\beta$.",
+      "pts": [
+        "(1) $\\lVert J(x^*)^{-1}[J(x^{(0)}) - J(x^*)] \\rVert \\le \\lVert J(x^*)^{-1} \\rVert\\,\\lVert J(x^{(0)}) - J(x^*) \\rVert \\le \\beta\\gamma\\lVert x^{(0)} - x^* \\rVert < \\beta\\gamma\\varepsilon \\le \\tfrac12$. The Lipschitz bound applies because $\\varepsilon \\le r$.",
+        "(2) Apply the lemma with $A = J(x^*)$ and $B = J(x^{(0)})$: the quantity is $< 1$, so $B$ is invertible.",
+        "(3) $\\lVert J(x^{(0)})^{-1} \\rVert \\le \\dfrac{\\beta}{1 - \\tfrac12} = 2\\beta$."
+      ],
+      "pit": "Submultiplicativity $\\lVert AB \\rVert \\le \\lVert A \\rVert\\lVert B \\rVert$ is the “property of matrix norms” used in step (1).",
+      "src": "",
+      "seen": [
+        "HW2 P1"
+      ]
+    },
+    {
+      "id": "NLO-04-24",
+      "g": "Newton in Rⁿ",
+      "k": "Proof: quadratic bound",
+      "q": "Continue: $x^{(1)} = x^{(0)} - J(x^{(0)})^{-1}F(x^{(0)})$, $F(x^*) = 0$, $\\lVert J(x^{(0)})^{-1} \\rVert \\le 2\\beta$, and the lemma $\\lVert F(x + y) - F(x) - J(x)y \\rVert \\le \\tfrac{\\gamma}{2}\\lVert y \\rVert^2$. (1) Write $x^{(1)} - x^*$ as $J(x^{(0)})^{-1}$ times a linearization error. (2) Derive $\\lVert x^{(1)} - x^* \\rVert \\le \\beta\\gamma\\lVert x^{(0)} - x^* \\rVert^2$. (3) Derive $\\lVert x^{(1)} - x^* \\rVert \\le \\tfrac12\\lVert x^{(0)} - x^* \\rVert$ and say what it gives.",
+      "pts": [
+        "(1) $x^{(1)} - x^* = J(x^{(0)})^{-1}\\big[F(x^*) - F(x^{(0)}) - J(x^{(0)})(x^* - x^{(0)})\\big]$, using $F(x^*) = 0$.",
+        "(2) Norms: $\\lVert x^{(1)} - x^* \\rVert \\le 2\\beta \\cdot \\tfrac{\\gamma}{2}\\lVert x^* - x^{(0)} \\rVert^2 = \\beta\\gamma\\lVert x^{(0)} - x^* \\rVert^2$ (lemma with $x = x^{(0)}$, $y = x^* - x^{(0)}$).",
+        "(3) $\\beta\\gamma\\lVert x^{(0)} - x^* \\rVert \\le \\beta\\gamma\\varepsilon \\le \\tfrac12$. So $x^{(1)} \\in N(x^*, \\varepsilon)$ again, the same argument applies at every step (induction), and the errors go to $0$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "HW2 P1"
+      ]
+    },
+    {
+      "id": "NLO-04-25",
+      "g": "Newton in Rⁿ",
+      "k": "Constants by hand",
+      "q": "$F(x) = \\begin{pmatrix} x_1^2 - x_2 \\\\ x_2 - 1 \\end{pmatrix}$ with root $x^* = (1,1)$. (1) Compute $J(x)$ and $J(x^*)^{-1}$. (2) Find $\\gamma$. (3) Find $\\beta$ from the eigenvalues of $M^\\top M$ with $M = J(x^*)^{-1}$. (4) Give the radius $\\varepsilon$. (5) What changes for $F(x) = (x_1^2, x_2)$ with root $0$?",
+      "pts": [
+        "(1) $J(x) = \\begin{pmatrix}2x_1&-1\\\\0&1\\end{pmatrix}$ and $J(x^*)^{-1} = \\begin{pmatrix}1/2&1/2\\\\0&1\\end{pmatrix}$.",
+        "(2) $J(x) - J(y) = \\begin{pmatrix}2(x_1 - y_1)&0\\\\0&0\\end{pmatrix}$ has norm $2|x_1 - y_1| \\le 2\\lVert x - y \\rVert$: $\\gamma = 2$.",
+        "(3) $M^\\top M = \\begin{pmatrix}1/4&1/4\\\\1/4&5/4\\end{pmatrix}$ has eigenvalues $\\tfrac{3 \\pm \\sqrt5}{4}$, so $\\beta = \\sqrt{\\tfrac{3 + \\sqrt5}{4}} \\approx 1.144$.",
+        "(4) $\\varepsilon = \\tfrac{1}{2\\beta\\gamma} \\approx 0.218$.",
+        "(5) $J(0) = \\operatorname{diag}(0, 1)$ is singular: no $\\beta$ exists. Newton halves $x_1$ each step: linear with ratio $\\tfrac12$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-26",
+      "g": "Newton in Rⁿ",
+      "k": "Minimization version",
+      "q": "Newton's method for $\\min f$ is root-finding on $\\nabla f$. (1) Translate the hypotheses of the convergence theorems. (2) Is positive definiteness of the Hessian needed for local quadratic convergence? (3) Apply the one-variable theorem to $f(t) = \\tfrac14 t^4 + \\tfrac12 t^2$ on $[-1, 1]$: what does it predict, and what really happens? (4) Why is Newton only linear on $f(x) = (x - x_0)^4$?",
+      "pts": [
+        "(1) They move up one derivative: the Hessian must be Lipschitz near $x^*$ and invertible at $x^*$ (in one variable $f''$ Lipschitz and $|f''| \\ge \\rho$).",
+        "(2) No: invertibility is enough for the rate. Positive definiteness is what makes the Newton direction a descent direction, a separate issue.",
+        "(3) $g = f' = t^3 + t$: $g' = 3t^2 + 1 \\ge 1 = \\rho$ and $|g''| = |6t| \\le 6 = \\gamma$, so $e_{k+1} \\le 3e_k^2$. In fact $t_{k+1} = \\tfrac{2t_k^3}{3t_k^2 + 1} \\approx 2t_k^3$: cubic, because $g''(0) = 0$. Consistent, since the theorem is an upper bound.",
+        "(4) $f''(x_0) = 0$: no $\\rho > 0$ works near the minimizer ($x_0$ is a triple root of $f'$), and the ratio is $\\tfrac{m - 1}{m} = \\tfrac23$."
+      ],
+      "pit": "The slide asks for “invertible and positive definite Jacobians at each iteration”; only invertibility near the root matters for the rate.",
+      "src": "N p4",
+      "seen": [
+        "MT25 P3"
+      ]
+    },
+    {
+      "id": "NLO-04-27",
+      "g": "Steepest descent",
+      "k": "Steepest direction",
+      "q": "Let $f \\in C^1$ and $\\nabla f(\\bar x) \\ne 0$. (1) Show $-\\nabla f(\\bar x)$ is a descent direction. (2) Solve $\\min\\{\\nabla f(\\bar x)^\\top d : \\lVert d \\rVert_2 = 1\\}$ and prove optimality. (3) Prove the solution is unique. (4) Is “steepest” independent of the norm?",
+      "pts": [
+        "(1) $\\nabla f^\\top(-\\nabla f) = -\\lVert \\nabla f \\rVert^2 < 0$, strictly because the gradient is not zero.",
+        "(2) By Cauchy–Schwarz $\\nabla f^\\top d \\ge -\\lVert \\nabla f \\rVert\\lVert d \\rVert = -\\lVert \\nabla f \\rVert$ for every unit $d$; $d = -\\nabla f/\\lVert \\nabla f \\rVert$ attains this bound.",
+        "(3) Equality in Cauchy–Schwarz forces $d$ parallel to $\\nabla f$; of the two unit vectors only $-\\nabla f/\\lVert \\nabla f \\rVert$ gives the negative sign.",
+        "(4) No. With $\\lVert d \\rVert_1 = 1$ and $g = (1, 2)$ the minimizer is the coordinate direction $(0, -1)$ with value $-2$, not $-g/\\lVert g \\rVert$."
+      ],
+      "pit": "On that slide $x^*$ denotes the current non-stationary point, not a minimizer.",
+      "src": "G p4–11",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-28",
+      "g": "Steepest descent",
+      "k": "Method and φ",
+      "q": "(1) What exactly is the “Method of Steepest Descent” in these slides? (2) What is the method called with other step rules? (3) Define $\\phi_k(\\alpha)$ and compute $\\phi_k'(\\alpha)$. (4) Which three results hold only for the exact-step version?",
+      "pts": [
+        "(1) Direction $-\\nabla f(x^k)$ together with exact line search $\\alpha^k = \\arg\\min_{\\alpha \\ge 0}\\phi_k(\\alpha)$. Both are part of the name.",
+        "(2) A gradient method (gradient descent).",
+        "(3) $\\phi_k(\\alpha) = f(x^k + \\alpha d^k)$ and, by the chain rule, $\\phi_k'(\\alpha) = \\nabla f(x^k + \\alpha d^k)^\\top d^k$.",
+        "(4) The zig-zag theorem, the improvement theorem and the convergence theorem for coercive functions."
+      ],
+      "pit": "",
+      "src": "G p13, 23–25, 39–41",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-29",
+      "g": "Steepest descent",
+      "k": "Example: one step",
+      "q": "Steepest descent with exact line search on $f(x) = (x_1 - 3)^2 + (x_2 - 2)^2$ from $x^0 = (1, 1)$. (1) Compute $d^0$. (2) Find $\\alpha^0$ from $\\phi_0$. (3) Compute $x^1$. (4) Is finishing in one iteration normal? Explain.",
+      "pts": [
+        "(1) $\\nabla f = (2(x_1 - 3), 2(x_2 - 2)) = (-4, -2)$, so $d^0 = (4, 2)$.",
+        "(2) $\\phi_0(\\alpha) = (4\\alpha - 2)^2 + (2\\alpha - 1)^2$, $\\phi_0' = 40\\alpha - 20 = 0$: $\\alpha^0 = \\tfrac12$ ($\\phi_0'' = 40 > 0$).",
+        "(3) $x^1 = (3, 2)$ and $\\nabla f(x^1) = 0$.",
+        "(4) No. Here $H = 2I$: the level sets are circles and $-\\nabla f$ points straight at the center. Whenever $H = cI$ the exact steepest-descent step coincides with the Newton step ($\\kappa = 1$)."
+      ],
+      "pit": "",
+      "src": "G p14–20",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-30",
+      "g": "Steepest descent",
+      "k": "Example: zig-zag",
+      "q": "Steepest descent with exact line search on $f(x) = 4x_1^2 - 4x_1x_2 + 2x_2^2 = \\tfrac12 x^\\top Q x$, $Q = \\begin{pmatrix}8&-4\\\\-4&4\\end{pmatrix}$, from $x^{(0)} = (2, 3)$; the exact step is $\\alpha = \\frac{g^\\top g}{g^\\top Q g}$ with $g = Qx$. (1) Do iteration 0. (2) Do iteration 1. (3) Give $x^{(2)}$ and the pattern. (4) What is the rate?",
+      "pts": [
+        "(1) $g = (4, 4)$, $Qg = (16, 0)$, $\\alpha = \\tfrac{32}{64} = \\tfrac12$, $x^{(1)} = (0, 1)$, $f: 10 \\to 2$.",
+        "(2) $g = (-4, 4)$, $Qg = (-48, 32)$, $\\alpha = \\tfrac{32}{320} = \\tfrac{1}{10}$, $x^{(2)} = (\\tfrac25, \\tfrac35)$, $f = \\tfrac25$.",
+        "(3) The steps alternate between $\\tfrac12$ and $\\tfrac{1}{10}$, and $x^{(k+2)} = \\tfrac15 x^{(k)}$; consecutive steps are perpendicular.",
+        "(4) $f$ drops by a factor of exactly $5$ per step: linear convergence that never terminates."
+      ],
+      "pit": "The bound $\\big(\\tfrac{\\kappa - 1}{\\kappa + 1}\\big)^2$ with $\\kappa \\approx 6.85$ allows a factor $\\tfrac59$ per step; the actual $\\tfrac15$ is within it.",
+      "src": "G p21–32",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-31",
+      "g": "Steepest descent",
+      "k": "Zig-zag theorem",
+      "q": "(1) State the zig-zag theorem for the Method of Steepest Descent. (2) Reduce it to a statement about gradients. (3) Prove that statement, including why $\\phi_k'(\\alpha^{(k)}) = 0$. (4) Does it hold for gradient descent with a constant step?",
+      "pts": [
+        "(1) $(x^{(k+1)} - x^{(k)})^\\top(x^{(k+2)} - x^{(k+1)}) = 0$ for every $k$.",
+        "(2) The steps are $-\\alpha^{(k)}\\nabla f(x^{(k)})$ and $-\\alpha^{(k+1)}\\nabla f(x^{(k+1)})$, so it suffices that $\\nabla f(x^{(k)})^\\top\\nabla f(x^{(k+1)}) = 0$.",
+        "(3) If $\\nabla f(x^{(k)}) \\ne 0$ then $\\phi_k'(0) = -\\lVert \\nabla f(x^{(k)}) \\rVert^2 < 0$, so $\\alpha = 0$ is not the minimizer on $[0, \\infty)$; the minimizer $\\alpha^{(k)} > 0$ is interior and $\\phi_k'(\\alpha^{(k)}) = 0$. By the chain rule this is $-\\nabla f(x^{(k+1)})^\\top\\nabla f(x^{(k)}) = 0$.",
+        "(4) No. On $x^2 + 2y^2$ from $(2, 1)$ with $\\alpha = 0.1$ the first two steps are $(-0.4, -0.4)$ and $(-0.32, -0.24)$, with dot product $0.224 \\ne 0$. Orthogonality is a property of the exact step."
+      ],
+      "pit": "",
+      "src": "G p33–38",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-32",
+      "g": "Steepest descent",
+      "k": "Descent, convergence",
+      "q": "For the Method of Steepest Descent: (1) State and prove the improvement theorem. (2) State the convergence theorem for coercive $f \\in C^1$. (3) What is added if $f$ is strictly convex? (4) Outline the proof of the convergence theorem in three steps.",
+      "pts": [
+        "(1) If $\\nabla f(x^{(k)}) \\ne 0$ then $f(x^{(k+1)}) < f(x^{(k)})$: $-\\nabla f$ is a descent direction, so some $\\hat\\alpha > 0$ has $\\phi_k(\\hat\\alpha) < \\phi_k(0)$, and the exact step does at least as well.",
+        "(2) From any start, some subsequence of the iterates converges, and the limit of every convergent subsequence is a critical point.",
+        "(3) The whole sequence converges to the unique global minimizer.",
+        "(4) The exact step exists (coercive along the ray). The iterates stay in the level set $\\{f \\le f(x^{(0)})\\}$, which is compact, so a subsequence converges. If its limit were not critical, a fixed step from nearby iterates would push $f$ below the limit of the decreasing values $f(x^{(k)})$: contradiction."
+      ],
+      "pit": "",
+      "src": "G p39–40",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-33",
+      "g": "Steepest descent",
+      "k": "Without coercivity",
+      "q": "$f(x) = \\log(1 + e^{-x})$ is convex, bounded below by $0$, and $f'' \\le \\tfrac14$. (1) Is it coercive? Does it have a minimizer? (2) What happens to the Method of Steepest Descent? (3) What does gradient descent with $\\alpha = 1$ do? (4) Which lesson does this give about the gradient-method convergence theorem?",
+      "pts": [
+        "(1) No and no: $f \\to 0$ as $x \\to +\\infty$ without reaching it.",
+        "(2) Along $d = -f'(x) > 0$, $\\phi(\\alpha)$ decreases forever: the exact step does not exist and the method is not defined.",
+        "(3) The iterates run off to $+\\infty$ while $f'(x_k) \\to 0$.",
+        "(4) The theorem proves only $\\nabla f(x^{(k)}) \\to 0$. The iterates themselves need not converge, and for exact line search the existence of the minimizer along the ray is an extra assumption."
+      ],
+      "pit": "",
+      "src": "G p40, 42",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-34",
+      "g": "Gradient methods",
+      "k": "Convergence theorem",
+      "q": "Gradient method $x^{(k+1)} = x^{(k)} - \\alpha^{(k)}\\nabla f(x^{(k)})$. (1) Which three step rules does the convergence theorem cover? (2) What are its hypotheses on $f$? (3) What is the conclusion? (4) What is the proof strategy?",
+      "pts": [
+        "(1) A constant $\\bar\\alpha \\in (0, \\tfrac2L)$; exact line search; backtracking with $s > 0$ and $\\gamma, \\beta \\in (0, 1)$.",
+        "(2) $f$ is bounded below and $\\nabla f$ is $L$-Lipschitz on $\\mathbb{R}^n$.",
+        "(3) $\\nabla f(x^{(k)}) \\to 0$.",
+        "(4) Show that every iteration decreases $f$ by at least $c\\lVert \\nabla f(x^{(k)}) \\rVert^2$ for a fixed $c > 0$. Since $f$ cannot decrease forever, the gradients must go to $0$."
+      ],
+      "pit": "Letters change meaning between the two slide decks: here $\\gamma$ is the Armijo constant and $\\beta$ the backtracking factor; in the Newton theorems $\\gamma$ is a Lipschitz constant and $\\beta$ bounds an inverse.",
+      "src": "G p41–43",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-35",
+      "g": "Gradient methods",
+      "k": "Descent lemma",
+      "q": "(1) Define “$\\nabla f$ is $L$-Lipschitz”. (2) Characterize it through the Hessian for $f \\in C^2$. (3) State the descent lemma. (4) Prove it for $f \\in C^2$. Which bound on $H$ is actually used?",
+      "pts": [
+        "(1) $\\lVert \\nabla f(x) - \\nabla f(y) \\rVert \\le L\\lVert x - y \\rVert$ for all $x, y$.",
+        "(2) $\\lVert H(x) \\rVert_2 \\le L$, i.e. $-LI \\preceq H(x) \\preceq LI$, for all $x$.",
+        "(3) $f(y) \\le f(x) + \\nabla f(x)^\\top(y - x) + \\tfrac{L}{2}\\lVert y - x \\rVert^2$.",
+        "(4) Taylor: $f(y) = f(x) + \\nabla f(x)^\\top(y - x) + \\tfrac12(y - x)^\\top H(u)(y - x)$ for some $u$ on the segment, and $(y - x)^\\top H(u)(y - x) \\le L\\lVert y - x \\rVert^2$. Only the upper bound $H \\preceq LI$ is used."
+      ],
+      "pit": "The slide says Lipschitz continuity is equivalent to $H \\preceq LI$ alone. Counterexample: $f = -x^4$ has $H \\le 0$ but $\\nabla f = -4x^3$ is not Lipschitz.",
+      "src": "G p44–45",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-36",
+      "g": "Gradient methods",
+      "k": "Guaranteed decrease",
+      "q": "Let $\\nabla f$ be $L$-Lipschitz and $x^+ = x - \\alpha\\nabla f(x)$. (1) Derive the guaranteed decrease from the descent lemma. (2) For which $\\alpha$ is a decrease guaranteed? (3) Which $\\alpha$ maximizes the guarantee, and what is it? (4) Is the guarantee $\\tfrac{1}{2L}\\lVert \\nabla f \\rVert^2$ valid for every $\\alpha < \\tfrac2L$?",
+      "pts": [
+        "(1) Put $y = x^+$: $f(x^+) \\le f(x) - \\alpha\\lVert \\nabla f \\rVert^2 + \\tfrac{L\\alpha^2}{2}\\lVert \\nabla f \\rVert^2 = f(x) - \\alpha\\big(1 - \\tfrac{L\\alpha}{2}\\big)\\lVert \\nabla f(x) \\rVert^2$.",
+        "(2) The coefficient is positive exactly for $0 < \\alpha < \\tfrac2L$.",
+        "(3) $\\alpha = \\tfrac1L$, where the coefficient is $\\tfrac{1}{2L}$: $f(x^+) \\le f(x) - \\tfrac{1}{2L}\\lVert \\nabla f(x) \\rVert^2$.",
+        "(4) No. For other $\\alpha \\in (0, \\tfrac2L)$ the decrease is $\\alpha(1 - \\tfrac{L\\alpha}{2})\\lVert \\nabla f \\rVert^2$, which is smaller. The slide blurs this."
+      ],
+      "pit": "",
+      "src": "G p46–47",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-37",
+      "g": "Gradient methods",
+      "k": "Proof for three rules",
+      "q": "To prove $\\nabla f(x^{(k)}) \\to 0$ one shows $f(x^{(k+1)}) \\le f(x^{(k)}) - c\\lVert g_k \\rVert^2$ with $g_k = \\nabla f(x^{(k)})$. Give $c$ for (1) a constant step $\\bar\\alpha \\in (0, \\tfrac2L)$, (2) exact line search, (3) backtracking with the test $f(x - \\alpha g) \\le f(x) - \\gamma\\alpha\\lVert g \\rVert^2$. (4) Finish the proof. (5) What speed does it give?",
+      "pts": [
+        "(1) $c = \\bar\\alpha\\big(1 - \\tfrac{L\\bar\\alpha}{2}\\big) > 0$.",
+        "(2) The exact step is at least as good as the trial step $\\tfrac1L$: $c = \\tfrac{1}{2L}$.",
+        "(3) Every $\\alpha \\le \\tfrac{2(1 - \\gamma)}{L}$ passes the test. So either $\\alpha_k = s$ or the previous trial $\\alpha_k/\\beta$ failed, which forces $\\alpha_k > \\tfrac{2\\beta(1 - \\gamma)}{L}$. Hence $\\alpha_k \\ge \\alpha_{\\min} = \\min\\{s, \\tfrac{2\\beta(1 - \\gamma)}{L}\\}$ and $c = \\gamma\\alpha_{\\min}$.",
+        "(4) Telescoping: $c\\sum_{k=0}^N \\lVert g_k \\rVert^2 \\le f(x^{(0)}) - f(x^{(N+1)}) \\le f(x^{(0)}) - \\inf f < \\infty$. A convergent series has terms tending to $0$.",
+        "(5) $\\min_{k \\le N}\\lVert g_k \\rVert^2 \\le \\dfrac{f(x^{(0)}) - \\inf f}{c(N + 1)}$: a small gradient after $O(1/\\epsilon^2)$ steps, without convexity."
+      ],
+      "pit": "",
+      "src": "G p47–48",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-38",
+      "g": "Gradient methods",
+      "k": "When it breaks",
+      "q": "Gradient descent with a constant step. Say what happens, and which hypothesis is violated, for (1) $f = x^2 + 2y^2$ with $\\bar\\alpha = 0.5$, (2) $f = x^4$ with $\\bar\\alpha = 0.1$ from $x_0 = 3$, (3) $f(x) = -x$. (4) Two gradient steps on $f = 100(x_2 - x_1^2)^2 + (1 - x_1)^2$ from $(0,0)$ with step $0.05$: compute them and comment.",
+      "pts": [
+        "(1) $L = 4$, so $\\bar\\alpha = \\tfrac2L$ is the excluded endpoint: $x \\mapsto 0$ at once but $y \\mapsto (1 - 4 \\times 0.5)y = -y$ oscillates and $\\lVert \\nabla f \\rVert$ stays constant. Larger steps diverge.",
+        "(2) $x \\mapsto x(1 - 0.4x^2)$: from $3$ to $-7.8$ and on to infinity. $\\nabla f$ is not Lipschitz, so no fixed step works from every start.",
+        "(3) $\\nabla f \\equiv -1$ is Lipschitz, but $f$ is unbounded below: $x_k \\to \\infty$ and the gradient never tends to $0$.",
+        "(4) $\\nabla f(0,0) = (-2, 0)$: $x^{(1)} = (0.1, 0)$. $\\nabla f(0.1, 0) = (-1.4, -2)$: $x^{(2)} = (0.17, 0.1)$. $f$ goes $1 \\to 0.82 \\to 1.194$: the second step increases $f$, because the local $\\tfrac2L$ is about $0.0096$, far below $0.05$."
+      ],
+      "pit": "",
+      "src": "G p51",
+      "seen": [
+        "MT24 P4c"
+      ]
+    },
+    {
+      "id": "NLO-04-39",
+      "g": "Gradient methods",
+      "k": "Rate and conditioning",
+      "q": "Steepest descent with exact steps on $f(x) = x^\\top Q x$, $Q \\succ 0$ with extreme eigenvalues $M \\ge m > 0$. (1) State the rate theorem. (2) What does it give for $\\kappa = 1$ and for large $\\kappa$? (3) Evaluate the bound for $x^2 + 2y^2$. (4) The slides say convergence is slow when $M - m$ is large. Is that accurate?",
+      "pts": [
+        "(1) $f(x^{(k+1)}) \\le \\Big(\\dfrac{M - m}{M + m}\\Big)^2 f(x^{(k)}) = \\Big(\\dfrac{\\kappa - 1}{\\kappa + 1}\\Big)^2 f(x^{(k)})$ with $\\kappa = M/m$.",
+        "(2) $\\kappa = 1$: factor $0$, one step. Large $\\kappa$: factor about $1 - \\tfrac4\\kappa$, so the number of iterations grows like $\\kappa$.",
+        "(3) $\\kappa = 2$: $\\big(\\tfrac13\\big)^2 = \\tfrac19$, attained exactly from $(2, 1)$.",
+        "(4) No. Only the ratio matters: multiplying $Q$ by $100$ multiplies $M - m$ by $100$ but changes neither $\\tfrac{M - m}{M + m}$ nor the iterates."
+      ],
+      "pit": "As printed the bound is for $f^* = 0$. In general it applies to $f(x^{(k)}) - f^*$.",
+      "src": "G p54–58",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-40",
+      "g": "Gradient methods",
+      "k": "Rate proof outline",
+      "q": "Outline the proof of $f(x^{(k+1)}) \\le \\big(\\tfrac{M - m}{M + m}\\big)^2 f(x^{(k)})$ for exact steepest descent on $f = x^\\top Q x$, with $g = 2Qx$. (1) Give the exact step and the one-step ratio $f(x^{(k+1)})/f(x^{(k)})$. (2) State the inequality needed (Kantorovich). (3) Combine.",
+      "pts": [
+        "(1) $\\alpha = \\dfrac{g^\\top g}{2g^\\top Q g}$, $f(x - \\alpha g) = f(x) - \\dfrac{(g^\\top g)^2}{4g^\\top Q g}$ and $f(x) = \\tfrac14 g^\\top Q^{-1}g$, so $$\\frac{f(x^{(k+1)})}{f(x^{(k)})} = 1 - \\frac{(g^\\top g)^2}{(g^\\top Q g)(g^\\top Q^{-1} g)}$$",
+        "(2) $\\dfrac{(g^\\top Q g)(g^\\top Q^{-1} g)}{(g^\\top g)^2} \\le \\dfrac{(M + m)^2}{4Mm}$.",
+        "(3) The ratio is at most $1 - \\dfrac{4Mm}{(M + m)^2} = \\dfrac{(M - m)^2}{(M + m)^2}$."
+      ],
+      "pit": "The slides state the theorem without proof.",
+      "src": "G p54",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-41",
+      "g": "Gradient methods",
+      "k": "One step vs bound",
+      "q": "One step of steepest descent with exact line search on $f = x^2 + 4y^2$ from $(1, 1)$. (1) Compute the gradient and the exact step. (2) Compute the new point. (3) Compute the ratio of $f$-values. (4) Compare with the bound from the condition number.",
+      "pts": [
+        "(1) $g = (2, 8)$, Hessian $\\operatorname{diag}(2, 8)$: $\\alpha = \\dfrac{g^\\top g}{g^\\top H g} = \\dfrac{68}{520} = \\dfrac{17}{130}$.",
+        "(2) $x^{(1)} = (1 - \\tfrac{34}{130},\\ 1 - \\tfrac{136}{130}) = (\\tfrac{48}{65}, -\\tfrac{3}{65})$.",
+        "(3) $f$: $5 \\to \\tfrac{36}{65} \\approx 0.554$, ratio $\\tfrac{36}{325} \\approx 0.111$.",
+        "(4) $\\kappa = 4$: $\\big(\\tfrac35\\big)^2 = 0.36$. The step is well within the bound."
+      ],
+      "pit": "Check: the new gradient $(\\tfrac{96}{65}, -\\tfrac{24}{65})$ is orthogonal to $g$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-42",
+      "g": "Gradient methods",
+      "k": "Best constant step",
+      "q": "Gradient descent with a constant step $\\alpha$ on $f = \\tfrac12(x^2 + 10y^2)$. (1) By which factors do the two coordinates change per step? (2) For which $\\alpha$ does it converge? (3) Which $\\alpha$ is best, and what is the rate? (4) For $x^2 + 2y^2$ with $\\alpha = 0.1$, give the per-coordinate factors and the rate.",
+      "pts": [
+        "(1) $|1 - \\alpha|$ and $|1 - 10\\alpha|$.",
+        "(2) $0 < \\alpha < \\tfrac{2}{10} = \\tfrac2L$.",
+        "(3) Balance the two: $1 - \\alpha = 10\\alpha - 1$, so $\\alpha = \\tfrac{2}{11}$ with rate $\\tfrac{9}{11} = \\tfrac{\\kappa - 1}{\\kappa + 1}$.",
+        "(4) $|1 - 2\\alpha| = 0.8$ and $|1 - 4\\alpha| = 0.6$: the slower coordinate sets the rate, $0.8$."
+      ],
+      "pit": "",
+      "src": "G p50",
+      "seen": []
+    },
+    {
+      "id": "NLO-04-43",
+      "g": "Gradient methods",
+      "k": "Quadratic-rate descent",
+      "q": "Gradient descent with constant step $0.5$ on $f(x) = x^2 - \\tfrac13 x^3$ from $x^{(0)} = 1$. (1) Write the iteration. (2) Find a closed form for $x^{(k)}$. (3) Show convergence to a strict local minimizer. Is it global? (4) Find the rate and explain why it is not linear.",
+      "pts": [
+        "(1) $f' = 2x - x^2$: $x^{(k+1)} = x^{(k)} - \\tfrac12(2x^{(k)} - (x^{(k)})^2) = \\tfrac12(x^{(k)})^2$.",
+        "(2) $x^{(k)} = 2 \\times (\\tfrac12)^{2^k}$: $1, \\tfrac12, \\tfrac18, \\tfrac{1}{128}, \\dots$ (check by induction).",
+        "(3) $x^{(k)} \\to 0$, with $f'(0) = 0$ and $f''(0) = 2 > 0$: a strict local minimizer. Not global: $f \\to -\\infty$ as $x \\to \\infty$.",
+        "(4) $e_{k+1}/e_k^2 = \\tfrac12$ exactly: quadratic. The map $\\Phi(x) = x - \\alpha f'(x)$ has $\\Phi'(0) = 1 - \\alpha f''(0) = 0$: the step happens to equal $1/f''(x^*)$, the Newton step at the solution."
+      ],
+      "pit": "“Gradient descent converges linearly” is not a theorem. Derive the error recursion instead of guessing from the method's name.",
+      "src": "",
+      "seen": [
+        "MT24 P3"
+      ]
+    },
+    {
+      "id": "NLO-04-44",
+      "g": "Gradient methods",
+      "k": "Conditioning",
+      "q": "Gradient descent with backtracking ($s = 2$, $\\gamma = \\tfrac14$, $\\beta = \\tfrac12$), stopping at $\\lVert \\nabla f \\rVert \\le 10^{-5}$. (1) On $0.01x^2 + y^2$ it needs about 200 iterations. What is $\\kappa$, and by which factor does $x$ shrink when the step $2$ is accepted? (2) On the Rosenbrock function it needs several thousand. Compute $\\kappa$ of $H(x^*) = \\begin{pmatrix}802&-400\\\\-400&200\\end{pmatrix}$ approximately. (3) Why does the rate of a non-quadratic $f$ depend on $H(x^*)$? (4) How does Newton compare?",
+      "pts": [
+        "(1) $\\kappa = 100$. With step $2$: $x \\mapsto (1 - 2 \\times 0.02)x = 0.96x$.",
+        "(2) Trace $1002$, determinant $400$: eigenvalues about $1001.6$ and $0.399$, so $\\kappa \\approx 2508$.",
+        "(3) Near $x^*$, $f \\approx f^* + \\tfrac12(x - x^*)^\\top H(x^*)(x - x^*)$, a quadratic with that Hessian.",
+        "(4) Newton is unaffected by $\\kappa$: on the Rosenbrock function it reaches the minimizer from $(0,0)$ in two steps."
+      ],
+      "pit": "",
+      "src": "G p52–60",
+      "seen": [
+        "HW2 P3"
+      ]
+    },
+    {
+      "id": "NLO-04-45",
+      "g": "Overview",
+      "k": "Which guarantee",
+      "q": "For each result give the hypotheses and what is guaranteed: (1) Newton, one variable, (2) Newton in $\\mathbb{R}^n$, (3) exact steepest descent on a quadratic, (4) exact steepest descent on a coercive function, (5) the gradient method with a constant, exact or backtracking step.",
+      "pts": [
+        "(1) $f'$ $\\gamma$-Lipschitz, $|f'| \\ge \\rho$ on $D$, start within $\\eta$: $e_{k+1} \\le \\tfrac{\\gamma}{2\\rho}e_k^2$.",
+        "(2) Jacobian $\\gamma$-Lipschitz near $x^*$, $\\lVert J(x^*)^{-1} \\rVert \\le \\beta$, start within $\\varepsilon = \\min\\{r, \\tfrac{1}{2\\beta\\gamma}\\}$: $\\lVert e_{k+1} \\rVert \\le \\beta\\gamma\\lVert e_k \\rVert^2$.",
+        "(3) $f = x^\\top Q x$, $Q \\succ 0$: $f$ shrinks by at least $\\big(\\tfrac{\\kappa - 1}{\\kappa + 1}\\big)^2$ per step (linear).",
+        "(4) $f \\in C^1$ coercive: convergent subsequences with critical limits; the whole sequence converges if $f$ is strictly convex.",
+        "(5) $f$ bounded below with $L$-Lipschitz gradient: only $\\nabla f(x^{(k)}) \\to 0$."
+      ],
+      "pit": "Newton's guarantees are local and fast; the gradient-method guarantees are global and slow.",
+      "src": "",
+      "seen": []
+    }
+  ]
+}

@@ -12,6 +12,10 @@
           "file": "nlo/ch03-newton-bfgs.json"
         },
         {
+          "title": "Convergence, gradient methods",
+          "file": "nlo/ch04-convergence-gradient.json"
+        },
+        {
           "title": "KKT conditions",
           "file": "nlo/ch06-kkt.json"
         },
