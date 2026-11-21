@@ -1,0 +1,1293 @@
+{
+  "title": "Optimal stopping",
+  "notes": [
+    {
+      "h": "Stopping problem",
+      "items": [
+        {
+          "t": "Definition",
+          "d": [
+            "Besides $g$ and $G$ there is a stopping cost $h_t$: stopping at $S$ costs $\\sum_{t<S} g + h_S(X_S)$."
+          ],
+          "cards": [
+            "MDP-07-01"
+          ]
+        },
+        {
+          "t": "Termination state",
+          "d": [
+            "Add state $\\tau$ and action $\\sigma$; $\\tau$ is absorbing and free; $V_t(\\tau) = 0$."
+          ],
+          "cards": [
+            "MDP-07-02",
+            "MDP-07-03"
+          ]
+        },
+        {
+          "t": "DP with stopping",
+          "d": [
+            "$V_T = G$, $V_t(x) = \\min\\{h_t(x), K_t(x)\\}$, $K_t(x) = \\min_u\\{g(x, u) + E\\,V_{t+1}(f(x, u, Z_{t+1}))\\}$; stop iff $h_t(x) \\le K_t(x)$."
+          ],
+          "cards": [
+            "MDP-07-04",
+            "MDP-07-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Asset selling",
+      "items": [
+        {
+          "t": "Model",
+          "d": [
+            "State: current offer or $\\tau$. $g_t = (1 + r)^{T-t}x$ when selling; $G(x) = x$ if unsold."
+          ],
+          "cards": [
+            "MDP-07-06",
+            "MDP-07-07",
+            "MDP-07-08"
+          ]
+        },
+        {
+          "t": "Recursion and threshold",
+          "d": [
+            "$V_t(x) = \\max\\{(1 + r)^{T-t}x, E\\,V_{t+1}(Z_{t+1})\\}$; $\\alpha_t = \\tfrac{E\\,V_{t+1}(Z_{t+1})}{(1 + r)^{T-t}}$; accept iff $Z_t > \\alpha_t$."
+          ],
+          "cards": [
+            "MDP-07-09",
+            "MDP-07-10"
+          ]
+        },
+        {
+          "t": "Uniform example",
+          "d": [
+            "$U[0, 1]$, $r = 0.1$, $T = 3$: $\\alpha_2 = 0.4545$, $\\alpha_1 = 0.5485$, expected revenue $0.787$."
+          ],
+          "cards": [
+            "MDP-07-11",
+            "MDP-07-12"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Threshold over time",
+      "items": [
+        {
+          "t": "Rescaling",
+          "d": [
+            "$J_t = V_t/(1 + r)^{T-t}$; $J_t(x) = \\max\\{x, \\alpha_t\\}$, $\\alpha_t = \\tfrac{E\\,J_{t+1}(Z_{t+1})}{1 + r}$."
+          ],
+          "cards": [
+            "MDP-07-13",
+            "MDP-07-17"
+          ]
+        },
+        {
+          "t": "Monotonicity",
+          "d": [
+            "i.i.d. offers: $J_t \\ge J_{t+1}$, hence $\\alpha_t \\ge \\alpha_{t+1}$. Proof: 1. base $\\max\\{x, \\alpha_{T-1}\\} \\ge x$; 2. replace $J_{t+1}$ by the smaller $J_{t+2}$; 3. replace $Z_{t+1}$ by $Z_{t+2}$."
+          ],
+          "cards": [
+            "MDP-07-14",
+            "MDP-07-15",
+            "MDP-07-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Long horizon",
+      "items": [
+        {
+          "t": "Threshold recursion",
+          "d": [
+            "$\\alpha_t = \\tfrac{\\alpha_{t+1}}{1 + r}P(Z \\le \\alpha_{t+1}) + \\tfrac{1}{1 + r}\\int_{\\alpha_{t+1}}^\\infty z f_Z(z)\\,dz$, $\\alpha_T = 0$."
+          ],
+          "cards": [
+            "MDP-07-18",
+            "MDP-07-19",
+            "MDP-07-23"
+          ]
+        },
+        {
+          "t": "Stationary threshold",
+          "d": [
+            "$(1 + r)\\bar\\alpha = P(Z \\le \\bar\\alpha)\\bar\\alpha + \\int_{\\bar\\alpha}^\\infty z f_Z(z)\\,dz$. Uniform: $\\bar\\alpha = 1 + r - \\sqrt{(1 + r)^2 - 1}$."
+          ],
+          "cards": [
+            "MDP-07-20",
+            "MDP-07-21",
+            "MDP-07-22",
+            "MDP-07-24"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Purchasing",
+      "items": [
+        {
+          "t": "Recursion",
+          "d": [
+            "$V_T(x) = x$, $V_t(x) = \\min\\{x, \\alpha_t\\}$, $\\alpha_t = E\\,V_{t+1}(Z_{t+1})$; buy iff $x_t < \\alpha_t$."
+          ],
+          "cards": [
+            "MDP-07-25",
+            "MDP-07-26"
+          ]
+        },
+        {
+          "t": "Thresholds",
+          "d": [
+            "$\\alpha_{T-1} = E\\,Z$, $\\alpha_t = \\alpha_{t+1}P(Z \\ge \\alpha_{t+1}) + \\int_0^{\\alpha_{t+1}} z f_Z(z)\\,dz \\le \\alpha_{t+1}$. Uniform: $\\alpha_t = \\alpha_{t+1} - \\tfrac{\\alpha_{t+1}^2}{2}$, limit 0."
+          ],
+          "cards": [
+            "MDP-07-27",
+            "MDP-07-28",
+            "MDP-07-29"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Correlated prices",
+      "items": [
+        {
+          "t": "Model",
+          "d": [
+            "$X_{t+1} = \\lambda X_t + Z_{t+1}$, $\\lambda \\in [0, 1)$, $Z > 0$; $V_t(x) = \\min\\{x, E\\,V_{t+1}(\\lambda x + Z_{t+1})\\}$."
+          ],
+          "cards": [
+            "MDP-07-30",
+            "MDP-07-38"
+          ]
+        },
+        {
+          "t": "First step",
+          "d": [
+            "$V_{T-1}(x) = \\min\\{x, \\lambda x + \\bar Z\\}$, $\\alpha_{T-1} = \\tfrac{\\bar Z}{1 - \\lambda}$."
+          ],
+          "cards": [
+            "MDP-07-31",
+            "MDP-07-32"
+          ]
+        },
+        {
+          "t": "Properties",
+          "d": [
+            "$V_t \\le V_{t+1}$; $V_t$ non-negative, increasing, concave; $x = E\\,V_{t+1}(\\lambda x + Z)$ has a unique solution $\\alpha_t$; $\\alpha_t \\le \\alpha_{t+1}$."
+          ],
+          "cards": [
+            "MDP-07-33",
+            "MDP-07-34",
+            "MDP-07-35",
+            "MDP-07-36",
+            "MDP-07-37"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "More examples",
+      "items": [
+        {
+          "t": "Options",
+          "d": [
+            "Stopping reward $(1 + r)^{T-t}$ times the immediate profit. Call: never early, value $\\tfrac{56}{3}$. Put: exercise at 90, value $5.5$ ($6.05$ if immediate exercise is allowed)."
+          ],
+          "cards": [
+            "MDP-07-39",
+            "MDP-07-40"
+          ]
+        },
+        {
+          "t": "Stop when high",
+          "d": [
+            "$V_t(x) = \\max\\{x, E\\,V_{t+1}(0.4x + W)\\}$: positive and convex; last decision: stop iff $x \\ge \\tfrac53\\bar w$."
+          ],
+          "cards": [
+            "MDP-07-41",
+            "MDP-07-42"
+          ]
+        },
+        {
+          "t": "Holding cost",
+          "d": [
+            "$c_t = -0.5 + E\\max\\{W, c_{t+1}\\}$: $9.5$, $9.875$, $9.969$."
+          ],
+          "cards": [
+            "MDP-07-43"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Marriage problem",
+      "items": [
+        {
+          "t": "Model",
+          "d": [
+            "States $1$, $\\neg 1$; $P(X_t = 1) = \\tfrac1t$; $h_t(1) = \\tfrac{t}{T}$, $h_t(\\neg 1) = 0$; $G(1) = 1$, $G(\\neg 1) = 0$."
+          ],
+          "cards": [
+            "MDP-07-44",
+            "MDP-07-45"
+          ]
+        },
+        {
+          "t": "Recursion",
+          "d": [
+            "$V_t(\\neg 1) = \\tfrac{1}{t+1}V_{t+1}(1) + \\tfrac{t}{t+1}V_{t+1}(\\neg 1)$, $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$."
+          ],
+          "cards": [
+            "MDP-07-46",
+            "MDP-07-47"
+          ]
+        },
+        {
+          "t": "Optimal rule",
+          "d": [
+            "$t^* = \\min\\{t : \\sum_{s=t}^{T-1}\\tfrac1s \\le 1\\} \\approx \\tfrac{T}{e}$; success probability about $\\tfrac1e$."
+          ],
+          "cards": [
+            "MDP-07-48",
+            "MDP-07-49"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Overview",
+      "items": [
+        {
+          "t": "Classification",
+          "d": [
+            "Does the value of continuing depend on the current state? Is there a cost of waiting? Max or min?"
+          ],
+          "cards": [
+            "MDP-07-50"
+          ]
+        },
+        {
+          "t": "Steps and symbols",
+          "d": [
+            "Formulate, compare stop with continue, read off the threshold, find its recursion, monotonicity, long horizon."
+          ],
+          "cards": [
+            "MDP-07-51",
+            "MDP-07-52"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "Selling, U[0,1], r = 0.1",
+          "d": [
+            "Thresholds $0.4545$, $0.5485$, $0.5913$, … $\\to 0.6417$; $T = 3$: revenue $0.787$ (first offer $0.605$)."
+          ],
+          "cards": [
+            "MDP-07-11",
+            "MDP-07-19",
+            "MDP-07-21"
+          ]
+        },
+        {
+          "t": "Selling, other data",
+          "d": [
+            "$r = 0.25$, $T = 2$: $\\alpha_1 = 0.4$, revenue $0.725$, $\\bar\\alpha = 0.5$. Offers 1, 2, 3, $r = 0$: $\\alpha_2 = 2$, $\\alpha_1 = \\tfrac73$, revenue $\\tfrac{23}{9}$."
+          ],
+          "cards": [
+            "MDP-07-24",
+            "MDP-07-23"
+          ]
+        },
+        {
+          "t": "Purchasing, U[0,1]",
+          "d": [
+            "$\\tfrac12$, $\\tfrac38$, $\\tfrac{39}{128}$; $T = 4$: expected price $0.258$."
+          ],
+          "cards": [
+            "MDP-07-27"
+          ]
+        },
+        {
+          "t": "Correlated prices",
+          "d": [
+            "$\\lambda = 0.5$, $Z \\sim U[0, 1]$: $\\alpha_{T-1} = 1$, $\\alpha_{T-2} = -4 + \\sqrt{24} = 0.899$. $\\lambda = 0.8$, $\\bar Z = 1$: $\\alpha_{T-1} = 5$."
+          ],
+          "cards": [
+            "MDP-07-32",
+            "MDP-07-37"
+          ]
+        },
+        {
+          "t": "Options, strike 105",
+          "d": [
+            "Call at 120: $16.5$ against $27$. Put at 90: $16.5$ against $8$."
+          ],
+          "cards": [
+            "MDP-07-39",
+            "MDP-07-40"
+          ]
+        },
+        {
+          "t": "Marriage problem",
+          "d": [
+            "$T = 4$: $t^* = 2$, success $\\tfrac{11}{24}$. $T = 7$: $t^* = 3$, success $\\tfrac{29}{70}$."
+          ],
+          "cards": [
+            "MDP-07-49"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "Two numbers",
+          "d": [
+            "$V_t(x) = \\max\\{\\text{stop now}, \\text{continue}\\}$ (min for costs); never a derivative."
+          ],
+          "cards": [
+            "MDP-07-09",
+            "MDP-07-25",
+            "MDP-07-04"
+          ]
+        },
+        {
+          "t": "Constant continuation value",
+          "d": [
+            "Next state independent of the current one: the continuation value is the threshold."
+          ],
+          "cards": [
+            "MDP-07-10",
+            "MDP-07-26",
+            "MDP-07-46",
+            "MDP-07-43"
+          ]
+        },
+        {
+          "t": "Split the expectation",
+          "d": [
+            "$E\\max\\{Z, \\alpha\\} = \\alpha P(Z \\le \\alpha) + \\int_\\alpha^\\infty z f_Z$; $E\\min\\{Z, \\alpha\\} = \\alpha P(Z \\ge \\alpha) + \\int_0^\\alpha z f_Z$."
+          ],
+          "cards": [
+            "MDP-07-18",
+            "MDP-07-26",
+            "MDP-07-19"
+          ]
+        },
+        {
+          "t": "Monotone in time",
+          "d": [
+            "Base step from max or min; replace the inner function; swap identically distributed disturbances."
+          ],
+          "cards": [
+            "MDP-07-14",
+            "MDP-07-33"
+          ]
+        },
+        {
+          "t": "Shape preserved",
+          "d": [
+            "min with concave, max with convex; affine argument and expectation keep both."
+          ],
+          "cards": [
+            "MDP-07-34",
+            "MDP-07-42"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "V and J",
+          "d": [
+            "Slides: $J_t = V_t/(1 + r)^{T-t}$. KE: $J_t$ is the slides' $V_t$."
+          ],
+          "cards": [
+            "MDP-07-13",
+            "MDP-07-17",
+            "MDP-07-52"
+          ]
+        },
+        {
+          "t": "tau",
+          "d": [
+            "A state, not a stopping time."
+          ],
+          "cards": [
+            "MDP-07-02",
+            "MDP-07-52"
+          ]
+        },
+        {
+          "t": "Threshold at T",
+          "d": [
+            "Not defined on the slides; KE sets $\\alpha_T = 0$ for asset selling."
+          ],
+          "cards": [
+            "MDP-07-15"
+          ]
+        },
+        {
+          "t": "Strict or weak",
+          "d": [
+            "At the threshold both actions are optimal; the slides write strict inequalities, KE accepts at equality."
+          ],
+          "cards": [
+            "MDP-07-10"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Thresholds at the end",
+          "d": [
+            "“$\\alpha_{T-1} \\ge \\alpha_T$” uses an undefined $\\alpha_T$; the range in “$\\alpha_t \\le \\alpha_{t+1}$ for all $t$” is $t \\le T - 2$."
+          ],
+          "cards": [
+            "MDP-07-15",
+            "MDP-07-36"
+          ]
+        },
+        {
+          "t": "Limit",
+          "d": [
+            "“As $t \\to \\infty$” should be $T - t \\to \\infty$."
+          ],
+          "cards": [
+            "MDP-07-20"
+          ]
+        },
+        {
+          "t": "Indices",
+          "d": [
+            "In $\\alpha_{T-1} = \\int_0^\\infty z f_{Z_{t+1}}(z)\\,dz$ the density is that of $Z_T$; “prices $X_t$, $t = 1, \\dots, T - 1$” should run to $T$; a closing parenthesis is missing in the recursion with correlated prices."
+          ],
+          "cards": [
+            "MDP-07-26",
+            "MDP-07-30"
+          ]
+        },
+        {
+          "t": "KE slips",
+          "d": [
+            "The range of $S$ differs between text and formula of the definition; the $T = 7$ table repeats the column label 7."
+          ],
+          "cards": [
+            "MDP-07-01",
+            "MDP-07-49"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MDP-07-01",
+      "g": "Stopping problem",
+      "k": "What is new",
+      "q": "A system $X_{t+1} = f(X_t, U_t, Z_{t+1})$ has running cost $g$, terminal cost $G$ and, in addition, a stopping cost $h_t(x)$ for $t < T$. (1) What distinguishes an optimal stopping problem from the standard control problem? (2) Give the total cost when the process is stopped at time $S < T$ and when it runs until $T$. (3) What has to be chosen? (4) Give two examples.",
+      "pts": [
+        "(1) The decision maker may end the process before the horizon; stopping is irreversible and leaves nothing to decide afterwards.",
+        "(2) Stopped at $S$: $E\\big(\\sum_{t=0}^{S-1} g(X_t, U_t) + h_S(X_S)\\big)$. Run to the end: $E\\big(\\sum_{t=0}^{T-1} g(X_t, U_t) + G(X_T)\\big)$. Stopping at $S$ shortens the horizon to $S$ and replaces $G$ by $h_S$.",
+        "(3) The stopping time $S$ (as a rule depending on the state) and the controls before it.",
+        "(4) Selling or buying an asset (the transaction ends the interaction with the market); deciding when a patient should undergo an operation; exercising an option."
+      ],
+      "pit": "KE's definition lets $S$ range over $\\{0, \\dots, T - 1\\}$ in the text and over $\\{0, \\dots, T\\}$ in the formula; $S = T$ (never stopping early) must be allowed.",
+      "src": "KE p61–62",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-02",
+      "g": "Stopping problem",
+      "k": "Termination state",
+      "q": "To bring a stopping problem with stopping cost $h_t$ into the standard form, the state and action spaces are enlarged. (1) Which state and which action are added? (2) Write the modified dynamics. (3) Write the modified running cost. (4) Write the modified terminal cost.",
+      "pts": [
+        "(1) A termination state $\\tau$ (“already stopped”) and an action $\\sigma$ (“stop”): $\\hat{\\mathcal{X}} = \\mathcal{X} \\cup \\{\\tau\\}$, $\\hat{\\mathcal{U}} = \\mathcal{U} \\cup \\{\\sigma\\}$.",
+        "(2) $X_{t+1} = \\tau$ if $X_t = \\tau$ or $U_t = \\sigma$; otherwise $X_{t+1} = f(X_t, U_t, Z_{t+1})$.",
+        "(3) $\\hat g_t(x, u) = 0$ if $x = \\tau$; $h_t(x)$ if $x \\ne \\tau$ and $u = \\sigma$; $g(x, u)$ otherwise.",
+        "(4) $\\hat G(x) = 0$ if $x = \\tau$ and $G(x)$ otherwise."
+      ],
+      "pit": "$\\tau$ is a state, not a time. The stopping cost enters through the running cost of the period in which one stops.",
+      "src": "S7 s.5–9 · KE p63",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-03",
+      "g": "Stopping problem",
+      "k": "Value of tau",
+      "q": "In the enlarged problem the termination state $\\tau$ has running cost 0, terminal cost 0 and leads back to $\\tau$ under every action. (1) State and prove the value of $\\tau$. (2) What does this mean for the actions taken in $\\tau$? (3) What does it do to the recursion at a state $x \\ne \\tau$?",
+      "pts": [
+        "(1) $V_t(\\tau) = 0$ for all $t$. Induction: $V_T(\\tau) = 0$; if $V_{t+1}(\\tau) = 0$ then $V_t(\\tau) = 0 + E\\,V_{t+1}(\\tau) = 0$.",
+        "(2) Every action is optimal there: once stopped, nothing remains to be decided.",
+        "(3) The action “stop” contributes $h_t(x) + E\\,V_{t+1}(\\tau) = h_t(x)$, so $\\tau$ disappears from the equation."
+      ],
+      "pit": "",
+      "src": "S7 s.13 · KE p64",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-04",
+      "g": "Stopping problem",
+      "k": "DP with stopping",
+      "q": "Stopping problem (costs, minimization) with running cost $g$, stopping cost $h_t$, terminal cost $G$ and dynamics $f$. (1) Write the recursion without the termination state. (2) Define the cost of continuing. (3) Give the optimal policy. (4) What happens if $h_t = +\\infty$ for all $t$?",
+      "pts": [
+        "(1) $V_T(x) = G(x)$ and $V_t(x) = \\min\\{h_t(x), K_t(x)\\}$ for $t = T - 1, \\dots, 0$.",
+        "(2) $K_t(x) = \\min_{u \\in \\mathcal{U}}\\big\\{g(x, u) + E\\,V_{t+1}(f(x, u, Z_{t+1}))\\big\\}$: one standard backward step.",
+        "(3) Stop if $h_t(x) \\le K_t(x)$; otherwise continue with the minimizer of $K_t(x)$.",
+        "(4) Stopping is never chosen and the standard algorithm is recovered."
+      ],
+      "pit": "For rewards replace min by max. KE writes $J_t$ for the value function and $W_t$ for the disturbance.",
+      "src": "KE p64–66",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-05",
+      "g": "Stopping problem",
+      "k": "With or without tau",
+      "q": "(1) Describe the two equivalent ways of modelling a stopping problem. (2) For a purchase at price $x$ write the equation with the termination state. (3) Reduce it to the equation without it. (4) State the short form to remember.",
+      "pts": [
+        "(1) Either enlarge the state space by $\\tau$, put the stopping cost into the running cost and use the standard algorithm; or keep the original state space, model the option to stop by a stopping cost $h_t$ and use the algorithm with stopping.",
+        "(2) $V_t(x) = \\min\\{x + E\\,V_{t+1}(\\tau),\\ E\\,V_{t+1}(Z_{t+1})\\}$ together with $V_t(\\tau) = 0$.",
+        "(3) $V_t(x) = \\min\\{x,\\ E\\,V_{t+1}(Z_{t+1})\\}$, defined for “not yet bought” only.",
+        "(4) $V_t(x) = \\min\\{\\text{cost of stopping now},\\ \\text{expected cost of continuing}\\}$, with max for rewards; both terms in money of the same date."
+      ],
+      "pit": "A non-zero cost arises only on the move to $\\tau$, and the cost-to-go from $\\tau$ is 0.",
+      "src": "S7 s.29 · KE p66",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-06",
+      "g": "Asset selling",
+      "k": "The problem",
+      "q": "An asset has to be sold between now ($t = 0$) and a terminal time $T$. (1) List the assumptions on the offers. (2) What happens to the money after a sale, and what at time $T$? (3) State the objective. (4) Which two forces pull against each other?",
+      "pts": [
+        "(1) At each $t = 1, \\dots, T$ a random offer $Z_t \\ge 0$ arrives; offers are i.i.d.; an offer is accepted or rejected, and a rejected offer is not renewed.",
+        "(2) Money received at $t$ is invested at a fixed interest rate $r > 0$ until $T$. The last offer $Z_T$ must be accepted if all earlier ones were rejected.",
+        "(3) Find a policy for accepting and rejecting offers that maximizes the expected revenue at time $T$.",
+        "(4) Selling early earns more interest and avoids bad later offers; waiting keeps the chance of a higher offer."
+      ],
+      "pit": "",
+      "src": "S7 s.3 · KE p66",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-07",
+      "g": "Asset selling",
+      "k": "Model with tau",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before. Write the controlled process: (1) states; (2) actions; (3) dynamics; (4) running and terminal reward.",
+      "pts": [
+        "(1) $\\mathcal{X} = \\mathbb{R}_+ \\cup \\{\\tau\\}$: $X_t = Z_t$ if the asset has not yet been sold and $X_t = \\tau$ if it has.",
+        "(2) $\\mathcal{U} = \\{\\text{sell}, \\text{do not sell}\\}$; “sell” accepts $Z_t$. No decision at $T$.",
+        "(3) $X_0 = 0$ (a fictitious null offer); $X_{t+1} = \\tau$ if $X_t = \\tau$ or ($X_t \\ne \\tau$ and $U_t = \\text{sell}$), and $X_{t+1} = Z_{t+1}$ otherwise.",
+        "(4) $g_t(X_t, U_t) = (1 + r)^{T-t}X_t$ if $X_t \\ne \\tau$ and $U_t = \\text{sell}$, else 0; $G(X_T) = X_T$ if $X_T \\ne \\tau$, else 0."
+      ],
+      "pit": "The reward carries a time index: the same offer is worth more at $T$ the earlier it is accepted.",
+      "src": "S7 s.5–9 · KE p66–67",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-08",
+      "g": "Asset selling",
+      "k": "One path",
+      "q": "Asset selling with $r = 0.1$ and $T = 3$; the offers turn out to be $0.62$, $0.41$, $0.80$. (1) Compute the revenue at $T$ for selling at $t = 1$, at $t = 2$, and at $t = 3$. (2) Write states, actions and rewards along the path that sells at $t = 2$. (3) How many reward terms are non-zero on any path? (4) Why is “wait for 0.80” not a policy?",
+      "pts": [
+        "(1) $0.62 \\times 1.1^2 = 0.750$; $0.41 \\times 1.1 = 0.451$; $0.80$.",
+        "(2) States $0, 0.62, 0.41, \\tau$; actions do not sell, do not sell, sell; rewards $g_0 = 0$, $g_1 = 0$, $g_2 = 0.451$, $G(\\tau) = 0$.",
+        "(3) Exactly one: either one $g_t$ (the period of the sale) or $G$ (never sold before $T$).",
+        "(4) At $t = 1$ only $0.62$ is known; a policy may use the offers seen so far, not future ones."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-09",
+      "g": "Asset selling",
+      "k": "Sell or wait",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before. $V_t(x)$ is the optimal expected revenue at $T$ when the offer at $t$ is $x$ and the asset is unsold. (1) Give $V_T$. (2) What does “sell” yield at $t < T$? (3) What does “do not sell” yield? (4) Write the recursion.",
+      "pts": [
+        "(1) $V_T(x) = x$ for $x \\ne \\tau$ and $V_T(\\tau) = 0$.",
+        "(2) $(1 + r)^{T-t}x$ now, then the state is $\\tau$ with value 0.",
+        "(3) Nothing now; the next state is the new offer: $E\\,V_{t+1}(Z_{t+1})$.",
+        "(4) $V_t(x) = \\max\\big\\{(1 + r)^{T-t}x,\\ E\\,V_{t+1}(Z_{t+1})\\big\\}$ for $x \\ne \\tau$, and $V_t(\\tau) = 0$."
+      ],
+      "pit": "",
+      "src": "S7 s.13 · KE p67",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-10",
+      "g": "Asset selling",
+      "k": "Acceptance threshold",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before; $V_t(x) = \\max\\{(1 + r)^{T-t}x, E\\,V_{t+1}(Z_{t+1})\\}$. (1) When is selling better? (2) Define the acceptance threshold and state the policy. (3) Why is the threshold the same for every current offer? (4) What does it mean in words, and what happens exactly at the threshold?",
+      "pts": [
+        "(1) When $(1 + r)^{T-t}x > E\\,V_{t+1}(Z_{t+1})$.",
+        "(2) $\\alpha_t = \\dfrac{E\\,V_{t+1}(Z_{t+1})}{(1 + r)^{T-t}}$: accept $Z_t$ if $Z_t > \\alpha_t$, reject if $Z_t < \\alpha_t$.",
+        "(3) The next offer is independent of the current one, so the value of waiting contains no $x$.",
+        "(4) The value of waiting converted to money of time $t$: what the unsold asset is worth at $t$. At $Z_t = \\alpha_t$ both actions are equally good."
+      ],
+      "pit": "The slides use strict inequalities only; KE accepts if $x \\ge \\alpha_t$, which is also optimal.",
+      "src": "S7 s.13 · KE p67",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-11",
+      "g": "Asset selling",
+      "k": "Uniform offers, T = 3",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before. Take $Z_t$ uniform on $[0, 1]$ and $r = 0.1$, $T = 3$; for $0 \\le a \\le 1$, $P(Z < a) = a$ and $\\int_a^1 z\\,dz = \\tfrac{1 - a^2}{2}$. (1) Find $\\alpha_2$ and $V_2$. (2) Compute $E\\,V_2(Z_2)$. (3) Find $\\alpha_1$. (4) Compute the optimal expected revenue $V_0(0)$ and state the policy.",
+      "pts": [
+        "(1) $E\\,V_3(Z_3) = E\\,Z = 0.5$, so $\\alpha_2 = \\tfrac{0.5}{1.1} = 0.4545$ and $V_2(x) = \\max\\{1.1x, 0.5\\}$.",
+        "(2) $0.5 \\times 0.4545 + 1.1 \\times \\tfrac{1 - 0.4545^2}{2} = 0.2273 + 0.4364 = 0.6636$.",
+        "(3) $\\alpha_1 = \\tfrac{0.6636}{1.21} = 0.5485$.",
+        "(4) $V_0(0) = E\\max\\{1.21Z_1, 0.6636\\} = 0.6636 \\times 0.5485 + 1.21 \\times \\tfrac{1 - 0.5485^2}{2} = 0.787$. Sell at $t = 1$ above $0.5485$, at $t = 2$ above $0.4545$, otherwise accept $Z_3$."
+      ],
+      "pit": "",
+      "src": "KE p69",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-12",
+      "g": "Asset selling",
+      "k": "Four policies",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before. Take $Z_t$ uniform on $[0, 1]$ and $r = 0.1$, $T = 3$. The optimal thresholds $0.5485$ (at $t = 1$) and $0.4545$ (at $t = 2$) give expected revenue $0.787$; one constant threshold $0.6417$ in both periods gives $0.769$. (1) Compute the expected revenue of “accept the first offer”. (2) Of “always wait until $T$”. (3) Rank the four policies. (4) What does the comparison show?",
+      "pts": [
+        "(1) $1.21 \\times E\\,Z_1 = 0.605$.",
+        "(2) $E\\,Z_3 = 0.5$.",
+        "(3) Optimal $0.787$, constant threshold $0.769$, first offer $0.605$, wait to the end $0.5$.",
+        "(4) The optimal policy earns 30% more than taking the first offer, and a threshold that falls towards the deadline beats a constant one."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-13",
+      "g": "Threshold over time",
+      "k": "Rescaled value J",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before; $V_t(x) = \\max\\{(1 + r)^{T-t}x, E\\,V_{t+1}(Z_{t+1})\\}$ and $V_T(x) = x$. (1) Define $J_t$. (2) Derive its recursion. (3) Express the threshold through $J$. (4) Interpret $J_t(x)$.",
+      "pts": [
+        "(1) $J_t(x) = \\dfrac{V_t(x)}{(1 + r)^{T-t}}$ for $x \\ne \\tau$: the value in money of time $t$.",
+        "(2) Divide the recursion by $(1 + r)^{T-t}$ and use $V_{t+1} = (1 + r)^{T-t-1}J_{t+1}$: $J_T(x) = x$, $J_t(x) = \\max\\Big\\{x, \\dfrac{E\\,J_{t+1}(Z_{t+1})}{1 + r}\\Big\\}$.",
+        "(3) $\\alpha_t = \\dfrac{E\\,J_{t+1}(Z_{t+1})}{1 + r}$, so $J_t(x) = \\max\\{x, \\alpha_t\\}$.",
+        "(4) What the asset is worth in cash at $t$ with offer $x$ in hand: sell at $x$ or keep it (worth $\\alpha_t$), whichever is larger."
+      ],
+      "pit": "KE has no $V_t$: its $J_t$ is the slides' $V_t$, i.e. $J_t(x) = (1 + r)^{T-t}\\max\\{x, \\alpha_t\\}$.",
+      "src": "S7 s.15–17 · KE p67",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-14",
+      "g": "Threshold over time",
+      "k": "J decreases in t",
+      "q": "Asset selling with i.i.d. offers; $J_T(x) = x$ and $J_t(x) = \\max\\big\\{x, \\tfrac{E\\,J_{t+1}(Z_{t+1})}{1 + r}\\big\\}$. Prove $J_t(x) \\ge J_{t+1}(x)$ for all $x \\ge 0$ and all $t$. (1) Base step. (2) Induction step. (3) Where is “identically distributed” used?",
+      "pts": [
+        "(1) $J_{T-1}(x) = \\max\\{x, \\alpha_{T-1}\\} \\ge x = J_T(x)$.",
+        "(2) Assume $J_{t+1} \\ge J_{t+2}$: $$\\begin{aligned}J_t(x) &= \\max\\Big\\{x, \\frac{E\\,J_{t+1}(Z_{t+1})}{1 + r}\\Big\\}\\\\ &\\ge \\max\\Big\\{x, \\frac{E\\,J_{t+2}(Z_{t+1})}{1 + r}\\Big\\}\\\\ &= \\max\\Big\\{x, \\frac{E\\,J_{t+2}(Z_{t+2})}{1 + r}\\Big\\} = J_{t+1}(x).\\end{aligned}$$",
+        "(3) In the last equality: an expectation depends only on the distribution, and $Z_{t+1}$, $Z_{t+2}$ have the same one."
+      ],
+      "pit": "The inequality step replaces the inner function by a smaller one; expectations preserve the order.",
+      "src": "S7 s.20 · KE p68",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-15",
+      "g": "Threshold over time",
+      "k": "Falling threshold",
+      "q": "Asset selling with i.i.d. offers, $J_t(x) = \\max\\{x, \\alpha_t\\}$, $\\alpha_t = \\tfrac{E\\,J_{t+1}(Z_{t+1})}{1 + r}$, and $J_t \\ge J_{t+1}$ for all $t$. (1) Deduce the order of the thresholds. (2) Give the intuition. (3) Which convention defines a threshold at $T$? (4) Describe the picture of threshold against time.",
+      "pts": [
+        "(1) $\\alpha_t = \\dfrac{E\\,J_{t+1}(Z_{t+1})}{1 + r} \\ge \\dfrac{E\\,J_{t+2}(Z_{t+2})}{1 + r} = \\alpha_{t+1}$.",
+        "(2) An offer that is acceptable at time $t$ should also be acceptable at $t + 1$, when there is less chance for improvement.",
+        "(3) $\\alpha_T = 0$ (KE): every offer is accepted at $T$, consistent with $J_T(x) = x = \\max\\{x, 0\\}$.",
+        "(4) Almost flat far from the deadline, falling quickly in the last periods, 0 at $T$; accept above the curve, reject below."
+      ],
+      "pit": "The slides write “$J_{T-1} \\ge J_T$, hence $\\alpha_{T-1} \\ge \\alpha_T$” without defining $\\alpha_T$; what that line gives directly is $\\alpha_{T-2} \\ge \\alpha_{T-1}$.",
+      "src": "S7 s.20–21 · KE p68",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-16",
+      "g": "Threshold over time",
+      "k": "Not identical offers",
+      "q": "Asset selling with $T = 3$, $r = 0.1$; $Z_1, Z_2$ are uniform on $[0, 1]$ but $Z_3$ is uniform on $[0, 4]$. (1) Compute $\\alpha_2$. (2) What is done at $t = 2$, and what is $J_2$? (3) Compute $\\alpha_1$. (4) What does the example show?",
+      "pts": [
+        "(1) $\\alpha_2 = \\tfrac{E\\,Z_3}{1.1} = \\tfrac{2}{1.1} = 1.818$.",
+        "(2) No offer $Z_2 \\le 1$ reaches the threshold: never sell; $J_2(x) = 1.818$.",
+        "(3) $\\alpha_1 = \\tfrac{E\\,J_2(Z_2)}{1.1} = \\tfrac{1.818}{1.1} = 1.653$.",
+        "(4) $\\alpha_1 < \\alpha_2$: without identical distributions the threshold can rise over time. The good offer comes late, and the closer it is, the less interest waiting costs."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-17",
+      "g": "Threshold over time",
+      "k": "V and J",
+      "q": "In asset selling with interest rate $r$ both $V_t$ and $J_t$ appear. (1) In which money is each measured? (2) When do they coincide? (3) For uniform offers on $[0, 1]$, $r = 0.1$, $T = 3$, write $V_2$, $J_2$, $V_1$, $J_1$ (thresholds $0.4545$ and $0.5485$). (4) Why work with $J$?",
+      "pts": [
+        "(1) $V_t$: money of time $T$. $J_t = V_t/(1 + r)^{T-t}$: money of time $t$.",
+        "(2) At $t = T$, and everywhere if there is no interest.",
+        "(3) $V_2 = \\max\\{1.1x, 0.5\\}$, $J_2 = \\max\\{x, 0.4545\\}$; $V_1 = \\max\\{1.21x, 0.6636\\}$, $J_1 = \\max\\{x, 0.5485\\}$.",
+        "(4) At every $t$ it is “offer against threshold”, and the recursion contains the single factor $\\tfrac{1}{1 + r}$."
+      ],
+      "pit": "",
+      "src": "S7 s.15–17",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-18",
+      "g": "Long horizon",
+      "k": "Threshold recursion",
+      "q": "Asset selling with i.i.d. offers of density $f_Z$ and interest rate $r$; $J_{t+1}(x) = \\max\\{x, \\alpha_{t+1}\\}$ and $\\alpha_t = \\tfrac{1}{1 + r}E\\,J_{t+1}(Z_{t+1})$. (1) Derive a recursion for the thresholds alone. (2) Read it in words. (3) Where does it start?",
+      "pts": [
+        "(1) Split at $\\alpha_{t+1}$: $$\\begin{aligned}\\alpha_t &= \\frac{1}{1 + r}E\\max\\{Z_{t+1}, \\alpha_{t+1}\\}\\\\ &= \\frac{\\alpha_{t+1}}{1 + r}P(Z \\le \\alpha_{t+1}) + \\frac{1}{1 + r}\\int_{\\alpha_{t+1}}^\\infty z f_Z(z)\\,dz.\\end{aligned}$$",
+        "(2) Next period the offer is rejected with probability $P(Z \\le \\alpha_{t+1})$ (value $\\alpha_{t+1}$) and accepted otherwise (value $z$); then discount one period.",
+        "(3) With $\\alpha_T = 0$: $\\alpha_{T-1} = \\dfrac{E\\,Z}{1 + r}$."
+      ],
+      "pit": "KE calls the right-hand side $\\mathcal{F}(\\alpha_{t+1})$ and writes the density as $\\rho$.",
+      "src": "S7 s.25 · KE p67–68",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-19",
+      "g": "Long horizon",
+      "k": "Iterating the map",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before. Take $Z_t$ uniform on $[0, 1]$ and $r = 0.1$. The thresholds satisfy $\\alpha_t = F(\\alpha_{t+1})$ with $F(\\alpha) = \\tfrac{1}{1 + r}E\\max\\{Z, \\alpha\\}$ and $\\alpha_T = 0$. (1) Compute $E\\max\\{Z, \\alpha\\}$ for $0 \\le \\alpha \\le 1$. (2) Write $F$. (3) Compute the thresholds one, two and three periods before the deadline. (4) What happens further back?",
+      "pts": [
+        "(1) $\\alpha \\cdot \\alpha + \\tfrac{1 - \\alpha^2}{2} = \\tfrac{1 + \\alpha^2}{2}$.",
+        "(2) $F(\\alpha) = \\dfrac{1 + \\alpha^2}{2.2}$.",
+        "(3) $F(0) = 0.4545$; $F(0.4545) = \\tfrac{1.2066}{2.2} = 0.5485$; $F(0.5485) = \\tfrac{1.3008}{2.2} = 0.5913$.",
+        "(4) They keep increasing by less and less: $0.6135$, $0.6256$, $0.6324$, …, towards $0.6417$."
+      ],
+      "pit": "The thresholds are obtained without computing any value function.",
+      "src": "S7 s.25 · KE p69",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-20",
+      "g": "Long horizon",
+      "k": "Limit of the threshold",
+      "q": "Asset selling with i.i.d. offers; the thresholds satisfy $\\alpha_t = F(\\alpha_{t+1})$ with $F(\\alpha) = \\tfrac{1}{1 + r}\\big[\\alpha P(Z \\le \\alpha) + \\int_\\alpha^\\infty z f_Z(z)\\,dz\\big]$. (1) Why do the thresholds converge as the deadline moves away? (2) Which equation does the limit $\\bar\\alpha$ satisfy? (3) In which sense is the limit taken? (4) What is the resulting policy?",
+      "pts": [
+        "(1) Going back in time they are non-decreasing ($\\alpha_t \\ge \\alpha_{t+1}$) and bounded (for bounded offers by the largest offer): a monotone bounded sequence converges.",
+        "(2) $\\bar\\alpha = F(\\bar\\alpha)$, i.e. $(1 + r)\\bar\\alpha = P(Z \\le \\bar\\alpha)\\,\\bar\\alpha + \\int_{\\bar\\alpha}^\\infty z f_Z(z)\\,dz$.",
+        "(3) The distance to the deadline $T - t \\to \\infty$ ($t$ fixed, $T \\to \\infty$).",
+        "(4) A stationary policy: accept the offer if it exceeds $\\bar\\alpha$, reject it if it is below."
+      ],
+      "pit": "The slide writes “as $t \\to \\infty$, $\\lim \\alpha_t = \\alpha_{t+1} = \\bar\\alpha$”; $t$ never exceeds $T$. KE writes $t \\to -\\infty$.",
+      "src": "S7 s.25 · KE p68–69",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-21",
+      "g": "Long horizon",
+      "k": "Solving for the limit",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before. Take $Z_t$ uniform on $[0, 1]$, so that $E\\max\\{Z, \\alpha\\} = \\tfrac{1 + \\alpha^2}{2}$. (1) Write the equation for the long-run threshold $\\bar\\alpha$ as a quadratic. (2) Solve it. (3) Which root is taken, and why? (4) Evaluate for $r = 0.1$ and $r = 0.25$.",
+      "pts": [
+        "(1) $(1 + r)\\bar\\alpha = \\tfrac{1 + \\bar\\alpha^2}{2}$, i.e. $\\bar\\alpha^2 - 2(1 + r)\\bar\\alpha + 1 = 0$.",
+        "(2) $\\bar\\alpha = (1 + r) \\pm \\sqrt{(1 + r)^2 - 1}$.",
+        "(3) The minus sign: the product of the roots is 1, so the other root exceeds 1, outside the range of the offers.",
+        "(4) $r = 0.1$: $1.1 - \\sqrt{0.21} = 0.6417$. $r = 0.25$: $1.25 - \\sqrt{0.5625} = 0.5$."
+      ],
+      "pit": "",
+      "src": "KE p69",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-22",
+      "g": "Long horizon",
+      "k": "Stationary policy",
+      "q": "Asset selling with offers uniform on $[0, 1]$; the long-run threshold is $\\bar\\alpha = 1 + r - \\sqrt{(1 + r)^2 - 1}$. (1) How good is the constant threshold $\\bar\\alpha$ for a short and for a long horizon ($r = 0.1$)? (2) How does $\\bar\\alpha$ change with $r$? (3) Why? (4) What happens as $r \\to 0$?",
+      "pts": [
+        "(1) $T = 3$: $0.769$ against the optimal $0.787$, a loss of about 2%. $T = 30$: the loss is below $0.01\\%$. Only the last few thresholds differ much from $\\bar\\alpha$.",
+        "(2) It falls: $0.868$ at $r = 1\\%$, $0.642$ at $10\\%$, $0.5$ at $25\\%$, $0.268$ at $100\\%$.",
+        "(3) The interest rate is the cost of waiting: each period of waiting loses one period of interest.",
+        "(4) $\\bar\\alpha \\to 1$: with no cost of waiting, wait for an offer close to the highest possible one."
+      ],
+      "pit": "",
+      "src": "S7 s.25 · KE p69",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-23",
+      "g": "Long horizon",
+      "k": "Discrete offers",
+      "q": "Asset selling with $T = 3$ and no interest ($r = 0$); each offer is 1, 2 or 3 with probability $\\tfrac13$. (1) Which recursion gives the thresholds without a density? (2) Compute $\\alpha_2$ and $\\alpha_1$. (3) Compute the optimal expected revenue. (4) Which offers are accepted at each time?",
+      "pts": [
+        "(1) $\\alpha_t = \\dfrac{E\\max\\{Z, \\alpha_{t+1}\\}}{1 + r}$ with $\\alpha_T = 0$.",
+        "(2) $\\alpha_2 = E\\,Z = 2$; $\\alpha_1 = \\tfrac13(2 + 2 + 3) = \\tfrac73$.",
+        "(3) $E\\max\\{Z_1, \\tfrac73\\} = \\tfrac13\\big(\\tfrac73 + \\tfrac73 + 3\\big) = \\tfrac{23}{9} \\approx 2.56$.",
+        "(4) $t = 1$: only 3. $t = 2$: 3 (indifferent at 2). $t = 3$: everything."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-24",
+      "g": "Long horizon",
+      "k": "Practice: r = 0.25",
+      "q": "Asset selling: offers $Z_1, \\dots, Z_T \\ge 0$ are i.i.d.; an offer accepted at time $t$ is invested at the interest rate $r > 0$ until $T$; rejected offers are lost, and $Z_T$ must be accepted if nothing was sold before. Take $Z_t$ uniform on $[0, 1]$, $r = 0.25$ and $T = 2$. (1) Find $\\alpha_1$. (2) Compute the optimal expected revenue at $T$. (3) Compare with accepting the first offer. (4) Give the long-run threshold.",
+      "pts": [
+        "(1) $\\alpha_1 = \\tfrac{E\\,Z_2}{1.25} = \\tfrac{0.5}{1.25} = 0.4$.",
+        "(2) $E\\max\\{1.25Z_1, 0.5\\} = 0.5 \\times 0.4 + 1.25 \\times \\tfrac{1 - 0.16}{2} = 0.2 + 0.525 = 0.725$.",
+        "(3) $1.25 \\times 0.5 = 0.625$.",
+        "(4) $\\bar\\alpha = 1.25 - 0.75 = 0.5$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-25",
+      "g": "Purchasing",
+      "k": "Problem and DP",
+      "q": "A fixed quantity of raw material is needed by a deadline; its price fluctuates. (1) State the assumptions and the objective. (2) Define state and actions. (3) Write the recursion. (4) What exactly is $V_t(x_t)$, and why is no termination state written?",
+      "pts": [
+        "(1) The successive prices $Z_t$ are i.i.d.; the purchase must be made within $T$ periods; minimize the expected price of the purchase.",
+        "(2) $X_t = Z_t$, the price at the beginning of period $t$; actions “buy” or “wait”.",
+        "(3) $V_T(x_T) = x_T$ and $V_t(x_t) = \\min\\{x_t, E\\,V_{t+1}(Z_{t+1})\\}$.",
+        "(4) The optimal cost-to-go when the current price is $x_t$ and nothing has been bought yet. Formally a termination state is needed, but a non-zero cost arises only on the move to it and the cost-to-go from it is 0."
+      ],
+      "pit": "",
+      "src": "S7 s.26, s.29 · KE p78",
+      "seen": [
+        "Ex 4.4"
+      ]
+    },
+    {
+      "id": "MDP-07-26",
+      "g": "Purchasing",
+      "k": "Purchase threshold",
+      "q": "Purchasing with a deadline: the prices $Z_1, \\dots, Z_T$ are i.i.d.; each period one may buy at the current price or wait; the purchase must be made by time $T$, and the expected price paid is minimized; $V_T(x) = x$, $V_t(x) = \\min\\{x, E\\,V_{t+1}(Z_{t+1})\\}$, and $f_Z$ is the density of the prices. (1) State the optimal policy and why it is a threshold rule. (2) Write $V_t$ through the threshold. (3) Give the terminal condition. (4) Derive the recursion for the thresholds.",
+      "pts": [
+        "(1) Buy if $x_t < \\alpha_t$, wait if $x_t > \\alpha_t$, where $\\alpha_t = E\\,V_{t+1}(Z_{t+1})$ is a constant: tomorrow's price is unrelated to today's.",
+        "(2) $V_t(x) = \\min\\{x, \\alpha_t\\}$.",
+        "(3) $\\alpha_{T-1} = E\\,V_T(Z_T) = E\\,Z_T = \\int_0^\\infty z f_Z(z)\\,dz$.",
+        "(4) $\\alpha_t = E\\min\\{Z_{t+1}, \\alpha_{t+1}\\} = \\alpha_{t+1}P(Z_{t+1} \\ge \\alpha_{t+1}) + \\int_0^{\\alpha_{t+1}} z f_Z(z)\\,dz$."
+      ],
+      "pit": "There is no interest, so nothing is divided by $(1 + r)^{T-t}$.",
+      "src": "S7 s.31 · KE p78",
+      "seen": [
+        "Ex 4.4"
+      ]
+    },
+    {
+      "id": "MDP-07-27",
+      "g": "Purchasing",
+      "k": "Uniform prices",
+      "q": "Purchasing with a deadline: the prices $Z_1, \\dots, Z_T$ are i.i.d.; each period one may buy at the current price or wait; the purchase must be made by time $T$, and the expected price paid is minimized. Take prices uniform on $[0, 1]$. (1) Write the threshold recursion. (2) Compute the thresholds one, two and three periods before the deadline. (3) State the policy for $T = 4$. (4) Compute the expected price paid for $T = 4$ and compare with buying on the first day.",
+      "pts": [
+        "(1) $P(Z \\ge a) = 1 - a$ and $\\int_0^a z\\,dz = \\tfrac{a^2}{2}$: $\\alpha_t = \\alpha_{t+1}(1 - \\alpha_{t+1}) + \\tfrac{\\alpha_{t+1}^2}{2} = \\alpha_{t+1} - \\tfrac{\\alpha_{t+1}^2}{2}$.",
+        "(2) $\\alpha_{T-1} = \\tfrac12$; $\\alpha_{T-2} = \\tfrac12 - \\tfrac18 = \\tfrac38$; $\\alpha_{T-3} = \\tfrac38 - \\tfrac{9}{128} = \\tfrac{39}{128} \\approx 0.305$.",
+        "(3) Buy at $t = 1$ below $0.305$, at $t = 2$ below $0.375$, at $t = 3$ below $0.5$; at $t = 4$ buy at any price.",
+        "(4) $E\\min\\{Z_1, 0.305\\} = 0.305 - \\tfrac{0.305^2}{2} \\approx 0.258$, against $0.5$."
+      ],
+      "pit": "",
+      "src": "S7 s.32",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-28",
+      "g": "Purchasing",
+      "k": "Rising threshold",
+      "q": "Purchasing with a deadline: the prices $Z_1, \\dots, Z_T$ are i.i.d.; each period one may buy at the current price or wait; the purchase must be made by time $T$, and the expected price paid is minimized; the thresholds satisfy $\\alpha_t = E\\min\\{Z_{t+1}, \\alpha_{t+1}\\}$. (1) Show that the threshold increases as the deadline approaches. (2) Interpret. (3) For prices uniform on $[0, 1]$, what happens to the threshold as $T \\to \\infty$? (4) Why?",
+      "pts": [
+        "(1) $\\min\\{Z, \\alpha_{t+1}\\} \\le \\alpha_{t+1}$ always, so $\\alpha_t \\le \\alpha_{t+1}$.",
+        "(2) With plenty of time only very low prices are accepted; with little time left the buyer is less demanding.",
+        "(3) It tends to 0 (slowly, roughly like $2/k$ with $k$ periods left): the limit must satisfy $\\bar\\alpha = \\bar\\alpha - \\tfrac{\\bar\\alpha^2}{2}$.",
+        "(4) Waiting costs nothing here, so with unlimited time one waits for a price close to the lowest possible."
+      ],
+      "pit": "",
+      "src": "S7 s.32 · KE p78",
+      "seen": [
+        "Ex 4.4"
+      ]
+    },
+    {
+      "id": "MDP-07-29",
+      "g": "Purchasing",
+      "k": "Selling vs buying",
+      "q": "Compare asset selling (interest rate $r$) with purchasing with a deadline, both with i.i.d. offers or prices $Z_t$. (1) Value function. (2) Definition of the threshold. (3) Rule and behaviour near the deadline. (4) Recursion of the thresholds. (5) Long-run threshold for $Z$ uniform on $[0, 1]$.",
+      "pts": [
+        "(1) Selling: $J_t(x) = \\max\\{x, \\alpha_t\\}$. Buying: $V_t(x) = \\min\\{x, \\alpha_t\\}$.",
+        "(2) Selling: $\\alpha_t = \\tfrac{E\\,J_{t+1}(Z)}{1 + r}$. Buying: $\\alpha_t = E\\,V_{t+1}(Z)$.",
+        "(3) Selling: accept above $\\alpha_t$, which falls. Buying: buy below $\\alpha_t$, which rises. Both become less demanding as the deadline approaches.",
+        "(4) Selling: $\\alpha_t = \\tfrac{E\\max\\{Z, \\alpha_{t+1}\\}}{1 + r}$. Buying: $\\alpha_t = E\\min\\{Z, \\alpha_{t+1}\\}$.",
+        "(5) Selling: $0.642$ for $r = 0.1$, and 1 for $r = 0$. Buying: 0. The interest decides whether the threshold stops in the interior or goes to the best possible price."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-30",
+      "g": "Correlated prices",
+      "k": "Model with memory",
+      "q": "The price of a material that must be bought by time $T$ follows a linear system. (1) Write the price dynamics and the assumptions. (2) Write the recursion. (3) What is different from i.i.d. prices? (4) Which price level reproduces itself on average?",
+      "pts": [
+        "(1) $X_{t+1} = \\lambda X_t + Z_{t+1}$ with a memory coefficient $\\lambda \\in [0, 1)$; the disturbances $Z_t$ are i.i.d. and take only positive values.",
+        "(2) $V_T(x_T) = x_T$ and $V_t(x_t) = \\min\\{x_t, E\\,V_{t+1}(\\lambda x_t + Z_{t+1})\\}$.",
+        "(3) The expected cost of waiting is now a function of the current price, so “compare $x$ with a constant” no longer applies: both sides change with $x$ and could cross several times.",
+        "(4) $m = \\lambda m + \\bar Z$, i.e. $m = \\dfrac{\\bar Z}{1 - \\lambda}$: above it the price is expected to fall, below it to rise."
+      ],
+      "pit": "$Z_t$ changes its role: it was the price itself for i.i.d. prices; here the price is $X_t$ and $Z_t$ is the shock added to it. $\\lambda = 0$ gives back i.i.d. prices.",
+      "src": "S7 s.34 · KE p69",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-31",
+      "g": "Correlated prices",
+      "k": "First step",
+      "q": "Purchasing with correlated prices: the price follows $X_{t+1} = \\lambda X_t + Z_{t+1}$ with $\\lambda \\in [0, 1)$ and i.i.d. positive disturbances $Z_t$ with mean $\\bar Z$; one may buy at the current price or wait and must buy by time $T$, so $V_T(x) = x$ and $V_t(x) = \\min\\{x, E\\,V_{t+1}(\\lambda x + Z_{t+1})\\}$. Carry out the step $t = T - 1$. (1) Compute $V_{T-1}$. (2) When is buying better? (3) Give the threshold. (4) Why is the rule a threshold rule here?",
+      "pts": [
+        "(1) $V_{T-1}(x) = \\min\\{x, E(\\lambda x + Z_T)\\} = \\min\\{x, \\lambda x + \\bar Z\\}$.",
+        "(2) $x < \\lambda x + \\bar Z \\iff (1 - \\lambda)x < \\bar Z \\iff x < \\dfrac{\\bar Z}{1 - \\lambda}$, using $1 - \\lambda > 0$.",
+        "(3) $\\alpha_{T-1} = \\dfrac{\\bar Z}{1 - \\lambda}$: buy if $x_{T-1} < \\alpha_{T-1}$, wait if $x_{T-1} > \\alpha_{T-1}$.",
+        "(4) “Buy” is a line of slope 1 and “wait” a line of slope $\\lambda < 1$ with a positive intercept; two such lines cross exactly once."
+      ],
+      "pit": "The threshold is the level to which the price reverts: below it tomorrow is expected to be dearer.",
+      "src": "S7 s.37 · KE p70",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-32",
+      "g": "Correlated prices",
+      "k": "First step, numbers",
+      "q": "The price follows $X_{t+1} = \\lambda X_t + Z_{t+1}$ with $E\\,Z = \\bar Z$; the purchase must be made by $T$ and the current time is $T - 1$. (1) For $\\lambda = 0.5$, $\\bar Z = 0.5$ give the threshold. (2) Compare buying and waiting at prices $0.6$ and $1.4$. (3) For $\\lambda = 0.8$, $\\bar Z = 1$ give the threshold. (4) Decide at prices 4 and 6.",
+      "pts": [
+        "(1) $\\alpha_{T-1} = \\tfrac{0.5}{0.5} = 1$.",
+        "(2) $0.6$: waiting costs $0.5 \\times 0.6 + 0.5 = 0.8 > 0.6$, buy. $1.4$: waiting costs $1.2 < 1.4$, wait.",
+        "(3) $\\alpha_{T-1} = \\tfrac{1}{0.2} = 5$.",
+        "(4) Price 4: waiting costs $0.8 \\times 4 + 1 = 4.2 > 4$, buy. Price 6: waiting costs $5.8 < 6$, wait."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-33",
+      "g": "Correlated prices",
+      "k": "V increases in t",
+      "q": "Purchasing with correlated prices: the price follows $X_{t+1} = \\lambda X_t + Z_{t+1}$ with $\\lambda \\in [0, 1)$ and i.i.d. positive disturbances $Z_t$ with mean $\\bar Z$; one may buy at the current price or wait and must buy by time $T$, so $V_T(x) = x$ and $V_t(x) = \\min\\{x, E\\,V_{t+1}(\\lambda x + Z_{t+1})\\}$. Prove $V_t(x) \\le V_{t+1}(x)$ for all $x$ and $t$. (1) Base step. (2) Induction step. (3) Say it in words.",
+      "pts": [
+        "(1) $V_{T-1}(x) = \\min\\{x, \\lambda x + \\bar Z\\} \\le x = V_T(x)$.",
+        "(2) Assume $V_{t+1} \\le V_{t+2}$: $$\\begin{aligned}V_t(x) &= \\min\\{x, E\\,V_{t+1}(\\lambda x + Z_{t+1})\\}\\\\ &\\le \\min\\{x, E\\,V_{t+2}(\\lambda x + Z_{t+1})\\}\\\\ &= \\min\\{x, E\\,V_{t+2}(\\lambda x + Z_{t+2})\\} = V_{t+1}(x),\\end{aligned}$$ using the hypothesis and then that the $Z_t$ are i.i.d.",
+        "(3) The more time is left, the lower the expected purchase price: one more period is one more chance."
+      ],
+      "pit": "The same three lines as for $J_t \\ge J_{t+1}$ in asset selling, with the inequality reversed.",
+      "src": "S7 s.40 · KE p70–71",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-34",
+      "g": "Correlated prices",
+      "k": "Increasing, concave",
+      "q": "Purchasing with correlated prices: the price follows $X_{t+1} = \\lambda X_t + Z_{t+1}$ with $\\lambda \\in [0, 1)$ and i.i.d. positive disturbances $Z_t$ with mean $\\bar Z$; one may buy at the current price or wait and must buy by time $T$, so $V_T(x) = x$ and $V_t(x) = \\min\\{x, E\\,V_{t+1}(\\lambda x + Z_{t+1})\\}$. Show by induction that $V_t$ is non-negative, increasing and concave in $x \\ge 0$ for all $t$. (1) Which three closure rules are needed? (2) Base step. (3) Induction step.",
+      "pts": [
+        "(1) A concave increasing function of $\\lambda x + z$ with $\\lambda \\ge 0$ is concave increasing in $x$; an expectation of non-negative, increasing, concave functions keeps the three properties; so does the minimum of two such functions.",
+        "(2) $V_T(x) = x$ is non-negative, increasing and linear, hence concave.",
+        "(3) If $V_{t+1}$ has the three properties, so has $x \\mapsto V_{t+1}(\\lambda x + z)$ for each $z > 0$, hence $x \\mapsto E\\,V_{t+1}(\\lambda x + Z_{t+1})$, hence its minimum with $x$, which is $V_t$."
+      ],
+      "pit": "The slide only says “use induction”. The positivity of the disturbances keeps the argument of the value function non-negative.",
+      "src": "S7 s.43 · KE p71",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-35",
+      "g": "Correlated prices",
+      "k": "Single crossing",
+      "q": "Purchasing with correlated prices: the price follows $X_{t+1} = \\lambda X_t + Z_{t+1}$ with $\\lambda \\in [0, 1)$ and i.i.d. positive disturbances $Z_t$ with mean $\\bar Z$; one may buy at the current price or wait and must buy by time $T$, so $V_T(x) = x$ and $V_t(x) = \\min\\{x, E\\,V_{t+1}(\\lambda x + Z_{t+1})\\}$. Write $K(x) = E\\,V_{t+1}(\\lambda x + Z_{t+1})$ for the cost of waiting; $V_{t+1}$ is non-negative, increasing and concave, and $V_{t+1}(y) \\le y$. Show that $x = K(x)$ has exactly one solution. (1) Sign of $K(x) - x$ at 0. (2) Sign for large $x$. (3) Why only one zero? (4) State the policy.",
+      "pts": [
+        "(1) $K(0) = E\\,V_{t+1}(Z_{t+1}) > 0$: prices are positive, so the expected purchase price is positive.",
+        "(2) $K(x) \\le \\lambda x + \\bar Z$, so $K(x) - x \\le \\bar Z - (1 - \\lambda)x \\to -\\infty$.",
+        "(3) $K(x) - x$ is concave. If it vanished at two points $a < b$, concavity would make it non-positive to the left of $a$, contradicting its positive value at 0.",
+        "(4) Buy if $x_t < \\alpha_t$, wait if $x_t > \\alpha_t$, where $\\alpha_t$ is the unique solution of $x = E\\,V_{t+1}(\\lambda x + Z_{t+1})$."
+      ],
+      "pit": "",
+      "src": "S7 s.43 · KE p71–72",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-36",
+      "g": "Correlated prices",
+      "k": "Threshold rises",
+      "q": "Purchasing with correlated prices: the price follows $X_{t+1} = \\lambda X_t + Z_{t+1}$ with $\\lambda \\in [0, 1)$ and i.i.d. positive disturbances $Z_t$ with mean $\\bar Z$; one may buy at the current price or wait and must buy by time $T$, so $V_T(x) = x$ and $V_t(x) = \\min\\{x, E\\,V_{t+1}(\\lambda x + Z_{t+1})\\}$. The threshold $\\alpha_t$ solves $x = K_t(x)$ with $K_t(x) = E\\,V_{t+1}(\\lambda x + Z_{t+1})$, and $V_t \\le V_{t+1}$ for all $t$. (1) Compare $K_t$ and $K_{t+1}$. (2) Deduce the order of the thresholds. (3) Interpret. (4) For which $t$ does the statement make sense?",
+      "pts": [
+        "(1) $K_t(x) = E\\,V_{t+1}(\\lambda x + Z) \\le E\\,V_{t+2}(\\lambda x + Z) = K_{t+1}(x)$.",
+        "(2) At $x = \\alpha_{t+1}$: $K_t(\\alpha_{t+1}) \\le K_{t+1}(\\alpha_{t+1}) = \\alpha_{t+1}$, so $K_t(x) - x$ is already non-positive there; its zero lies to the left: $\\alpha_t \\le \\alpha_{t+1}$.",
+        "(3) The threshold price increases as the deadline approaches.",
+        "(4) $t \\le T - 2$: thresholds exist for $t = 0, \\dots, T - 1$ only."
+      ],
+      "pit": "",
+      "src": "S7 s.43 · KE p72",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-37",
+      "g": "Correlated prices",
+      "k": "One more step back",
+      "q": "Prices $X_{t+1} = 0.5X_t + Z_{t+1}$ with $Z$ uniform on $[0, 1]$; the purchase must be made by $T$. The last step gave $V_{T-1}(y) = \\min\\{y, 0.5y + 0.5\\}$, and for $0 \\le x \\le 2$ the cost of waiting at $T - 2$ is $K(x) = 0.5x + 0.5 - \\tfrac{x^2}{16}$. (1) Where does the term $-\\tfrac{x^2}{16}$ come from? (2) Solve $x = K(x)$. (3) Compare with $\\alpha_{T-1} = 1$. (4) What does the example show?",
+      "pts": [
+        "(1) $V_{T-1}(y) = y - 0.5(y - 1)^+$. With $Y = 0.5x + Z$: $E(Y - 1)^+ = \\int_{1 - 0.5x}^1 (0.5x + z - 1)\\,dz = \\tfrac{(0.5x)^2}{2}$, and half of it is $\\tfrac{x^2}{16}$.",
+        "(2) $x^2 + 8x - 8 = 0$, so $x = -4 + \\sqrt{24} \\approx 0.899$.",
+        "(3) $\\alpha_{T-2} = 0.899 < 1 = \\alpha_{T-1}$, as the general result says.",
+        "(4) With memory the cost of waiting is a curve bending down, and the threshold is found by solving an equation at each step; there is no simple recursion for the thresholds."
+      ],
+      "pit": "Further back the thresholds are $0.831$, $0.781$, $0.743$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-38",
+      "g": "Correlated prices",
+      "k": "No mean reversion",
+      "q": "Prices $X_{t+1} = \\lambda X_t + Z_{t+1}$ with positive disturbances of mean $\\bar Z$; the purchase must be made by $T$. (1) What does the price do when $\\lambda = 1$? (2) Compare buying and waiting at $T - 1$. (3) What is the optimal policy? (4) On what does the single crossing rely?",
+      "pts": [
+        "(1) $X_{t+1} = X_t + Z_{t+1}$ with $Z > 0$: it only goes up.",
+        "(2) Waiting costs $x + \\bar Z > x$ at every price; the two lines are parallel and never cross, and $\\tfrac{\\bar Z}{1 - \\lambda}$ is undefined.",
+        "(3) Buy immediately at any price.",
+        "(4) On the slope $\\lambda$ of “wait” being smaller than the slope 1 of “buy”."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-39",
+      "g": "More examples",
+      "k": "Call option",
+      "q": "A stock is worth 100 now; each month it is multiplied by 1.2 with probability $\\tfrac23$ or by 0.9 with probability $\\tfrac13$. An option with strike 105 expires in 2 months and may be exercised once, at the end of month 1 or 2; the profit from exercising is invested at 10% per month until month 2. For a call the profit from exercising at price $x$ is $x - 105$. (1) List the prices and the values at month 2. (2) At month 1 with price 120, compare exercising and continuing. (3) Same with price 90. (4) Give the optimal policy and the value now.",
+      "pts": [
+        "(1) Month 1: 120 or 90. Month 2: 144, 108 or 81, with $V_2(x) = (x - 105)^+$: 39, 3, 0.",
+        "(2) Exercise: $1.1 \\times 15 = 16.5$. Continue: $\\tfrac23 \\cdot 39 + \\tfrac13 \\cdot 3 = 27$. Continue.",
+        "(3) Exercise: 0. Continue: $\\tfrac23 \\cdot 3 = 2$. Continue.",
+        "(4) Never exercise early; exercise at month 2 if the price is above 105. Value $\\tfrac23 \\cdot 27 + \\tfrac13 \\cdot 2 = \\tfrac{56}{3} \\approx 18.67$."
+      ],
+      "pit": "The reward for stopping at $t$ is $(1 + r)^{T-t}$ times the immediate profit, so that both terms of the max are in money of time $T$.",
+      "src": "KE p79",
+      "seen": [
+        "HW2 P3",
+        "Ex 4.6"
+      ]
+    },
+    {
+      "id": "MDP-07-40",
+      "g": "More examples",
+      "k": "Put option",
+      "q": "A stock is worth 100 now; each month it is multiplied by 1.2 with probability $\\tfrac23$ or by 0.9 with probability $\\tfrac13$. An option with strike 105 expires in 2 months and may be exercised once, at the end of month 1 or 2; the profit from exercising is invested at 10% per month until month 2. For a put the profit from exercising at price $x$ is $105 - x$. (1) Give the values at month 2. (2) At month 1 with price 90, compare exercising and continuing. (3) Give the optimal policy and its value now. (4) What changes if exercising immediately (at price 100) is also allowed?",
+      "pts": [
+        "(1) $V_2(x) = (105 - x)^+$: 0, 0, 24 at prices 144, 108, 81.",
+        "(2) Exercise: $1.1 \\times 15 = 16.5$. Continue: $\\tfrac13 \\cdot 24 = 8$. Exercise.",
+        "(3) Exercise at month 1 if the price is 90; at price 120 the option ends worthless. Value $\\tfrac13 \\cdot 16.5 = 5.5$.",
+        "(4) Exercising now gives $1.21 \\times 5 = 6.05 > 5.5$: exercise immediately."
+      ],
+      "pit": "State which exercise dates are allowed before answering. The call is not affected: exercising it now gives nothing.",
+      "src": "KE p79",
+      "seen": [
+        "HW2 P3",
+        "Ex 4.6"
+      ]
+    },
+    {
+      "id": "MDP-07-41",
+      "g": "More examples",
+      "k": "Take the pot",
+      "q": "A pot holds 100. On each of five mornings its owner may take the whole pot (the process ends) or let the day proceed: then 60% of the pot is spent and afterwards a random amount $W > 0$ (i.i.d., mean $\\bar w$) is added. After the fifth day he receives whatever is in the pot. He maximizes the expected amount received. (1) Formulate the stopping problem. (2) Write the recursion and the policy at time $t$. (3) Solve the last decision. (4) How does the stopping region differ from the purchasing problem?",
+      "pts": [
+        "(1) State $X_t \\ge 0$ (the pot), $X_0 = 100$; decision times $t = 0, \\dots, 4$, $T = 5$; continuing gives $X_{t+1} = 0.4X_t + W_{t+1}$ with reward 0; stopping reward $h_t(x) = x$; terminal reward $G(x) = x$.",
+        "(2) $V_t(x) = \\max\\{x, E\\,V_{t+1}(0.4x + W_{t+1})\\}$; take the pot iff $x \\ge E\\,V_{t+1}(0.4x + W_{t+1})$.",
+        "(3) $V_4(x) = \\max\\{x, 0.4x + \\bar w\\}$: take the pot iff $0.6x \\ge \\bar w$, i.e. $x \\ge \\tfrac53\\bar w$.",
+        "(4) Here one stops when the state is high (a reward of slope 1 against a continuation value of slope $0.4$); the buyer stops when the price is low."
+      ],
+      "pit": "",
+      "src": "KE p78–79",
+      "seen": [
+        "Ex 4.5"
+      ]
+    },
+    {
+      "id": "MDP-07-42",
+      "g": "More examples",
+      "k": "Positive and convex",
+      "q": "A stopping problem with rewards has $V_T(x) = x$ and $V_t(x) = \\max\\{x, E\\,V_{t+1}(0.4x + W_{t+1})\\}$ for $x > 0$, with i.i.d. positive $W_t$. Show that every $V_t$ is positive and convex. (1) Base step. (2) Induction step for convexity. (3) Positivity. (4) Compare with the purchasing problem with correlated prices.",
+      "pts": [
+        "(1) $V_T(x) = x$ is positive and linear, hence convex.",
+        "(2) If $V_{t+1}$ is convex, so is $x \\mapsto V_{t+1}(0.4x + w)$ (a convex function of an affine map), so is its expectation over $W$, and so is the maximum of that with $x$.",
+        "(3) $V_t(x) \\ge x > 0$.",
+        "(4) There a minimum preserves concavity; here a maximum preserves convexity. The same three closure rules are used."
+      ],
+      "pit": "A function $J$ is convex iff $J(\\alpha x + (1 - \\alpha)y) \\le \\alpha J(x) + (1 - \\alpha)J(y)$ for $\\alpha \\in [0, 1]$.",
+      "src": "KE p79",
+      "seen": [
+        "Ex 4.5"
+      ]
+    },
+    {
+      "id": "MDP-07-43",
+      "g": "More examples",
+      "k": "Holding cost",
+      "q": "A house must be sold within 3 days. On each day $t = 0, 1, 2, 3$ an offer $W_t$ arrives, i.i.d. with $P(8) = \\tfrac14$, $P(10) = \\tfrac12$, $P(12) = \\tfrac14$; a rejected offer is lost, each rejection costs $0.5$ for one more day of holding, and on day 3 the offer must be accepted. (1) Write the recursion and the form of the value function. (2) Compute the continuation values $c_2, c_1, c_0$. (3) Give the policy and the expected net price before the first offer is seen. (4) Replace the holding cost by 10% interest per day on the proceeds until day 3: find $c_2$ and compare.",
+      "pts": [
+        "(1) $V_3(w) = w$, $V_t(w) = \\max\\{w, c_t\\}$ with $c_t = -0.5 + E\\,V_{t+1}(W)$, so $c_t = -0.5 + E\\max\\{W, c_{t+1}\\}$ and $c_2 = -0.5 + E\\,W$.",
+        "(2) $c_2 = 9.5$; $c_1 = -0.5 + \\big(\\tfrac{9.5}{4} + 5 + 3\\big) = 9.875$; $c_0 = -0.5 + \\big(\\tfrac{9.875}{4} + 5 + 3\\big) = 9.969$.",
+        "(3) On days 0, 1, 2 accept 10 or 12 and reject 8. $E\\max\\{W, c_0\\} = \\tfrac{9.969}{4} + 8 \\approx 10.49$.",
+        "(4) $V_t(w) = \\max\\{1.1^{3-t}w, E\\,V_{t+1}(W)\\}$ in day-3 money; the threshold on day 2 is $\\tfrac{10}{1.1} \\approx 9.09 < 9.5$: the seller accepts more readily."
+      ],
+      "pit": "The cost of waiting may be a holding cost or lost interest; both lower the continuation value.",
+      "src": "",
+      "seen": [
+        "MkB P3"
+      ]
+    },
+    {
+      "id": "MDP-07-44",
+      "g": "Marriage problem",
+      "k": "State: apparent rank",
+      "q": "Marriage problem: $T$ candidates are presented one at a time in random order (every ordering equally likely); each is accepted or rejected on the spot, a rejected candidate does not return, and the aim is to maximize the probability of accepting the best of all $T$. (1) What does the decision maker observe at time $t$, and what is the state? (2) Give the distribution of $X_t$ and its relation to the past. (3) Why can the states be merged into two?",
+      "pts": [
+        "(1) Only how the current candidate compares with those already seen. $X_t \\in \\{1, \\dots, t\\}$ is the apparent rank of the $t$-th candidate among the first $t$; the absolute rank among all $T$ is not known.",
+        "(2) Every ordering is equally likely, so $P(X_t = 1) = \\tfrac1t$ and $P(X_t \\ne 1) = \\tfrac{t-1}{t}$, independently of the current state.",
+        "(3) A candidate of apparent rank other than 1 cannot be the best of all, and rewards and transition probabilities are the same for all such ranks: the state space is $\\{1, \\neg 1\\}$."
+      ],
+      "pit": "This example is in KE only; the slides do not cover it.",
+      "src": "KE p72–74",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-45",
+      "g": "Marriage problem",
+      "k": "Stopping reward",
+      "q": "Marriage problem: $T$ candidates are presented one at a time in random order (every ordering equally likely); each is accepted or rejected on the spot, a rejected candidate does not return, and the aim is to maximize the probability of accepting the best of all $T$. The state is 1 if the current candidate is the best seen so far and $\\neg 1$ otherwise. (1) Compute the reward for accepting at time $t < T$ in state 1. (2) In state $\\neg 1$. (3) Give the terminal reward. (4) What is the running reward of rejecting?",
+      "pts": [
+        "(1) The probability that the best of the first $t$ is the best of all: $h_t(1) = \\dfrac{P(\\text{best of all is at position } t)}{P(\\text{best of first } t \\text{ is at position } t)} = \\dfrac{1/T}{1/t} = \\dfrac{t}{T}$.",
+        "(2) $h_t(\\neg 1) = 0$.",
+        "(3) $G(1) = 1$ and $G(\\neg 1) = 0$.",
+        "(4) $g(x, \\text{reject}) = 0$."
+      ],
+      "pit": "The objective is a probability: the expected value of a reward that is 1 if the best is accepted and 0 otherwise.",
+      "src": "KE p73–74",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-46",
+      "g": "Marriage problem",
+      "k": "Recursion",
+      "q": "Marriage problem: $T$ candidates are presented one at a time in random order (every ordering equally likely); each is accepted or rejected on the spot, a rejected candidate does not return, and the aim is to maximize the probability of accepting the best of all $T$. States 1 and $\\neg 1$; accepting in state 1 at time $t$ is worth $\\tfrac{t}{T}$, and $P(X_{t+1} = 1) = \\tfrac{1}{t+1}$. (1) Write the terminal values. (2) Write the value of state $\\neg 1$. (3) Write the value of state 1. (4) State the optimal policy.",
+      "pts": [
+        "(1) $V_T(1) = 1$, $V_T(\\neg 1) = 0$.",
+        "(2) $V_t(\\neg 1) = \\dfrac{1}{t+1}V_{t+1}(1) + \\dfrac{t}{t+1}V_{t+1}(\\neg 1)$: rejecting is optimal, accepting yields 0.",
+        "(3) $V_t(1) = \\max\\Big\\{\\dfrac{t}{T}, V_t(\\neg 1)\\Big\\}$: the value of continuing does not depend on the current state.",
+        "(4) Never accept in state $\\neg 1$; in state 1 accept iff $\\dfrac{t}{T} \\ge V_t(\\neg 1)$."
+      ],
+      "pit": "KE writes $J_t$ for these values.",
+      "src": "KE p75",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-47",
+      "g": "Marriage problem",
+      "k": "Threshold in time",
+      "q": "Marriage problem: $T$ candidates are presented one at a time in random order (every ordering equally likely); each is accepted or rejected on the spot, a rejected candidate does not return, and the aim is to maximize the probability of accepting the best of all $T$; $V_t(\\neg 1) = \\tfrac{1}{t+1}V_{t+1}(1) + \\tfrac{t}{t+1}V_{t+1}(\\neg 1)$ and $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$. (1) State the lemma on the shape of the policy. (2) Prove its contrapositive. (3) Describe the optimal policy.",
+      "pts": [
+        "(1) If it is optimal to accept a candidate who is the best out of $t - 1$, it is also optimal to accept one who is the best out of $t$.",
+        "(2) Suppose rejecting is optimal at $t$ in state 1: $\\tfrac{t}{T} \\le V_t(\\neg 1) = V_t(1)$. Then $V_{t-1}(\\neg 1) = \\tfrac1t V_t(1) + \\tfrac{t-1}{t}V_t(\\neg 1) = V_t(\\neg 1) \\ge \\tfrac{t}{T} > \\tfrac{t-1}{T}$, so rejecting is optimal at $t - 1$ too.",
+        "(3) There is a time $t^*$: reject the first $t^* - 1$ candidates whatever they are, then accept the first one who is better than all seen before."
+      ],
+      "pit": "",
+      "src": "KE p75–76",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-48",
+      "g": "Marriage problem",
+      "k": "The rule T/e",
+      "q": "Marriage problem: $T$ candidates are presented one at a time in random order (every ordering equally likely); each is accepted or rejected on the spot, a rejected candidate does not return, and the aim is to maximize the probability of accepting the best of all $T$. For $t \\ge t^*$ accepting in state 1 is optimal, so $V_t(1) = \\tfrac{t}{T}$ and $V_t(\\neg 1) = \\tfrac1T + \\tfrac{t}{t+1}V_{t+1}(\\neg 1)$. (1) Solve this recursion using $s_t = \\tfrac{T}{t}V_t(\\neg 1)$. (2) Characterize $t^*$. (3) Approximate $t^*$ for large $T$. (4) What is the probability of success?",
+      "pts": [
+        "(1) $s_T = 0$ and $s_t = \\tfrac1t + s_{t+1}$, so $s_t = \\tfrac1t + \\tfrac{1}{t+1} + \\dots + \\tfrac{1}{T-1}$.",
+        "(2) Accepting is optimal iff $V_t(\\neg 1) \\le \\tfrac{t}{T}$, i.e. $s_t \\le 1$: $t^* = \\min\\Big\\{t : \\sum_{s=t}^{T-1}\\tfrac1s \\le 1\\Big\\}$.",
+        "(3) $1 \\approx \\int_{t^*}^{T}\\tfrac{ds}{s} = \\ln\\tfrac{T}{t^*}$, so $t^* \\approx \\tfrac{T}{e}$: reject about 37% of the candidates.",
+        "(4) Approximately $\\tfrac1e \\approx 0.37$, whatever the size of $T$."
+      ],
+      "pit": "KE calls the rescaled quantity $V_t$, which here would clash with the value function.",
+      "src": "KE p76–77",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-49",
+      "g": "Marriage problem",
+      "k": "Small cases",
+      "q": "Marriage problem: $T$ candidates are presented one at a time in random order (every ordering equally likely); each is accepted or rejected on the spot, a rejected candidate does not return, and the aim is to maximize the probability of accepting the best of all $T$. The optimal rule rejects the first $t^* - 1$ candidates, where $t^* = \\min\\{t : \\sum_{s=t}^{T-1}\\tfrac1s \\le 1\\}$. (1) Find $t^*$ for $T = 4$. (2) Compute the probability of success for $T = 4$ by the recursion. (3) Find $t^*$ for $T = 7$. (4) Compare the success probabilities with picking a candidate blindly.",
+      "pts": [
+        "(1) $t = 2$: $\\tfrac12 + \\tfrac13 = 0.83 \\le 1$; $t = 1$: $1.83 > 1$. So $t^* = 2$: reject the first, then accept the first one better than all before.",
+        "(2) $V_3(\\neg 1) = \\tfrac14$, $V_3(1) = \\tfrac34$; $V_2(\\neg 1) = \\tfrac13 \\cdot \\tfrac34 + \\tfrac23 \\cdot \\tfrac14 = \\tfrac{5}{12}$, $V_2(1) = \\max\\{\\tfrac12, \\tfrac{5}{12}\\} = \\tfrac12$; $V_1(\\neg 1) = \\tfrac12 \\cdot \\tfrac12 + \\tfrac12 \\cdot \\tfrac{5}{12} = \\tfrac{11}{24}$, so the success probability is $V_1(1) = \\max\\{\\tfrac14, \\tfrac{11}{24}\\} = \\tfrac{11}{24} \\approx 0.458$.",
+        "(3) $\\tfrac13 + \\tfrac14 + \\tfrac15 + \\tfrac16 = 0.95 \\le 1$ and adding $\\tfrac12$ exceeds 1: $t^* = 3$.",
+        "(4) $T = 4$: $0.458$ against $\\tfrac14$. $T = 7$: $\\tfrac{29}{70} \\approx 0.41$ against $\\tfrac17 \\approx 0.14$."
+      ],
+      "pit": "KE's table for $T = 7$ labels the sixth column “7”.",
+      "src": "KE p75",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-50",
+      "g": "Overview",
+      "k": "Four problems",
+      "q": "For each stopping problem give the value of continuing, whether it depends on the current state, the rule, and the behaviour of the threshold near the deadline: (1) asset selling; (2) purchasing with i.i.d. prices; (3) purchasing with correlated prices; (4) the marriage problem.",
+      "pts": [
+        "(1) $\\tfrac{E\\,J_{t+1}(Z)}{1 + r}$; no; sell above $\\alpha_t$; the threshold falls.",
+        "(2) $E\\,V_{t+1}(Z)$; no; buy below $\\alpha_t$; the threshold rises.",
+        "(3) $E\\,V_{t+1}(\\lambda x + Z)$; yes; buy below $\\alpha_t$, which needs concavity; the threshold rises.",
+        "(4) $V_t(\\neg 1)$; no; accept a relatively best candidate once $t \\ge t^*$: a threshold in time."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-51",
+      "g": "Overview",
+      "k": "Which step",
+      "q": "Which step answers each request in a stopping problem? (1) “Formulate the problem.” (2) “Show that the optimal policy is a threshold policy.” (3) “Find a recursion for the thresholds.” (4) “How does the threshold move as the deadline approaches?” (5) “What happens for a long horizon?”",
+      "pts": [
+        "(1) State = the information needed to decide; reward or cost of stopping now; next state when continuing; forced action at $T$. Then $V_T = G$ and $V_t(x) = \\max\\{\\text{stop now}, E\\,V_{t+1}(\\text{next state})\\}$ in money of one date.",
+        "(2) If the value of continuing contains no $x$, it is the threshold. If it contains $x$, prove the shape of $V_t$ (monotone, concave or convex) and a single crossing.",
+        "(3) Insert $V_{t+1} = \\max\\{x, \\alpha_{t+1}\\}$ (or min) and split the expectation at the threshold; start from the forced action at $T$.",
+        "(4) Prove by induction how $V_t$ and $V_{t+1}$ compare (replace by a smaller or larger function, then use identical distributions).",
+        "(5) Solve $\\bar\\alpha = F(\\bar\\alpha)$ and take the root inside the range of the offers; without a cost of waiting the threshold goes to the best possible price."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-07-52",
+      "g": "Overview",
+      "k": "Notation traps",
+      "q": "What does each symbol mean in this topic, and what is it easily confused with? (1) $\\tau$. (2) $V_t$ and $J_t$. (3) $\\alpha_t$. (4) $Z_t$. (5) The letters used by KE.",
+      "pts": [
+        "(1) The termination state, not a time. KE also has $\\sigma$ (the action “stop”) and $S$ (the stopping time).",
+        "(2) Slides: $V_t$ in money of time $T$, $J_t = V_t/(1 + r)^{T-t}$ in money of time $t$. KE has only $J_t$, equal to the slides' $V_t$.",
+        "(3) A threshold: stop above it when selling, below it when buying. Elsewhere $\\alpha$ was a constant in a value function.",
+        "(4) An offer in asset selling, a price in purchasing, a shock added to the price $X_t$ with correlated prices.",
+        "(5) $W_t$ for offers and prices, density $\\rho$, stopping cost $h_t$, continuation cost $K_t$, threshold map $\\mathcal{F}$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}

@@ -61,6 +61,10 @@
           "file": "mdp/ch06-portfolio.json"
         },
         {
+          "title": "Optimal stopping",
+          "file": "mdp/ch07-optimal-stopping.json"
+        },
+        {
           "title": "Core concepts",
           "file": "mdp/core-concepts.json"
         }
