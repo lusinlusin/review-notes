@@ -2,22 +2,79 @@
   "title": "Statistics & inference",
   "notes": [
     {
+      "h": "Big picture",
+      "items": [
+        {
+          "t": "What this topic is about",
+          "d": [
+            "Every question here takes apart one sentence: \"this signal (or coefficient) is statistically significant\". The sentence can fail at several layers, and the sections follow those layers in order:",
+            "$$\\begin{array}{ll} \\textsf{Section} & \\textsf{Question it answers} \\\\ \\hline \\textsf{Testing basics} & \\textsf{what errors can one test make; is the effect worth anything} \\\\ \\textsf{Multiple testing} & \\textsf{after many tests, how much is \"significant\" worth} \\\\ \\textsf{OLS assumptions} & \\textsf{is the t-stat's standard error computed correctly} \\\\ \\textsf{Regression pitfalls} & \\textsf{does the coefficient measure what you think} \\\\ \\textsf{Fit \\& regularization} & \\textsf{does a good fit mean good prediction} \\\\ \\textsf{Asset pricing} & \\textsf{is a slope a sensitivity or a premium; its SE} \\\\ \\textsf{Forecast comparison} & \\textsf{is one model really better than another} \\end{array}$$",
+            "Each item below follows the same pattern: what it answers → definition → symbols → a worked example with numbers → key points."
+          ],
+          "cards": []
+        },
+        {
+          "t": "Three running examples",
+          "d": [
+            "The questions live in three different settings, so three examples are used. Each item says which one it uses.",
+            "Signal A (one return series, used for testing): a long-short signal with independent daily returns, true mean $\\mu=3$ bp $=0.0003$, sd $\\sigma=1\\%$; daily turnover 10%, one-way cost 5 bp.",
+            "Regression P (time series, used for fit and standard errors): a standardized signal $x_t$ (mean 0, sd 1) predicts next month's market return: $$r_{t+1}=0.5\\%+\\beta x_t+u_{t+1},\\quad \\beta=0.5\\%,\\quad \\mathrm{sd}(r_{t+1})=5\\%$$ Population $R^2=\\beta^2/\\mathrm{Var}(r)=0.005^2/0.05^2=1\\%$: real but weak. 20 years, $n=240$ months.",
+            "Research R (cross-section, used for regressions on stocks): $N=500$ stocks, $T=120$ months. New signal $S$, existing factor momentum $M$, target next-month return $Y$. Cross-sectional correlations (think ICs): $\\rho_{SY}=0.04$, $\\rho_{SM}=0.6$, $\\rho_{MY}=0.05$."
+          ],
+          "cards": []
+        }
+      ]
+    },
+    {
       "h": "Testing basics",
       "items": [
         {
-          "t": "Errors and power",
+          "t": "Hypothesis test, two errors",
           "d": [
-            "Type I: reject true $H_0$ (≤ α). Type II: keep false $H_0$ (β). Power $1-\\beta\\approx\\Phi(\\delta\\sqrt n/\\sigma-z_{1-\\alpha/2})$.",
-            "80% power at 5%: $n\\approx(2.8\\sigma/\\delta)^2$. Annual SR 0.5 → ≈31 years."
+            "Answers: when testing whether A's mean is 0, what can go wrong?",
+            "$$\\begin{array}{lll} \\textsf{Term} & \\textsf{Meaning} & \\textsf{Symbols} \\\\ \\hline H_0 \\textsf{ vs } H_1 & \\theta\\in\\Theta_0 \\textsf{ vs } \\theta\\in\\Theta_1 & \\theta = \\textsf{unknown parameter} \\\\ \\textsf{Rejection region} & \\textsf{reject } H_0 \\textsf{ if } T(X)>c & T = \\textsf{statistic},\\ c = \\textsf{critical value} \\\\ \\textsf{Type I error} & H_0 \\textsf{ true, rejected} & \\textsf{false positive} \\\\ \\textsf{Type II error} & H_0 \\textsf{ false, kept} & \\textsf{false negative} \\end{array}$$",
+            "Power function: $\\beta(\\theta)=P_\\theta(X\\in R)$, the probability of rejecting when the true parameter is $\\theta$. On $\\Theta_0$ it is the Type I error probability; on $\\Theta_1$ it is the power. Size $=\\sup_{\\theta\\in\\Theta_0}\\beta(\\theta)$; a level-$\\alpha$ test has size $\\le\\alpha$.",
+            "Key point: fixing $\\alpha$ controls only Type I error. A larger rejection region lowers Type II error and raises Type I error."
           ],
           "cards": [
             "BAG-B-01"
           ]
         },
         {
-          "t": "Statistical vs economic significance",
+          "t": "Power and sample size",
           "d": [
-            "$t$ grows like $\\sqrt n$; size decides whether costs are covered. Daily cost ≈ turnover × 2 sides × cost per side."
+            "Answers: with 5 years of A's data, what is the chance of detecting it?",
+            "Two-sided z-test of $H_0:\\mu=0$ with true mean $\\delta$, noise $\\sigma$, $n$ observations: $$\\text{power}=\\Phi\\Big(\\frac{\\delta\\sqrt n}{\\sigma}-z_{1-\\alpha/2}\\Big)+\\Phi\\Big(-\\frac{\\delta\\sqrt n}{\\sigma}-z_{1-\\alpha/2}\\Big)$$ The second term is tiny. For 80% power at 5%: $$n\\approx\\Big(\\frac{(z_{0.975}+z_{0.8})\\,\\sigma}{\\delta}\\Big)^2=\\Big(\\frac{2.80\\,\\sigma}{\\delta}\\Big)^2$$",
+            "Symbols: $\\delta/\\sigma$ is the per-period Sharpe ratio; $z_{1-\\alpha/2}=1.96$ at 5%; $\\Phi$ the standard normal CDF.",
+            "Example (A): $\\delta/\\sigma=0.03$ a day, annual Sharpe $0.03\\sqrt{252}=0.48$.",
+            "$$\\begin{array}{lccc} \\textsf{Data} & \\textsf{n} & \\delta\\sqrt n/\\sigma & \\textsf{Power} \\\\ \\hline 1\\textsf{ year} & \\textsf{252} & \\textsf{0.48} & \\textsf{7.6\\%} \\\\ 5\\textsf{ years} & \\textsf{1260} & \\textsf{1.06} & \\textsf{18.7\\%} \\\\ 10\\textsf{ years} & \\textsf{2520} & \\textsf{1.51} & \\textsf{32.5\\%} \\\\ 20\\textsf{ years} & \\textsf{5040} & \\textsf{2.13} & \\textsf{56.7\\%} \\\\ 34.6\\textsf{ years} & \\textsf{8721} & \\textsf{2.80} & \\textsf{80\\%} \\end{array}$$",
+            "Relationship: power depends on the data only through $\\delta\\sqrt n/\\sigma$. Halve the Sharpe and you need four times the years. Most single signals are underpowered."
+          ],
+          "cards": [
+            "BAG-B-01"
+          ]
+        },
+        {
+          "t": "p-value under the null",
+          "d": [
+            "Answers: what does a p-value look like when there is nothing there? (Bridge to multiple testing.)",
+            "Definition: p-value $=P_{H_0}(|T|\\ge|t_{\\text{obs}}|)$, the probability, assuming $H_0$, of a statistic at least as extreme as the one observed. It is not the probability that $H_0$ is true.",
+            "Theorem: for a continuous statistic, under $H_0$ the p-value is Uniform(0,1). So \"reject if $p<\\alpha$\" has Type I error exactly $\\alpha$.",
+            "Key point: a histogram of many p-values is flat if all are noise; real effects pile up near 0."
+          ],
+          "cards": [
+            "BAG-B-03"
+          ]
+        },
+        {
+          "t": "Statistical vs economic",
+          "d": [
+            "Answers: the t-stat is fine. Is the effect big enough to trade?",
+            "Definition (Wooldridge): statistical significance is decided by $t=\\hat\\beta/\\mathrm{se}(\\hat\\beta)$; economic significance by the size and sign of $\\hat\\beta$. A big $t$ can come from a tiny $\\mathrm{se}$ (large sample), not a big effect.",
+            "Book example: 401(k) participation on firm size, coefficient $-0.00013$, $t=-3.25$. Yet 10,000 more employees lowers participation by only $10000\\times0.00013=1.3$ points.",
+            "Example (A vs B): daily cost $=2\\times\\text{turnover}\\times\\text{one-way cost}$.",
+            "$$\\begin{array}{lcccccc} \\textsf{Signal} & \\textsf{gross/day} & \\textsf{vol} & \\textsf{turnover} & \\textsf{cost/day} & \\textsf{net/yr} & \\textsf{20-yr gross } t \\\\ \\hline \\textsf{A} & 3\\textsf{ bp} & \\textsf{1\\%} & \\textsf{10\\%} & 1\\textsf{ bp} & \\textsf{5.04\\%} & \\textsf{2.13} \\\\ \\textsf{B} & 1\\textsf{ bp} & \\textsf{0.2\\%} & \\textsf{20\\%} & 2\\textsf{ bp} & \\textsf{-2.52\\%} & \\textsf{3.55} \\end{array}$$",
+            "Relationship: B is more significant and loses money; A is less significant and earns a net Sharpe of 0.32. You need both: \"is it zero?\" and \"is it worth it after costs?\"."
           ],
           "cards": [
             "BAG-B-02"
@@ -29,9 +86,14 @@
       "h": "Multiple testing",
       "items": [
         {
-          "t": "FWER and Bonferroni",
+          "t": "Outcome table and FWER",
           "d": [
-            "FWER $=P(V\\ge1)$. Bonferroni: reject if $p_i\\le\\alpha/m$. For $m$ independent nulls, $P(\\text{some }p\\le\\alpha)=1-(1-\\alpha)^m$."
+            "Answers: one test has Type I error $\\alpha$. With 1,000 tests, what does \"error\" even mean?",
+            "$$\\begin{array}{lccc}  & H_0\\textsf{ true} & H_0\\textsf{ false} & \\textsf{Total} \\\\ \\hline \\textsf{Reject} & \\textsf{V} & \\textsf{S} & \\textsf{R} \\\\ \\textsf{Keep} & \\textsf{U} & \\textsf{W} & \\textsf{m-R} \\\\ \\hline \\textsf{Total} & m_0 & m-m_0 & \\textsf{m} \\end{array}$$",
+            "Symbols: $V$ false positives, $S$ true positives, $W$ false negatives. All are random; only $R$ is observed.",
+            "FWER $=P(V\\ge1)$. For $m$ independent true nulls each tested at $\\alpha$: $\\mathrm{FWER}=1-(1-\\alpha)^m$.",
+            "$$\\begin{array}{lcccc} \\textsf{m} & \\textsf{1} & \\textsf{5} & \\textsf{100} & \\textsf{1000} \\\\ \\hline \\alpha=0.05 & \\textsf{0.05} & \\textsf{0.226} & \\textsf{0.994} & \\approx1 \\\\ \\alpha=0.01 & \\textsf{0.01} & \\textsf{0.049} & \\textsf{0.634} & \\approx1 \\end{array}$$",
+            "Book example: a broker sends 1,024 clients every possible 10-day up/down call; one client sees 10 correct calls by construction."
           ],
           "cards": [
             "BAG-B-03",
@@ -39,18 +101,42 @@
           ]
         },
         {
-          "t": "FDR and Benjamini-Hochberg",
+          "t": "Bonferroni and Holm",
           "d": [
-            "FDR $=E[V/\\max(R,1)]$. BH: largest $k$ with $p_{(k)}\\le kq/m$; reject $1..k$."
+            "Bonferroni: reject only if $p_j<\\alpha/m$. Proof by the union bound, no independence needed: $$\\mathrm{FWER}=P\\Big(\\bigcup_j A_j\\Big)\\le\\sum_j P(A_j)\\le m\\cdot\\frac{\\alpha}{m}=\\alpha$$ $A_j$ = \"null $j$ is true but rejected\".",
+            "Holm (step-down): sort p-values; compare them in turn with $\\alpha/m,\\ \\alpha/(m-1),\\dots$; stop at the first failure. Also controls FWER, never rejects fewer than Bonferroni.",
+            "Book example (5 fund managers, p-values 0.006, 0.918, 0.012, 0.601, 0.756): uncorrected rejects One and Three; Bonferroni (0.01) rejects only One; Holm: $0.006<0.01$, $0.012<0.0125$, $0.601>0.0167$, rejects One and Three.",
+            "Key point: Bonferroni is valid under any dependence but conservative, paid for in Type II errors."
           ],
           "cards": [
+            "BAG-B-04",
+            "BAG-B-05"
+          ]
+        },
+        {
+          "t": "FDR and Benjamini-Hochberg",
+          "d": [
+            "Answers: if a few false positives are acceptable, how do you get more discoveries?",
+            "FDP $=V/R$ (0 if $R=0$), the false share among this sample's rejections; FDR $=E(\\text{FDP})$.",
+            "BH at level $q$: sort $p_{(1)}\\le\\dots\\le p_{(m)}$; $L=\\max\\{j:\\ p_{(j)}<qj/m\\}$; reject all with $p\\le p_{(L)}$. Then $\\mathrm{FDR}\\le\\frac{m_0}{m}q\\le q$ (independent or mildly dependent p-values).",
+            "Example (10 tests, $q=0.05$):",
+            "$$\\begin{array}{lcccccc} \\textsf{j} & \\textsf{1} & \\textsf{2} & \\textsf{3} & \\textsf{4} & \\textsf{5} & \\textsf{6} \\\\ \\hline p_{(j)} & \\textsf{0.00017} & \\textsf{0.00448} & \\textsf{0.00671} & \\textsf{0.00907} & \\textsf{0.01220} & \\textsf{0.33626} \\\\ \\textsf{BH line } 0.05j/10 & \\textsf{0.005} & \\textsf{0.010} & \\textsf{0.015} & \\textsf{0.020} & \\textsf{0.025} & \\textsf{0.030} \\end{array}$$ Bonferroni (0.005) rejects 2; BH rejects 5.",
+            "Example (A, simulated): 900 noise signals + 100 like A. With 5 years, uncorrected FDR is 0.71 and BH finds 0.16 of the 100 real ones; with 20 years BH finds 9.1. The bottleneck is power, not the correction.",
+            "Key point: there is no standard FDR level like 5%: smaller when follow-up is expensive, larger when cheap."
+          ],
+          "cards": [
+            "BAG-B-03",
             "BAG-B-04"
           ]
         },
         {
-          "t": "Reading a t-stat",
+          "t": "t = 3 after a search",
           "d": [
-            "$|t|=3$: $p\\approx0.0027$ for one test. 100 tries: 24% chance of a false $|t|\\ge3$; Bonferroni bar ≈3.5."
+            "Answers: R's new signal shows $t=3$. Does that survive the number of tries?",
+            "One pre-specified test: $p=2[1-\\Phi(3)]=0.0027$. With $m$ independent null tries: $P(\\text{some }|t|\\ge3)=1-(1-0.0027)^m$.",
+            "$$\\begin{array}{lccccc} \\textsf{m} & \\textsf{1} & \\textsf{10} & \\textsf{50} & \\textsf{100} & \\textsf{200} \\\\ \\hline P(\\textsf{some }|t|\\ge3) & \\textsf{0.27\\%} & \\textsf{2.7\\%} & \\textsf{12.6\\%} & \\textsf{23.7\\%} & \\textsf{41.8\\%} \\\\ \\textsf{Bonferroni bar} & \\textsf{1.96} & \\textsf{2.81} & \\textsf{3.29} & \\textsf{3.48} & \\textsf{3.66} \\end{array}$$",
+            "Bar: $t^*=\\Phi^{-1}(1-\\alpha/(2M))$. Using about 316 published factors, the bar is 3.78. The hard part is $M$: variants others tried and reports you read also count.",
+            "Checklist before believing it: number of variants; timestamps, restatements, survivorship; stability across subsamples, sectors, small parameter changes; what is left after neutralizing size, industry, momentum; costs and capacity; overlapping returns. Then replicate on untouched data."
           ],
           "cards": [
             "BAG-B-05"
@@ -62,10 +148,26 @@
       "h": "OLS assumptions",
       "items": [
         {
-          "t": "Which assumption does what",
+          "t": "Assumptions for unbiasedness",
           "d": [
-            "Unbiased: linearity, random sampling, no perfect collinearity, $E(u\\mid X)=0$.",
-            "Usual variance / BLUE: + homoskedastic, uncorrelated errors. Exact $t$: + normal errors (dropped in large samples)."
+            "Answers: the t-stats above assumed the regression is right. Which assumptions give an unbiased coefficient?",
+            "MLR.1 linear in parameters: $y=\\beta_0+\\beta_1x_1+\\dots+\\beta_kx_k+u$. MLR.2 random sampling. MLR.3 no perfect collinearity (no exact linear relation among regressors, none constant). MLR.4 zero conditional mean: $E(u\\mid x_1,\\dots,x_k)=0$.",
+            "Symbols: $y$ e.g. next month's return; $x_j$ e.g. signal, size; $\\beta_j$ unknown constants; $u$ everything not in the model (random).",
+            "Theorem 3.1: under MLR.1–4, $E(\\hat\\beta_j)=\\beta_j$. Matrix proof: $$\\hat\\beta=(X'X)^{-1}X'y=\\beta+(X'X)^{-1}X'u,\\qquad E(\\hat\\beta\\mid X)=\\beta$$ using $E(u\\mid X)=0$ for the whole matrix $X$ (strict exogeneity in time series).",
+            "Key points: MLR.3 allows correlated regressors, only not perfectly. MLR.4 is the one that breaks (omitted variables, measurement error, simultaneity, look-ahead) and can never be checked from the data. Unbiasedness is a property of the procedure, not of one estimate."
+          ],
+          "cards": [
+            "BAG-B-06"
+          ]
+        },
+        {
+          "t": "Variance, t, large samples",
+          "d": [
+            "MLR.5 homoskedasticity: $\\mathrm{Var}(u\\mid x)=\\sigma^2$. MLR.1–5 = Gauss-Markov ⇒ OLS is BLUE and (Theorem 3.2) $$\\mathrm{Var}(\\hat\\beta_j)=\\frac{\\sigma^2}{\\mathrm{SST}_j(1-R_j^2)},\\qquad \\mathrm{SST}_j=\\sum_i(x_{ij}-\\bar x_j)^2$$ $R_j^2$ = $R^2$ from regressing $x_j$ on the other regressors.",
+            "MLR.6 normality: $u\\sim N(0,\\sigma^2)$ independent of $x$. MLR.1–6 = classical linear model ⇒ $(\\hat\\beta_j-\\beta_j)/\\mathrm{se}(\\hat\\beta_j)\\sim t_{n-k-1}$ exactly.",
+            "Large samples (Theorem 5.2): MLR.1–5 alone give an asymptotically normal $t$; normality is not needed. Homoskedasticity still is.",
+            "$$\\begin{array}{ll} \\textsf{Assumptions} & \\textsf{What you get} \\\\ \\hline \\textsf{MLR.1--4} & \\textsf{unbiased } \\hat\\beta \\\\ \\textsf{+ MLR.5} & \\textsf{usual SE formula, BLUE} \\\\ \\textsf{+ MLR.6} & \\textsf{exact } t \\textsf{ in small samples} \\\\ \\textsf{MLR.1--5, large } n & \\textsf{approx. normal } t \\end{array}$$",
+            "Example (R-like): 3,000 stocks, $x_1$ variance 1, correlation 0.6 with $x_2$ ($R_1^2=0.36$), error sd 10%: $\\mathrm{sd}(\\hat\\beta_1)=0.10/\\sqrt{3000\\times0.64}=0.228\\%$."
           ],
           "cards": [
             "BAG-B-06"
@@ -74,16 +176,28 @@
         {
           "t": "Heteroskedasticity",
           "d": [
-            "$\\mathrm{Var}(\\hat\\beta_1)=\\sum(x_i-\\bar x)^2\\sigma_i^2/SST_x^2$. Fix: White SE, or WLS."
+            "Answers: what if error variance differs across observations (small caps noisier than large caps)?",
+            "Definition: $\\mathrm{Var}(u_i\\mid x_i)=\\sigma_i^2$ varies with $i$.",
+            "Unchanged: unbiasedness, consistency, $R^2$. Changed: usual SEs and $t$, $F$ tests are wrong, and large samples do not fix it; OLS is no longer BLUE.",
+            "True variance, simple regression: $$\\mathrm{Var}(\\hat\\beta_1)=\\frac{\\sum_i(x_i-\\bar x)^2\\sigma_i^2}{\\mathrm{SST}_x^2}$$ White's estimator plugs in $\\hat u_i^2$ for $\\sigma_i^2$. Points far from $\\bar x$ get more weight.",
+            "Hand example: $x=(-2,-1,0,1,2)$, $y=(-1.6,-0.4,0.1,0.6,0.8)$: $\\hat\\beta_1=0.58$, residuals $(-0.34,0.28,0.20,0.12,-0.26)$. Usual SE $=\\sqrt{(0.316/3)/10}=0.103$; White SE $=\\sqrt{0.8256/100}=0.091$.",
+            "Example (P cross-section, simulated): 500 stocks, $\\mathrm{Var}(u\\mid x)\\propto0.2+x^2$, true $\\beta=0$. Usual SE is too small by $\\sqrt{E[x^2(0.2+x^2)]/E(0.2+x^2)}=\\sqrt{3.2/1.2}=1.63$×; a nominal 5% test rejects 22.6% of the time with usual SEs, 5.5% with White.",
+            "WLS: if $\\mathrm{Var}(u\\mid x)=\\sigma^2h(x)$ with $h$ known, divide the equation by $\\sqrt{h_i}$ and run OLS (more efficient). Robust SEs need no $h$."
           ],
           "cards": [
             "BAG-B-07"
           ]
         },
         {
-          "t": "Serial correlation",
+          "t": "Serial correlation, Newey-West",
           "d": [
-            "Unbiased under strict exogeneity; usual SE omits $\\sum\\rho^jx_tx_{t+j}$ terms. Fix: Newey-West, lag ≥ overlap; non-overlapping samples."
+            "Answers: in time series, errors in different periods are correlated. What happens to the SE?",
+            "AR(1) errors $u_t=\\rho u_{t-1}+e_t$, $\\bar x=0$: $$\\mathrm{Var}(\\hat\\beta_1)=\\frac{\\sigma^2}{\\mathrm{SST}_x}+\\frac{2\\sigma^2}{\\mathrm{SST}_x^2}\\sum_{t=1}^{n-1}\\sum_{j=1}^{n-t}\\rho^jx_tx_{t+j}$$ The usual formula keeps only the first term. With strict exogeneity $\\hat\\beta$ stays unbiased.",
+            "When it matters: both $x$ and $u$ must be autocorrelated. Long-sample variance inflation $\\approx(1+\\rho_x\\rho_u)/(1-\\rho_x\\rho_u)$:",
+            "$$\\begin{array}{lcc} (\\rho_x,\\rho_u) & \\textsf{Var inflation} & \\textsf{SE inflation} \\\\ \\hline (0.95,\\,0) & \\textsf{1.00} & \\textsf{1.00} \\\\ (0.5,\\,0.5) & \\textsf{1.67} & \\textsf{1.29} \\\\ (0.9,\\,0.9) & \\textsf{9.53} & \\textsf{3.09} \\end{array}$$",
+            "Newey-West: with $\\hat a_t=\\hat r_t\\hat u_t$ ($\\hat r_t$ = residual of $x_1$ on the other regressors), $$\\hat\\nu=\\sum_t\\hat a_t^2+2\\sum_{h=1}^{g}\\Big(1-\\frac{h}{g+1}\\Big)\\sum_{t>h}\\hat a_t\\hat a_{t-h}$$ Bartlett weights keep $\\hat\\nu\\ge0$; $g$ = lags allowed (rule of thumb $\\lfloor4(n/100)^{2/9}\\rfloor$; at least $h-1$ for $h$-period overlapping returns).",
+            "Example (P with 12-month overlapping returns, persistent $x$, true $\\beta=0$, simulated): false rejection at 5% is 54.6% with usual SEs, 56.3% White, 16.8% Newey-West $g=12$, 4.8% using only 20 non-overlapping years.",
+            "Key point: NW helps but still over-rejects with persistent regressors and $n$ around 100–240. The non-overlapping test has the right size but low power."
           ],
           "cards": [
             "BAG-B-08"
@@ -95,27 +209,42 @@
       "h": "Regression pitfalls",
       "items": [
         {
-          "t": "Omitted variables",
+          "t": "Omitted variable bias",
           "d": [
-            "Short-regression slope $\\to\\beta_1+\\beta_2\\,\\mathrm{Cov}(x_1,x_2)/\\mathrm{Var}(x_1)$; needs both $\\beta_2\\ne0$ and correlation."
+            "Answers: MLR.4 is the assumption that governs bias. What is the commonest way it breaks, and in which direction?",
+            "True model $y=\\beta_0+\\beta_1x_1+\\beta_2x_2+u$; you regress $y$ on $x_1$ only: $$E(\\tilde\\beta_1)=\\beta_1+\\beta_2\\tilde\\delta_1,\\qquad \\tilde\\delta_1=\\frac{\\widehat{\\mathrm{Cov}}(x_1,x_2)}{\\widehat{\\mathrm{Var}}(x_1)}$$",
+            "Symbols: $\\tilde\\beta_1$ short-regression slope; $\\beta_2$ true effect of the omitted $x_2$; $\\tilde\\delta_1$ slope of $x_2$ on $x_1$.",
+            "$$\\begin{array}{lcc}  & \\mathrm{Corr}(x_1,x_2)>0 & \\mathrm{Corr}(x_1,x_2)<0 \\\\ \\hline \\beta_2>0 & \\textsf{upward} & \\textsf{downward} \\\\ \\beta_2<0 & \\textsf{downward} & \\textsf{upward} \\end{array}$$",
+            "Example (simulated): $x_1$ = low analyst coverage, $x_2$ = smallness, correlation 0.6; truth $\\beta_1=0$, $\\beta_2=0.3\\%$/month. Short regression gives $0.6\\times0.3\\%=0.18\\%$/month; averaged over 240 months its $t\\approx15$. The more significant, the easier it is to mistake bias for alpha.",
+            "Over-controlling: do not control for the channel the signal works through. If the signal acts only via liquidity, controlling for liquidity removes the effect (0.205% → 0.012% in simulation). Confounders: control. Mediators: don't. Telling them apart needs economics, not statistics."
           ],
           "cards": [
             "BAG-B-09"
           ]
         },
         {
-          "t": "Partial correlation",
+          "t": "Frisch-Waugh, partial correlation",
           "d": [
-            "Correlate residuals after regressing both on controls. One control: $\\frac{\\rho_{xy}-\\rho_{xz}\\rho_{yz}}{\\sqrt{(1-\\rho_{xz}^2)(1-\\rho_{yz}^2)}}$."
+            "Answers: $S$ has IC 0.04. How much of it is borrowed from momentum?",
+            "Frisch-Waugh: in $y=\\beta_0+\\beta_1x_1+\\beta_2x_2+u$, $$\\hat\\beta_1=\\frac{\\sum_i\\hat r_{i1}y_i}{\\sum_i\\hat r_{i1}^2}$$ $\\hat r_{i1}$ = residual of $x_1$ regressed on $x_2$. \"Controlling for $x_2$\" means removing from $x_1$ the part $x_2$ explains.",
+            "Simple vs multiple slope: $\\tilde\\beta_1=\\hat\\beta_1+\\hat\\beta_2\\tilde\\delta_1$. Example (R, standardized): $0.04=0.0156+0.0406\\times0.6$: 0.0244 of the raw IC is momentum's effect times the overlap.",
+            "Partial correlation: correlate the residuals of both $X$ and $Y$ on $Z$. One control: $$\\rho_{XY\\cdot Z}=\\frac{\\rho_{XY}-\\rho_{XZ}\\rho_{YZ}}{\\sqrt{(1-\\rho_{XZ}^2)(1-\\rho_{YZ}^2)}}$$",
+            "$$\\begin{array}{lc} \\textsf{Quantity (R)} & \\textsf{Value} \\\\ \\hline \\rho_{SY} \\textsf{ (raw IC)} & \\textsf{0.0400} \\\\ \\textsf{via momentum } \\rho_{SM}\\rho_{MY} & \\textsf{0.0300} \\\\ \\textsf{numerator} & \\textsf{0.0100} \\\\ \\textsf{denominator } \\sqrt{0.64\\times0.9975} & \\textsf{0.7990} \\\\ \\rho_{SY\\cdot M} & \\textsf{0.0125} \\end{array}$$",
+            "Key points: same numerator as the multiple-regression coefficient, so the two tests agree. Removes only linear effects of the controls included; says nothing about causality or costs. \"Neutralize, then compute IC\" is a partial correlation."
           ],
           "cards": [
             "BAG-B-10"
           ]
         },
         {
-          "t": "Multicollinearity",
+          "t": "Multicollinearity and VIF",
           "d": [
-            "$\\mathrm{Var}(\\hat\\beta_j)=\\sigma^2/[SST_j(1-R_j^2)]$, VIF $=1/(1-R_j^2)$. Sums of coefficients are well identified; splits are not."
+            "Answers: why is a coefficient imprecise when regressors are correlated, while predictions are fine?",
+            "$$\\mathrm{Var}(\\hat\\beta_j)=\\frac{\\sigma^2}{\\mathrm{SST}_j}\\cdot\\mathrm{VIF}_j,\\qquad \\mathrm{VIF}_j=\\frac{1}{1-R_j^2}$$ Three drivers: more noise $\\sigma^2$, less variation $\\mathrm{SST}_j$, more overlap $R_j^2$.",
+            "$$\\begin{array}{lccccc} R_j^2 & \\textsf{0} & \\textsf{0.81} & \\textsf{0.90} & \\textsf{0.95} & \\textsf{0.98} \\\\ \\hline \\mathrm{VIF} & \\textsf{1} & \\textsf{5.26} & \\textsf{10} & \\textsf{20} & \\textsf{50} \\end{array}$$ R: $S$ and $M$ correlate 0.6, VIF 1.56, SE ×1.25.",
+            "Why prediction survives (simulated, correlation 0.95, $n=100$, $\\beta_1=\\beta_2=1$): the RSS surface is a long valley along $\\beta_1-\\beta_2$.",
+            "$$\\begin{array}{lc} \\textsf{Quantity} & \\textsf{sd} \\\\ \\hline \\hat\\beta_1 & \\textsf{0.329} \\\\ \\hat\\beta_1+\\hat\\beta_2 & \\textsf{0.102} \\\\ \\textsf{prediction, same structure} & \\textsf{0.177} \\\\ \\textsf{prediction at } x=(1,-1) & \\textsf{0.657} \\end{array}$$",
+            "Key points: high collinearity violates no assumption and OLS stays unbiased; VIF cut-offs (5, 10) are arbitrary. Danger comes when new data move along the valley (features decouple). Fixes: drop one, average the group, ridge, PCA."
           ],
           "cards": [
             "BAG-B-11"
@@ -127,19 +256,52 @@
       "h": "Fit & regularization",
       "items": [
         {
-          "t": "R² and OOS R²",
+          "t": "R² and adjusted R²",
           "d": [
-            "Noise: $E[R^2]\\approx k/(n-1)$. $R^2_{OOS}=1-\\sum(r-\\hat r)^2/\\sum(r-\\bar r)^2$ against the historical mean.",
-            "One signal: $R^2=IC^2$; $IR\\approx IC\\sqrt{BR}$."
+            "Answers: P's in-sample $R^2$ goes from 1% to 17% after adding 19 features. Which model is better?",
+            "$$R^2=1-\\frac{\\mathrm{RSS}}{\\mathrm{TSS}},\\qquad \\bar R^2=1-(1-R^2)\\frac{n-1}{n-k-1}$$ RSS = $\\sum(y_i-\\hat y_i)^2$, TSS = $\\sum(y_i-\\bar y)^2$. $R^2$ never falls when a variable is added (the old solution is still available). $\\bar R^2$ rises iff the new variable has $|t|>1$, and can be negative.",
+            "Under pure noise with $k$ features: $E(R^2)=k/(n-1)$.",
+            "$$\\begin{array}{lccc} \\textsf{n} & \\textsf{k} & E(R^2) & \\textsf{simulated} \\\\ \\hline \\textsf{240} & \\textsf{20} & \\textsf{0.0837} & \\textsf{0.0837} \\\\ \\textsf{120} & \\textsf{20} & \\textsf{0.168} & \\textsf{0.167} \\end{array}$$",
+            "Key point: a low $R^2$ does not mean biased coefficients; a high in-sample $R^2$ does not mean prediction."
           ],
           "cards": [
             "BAG-B-12"
           ]
         },
         {
-          "t": "Ridge, lasso",
+          "t": "Out-of-sample R²",
           "d": [
-            "Penalties $\\lambda\\lVert\\beta\\rVert_2^2$, $\\lambda\\lVert\\beta\\rVert_1$; tune $\\lambda$ with time-ordered CV inside training data."
+            "$$R^2_{\\text{OOS}}=1-\\frac{\\sum_{t\\in\\text{test}}(y_t-\\hat y_t)^2}{\\sum_{t\\in\\text{test}}(y_t-\\bar y_{\\text{train}})^2}$$ $\\hat y_t$ uses only data before the test period; the benchmark is the training mean. Negative = worse than the historical mean.",
+            "Example (P, train 120 months, test 120, simulated):",
+            "$$\\begin{array}{lccc} \\textsf{Model} & \\textsf{in-sample } R^2 & R^2_{\\textsf{OOS}} & \\textsf{share} >0 \\\\ \\hline x_t \\textsf{ only} & \\textsf{1.75\\%} & \\textsf{0.19\\%} & \\textsf{58\\%} \\\\ x_t + 19 \\textsf{ noise} & \\textsf{17.4\\%} & \\textsf{-19.4\\%} & \\textsf{2\\%} \\\\ 20 \\textsf{ noise} & \\textsf{16.7\\%} & \\textsf{-20.5\\%} & \\textsf{1\\%} \\end{array}$$",
+            "Relationship: in-sample and OOS move in opposite directions. Even the true model is negative OOS 42% of the time: with population $R^2=1\\%$ and 120 months, estimation error is as large as the signal."
+          ],
+          "cards": [
+            "BAG-B-12"
+          ]
+        },
+        {
+          "t": "Low R², IC and breadth",
+          "d": [
+            "With one linear predictor $R^2=IC^2$. Fundamental law: $IR\\approx IC\\sqrt{BR}$, $BR$ = independent bets per year.",
+            "$$\\begin{array}{lcccc} \\textsf{Setting} & \\textsf{IC} & R^2 & \\textsf{BR} & \\textsf{IR} \\\\ \\hline \\textsf{market timing, quarterly} & \\textsf{0.25} & \\textsf{6.25\\%} & \\textsf{4} & \\textsf{0.50} \\\\ \\textsf{100 stocks, quarterly} & \\textsf{0.025} & \\textsf{0.06\\%} & \\textsf{400} & \\textsf{0.50} \\\\ \\textsf{P, monthly timing} & \\textsf{0.10} & \\textsf{1\\%} & \\textsf{12} & \\textsf{0.35} \\\\ \\textsf{500 stocks, monthly} & \\textsf{0.05} & \\textsf{0.25\\%} & \\textsf{6000} & \\textsf{3.87} \\end{array}$$",
+            "Key point: stock selection with a tiny $R^2$ can match timing with a large one, through breadth. Bets on the same day share factors, so the last row is an upper bound."
+          ],
+          "cards": [
+            "BAG-B-12"
+          ]
+        },
+        {
+          "t": "Bias-variance, ridge, lasso",
+          "d": [
+            "Answers: where does P's −19% OOS come from, and how to cut it?",
+            "$$E\\big(y_0-\\hat f(x_0)\\big)^2=\\mathrm{Var}\\big(\\hat f(x_0)\\big)+\\mathrm{Bias}\\big(\\hat f(x_0)\\big)^2+\\mathrm{Var}(\\epsilon)$$ Expectation over training sets and the new point. In P, $\\mathrm{Var}(\\epsilon)$ is 99% of the variance; OLS with 20 features on 120 months adds a variance term of about 17–20% of TSS.",
+            "Ridge: $\\min\\ \\mathrm{RSS}+\\lambda\\sum_j\\beta_j^2$, solution $(X'X+\\lambda I)^{-1}X'y$ (features standardized, intercept not penalized). Along an eigen-direction of $X'X/n$ with eigenvalue $d$ it keeps $d/(d+\\lambda)$ of the OLS coefficient. Two features with correlation 0.95: eigenvalues 1.95 (sum) and 0.05 (difference).",
+            "$$\\begin{array}{lccc} \\lambda & \\textsf{kept, sum} & \\textsf{kept, difference} & \\textsf{condition no.} \\\\ \\hline \\textsf{0} & \\textsf{100\\%} & \\textsf{100\\%} & \\textsf{39} \\\\ \\textsf{0.1} & \\textsf{95\\%} & \\textsf{33\\%} & \\textsf{13.7} \\\\ \\textsf{1} & \\textsf{66\\%} & \\textsf{5\\%} & \\textsf{2.8} \\end{array}$$",
+            "Lasso: $\\min\\ \\mathrm{RSS}+\\lambda\\sum_j|\\beta_j|$. Orthonormal case, $\\lambda=0.5$: ridge divides by 1.5, lasso subtracts 0.25 and zeroes the rest.",
+            "$$\\begin{array}{lcc} \\textsf{OLS} & \\textsf{ridge} & \\textsf{lasso} \\\\ \\hline \\textsf{0.8} & \\textsf{0.533} & \\textsf{0.55} \\\\ \\textsf{0.3} & \\textsf{0.200} & \\textsf{0.05} \\\\ \\textsf{-0.2} & \\textsf{-0.133} & \\textsf{0} \\end{array}$$",
+            "Example (P with 20 correlated features, $\\lambda$ by expanding-window CV, simulated): mean $R^2_{\\text{OOS}}$ OLS −18.7%, ridge −0.07%, lasso −0.04%. Regularization removes the variance term; it cannot create signal.",
+            "Leakage: choose $\\lambda$ and standardization inside the training period only; with overlapping labels, purge training points whose label window reaches the validation period, and add an embargo after it."
           ],
           "cards": [
             "BAG-B-13"
@@ -148,7 +310,12 @@
         {
           "t": "Bootstrap",
           "d": [
-            "Plug-in: resample from $\\hat F_n$. Fails with dependence: AR(1) mean variance factor $\\frac{1+\\rho}{1-\\rho}$. Use block bootstrap / resample dates."
+            "Answers: how do you get a standard error for a statistic with no formula (Sharpe ratio), and when does that fail?",
+            "Empirical distribution $\\hat F_n$ puts mass $1/n$ on each data point. Bootstrap: $V_F(T_n)\\approx V_{\\hat F_n}(T_n)\\approx v_{\\text{boot}}$. Draw $n$ points with replacement, recompute $T_n^*$, repeat $B$ times, take the variance.",
+            "Example (P's 240 i.i.d. months): SE of the mean, formula 0.325% vs bootstrap 0.329%; SE of the annual Sharpe, true 0.226 vs bootstrap 0.228. The 95% interval for a Sharpe of 0.35 is about $[-0.09,0.80]$: still contains 0 after 20 years.",
+            "Failure: $\\hat F_n$ assumes i.i.d. With AR(1) returns, $\\rho=0.5$: $$\\mathrm{SD}(\\bar X)\\approx\\frac{\\sigma}{\\sqrt n}\\sqrt{\\frac{1+\\rho}{1-\\rho}}=0.323\\%\\times\\sqrt3=0.559\\%$$",
+            "$$\\begin{array}{lcc} \\textsf{Method (simulated)} & \\textsf{SE} & \\textsf{share of truth} \\\\ \\hline \\textsf{naive (block 1)} & \\textsf{0.320\\%} & \\textsf{57\\%} \\\\ \\textsf{block } 6 & \\textsf{0.483\\%} & \\textsf{86\\%} \\\\ \\textsf{block } 12 & \\textsf{0.507\\%} & \\textsf{91\\%} \\end{array}$$",
+            "Key point: moving-block bootstrap keeps dependence inside blocks (start near $n^{1/3}$); for panels resample whole dates."
           ],
           "cards": [
             "BAG-B-14"
@@ -162,8 +329,12 @@
         {
           "t": "Time series vs cross-section",
           "d": [
-            "TS: $r_{it}=\\alpha_i+\\beta_i^\\top f_t+\\varepsilon_{it}$ (exposures, pricing errors). CS: $r_{it}=\\gamma_{0t}+\\lambda_t^\\top z_{it}+u_{it}$ (premia).",
-            "CS slope = long-short portfolio, weights $\\propto z_i-\\bar z$."
+            "Answers: the same $N\\times T$ panel can be regressed in two directions. What does each slope mean?",
+            "Time series (fix stock $i$): $r_{it}=\\alpha_i+\\beta_if_t+\\epsilon_{it}$. $\\beta_i$ = exposure, $\\alpha_i$ = pricing error when $f_t$ is a traded return.",
+            "Cross-section (fix date $t$): $r_{it}=\\gamma_{0t}+\\lambda_tz_{it}+u_{it}$. $z_{it}$ = characteristic known at the start of the period; $\\lambda_t$ = premium earned per unit of $z$ this period.",
+            "The cross-sectional slope is a portfolio return: $$\\hat\\lambda_t=\\sum_iw_{it}r_{it},\\qquad w_{it}=\\frac{z_{it}-\\bar z_t}{\\sum_j(z_{jt}-\\bar z_t)^2},\\qquad \\sum_iw_{it}=0,\\ \\sum_iw_{it}z_{it}=1$$",
+            "Example: 5 stocks, $z=(-2,-1,0,1,2)$, $r=(-1.0,0.5,0.2,1.5,2.0)\\%$: $w=(-0.2,-0.1,0,0.1,0.2)$, $\\hat\\lambda=\\sum wr=0.70\\%$, intercept 0.64%.",
+            "$$\\begin{array}{lll}  & \\textsf{Time series} & \\textsf{Cross-section} \\\\ \\hline \\textsf{Fixed} & \\textsf{stock } i & \\textsf{date } t \\\\ \\textsf{Slope} & \\beta_i\\textsf{: sensitivity} & \\lambda_t\\textsf{: premium} \\\\ \\textsf{Intercept} & \\alpha_i\\textsf{: pricing error} & \\gamma_{0t}\\textsf{: common part} \\\\ \\textsf{Use} & \\textsf{exposure, attribution} & \\textsf{alpha research} \\end{array}$$"
           ],
           "cards": [
             "BAG-B-15"
@@ -172,7 +343,11 @@
         {
           "t": "Fama-MacBeth",
           "d": [
-            "$\\bar\\lambda=\\frac1T\\sum\\hat\\lambda_t$, SE $=s(\\hat\\lambda_t)/\\sqrt T$; Newey-West if $\\hat\\lambda_t$ autocorrelated; Shanken for estimated betas; cluster for firm effects."
+            "Answers: we have $T$ estimates $\\hat\\lambda_t$. Is the average premium nonzero, and what is its SE?",
+            "$$\\bar\\lambda=\\frac1T\\sum_t\\hat\\lambda_t,\\qquad \\mathrm{se}(\\bar\\lambda)=\\frac{s_\\lambda}{\\sqrt T}$$ Example (R): $\\bar\\lambda=0.40\\%$, $s_\\lambda=1.5\\%$, $T=120$: se 0.137%, $t=2.92$.",
+            "Why not pooled OLS: a common shock hits every stock in a month ($\\lambda_t=\\lambda+\\eta_t$). Pooled OLS treats $N\\times T$ points as independent; FM puts each month's shock into one $\\hat\\lambda_t$, so it enters $s_\\lambda$. Simulated ($N=500$, $T=120$): FM se 0.156%, $t=2.57$; pooled se 0.045%, $t=9.05$. Under a zero premium, pooled rejects 41% at 5%, FM 5.6%.",
+            "Autocorrelated $\\hat\\lambda_t$: $\\mathrm{Var}(\\bar\\lambda)$ gains $2\\sum_k(1-k/T)\\rho_k$. AR(1) with $\\phi=0.3$: inflation $1.3/0.7=1.857$, se $0.137\\%\\to0.187\\%$, $t$ $2.92\\to2.14$. Use Newey-West on $\\hat\\lambda_t-\\bar\\lambda$.",
+            "Errors-in-variables: if $z$ is an estimated beta, $$\\mathrm{plim}\\,\\hat\\lambda=\\lambda\\cdot\\frac{\\sigma^2_{z^*}}{\\sigma^2_{z^*}+\\sigma^2_e}$$ e.g. $0.09/(0.09+0.04)=0.69$: premium understated by 31%. Fixes: portfolio betas, Shanken correction for the SE. Persistent firm effects: cluster by firm."
           ],
           "cards": [
             "BAG-B-16"
@@ -184,12 +359,63 @@
       "h": "Forecast comparison",
       "items": [
         {
-          "t": "Diebold-Mariano",
+          "t": "Loss and OOS error",
           "d": [
-            "$d_t=L(e_{A,t})-L(e_{B,t})$; $DM=\\bar d/\\sqrt{\\widehat{LRV}/T}$ with HAC. Nested models: Clark-West. Many models: MCS, reality check, SPA."
+            "Answers: \"which model is better\" means nothing until the loss is fixed.",
+            "Forecast $f_t$ of $y_{t+1}$ from information $I_t$; error $e_{t+1}=y_{t+1}-f_t$. Under squared loss the best forecast is $E(y_{t+1}\\mid I_t)$.",
+            "$$\\mathrm{RMSE}=\\Big(\\frac1m\\sum e^2\\Big)^{1/2},\\qquad \\mathrm{MAE}=\\frac1m\\sum|e|$$ over $m$ OOS points. In quant work the loss can also be rank IC or portfolio P&L.",
+            "Book example: unemployment, 7 OOS years: AR(1) RMSE 0.962 vs VAR(1) 0.673. Whether that gap is real with $m=7$ is the question DM answers."
           ],
           "cards": [
             "BAG-B-17"
+          ]
+        },
+        {
+          "t": "Diebold-Mariano",
+          "d": [
+            "$$d_t=L(e_{A,t})-L(e_{B,t}),\\qquad DM=\\frac{\\bar d}{\\sqrt{\\widehat{\\mathrm{LRV}}(d)/m}}\\ \\to N(0,1)$$ LRV = long-run variance via Newey-West; $h$-step forecasts make $d_t$ MA($h-1$), so use at least $h-1$ lags.",
+            "Example (simulated): truth $y=0.5x+u$; A forecasts $0.5x$, B $0.3x$; $m=120$.",
+            "$$\\begin{array}{lc} \\textsf{Quantity} & \\textsf{Value} \\\\ \\hline \\textsf{MSE A / MSE B, one sample} & 1.1642 / 1.1627 \\\\ \\textsf{corr of the two squared-error series} & \\textsf{0.97} \\\\ \\textsf{power, paired DM} & \\textsf{21\\%} \\\\ \\textsf{power, unpaired test} & \\textsf{0\\%} \\\\ m \\textsf{ for 80\\% power} & \\approx800 \\end{array}$$",
+            "Relationship: both errors share the same $y_t$, so pairing removes the common part and makes the test far more powerful; even so, small true differences need long samples.",
+            "Key points: nested models → Clark-West; tuning inside the rolling window; many models → model confidence set, reality check / SPA. In practice: NW $t$-test on the difference of two IC series."
+          ],
+          "cards": [
+            "BAG-B-17"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "β in testing",
+          "d": [
+            "Casella-Berger use $\\beta(\\theta)$ for the power function; many texts use $\\beta$ for the Type II error probability (power $=1-\\beta$). Opposite meanings: say which."
+          ],
+          "cards": []
+        },
+        {
+          "t": "SSR, SST, RSS, TSS",
+          "d": [
+            "Wooldridge: SSR = residual sum of squares, SST = total. ISL: RSS and TSS for the same things. $\\mathrm{SST}_j$ (one regressor's variation) and $R_j^2$ (regressor on regressors) are not the $y$-regression quantities."
+          ],
+          "cards": []
+        },
+        {
+          "t": "λ",
+          "d": [
+            "Ridge/lasso penalty vs cross-sectional factor premium $\\lambda_t$. Unrelated."
+          ],
+          "cards": []
+        },
+        {
+          "t": "Source erratum",
+          "d": [
+            "The reference answer to Q27 says residual autocorrelation with lagged $y$ regressors makes OLS inconsistent. Too broad: if $E(u_t\\mid y_{t-1})=0$, OLS is consistent and only the SEs are wrong; inconsistency needs AR errors on top, and then $y_t$ is really AR(2)."
+          ],
+          "cards": [
+            "BAG-B-08"
           ]
         }
       ]
