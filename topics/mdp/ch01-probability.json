@@ -1,0 +1,601 @@
+{
+  "title": "Probability",
+  "notes": [
+    {
+      "h": "Events",
+      "items": [
+        {
+          "t": "Axioms",
+          "d": [
+            "$P(A) \\ge 0$; $P(\\Omega) = 1$; countable additivity for disjoint events.",
+            "Consequences: $P(\\emptyset) = 0$; $P(A^c) = 1 - P(A)$; $A \\subseteq B \\Rightarrow P(A) \\le P(B)$; $P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$."
+          ],
+          "cards": [
+            "MDP-01-01"
+          ]
+        },
+        {
+          "t": "Conditional probability",
+          "d": [
+            "$P(A \\mid B) = P(A \\cap B)/P(B)$, $P(B) > 0$. Joint = conditional × marginal.",
+            "$P(A \\mid B) + P(A^c \\mid B) = 1$ always; $P(A \\mid B) + P(A \\mid B^c) \\ne 1$ in general."
+          ],
+          "cards": [
+            "MDP-01-02"
+          ]
+        },
+        {
+          "t": "Independence",
+          "d": [
+            "$P(A \\cap B) = P(A)P(B)$, equivalently $P(A \\mid B) = P(A)$.",
+            "Disjoint (positive probabilities) ⇒ not independent. Mutual ⇒ pairwise, not conversely (two coins and “exactly one head”)."
+          ],
+          "cards": [
+            "MDP-01-03"
+          ]
+        },
+        {
+          "t": "Law of total probability",
+          "d": [
+            "$A_1, \\dots, A_n$ a partition: $P(B) = \\sum_i P(B \\mid A_i)P(A_i)$.",
+            "Fails if the cases do not cover every outcome."
+          ],
+          "cards": [
+            "MDP-01-04",
+            "MDP-01-05"
+          ]
+        },
+        {
+          "t": "Bayes' law",
+          "d": [
+            "$$P(A \\mid B) = \\frac{P(B \\mid A)P(A)}{P(B \\mid A)P(A) + P(B \\mid A^c)P(A^c)}$$",
+            "One piece divided by the total; the denominator is the law of total probability."
+          ],
+          "cards": [
+            "MDP-01-04",
+            "MDP-01-06",
+            "MDP-01-07",
+            "MDP-01-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Random variables",
+      "items": [
+        {
+          "t": "Density, discrete law",
+          "d": [
+            "Density: $p \\ge 0$, $\\int p = 1$, $P(a \\le X \\le b) = \\int_a^b p(x)\\,dx$. Discrete: $p_i \\ge 0$, $\\sum_i p_i = 1$ (finitely or countably many values)."
+          ],
+          "cards": [
+            "MDP-01-09",
+            "MDP-01-10"
+          ]
+        },
+        {
+          "t": "Joint, marginal, conditional",
+          "d": [
+            "$p_X(x) = \\sum_y p(x,y)$; $p_{X \\mid Y}(x \\mid y) = p(x,y)/p_Y(y)$.",
+            "Independent: $p(x,y) = p_X(x)p_Y(y)$ for all pairs."
+          ],
+          "cards": [
+            "MDP-01-11"
+          ]
+        },
+        {
+          "t": "Expectation and variance",
+          "d": [
+            "$EX = \\sum_i x_i p_i$ or $\\int x\\,p(x)\\,dx$; $E f(X) = \\sum_i f(x_i)p_i$.",
+            "$\\operatorname{Var}X = E[(X - EX)^2] = EX^2 - (EX)^2$; $\\operatorname{Var}(aX + b) = a^2\\operatorname{Var}X$."
+          ],
+          "cards": [
+            "MDP-01-12"
+          ]
+        },
+        {
+          "t": "Rules and what they need",
+          "d": [
+            "$E(aX + bY) = aEX + bEY$: always.",
+            "$E[XY] = EX \\cdot EY$ and $\\operatorname{Var}(X+Y) = \\operatorname{Var}X + \\operatorname{Var}Y$: independence (zero covariance suffices).",
+            "Independent ⇒ uncorrelated, not conversely."
+          ],
+          "cards": [
+            "MDP-01-12",
+            "MDP-01-14"
+          ]
+        },
+        {
+          "t": "Named distributions",
+          "d": [
+            "Uniform on $[\\alpha,\\beta]$: mean $\\tfrac{\\alpha+\\beta}{2}$, variance $\\tfrac{(\\beta-\\alpha)^2}{12}$.",
+            "$N(\\mu,\\sigma^2)$: density $\\tfrac{1}{\\sqrt{2\\pi}\\sigma}e^{-(x-\\mu)^2/(2\\sigma^2)}$, mean $\\mu$, variance $\\sigma^2$.",
+            "Exponential $a e^{-ax}$: mean $\\tfrac1a$, variance $\\tfrac{1}{a^2}$; $\\int_0^\\infty x^n a e^{-ax}dx = \\tfrac{n!}{a^n}$."
+          ],
+          "cards": [
+            "MDP-01-12",
+            "MDP-01-09"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Conditional mean",
+      "items": [
+        {
+          "t": "Conditional expectation",
+          "d": [
+            "$E(X \\mid A) = E(X\\,\\mathbf 1_A)/P(A)$: a number. $E(X \\mid Y = y)$: one number per $y$. $E(X \\mid Y)$: a random variable, a function of $Y$."
+          ],
+          "cards": [
+            "MDP-01-13"
+          ]
+        },
+        {
+          "t": "Law of total expectation",
+          "d": [
+            "$EX = \\sum_i E(X \\mid A_i)P(A_i) = E[E(X \\mid Y)]$, for any $X, Y$.",
+            "Average within each case, then weight the cases. This is the step behind every dynamic-programming recursion."
+          ],
+          "cards": [
+            "MDP-01-13",
+            "MDP-01-10",
+            "MDP-01-14"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Tools for later",
+      "items": [
+        {
+          "t": "Quadratic minimizer",
+          "d": [
+            "$Q$ symmetric positive definite: $\\arg\\min_x \\{x^\\top Qx + q^\\top x\\} = -\\tfrac12 Q^{-1}q$, value $-\\tfrac14 q^\\top Q^{-1}q$."
+          ],
+          "cards": [
+            "MDP-01-15"
+          ]
+        },
+        {
+          "t": "Induction",
+          "d": [
+            "Base case, hypothesis, step."
+          ],
+          "cards": [
+            "MDP-01-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "Rain and football",
+          "d": [
+            "$P(R) = 0.6$, $P(F \\mid R) = 0.2$, $P(F \\mid R^c) = 0.8$: joint $0.12$ and $0.32$, $P(F) = 0.44$, $P(R \\mid F) = \\tfrac{3}{11}$."
+          ],
+          "cards": [
+            "MDP-01-05"
+          ]
+        },
+        {
+          "t": "Rare-condition test",
+          "d": [
+            "Prevalence $0.001$, both error rates $0.05$: $P(+) = 0.0509$, $P(\\text{infected} \\mid +) = \\tfrac{19}{1018} \\approx 1.87\\%$."
+          ],
+          "cards": [
+            "MDP-01-06"
+          ]
+        },
+        {
+          "t": "Three urns",
+          "d": [
+            "White drawn with probability $\\tfrac12$; other ball white with probability $\\tfrac23$."
+          ],
+          "cards": [
+            "MDP-01-07"
+          ]
+        },
+        {
+          "t": "Three doors",
+          "d": [
+            "Host who knows: switching wins with probability $\\tfrac23$. Host who opens at random: $\\tfrac12$."
+          ],
+          "cards": [
+            "MDP-01-08"
+          ]
+        },
+        {
+          "t": "Piecewise density",
+          "d": [
+            "$a$ on $[0,1)$, $b$ on $[1,3)$, mean $1.5$: $a = b = \\tfrac13$, variance $0.75$, $E(\\xi \\mid \\xi \\ge 1) = 2$."
+          ],
+          "cards": [
+            "MDP-01-10"
+          ]
+        },
+        {
+          "t": "Random number of terms",
+          "d": [
+            "$ES = 70$, $\\operatorname{Var}S = 6380 = E(N)\\operatorname{Var}(Y) + \\operatorname{Var}(N)(EY)^2 = 280 + 6100$."
+          ],
+          "cards": [
+            "MDP-01-14"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "Parameters of a density",
+          "d": [
+            "Non-negativity restricts the range; total mass 1 gives an equation; a given mean gives a second one."
+          ],
+          "cards": [
+            "MDP-01-09",
+            "MDP-01-10"
+          ]
+        },
+        {
+          "t": "Data given case by case",
+          "d": [
+            "Translate every sentence into a conditional probability; joint = conditional × marginal; add up for the total; divide for the reverse conditional."
+          ],
+          "cards": [
+            "MDP-01-05",
+            "MDP-01-06",
+            "MDP-01-07",
+            "MDP-01-08"
+          ]
+        },
+        {
+          "t": "Expectation of a messy quantity",
+          "d": [
+            "Try linearity first (no independence needed); otherwise condition on a partition and use the tower property."
+          ],
+          "cards": [
+            "MDP-01-14",
+            "MDP-01-13"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "Conditional versus joint",
+          "d": [
+            "A probability stated “if …” is $P(F \\mid R)$, not $P(F \\cap R)$."
+          ],
+          "cards": [
+            "MDP-01-05"
+          ]
+        },
+        {
+          "t": "Number versus random variable",
+          "d": [
+            "$E(X \\mid A)$ and $E(X \\mid Y = y)$ are numbers; $E(X \\mid Y)$ is a random variable."
+          ],
+          "cards": [
+            "MDP-01-13"
+          ]
+        },
+        {
+          "t": "Row and column vectors",
+          "d": [
+            "The slide writes the multivariate normal exponent with row vectors; KE uses columns, except for distributions, which are rows from the next topic on."
+          ],
+          "cards": [
+            "MDP-01-12"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Events",
+          "d": [
+            "“All subsets are events” holds for countable $\\Omega$ only."
+          ],
+          "cards": [
+            "MDP-01-01"
+          ]
+        },
+        {
+          "t": "Conditioning",
+          "d": [
+            "$P(A \\mid B) = P(A \\cap B)/P(B)$ needs $P(B) > 0$; Bayes needs $P(A), P(B) > 0$."
+          ],
+          "cards": [
+            "MDP-01-02",
+            "MDP-01-04"
+          ]
+        },
+        {
+          "t": "Discrete random variable",
+          "d": [
+            "“A finite number of possible values” should read finite or countably many."
+          ],
+          "cards": [
+            "MDP-01-11"
+          ]
+        },
+        {
+          "t": "Total expectation",
+          "d": [
+            "Holds for all $X, Y$, not only dependent ones; the indicator in $E(X \\mid A)$ is $\\mathbf 1_A$ of the outcome."
+          ],
+          "cards": [
+            "MDP-01-13"
+          ]
+        },
+        {
+          "t": "Quadratic formula",
+          "d": [
+            "KE (A.1) needs $Q$ symmetric as well as positive definite."
+          ],
+          "cards": [
+            "MDP-01-15"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MDP-01-01",
+      "g": "Events",
+      "k": "Axioms",
+      "q": "A random experiment has outcome set $\\Omega$; events are subsets $A \\subseteq \\Omega$, and $P$ assigns each event a number in $[0,1]$. (1) State the three axioms. (2) Derive $P(A^c) = 1 - P(A)$. (3) Give $P(A \\cup B)$ for arbitrary $A, B$ and the reason. (4) What follows from $A \\subseteq B$?",
+      "pts": [
+        "(1) $P(A) \\ge 0$; $P(\\Omega) = 1$; for disjoint $A_1, A_2, \\dots$: $P\\big(\\bigcup_i A_i\\big) = \\sum_i P(A_i)$ (countable additivity).",
+        "(2) $A$ and $A^c$ are disjoint with union $\\Omega$, so $P(A) + P(A^c) = P(\\Omega) = 1$.",
+        "(3) $P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$: write $A \\cup B$ as $A$ plus the disjoint piece $B \\setminus (A \\cap B)$.",
+        "(4) $P(A) \\le P(B)$ and $P(B \\setminus A) = P(B) - P(A)$."
+      ],
+      "pit": "“All subsets are events” is right for a countable $\\Omega$ only; an uncountable $\\Omega$ needs a restricted collection of events.",
+      "src": "S1 p4–5",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-02",
+      "g": "Events",
+      "k": "Conditional prob.",
+      "q": "(1) Define $P(A \\mid B)$ and say when it is defined. (2) Which of $P(A \\mid B) + P(A^c \\mid B)$ and $P(A \\mid B) + P(A \\mid B^c)$ always equals 1, and why? (3) Check both on a fair die with $A = \\{6\\}$, $B = \\{2,4,6\\}$.",
+      "pts": [
+        "(1) $P(A \\mid B) = \\dfrac{P(A \\cap B)}{P(B)}$ for $P(B) > 0$. Equivalently joint = conditional × marginal: $P(A \\cap B) = P(A \\mid B)P(B)$.",
+        "(2) The first. For fixed $B$, $A \\mapsto P(A \\mid B)$ is itself a probability, so the complement rule applies. The second sum mixes two different conditional probabilities.",
+        "(3) $\\tfrac13 + \\tfrac23 = 1$; but $P(A \\mid B) + P(A \\mid B^c) = \\tfrac13 + 0 = \\tfrac13$."
+      ],
+      "pit": "In the rain example $P(F \\mid R) + P(F \\mid R^c) = 0.2 + 0.8 = 1$ only by the choice of numbers.",
+      "src": "S1 p6–8",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-03",
+      "g": "Events",
+      "k": "Independence",
+      "q": "(1) Define independence of two events and give the equivalent conditional form. (2) Are two disjoint events with positive probabilities independent? (3) Define mutual independence of $A_1, \\dots, A_n$ and give three events that are pairwise but not mutually independent.",
+      "pts": [
+        "(1) $P(A \\cap B) = P(A)P(B)$; when $P(B) > 0$ this is $P(A \\mid B) = P(A)$: knowing $B$ does not change the probability of $A$.",
+        "(2) Never: $P(A \\cap B) = 0 \\ne P(A)P(B)$. Knowing $B$ happened tells you $A$ did not.",
+        "(3) The product rule must hold for every sub-family. Two fair coins: $A_1$ = first is heads, $A_2$ = second is heads, $A_3$ = exactly one head. Each pair has probability $\\tfrac14 = \\tfrac12 \\cdot \\tfrac12$, but $A_1 \\cap A_2 \\cap A_3 = \\emptyset$ has probability $0 \\ne \\tfrac18$."
+      ],
+      "pit": "Do not assume independence because two things “are different”; check the product rule.",
+      "src": "S1 p7",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-04",
+      "g": "Events",
+      "k": "Total prob., Bayes",
+      "q": "Events $A_1, \\dots, A_n$ and an event $B$. (1) What must the $A_i$ satisfy for the law of total probability, and what does it say? (2) Why does it hold? (3) State Bayes' law with the two-case denominator. (4) Fair die, $A_1 = \\{1,2\\}$, $A_2 = \\{3,4\\}$, $B$ = even: what does the formula give and why is it wrong?",
+      "pts": [
+        "(1) Mutually exclusive and collectively exhaustive (a partition of $\\Omega$). Then $P(B) = \\sum_i P(B \\mid A_i)P(A_i)$.",
+        "(2) The $A_i$ cut $B$ into disjoint pieces $B \\cap A_i$; add their probabilities, then use joint = conditional × marginal on each.",
+        "(3) $$P(A \\mid B) = \\frac{P(B \\mid A)P(A)}{P(B \\mid A)P(A) + P(B \\mid A^c)P(A^c)}$$ The denominator is the law of total probability.",
+        "(4) $\\tfrac12 \\cdot \\tfrac13 + \\tfrac12 \\cdot \\tfrac13 = \\tfrac13 \\ne \\tfrac12$. The cases do not cover $\\{5,6\\}$; the missing term is $P(B \\mid \\{5,6\\})P(\\{5,6\\}) = \\tfrac16$."
+      ],
+      "pit": "",
+      "src": "S1 p9–12",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-05",
+      "g": "Bayes examples",
+      "k": "Rain and football",
+      "q": "It rains on a given day with probability $0.6$. A group of friends play football with probability $0.2$ if it rains and $0.8$ if it does not. Find the probability that (1) it rains and they play; (2) it does not rain and they play; (3) they play; (4) it rained, given that they played. (5) Are “rain” and “play” independent?",
+      "pts": [
+        "(1) $P(R \\cap F) = P(F \\mid R)P(R) = 0.2 \\times 0.6 = 0.12$.",
+        "(2) $P(R^c \\cap F) = 0.8 \\times 0.4 = 0.32$.",
+        "(3) $P(F) = 0.12 + 0.32 = 0.44$.",
+        "(4) $P(R \\mid F) = \\dfrac{0.12}{0.44} = \\dfrac{3}{11} \\approx 0.273$.",
+        "(5) No: $P(F \\mid R) = 0.2 \\ne P(F) = 0.44$."
+      ],
+      "pit": "“If it rains, they play with probability 0.2” is the conditional $P(F \\mid R)$, not the joint $P(F \\cap R)$.",
+      "src": "S1 p13",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-06",
+      "g": "Bayes examples",
+      "k": "Rare-condition test",
+      "q": "$0.1\\%$ of a population is infected. A test gives a positive result for $5\\%$ of healthy people and a negative result for $5\\%$ of infected people. (1) Probability of a positive result. (2) Probability of infection given a positive result. (3) Why is the answer so far from $95\\%$?",
+      "pts": [
+        "(1) $0.001 \\times 0.95 + 0.999 \\times 0.05 = 0.00095 + 0.04995 = 0.0509$.",
+        "(2) $\\dfrac{0.00095}{0.0509} = \\dfrac{19}{1018} \\approx 1.87\\%$.",
+        "(3) The healthy group is 999 times larger, and its $5\\%$ false positives swamp the true positives: per million people, 49,950 false positives against 950 true ones."
+      ],
+      "pit": "$P(+ \\mid \\text{infected}) = 95\\%$ and $P(\\text{infected} \\mid +) \\approx 1.9\\%$ are different conditionals.",
+      "src": "KE p85",
+      "seen": [
+        "Ex A.3"
+      ]
+    },
+    {
+      "id": "MDP-01-07",
+      "g": "Bayes examples",
+      "k": "Three urns",
+      "q": "Urn 1 holds one black and one white ball, urn 2 two black balls, urn 3 two white balls. An urn is chosen uniformly and one ball is drawn from it; the ball is white. (1) Probability of drawing white. (2) Probability that the other ball in the chosen urn is white. (3) Why is the intuitive answer $\\tfrac12$ wrong?",
+      "pts": [
+        "(1) $\\tfrac13 \\cdot \\tfrac12 + \\tfrac13 \\cdot 0 + \\tfrac13 \\cdot 1 = \\tfrac12$.",
+        "(2) The other ball is white exactly when urn 3 was chosen: $\\dfrac{\\tfrac13 \\cdot 1}{\\tfrac12} = \\tfrac23$.",
+        "(3) Urn 3 gives a white ball with probability 1 and urn 1 only with probability $\\tfrac12$. Condition on balls: the three white balls are equally likely to be the one drawn, and two of them sit in urn 3."
+      ],
+      "pit": "",
+      "src": "KE p85",
+      "seen": [
+        "Ex A.2"
+      ]
+    },
+    {
+      "id": "MDP-01-08",
+      "g": "Bayes examples",
+      "k": "Three doors",
+      "q": "A prize is behind one of three doors, uniformly. You pick door 1. The host knows where the prize is and opens an empty door among the other two (uniformly if he has a choice); he opens door 3. (1) Give the probability that he opens door 3 when the prize is behind door 1, door 2, door 3. (2) Probability that he opens door 3. (3) Probability that the prize is behind door 2, and the decision. (4) What changes if the host opens one of the other two doors at random and it happens to be empty?",
+      "pts": [
+        "(1) $\\tfrac12$, $1$ (forced), $0$.",
+        "(2) $\\tfrac13\\big(\\tfrac12 + 1 + 0\\big) = \\tfrac12$.",
+        "(3) $\\dfrac{\\tfrac13 \\cdot 1}{\\tfrac12} = \\tfrac23$; door 1 keeps $\\tfrac13$. Switch.",
+        "(4) The likelihoods of “opens door 3 and it is empty” become $\\tfrac12$ and $\\tfrac12$ for doors 1 and 2, so the posterior is $\\tfrac12$ each. The answer depends on the host's rule, not only on what was observed."
+      ],
+      "pit": "",
+      "src": "S0 p8",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-09",
+      "g": "Random variables",
+      "k": "Density conditions",
+      "q": "$p(\\xi) = a\\,e^{-a\\xi + b}$ for $\\xi \\ge 0$ and $p(\\xi) = 0$ for $\\xi < 0$. (1) Which two conditions make $p$ a probability density? (2) Find all pairs $(a, b)$. (3) Give the mean and variance.",
+      "pts": [
+        "(1) $p \\ge 0$ everywhere and $\\int_{-\\infty}^{\\infty} p(\\xi)\\,d\\xi = 1$.",
+        "(2) $a < 0$ makes $p < 0$; $a = 0$ makes $p \\equiv 0$. For $a > 0$: $\\int_0^\\infty a e^{-a\\xi}e^{b}\\,d\\xi = e^b$, so $b = 0$. Answer: $a > 0$, $b = 0$ (the exponential distribution).",
+        "(3) $E\\,\\xi = \\tfrac1a$, $E\\,\\xi^2 = \\tfrac{2}{a^2}$, $\\operatorname{Var}\\xi = \\tfrac{1}{a^2}$, using $\\int_0^\\infty x^n a e^{-ax}\\,dx = \\tfrac{n!}{a^n}$."
+      ],
+      "pit": "State both conditions. Use non-negativity to restrict the range of the parameter first, then normalization to pin it down.",
+      "src": "KE p85",
+      "seen": [
+        "HW1 P1",
+        "Ex A.1"
+      ]
+    },
+    {
+      "id": "MDP-01-10",
+      "g": "Random variables",
+      "k": "Piecewise density",
+      "q": "A density equals $a$ on $[0,1)$, $b$ on $[1,3)$ and $0$ elsewhere, with $a, b \\ge 0$. (1) Write the condition for a density. (2) Given $E\\,\\xi = 1.5$, find $a$ and $b$. (3) Compute $\\operatorname{Var}\\xi$. (4) Compute $P(\\xi \\ge 1)$ and $E(\\xi \\mid \\xi \\ge 1)$, and check the law of total expectation.",
+      "pts": [
+        "(1) $a + 2b = 1$.",
+        "(2) $E\\,\\xi = \\tfrac a2 + 4b = 1.5$ with $a = 1 - 2b$ gives $\\tfrac12 + 3b = 1.5$, so $b = \\tfrac13$, $a = \\tfrac13$.",
+        "(3) $E\\,\\xi^2 = \\tfrac13 \\cdot \\tfrac13 + \\tfrac13 \\cdot \\tfrac{26}{3} = 3$, so $\\operatorname{Var}\\xi = 3 - 2.25 = 0.75$.",
+        "(4) $P(\\xi \\ge 1) = 2b = \\tfrac23$; given $\\xi \\ge 1$ the law is uniform on $[1,3]$, mean $2$; $E(\\xi \\mid \\xi < 1) = \\tfrac12$. Check: $\\tfrac12 \\cdot \\tfrac13 + 2 \\cdot \\tfrac23 = 1.5$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MkA P1"
+      ]
+    },
+    {
+      "id": "MDP-01-11",
+      "g": "Random variables",
+      "k": "Joint and marginal",
+      "q": "Two discrete random variables $X, Y$ with joint probabilities $p(x,y) = P(X = x, Y = y)$. (1) Give the marginal of $X$ and the conditional of $X$ given $Y = y$. (2) When are $X$ and $Y$ independent, and what is a quick negative test? (3) Fair die $X$ and $Y = 1$ if $X$ is even, $0$ otherwise: compute $p_{X \\mid Y}(2 \\mid 1)$.",
+      "pts": [
+        "(1) $p_X(x) = \\sum_y p(x,y)$; $p_{X \\mid Y}(x \\mid y) = \\dfrac{p(x,y)}{p_Y(y)}$ for $p_Y(y) > 0$.",
+        "(2) $p(x,y) = p_X(x)\\,p_Y(y)$ for every pair (densities: $p(x,y) = p_X(x)p_Y(y)$). If the set of possible pairs is not a product set, they are dependent.",
+        "(3) $\\dfrac{1/6}{1/2} = \\tfrac13$."
+      ],
+      "pit": "",
+      "src": "S1 p19–21 · KE p81–82",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-12",
+      "g": "Random variables",
+      "k": "Mean and variance",
+      "q": "(1) Define $\\operatorname{Var}X$ and derive the shortcut formula. (2) Which of these need independence: $E(X+Y) = EX + EY$; $E[XY] = EX \\cdot EY$; $\\operatorname{Var}(X+Y) = \\operatorname{Var}X + \\operatorname{Var}Y$? (3) Give $X, Y$ that are uncorrelated but dependent. (4) Give the mean and variance of the uniform distribution on $[\\alpha, \\beta]$ and of $N(\\mu, \\sigma^2)$.",
+      "pts": [
+        "(1) $\\operatorname{Var}X = E[(X - \\mu)^2]$ with $\\mu = EX$; expanding, $EX^2 - 2\\mu\\cdot\\mu + \\mu^2 = EX^2 - (EX)^2$.",
+        "(2) Linearity always holds. The product rule and the additivity of variances need independence (zero covariance is enough): $\\operatorname{Var}(X+Y) = \\operatorname{Var}X + \\operatorname{Var}Y + 2\\operatorname{Cov}(X,Y)$.",
+        "(3) $X$ uniform on $\\{-1, 0, 1\\}$, $Y = X^2$: $\\operatorname{Cov} = EX^3 - EX \\cdot EX^2 = 0$, but $P(X = 0, Y = 0) = \\tfrac13 \\ne \\tfrac13 \\cdot \\tfrac13$.",
+        "(4) Uniform: $\\tfrac{\\alpha + \\beta}{2}$ and $\\tfrac{(\\beta - \\alpha)^2}{12}$. Normal: $\\mu$ and $\\sigma^2$."
+      ],
+      "pit": "Two normal variables with zero covariance are independent only if they are jointly normal.",
+      "src": "S1 p23–28",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-13",
+      "g": "Conditional mean",
+      "k": "Tower property",
+      "q": "(1) Define $E(X \\mid A)$ for an event with $P(A) > 0$. (2) State both forms of the law of total expectation. (3) Fair die $X$, and $Y = 1$ if $X$ is even, $0$ otherwise: give $E(X \\mid \\text{even})$, $E(X \\mid \\text{odd})$ and $E(X \\mid Y)$; which are numbers and which is a random variable? (4) Verify the tower property on this example.",
+      "pts": [
+        "(1) $E(X \\mid A) = \\dfrac{E(X\\,\\mathbf 1_A)}{P(A)}$, where $\\mathbf 1_A$ is 1 on $A$ and 0 elsewhere.",
+        "(2) For a partition $A_1, \\dots, A_n$: $EX = \\sum_i E(X \\mid A_i)P(A_i)$. For a random variable $Y$: $EX = E[E(X \\mid Y)] = \\sum_j E(X \\mid Y = y_j)P(Y = y_j)$.",
+        "(3) $4$ and $3$ are numbers. $E(X \\mid Y)$ is a random variable: it equals $4$ when $Y = 1$ and $3$ when $Y = 0$.",
+        "(4) $\\tfrac12 \\cdot 4 + \\tfrac12 \\cdot 3 = 3.5 = EX$."
+      ],
+      "pit": "The slide says the second form holds “for dependent $X$ and $Y$”; it holds for all $X, Y$ (independence is the case $E(X \\mid Y) = EX$). The slide also writes $\\mathbf 1_A(X)$; for an event $A \\subseteq \\Omega$ the indicator is a function of the outcome.",
+      "src": "S1 p31 · KE p83",
+      "seen": []
+    },
+    {
+      "id": "MDP-01-14",
+      "g": "Conditional mean",
+      "k": "Random sum",
+      "q": "The number of claims in a month is $N = 0, 1, 2$ with probabilities $0.5, 0.3, 0.2$. Given $N = n$ the claim sizes $Y_1, \\dots, Y_n$ are i.i.d. and independent of $N$, with mean $100$ and variance $400$. Let $S = Y_1 + \\dots + Y_N$. (1) Compute $E(S \\mid N = n)$ and $E(S^2 \\mid N = n)$, and say where independence is used. (2) Compute $ES$, $ES^2$ and $\\operatorname{Var}S$. (3) Compare $\\operatorname{Var}S$ with $E(N)\\operatorname{Var}(Y_1)$ and explain the difference.",
+      "pts": [
+        "(1) $E(S \\mid N = n) = 100n$ (linearity only). $E(S^2 \\mid N = n) = \\operatorname{Var}(S \\mid N = n) + (100n)^2 = 400n + 10^4 n^2$; adding the variances uses independence. Values: $0$, $10400$, $40800$.",
+        "(2) $ES = 0.3 \\cdot 100 + 0.2 \\cdot 200 = 70$; $ES^2 = 0.3 \\cdot 10400 + 0.2 \\cdot 40800 = 11280$; $\\operatorname{Var}S = 11280 - 4900 = 6380$.",
+        "(3) $E(N)\\operatorname{Var}(Y_1) = 0.7 \\times 400 = 280$. The other $6100 = \\operatorname{Var}(N)(EY_1)^2 = 0.61 \\times 10^4$ comes from the randomness of the number of claims."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MkB P1"
+      ]
+    },
+    {
+      "id": "MDP-01-15",
+      "g": "Tools for later",
+      "k": "Quadratic minimizer",
+      "q": "$f(x) = x^\\top Q x + q^\\top x$ on $\\mathbb{R}^n$. (1) Under which assumption on $Q$ is the minimizer unique, and what is it? (2) Prove it by completing the square. (3) Give the minimal value. (4) What goes wrong if $Q$ is not symmetric?",
+      "pts": [
+        "(1) $Q$ symmetric positive definite; $x^\\star = -\\tfrac12 Q^{-1}q$.",
+        "(2) $f(x) = (x - x^\\star)^\\top Q (x - x^\\star) - x^{\\star\\top} Q x^\\star$, because $-2Qx^\\star = q$. The first term is $\\ge 0$ and vanishes only at $x = x^\\star$.",
+        "(3) $-x^{\\star\\top}Qx^\\star = -\\tfrac14 q^\\top Q^{-1} q$.",
+        "(4) The gradient is $(Q + Q^\\top)x + q$, not $2Qx + q$; the formula must use the symmetric part $\\tfrac12(Q + Q^\\top)$."
+      ],
+      "pit": "KE states the formula for “positive definite” $Q$ only; symmetry is also needed. Check: $Q = \\begin{pmatrix}3&1\\\\1&2\\end{pmatrix}$, $q = (1, -4)^\\top$ gives $x^\\star = (-0.6,\\ 1.3)$ and value $-2.9$.",
+      "src": "KE p84",
+      "seen": [
+        "Ex A.5"
+      ]
+    },
+    {
+      "id": "MDP-01-16",
+      "g": "Tools for later",
+      "k": "Induction",
+      "q": "(1) Name the three labelled parts of a proof by induction. (2) Prove $1^2 + 2^2 + \\dots + k^2 = \\tfrac16 k(k+1)(2k+1)$ for all $k \\ge 1$. (3) Where is induction used in what follows?",
+      "pts": [
+        "(1) Base case; induction hypothesis (stated explicitly); induction step that uses the hypothesis.",
+        "(2) Base $k = 1$: $1 = \\tfrac16 \\cdot 1 \\cdot 2 \\cdot 3$. Step: $\\tfrac16 k(k+1)(2k+1) + (k+1)^2 = \\tfrac16 (k+1)(2k^2 + 7k + 6) = \\tfrac16 (k+1)(k+2)(2k+3)$, the formula for $k+1$.",
+        "(3) Powers of a transition matrix, multi-step transition probabilities, $p_t = qP^t$; later every optimality proof of dynamic programming is an induction backward in time."
+      ],
+      "pit": "",
+      "src": "KE p84",
+      "seen": [
+        "Ex A.6"
+      ]
+    }
+  ]
+}

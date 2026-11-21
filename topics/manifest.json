@@ -41,6 +41,14 @@
       "name": "MDP",
       "topics": [
         {
+          "title": "Probability",
+          "file": "mdp/ch01-probability.json"
+        },
+        {
+          "title": "Markov chains",
+          "file": "mdp/ch02-markov-chains.json"
+        },
+        {
           "title": "Core concepts",
           "file": "mdp/core-concepts.json"
         }

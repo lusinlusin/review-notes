@@ -1,0 +1,1378 @@
+{
+  "title": "Markov chains",
+  "notes": [
+    {
+      "h": "Markov property",
+      "items": [
+        {
+          "t": "Markov property",
+          "d": [
+            "$$P(X_{t+1} = x_{t+1} \\mid X_0 = x_0, \\dots, X_t = x_t) = P(X_{t+1} = x_{t+1} \\mid X_t = x_t)$$",
+            "The future depends on the past only through the present. It does not make distant times independent."
+          ],
+          "cards": [
+            "MDP-02-01"
+          ]
+        },
+        {
+          "t": "Recursion form",
+          "d": [
+            "$X_{t+1} = f(X_t, Z_{t+1})$ with $Z_{t+1}$ independent of $(X_0, \\dots, X_t)$ and identically distributed: a time-homogeneous chain with $P_{ij} = P(f(i, Z) = j)$."
+          ],
+          "cards": [
+            "MDP-02-02"
+          ]
+        },
+        {
+          "t": "Standard models",
+          "d": [
+            "Stock price $X_{t+1} = X_t(1 + Z_{t+1})$; coin flips $X_{t+1} = X_t + Z_{t+1}$; queue $X_{t+1} = [X_t + A_{t+1} - D_{t+1}]^+$.",
+            "$(S,s)$ inventory: $X_{t+1} = [S - Z_{t+1}]^+$ if $X_t \\le s$, $[X_t - Z_{t+1}]^+$ if $X_t > s$."
+          ],
+          "cards": [
+            "MDP-02-03",
+            "MDP-02-04"
+          ]
+        },
+        {
+          "t": "State augmentation",
+          "d": [
+            "If $X_{t+1}$ needs $X_{t-1}, \\dots, X_{t-m}$, the state $(X_t, \\dots, X_{t-m})$ is Markov, at the price of $|\\mathbb{X}|^{m+1}$ states. Look for a smaller sufficient summary."
+          ],
+          "cards": [
+            "MDP-02-05",
+            "MDP-02-06"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Transition matrix",
+      "items": [
+        {
+          "t": "Chain as a tuple",
+          "d": [
+            "$(\\mathbb{X}, q, P)$: $X_0 \\sim q$ (row vector), $P_{ij} = P(X_{t+1} = j \\mid X_t = i)$ for all $t$.",
+            "Equivalent descriptions: recursion, graph, tuple."
+          ],
+          "cards": [
+            "MDP-02-07"
+          ]
+        },
+        {
+          "t": "Stochastic matrix",
+          "d": [
+            "$P_{ij} \\ge 0$, rows sum to 1. Then $Pe = e$, $P^t$ is stochastic, and all eigenvalues satisfy $|\\lambda| \\le 1$.",
+            "Proof of the last: for $Pv = \\lambda v$ take the largest $|v_k|$; $|\\lambda||v_k| \\le \\sum_j P_{kj}|v_j| \\le |v_k|$."
+          ],
+          "cards": [
+            "MDP-02-07",
+            "MDP-02-11"
+          ]
+        },
+        {
+          "t": "Building P from a mechanism",
+          "d": [
+            "Fix the order of the states; for each state enumerate what can happen in one period, in the stated order of events; check every row sums to 1."
+          ],
+          "cards": [
+            "MDP-02-08",
+            "MDP-02-09",
+            "MDP-02-04",
+            "MDP-02-10"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Distribution in time",
+      "items": [
+        {
+          "t": "Path probability",
+          "d": [
+            "$P(X_0 = x_0, \\dots, X_t = x_t) = q_{x_0}P_{x_0x_1}\\cdots P_{x_{t-1}x_t}$: chain rule, Markov property, definitions."
+          ],
+          "cards": [
+            "MDP-02-12"
+          ]
+        },
+        {
+          "t": "Distribution at time t",
+          "d": [
+            "$p_t = p_{t-1}P = qP^t$ (rows). $P^t(i,j) = P(X_t = j \\mid X_0 = i)$."
+          ],
+          "cards": [
+            "MDP-02-13",
+            "MDP-02-16",
+            "MDP-02-17"
+          ]
+        },
+        {
+          "t": "Multi-step transitions",
+          "d": [
+            "$P(X_{t+s} = j \\mid X_t = i) = P^s(i,j)$, by induction on $s$; $P^{s+u} = P^sP^u$."
+          ],
+          "cards": [
+            "MDP-02-14"
+          ]
+        },
+        {
+          "t": "Coin flips",
+          "d": [
+            "$p_t$ is Binomial$(t, \\tfrac12)$: $P(X_t = j) = \\binom tj 2^{-t}$."
+          ],
+          "cards": [
+            "MDP-02-15"
+          ]
+        },
+        {
+          "t": "Parity",
+          "d": [
+            "If every step changes the parity of the state, odd times and even times live on different states: period 2."
+          ],
+          "cards": [
+            "MDP-02-18"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Powers of P",
+      "items": [
+        {
+          "t": "Diagonalization",
+          "d": [
+            "$P = R\\Lambda R^{-1} \\Rightarrow P^t = R\\Lambda^tR^{-1} = \\sum_i \\lambda_i^t\\,r_i\\ell_i$, with $Pr_i = \\lambda_ir_i$, $\\ell_iP = \\lambda_i\\ell_i$, $\\ell_ir_j = \\delta_{ij}$."
+          ],
+          "cards": [
+            "MDP-02-19"
+          ]
+        },
+        {
+          "t": "Stochastic case",
+          "d": [
+            "$\\lambda_1 = 1$, $r_1 = e$, $\\ell_1 = \\pi$: $P^t = e\\pi + \\sum_{i \\ge 2}\\lambda_i^t\\,r_i\\ell_i$.",
+            "All other $|\\lambda_i| < 1$: $P^t \\to e\\pi$ at rate $|\\lambda_2|^t$. Some $|\\lambda_i| = 1$, $\\lambda_i \\ne 1$: no limit. Eigenvalue 1 repeated: $\\pi$ not unique."
+          ],
+          "cards": [
+            "MDP-02-20"
+          ]
+        },
+        {
+          "t": "Two-state chain",
+          "d": [
+            "$\\lambda_2 = 1 - \\alpha - \\beta$, $r_2 = (\\alpha, -\\beta)^\\top$, $$P^t = \\frac{1}{\\alpha+\\beta}\\begin{pmatrix}\\beta&\\alpha\\\\\\beta&\\alpha\\end{pmatrix} + \\frac{(1-\\alpha-\\beta)^t}{\\alpha+\\beta}\\begin{pmatrix}\\alpha&-\\alpha\\\\-\\beta&\\beta\\end{pmatrix}$$"
+          ],
+          "cards": [
+            "MDP-02-21",
+            "MDP-02-22",
+            "MDP-02-23"
+          ]
+        },
+        {
+          "t": "Shortcuts",
+          "d": [
+            "$2 \\times 2$: $\\lambda_2 = \\operatorname{tr}P - 1$. $3 \\times 3$: $\\lambda_2 + \\lambda_3 = \\operatorname{tr}P - 1$, $\\lambda_2\\lambda_3 = \\det P$.",
+            "Large $t$: $P^t(i,j) \\approx \\pi_j$ once the other eigenvalues are shown to have modulus below 1; fit the remaining constants from $t = 0, 1$."
+          ],
+          "cards": [
+            "MDP-02-24",
+            "MDP-02-25",
+            "MDP-02-27"
+          ]
+        },
+        {
+          "t": "Not diagonalizable",
+          "d": [
+            "Fewer than $n$ independent eigenvectors: terms $t^m\\lambda^t$ appear (Jordan form)."
+          ],
+          "cards": [
+            "MDP-02-26"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Invariant and limit",
+      "items": [
+        {
+          "t": "Invariant distribution",
+          "d": [
+            "$\\pi \\ge 0$, $\\sum_i\\pi_i = 1$, $\\pi P = \\pi$ ($\\pi_j = \\sum_i\\pi_iP_{ij}$). Drop one equation, add the normalization.",
+            "Neighbour chains: $\\pi_iP_{i,i+1} = \\pi_{i+1}P_{i+1,i}$. Doubly stochastic $P$: uniform $\\pi$."
+          ],
+          "cards": [
+            "MDP-02-28",
+            "MDP-02-29",
+            "MDP-02-30",
+            "MDP-02-31",
+            "MDP-02-36"
+          ]
+        },
+        {
+          "t": "Limiting distribution",
+          "d": [
+            "$p_\\infty = \\lim_t p_t$ for every $q$; equivalently $\\lim_t P^t = e\\,p_\\infty$. A limiting distribution is invariant; not conversely."
+          ],
+          "cards": [
+            "MDP-02-32"
+          ]
+        },
+        {
+          "t": "Eigenvalue test",
+          "d": [
+            "$\\pi$ unique ⇔ eigenvalue 1 is simple ⇔ one recurrent class.",
+            "$\\pi$ is the limit ⇔ no other eigenvalue on the unit circle ⇔ that class is aperiodic. Rate $C\\,t^m|\\lambda_2|^t$."
+          ],
+          "cards": [
+            "MDP-02-33",
+            "MDP-02-37"
+          ]
+        },
+        {
+          "t": "Classes",
+          "d": [
+            "Class: states that communicate. Recurrent: returns with probability 1; transient otherwise. Period: gcd of the possible return times; a self-loop gives period 1. Irreducible: a single class."
+          ],
+          "cards": [
+            "MDP-02-34"
+          ]
+        },
+        {
+          "t": "Existence",
+          "d": [
+            "Finite state space: an invariant distribution always exists. Infinite state space: it may not (coin flips)."
+          ],
+          "cards": [
+            "MDP-02-35"
+          ]
+        },
+        {
+          "t": "Time averages",
+          "d": [
+            "If $P(X_t = i) \\to \\pi(i)$ then $\\tfrac1t\\sum_{s \\le t}P(X_s = i) \\to \\pi(i)$. Averages can converge when $P(X_t = i)$ does not (periodic chains)."
+          ],
+          "cards": [
+            "MDP-02-36"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "First-step analysis",
+      "items": [
+        {
+          "t": "Hitting probabilities",
+          "d": [
+            "$h_i = 1$ on the target, $h_i = 0$ on closed classes that miss it, and $h_i = \\sum_j P_{ij}h_j$ elsewhere.",
+            "Matrix form: $h_T = (I - Q)^{-1}b$; $(I - Q)^{-1} = \\sum_k Q^k$ counts expected visits."
+          ],
+          "cards": [
+            "MDP-02-38",
+            "MDP-02-39"
+          ]
+        },
+        {
+          "t": "Expected hitting times",
+          "d": [
+            "$m_i = 0$ on the target and $m_i = 1 + \\sum_j P_{ij}m_j$ elsewhere; finite only if the target is reached with probability 1.",
+            "KE: $q_{ij}(s) = \\sum_{k \\ne j}p_{ik}q_{kj}(s-1)$ and $t_{ij} = 1 + \\sum_{k \\ne j}p_{ik}t_{kj}$."
+          ],
+          "cards": [
+            "MDP-02-40",
+            "MDP-02-41"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Rewards",
+      "items": [
+        {
+          "t": "Expected reward",
+          "d": [
+            "$E\\,r(X_t) = qP^tr$; $P^tr$ lists it by starting state. Total to time $t$: $\\sum_{k \\le t}qP^kr$.",
+            "Indicator rewards turn probabilities into expected rewards."
+          ],
+          "cards": [
+            "MDP-02-42",
+            "MDP-02-43"
+          ]
+        },
+        {
+          "t": "Discounted value",
+          "d": [
+            "$V = \\sum_k \\gamma^kP^kr$ solves $V = r + \\gamma PV$, so $V = (I - \\gamma P)^{-1}r$; the slide formula is $qV$.",
+            "$\\sum_k A^k = (I - A)^{-1}$ when all eigenvalues of $A$ have modulus below 1; applied to $A = \\gamma P$."
+          ],
+          "cards": [
+            "MDP-02-44",
+            "MDP-02-45",
+            "MDP-02-46",
+            "MDP-02-47"
+          ]
+        },
+        {
+          "t": "Long-run average",
+          "d": [
+            "$\\pi r$; $(1 - \\gamma)V(i) \\to \\pi r$ as $\\gamma \\to 1$. For $\\gamma = 1$, $I - P$ is singular."
+          ],
+          "cards": [
+            "MDP-02-45",
+            "MDP-02-46",
+            "MDP-02-48"
+          ]
+        },
+        {
+          "t": "Towards dynamic programming",
+          "d": [
+            "Reward and transition depend on an action, and one optimizes: $V_t(x) = \\min_u\\{g(x,u) + \\sum_yP_u(x,y)V_{t+1}(y)\\}$."
+          ],
+          "cards": [
+            "MDP-02-48"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Overview",
+      "items": [
+        {
+          "t": "Which tool",
+          "d": [
+            "Markov and P: state, rows, row sums. After n steps: paths or eigenvalues. Long run: invariant distribution, then existence of the limit. Reaching: first-step analysis. Rewards: row × matrix × column."
+          ],
+          "cards": [
+            "MDP-02-49"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "Two-state chain 0.2 / 0.3",
+          "d": [
+            "$P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$: $p_1, p_2, p_3 = (0.8, 0.2), (0.7, 0.3), (0.65, 0.35)$; $\\lambda_2 = 0.5$; $\\pi = (0.6, 0.4)$.",
+            "Reward $(1,0)^\\top$, $\\gamma = 0.9$: $V = (6.727,\\ 4.909)^\\top$; $\\pi r = 0.6$."
+          ],
+          "cards": [
+            "MDP-02-13",
+            "MDP-02-22",
+            "MDP-02-29",
+            "MDP-02-43",
+            "MDP-02-46"
+          ]
+        },
+        {
+          "t": "Inventory s = 1, S = 3",
+          "d": [
+            "$P = \\begin{pmatrix}0.1&0.2&0.4&0.3\\\\0.1&0.2&0.4&0.3\\\\0.3&0.4&0.3&0\\\\0.1&0.2&0.4&0.3\\end{pmatrix}$, $\\pi = \\big(\\tfrac{19}{110}, \\tfrac{3}{11}, \\tfrac{4}{11}, \\tfrac{21}{110}\\big)$; order frequency $\\tfrac{49}{110}$; average stock $\\tfrac{173}{110}$."
+          ],
+          "cards": [
+            "MDP-02-04",
+            "MDP-02-31"
+          ]
+        },
+        {
+          "t": "Two urns",
+          "d": [
+            "$P_{i,i\\pm1} = \\tfrac{(3-i)^2}{9}, \\tfrac{i^2}{9}$; $\\pi = \\tfrac{1}{20}(1, 9, 9, 1)$."
+          ],
+          "cards": [
+            "MDP-02-08",
+            "MDP-02-30"
+          ]
+        },
+        {
+          "t": "Service desk",
+          "d": [
+            "$P = \\begin{pmatrix}0.5&0.5&0\\\\0.3&0.5&0.2\\\\0&0.3&0.7\\end{pmatrix}$; $(P^2)_{00} = 0.4$; $\\pi = \\tfrac{1}{34}(9, 15, 10)$; busy fraction $\\tfrac{25}{34}$; expected time from 0 to 2 is 10."
+          ],
+          "cards": [
+            "MDP-02-09",
+            "MDP-02-17",
+            "MDP-02-30",
+            "MDP-02-41",
+            "MDP-02-43"
+          ]
+        },
+        {
+          "t": "Seven-state chain",
+          "d": [
+            "Closed class $\\{1,2,3\\}$ with $\\pi = (\\tfrac15, \\tfrac25, \\tfrac25)$ and eigenvalues $1, \\pm\\tfrac i2$; $P^3(1,1) = \\tfrac14$; $P^{1000}(1,1) = 0.200$.",
+            "Reaching 7: $h_4 = \\tfrac13$, $h_5 = \\tfrac23$, $h_6 = \\tfrac13$."
+          ],
+          "cards": [
+            "MDP-02-17",
+            "MDP-02-25",
+            "MDP-02-34",
+            "MDP-02-35",
+            "MDP-02-38",
+            "MDP-02-39"
+          ]
+        },
+        {
+          "t": "Walk on a cycle",
+          "d": [
+            "$P(X_2 = 0) = \\tfrac49$; period 2; uniform $\\pi$ but no limit; expected time from 0 to 2 is $\\tfrac{18}{5}$."
+          ],
+          "cards": [
+            "MDP-02-18",
+            "MDP-02-36",
+            "MDP-02-41"
+          ]
+        },
+        {
+          "t": "Three-page rotation",
+          "d": [
+            "$(q_1, q_2, q_3) = (c, c, 2c)$, $0 < c < \\tfrac12$; faster than $2^{-t}$ for $\\tfrac{3}{10} < c < \\tfrac12$."
+          ],
+          "cards": [
+            "MDP-02-37"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "Show Markov, find P",
+          "d": [
+            "One sentence: given the current state, the law of the next state depends on that state only and not on earlier history or on time. Then the rows."
+          ],
+          "cards": [
+            "MDP-02-08",
+            "MDP-02-09",
+            "MDP-02-06",
+            "MDP-02-10"
+          ]
+        },
+        {
+          "t": "Probability after many steps",
+          "d": [
+            "Never multiply out. Identify the closed class, show the non-unit eigenvalues have modulus below 1 (or use aperiodicity), and answer with the invariant distribution."
+          ],
+          "cards": [
+            "MDP-02-25",
+            "MDP-02-24"
+          ]
+        },
+        {
+          "t": "Invariant versus limiting",
+          "d": [
+            "Invariant: just solve. Limiting: check one recurrent class and aperiodicity first. Long-run fraction of time: the invariant distribution, even for periodic chains."
+          ],
+          "cards": [
+            "MDP-02-35",
+            "MDP-02-36",
+            "MDP-02-33"
+          ]
+        },
+        {
+          "t": "Condition on the first step",
+          "d": [
+            "Hitting probabilities, hitting times and the value equation are the same idea: one step, then the same problem from the new state."
+          ],
+          "cards": [
+            "MDP-02-38",
+            "MDP-02-40",
+            "MDP-02-44"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "Initial distribution",
+          "d": [
+            "Slides: $q$ (and once $\\gamma$). KE: $p_0$. $\\gamma$ is otherwise the discount factor."
+          ],
+          "cards": [
+            "MDP-02-07",
+            "MDP-02-28"
+          ]
+        },
+        {
+          "t": "Rows and columns",
+          "d": [
+            "Distributions ($q$, $p_t$, $\\pi$) are rows and act from the left; functions of the state ($r$, $V$, $h$) are columns and act from the right."
+          ],
+          "cards": [
+            "MDP-02-13",
+            "MDP-02-42"
+          ]
+        },
+        {
+          "t": "State labels",
+          "d": [
+            "When states start at 0, row i belongs to state i − 1. Label rows and columns."
+          ],
+          "cards": [
+            "MDP-02-15",
+            "MDP-02-09"
+          ]
+        },
+        {
+          "t": "(S,s) and (s,S)",
+          "d": [
+            "Same policy: refill to S when the stock is at most s."
+          ],
+          "cards": [
+            "MDP-02-04"
+          ]
+        },
+        {
+          "t": "Left eigenvectors",
+          "d": [
+            "KE calls them $q_i$; they are written $\\ell_i$ here because $q$ is taken."
+          ],
+          "cards": [
+            "MDP-02-19"
+          ]
+        },
+        {
+          "t": "First-passage notation",
+          "d": [
+            "KE's $T_{ij}$ counts from $s = 0$, so $T_{ii} = 0$; $q_{ij}(s)$ is a first-passage probability."
+          ],
+          "cards": [
+            "MDP-02-40"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Recursion as definition",
+          "d": [
+            "Needs the disturbance to be independent of the past."
+          ],
+          "cards": [
+            "MDP-02-02"
+          ]
+        },
+        {
+          "t": "Largest eigenvalue",
+          "d": [
+            "Ordering by modulus does not force $\\lambda_1 = 1$ (ties on the unit circle). Correct: 1 is an eigenvalue and none has larger modulus."
+          ],
+          "cards": [
+            "MDP-02-11"
+          ]
+        },
+        {
+          "t": "Two-state invariant",
+          "d": [
+            "$0 < \\alpha, \\beta < 1$ is needed for the limit, not for invariance."
+          ],
+          "cards": [
+            "MDP-02-29"
+          ]
+        },
+        {
+          "t": "Series theorem",
+          "d": [
+            "Stated for $1 > |\\lambda_1|$; apply it to $\\gamma P$, not to $P$."
+          ],
+          "cards": [
+            "MDP-02-45"
+          ]
+        },
+        {
+          "t": "KE convergence bound",
+          "d": [
+            "No “lim” in front, and $m = 0$ is possible."
+          ],
+          "cards": [
+            "MDP-02-33"
+          ]
+        },
+        {
+          "t": "KE hitting times",
+          "d": [
+            "“Reachable” must be strengthened to “reached with probability 1”."
+          ],
+          "cards": [
+            "MDP-02-40"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MDP-02-01",
+      "g": "Markov property",
+      "k": "Markov property",
+      "q": "A discrete-time stochastic process $X_0, X_1, X_2, \\dots$ takes values in a state space $\\mathbb{X}$. (1) State the Markov property. (2) Say it in words. (3) Does it make $X_{t+1}$ independent of $X_{t-1}$? (4) For which histories is the statement meant?",
+      "pts": [
+        "(1) For all $t$ and all observed states $x_0, \\dots, x_{t+1}$: $$\\begin{aligned}&P(X_{t+1} = x_{t+1} \\mid X_0 = x_0, \\dots, X_t = x_t)\\\\&\\quad = P(X_{t+1} = x_{t+1} \\mid X_t = x_t)\\end{aligned}$$",
+        "(2) The future depends on the past only through the present: given the current state, the earlier history adds no information about the next state.",
+        "(3) No. The dependence passes through $X_t$. With $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$: $P(X_2 = 1 \\mid X_0 = 1) = 0.7$ but $P(X_2 = 1 \\mid X_0 = 2) = 0.45$.",
+        "(4) Histories of positive probability; otherwise the left side is undefined."
+      ],
+      "pit": "KE states the property for events $\\{X_{t+1} \\in A\\}$, which is needed for continuous state spaces; for countable ones the two forms are equivalent.",
+      "src": "S2 p16 · KE p7",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-02",
+      "g": "Markov property",
+      "k": "Recursion form",
+      "q": "A process is defined by $X_{t+1} = f(X_t, Z_{t+1})$ with a random disturbance $Z_{t+1}$. (1) What must hold for the disturbances so that $(X_t)$ is a time-homogeneous Markov chain? (2) What is then $P_{ij}$? (3) Sketch why the Markov property holds. (4) Let $Z_1 = \\pm 1$ with probability $\\tfrac12$ each, $Z_{t+1} = -Z_t$, $X_0 = 0$ and $X_{t+1} = X_t + Z_{t+1}$. Show that this process is not Markov.",
+      "pts": [
+        "(1) $Z_{t+1}$ is independent of the whole past $(X_0, \\dots, X_t)$ and its law does not depend on $t$. Simplest case: $X_0, Z_1, Z_2, \\dots$ independent with the $Z$'s identically distributed.",
+        "(2) $P_{ij} = P(f(i, Z_1) = j)$.",
+        "(3) The history $\\{X_0 = x_0, \\dots, X_t = x_t\\}$ is determined by $(X_0, Z_1, \\dots, Z_t)$, hence independent of $Z_{t+1}$. On it $X_{t+1} = f(x_t, Z_{t+1})$, so the conditional law of $X_{t+1}$ is the law of $f(x_t, Z)$: it depends on $x_t$ only.",
+        "(4) The path is $0, Z_1, 0, Z_1, \\dots$, so $P(X_3 = 1 \\mid X_2 = 0) = \\tfrac12$ while $P(X_3 = 1 \\mid X_2 = 0, X_1 = 1) = 1$."
+      ],
+      "pit": "The slide says a Markov chain “is defined via the recursion” without the independence condition. KE asks for $W_{t+1}$ “conditionally independent given $X_t$”; read it as independent of the past given $X_t$.",
+      "src": "S2 p6 · KE p12",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-03",
+      "g": "Markov property",
+      "k": "Three models",
+      "q": "For each model give the state space, the recursion, and the condition under which it is a Markov chain. (1) A stock price with rate of return $Z_{t+1}$ from day $t$ to day $t+1$. (2) The number of heads in $t$ flips of a fair coin. (3) A queue: $A_{t+1}$ customers arrive and up to $D_{t+1}$ can be served in period $t+1$; $X_t$ is the number waiting at the end of period $t$.",
+      "pts": [
+        "(1) $X_{t+1} = X_t(1 + Z_{t+1})$ on the continuous state space $\\mathbb{R}_+$ (no transition matrix; a transition kernel instead). Markov when the returns are independent.",
+        "(2) $X_{t+1} = X_t + Z_{t+1}$ with $Z_{t+1} \\in \\{0, 1\\}$ i.i.d., on $\\mathbb{X} = \\{0, 1, 2, \\dots\\}$. The flips are independent, so it is Markov; it never decreases and $X_t \\le t$.",
+        "(3) $X_{t+1} = [X_t + A_{t+1} - D_{t+1}]^+$ on $\\{0, 1, 2, \\dots\\}$, where $[c]^+ = \\max\\{c, 0\\}$. Markov when arrivals and services are independent across periods."
+      ],
+      "pit": "",
+      "src": "S2 p6–10, p32 · KE p8–11",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-04",
+      "g": "Markov property",
+      "k": "(S,s) inventory",
+      "q": "$(S, s)$ inventory model: $X_t$ is the stock at the end of period $t$ and $Z_{t+1}$ the demand during period $t+1$; unmet demand is lost. (1) State the ordering policy. (2) Write the dynamics. (3) When is $(X_t)$ a Markov chain? (4) For $s = 1$, $S = 3$ and demand $0, 1, 2, 3$ with probabilities $0.3, 0.4, 0.2, 0.1$, write the transition matrix on the states $0, 1, 2, 3$.",
+      "pts": [
+        "(1) Order nothing while the stock exceeds $s$; otherwise raise it to $S > s$.",
+        "(2) $X_{t+1} = [S - Z_{t+1}]^+$ if $X_t \\le s$, and $X_{t+1} = [X_t - Z_{t+1}]^+$ if $X_t > s$.",
+        "(3) When the demands are independent (i.i.d. for a time-homogeneous chain): $X_{t+1}$ then depends on past demands only through $X_t$.",
+        "(4) From 0 and 1 (refilled to 3) and from 3: next state $3, 2, 1, 0$ with probabilities $0.3, 0.4, 0.2, 0.1$. From 2: next state $2, 1, 0$ with probabilities $0.3, 0.4, 0.3$. $$P = \\begin{pmatrix}0.1&0.2&0.4&0.3\\\\0.1&0.2&0.4&0.3\\\\0.3&0.4&0.3&0\\\\0.1&0.2&0.4&0.3\\end{pmatrix}$$"
+      ],
+      "pit": "The slides write $(S, s)$ and KE writes $(s, S)$ for the same policy. Fix the order of the states before writing a row.",
+      "src": "S2 p11–13 · KE p9–10",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-05",
+      "g": "Markov property",
+      "k": "State augmentation",
+      "q": "A queue with a guard: new arrivals are admitted only if at most $K$ customers were waiting, and the guard observes the room with a delay of one period. (1) Write the recursion for the number $X_t$ in the room. (2) Why is $(X_t)$ not a Markov chain? (3) How is the model repaired? (4) What is the price, in general, for a memory of $m$ periods?",
+      "pts": [
+        "(1) $X_{t+1} = [X_t + A_{t+1} - D_{t+1}]^+$ if $X_{t-1} \\le K$, and $X_{t+1} = [X_t - D_{t+1}]^+$ if $X_{t-1} > K$.",
+        "(2) $X_{t+1}$ depends on $X_{t-1}$ as well as on $X_t$.",
+        "(3) Enlarge the state: $X'_t = (X_t, X_{t-1})$ is again a Markov chain.",
+        "(4) State space explosion: the state $(X_t, \\dots, X_{t-m})$ lives in $\\mathbb{X}^{m+1}$. A good model keeps the state as small as possible."
+      ],
+      "pit": "",
+      "src": "S2 p35–36 · KE p11–12",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-06",
+      "g": "Markov property",
+      "k": "Three-day memory",
+      "q": "Each day is rainy (R) or dry (N). If the last three days were all rainy, it rains today with probability $0.8$; if they were all dry, with probability $0.2$; in all other cases today's weather equals yesterday's with probability $0.6$. (1) Give a state that makes this a Markov chain by brute force. (2) Give a smaller sufficient state. (3) List the transitions of the smaller chain. (4) Why can “one rainy day so far” and “two rainy days so far” not be merged?",
+      "pts": [
+        "(1) The last three days: $2^3 = 8$ states.",
+        "(2) Yesterday's weather together with the length of the current run, capped at 3: $R_1, R_2, R_3, N_1, N_2, N_3$, six states.",
+        "(3) $R_1 \\to R_2$ and $R_2 \\to R_3$ with probability $0.6$, $R_3 \\to R_3$ with $0.8$; the remaining probability ($0.4, 0.4, 0.2$) goes to $N_1$. Mirror image: $N_1 \\to N_2 \\to N_3$ with $0.6$, $N_3 \\to N_3$ with $0.8$, and to $R_1$ with $0.4, 0.4, 0.2$.",
+        "(4) They rain with the same probability but lead to different states: $R_2$ can reach $R_3$ in one step, $R_1$ cannot."
+      ],
+      "pit": "“As few states as possible” is the point: eight states are correct but not minimal. Translate “all other cases” for both rainy and dry yesterdays.",
+      "src": "KE p24",
+      "seen": [
+        "Ex 2.3"
+      ]
+    },
+    {
+      "id": "MDP-02-07",
+      "g": "Transition matrix",
+      "k": "Definition of a chain",
+      "q": "A process on a countable state space. (1) Define the transition probabilities and time-homogeneity. (2) List the four items in the formal definition of a time-homogeneous Markov chain and the tuple that represents it. (3) What is a stochastic matrix, and why is $P$ one? (4) Name three equivalent ways to describe a Markov chain.",
+      "pts": [
+        "(1) $P_t(i,j) = P(X_{t+1} = j \\mid X_t = i)$; time-homogeneous when this does not depend on $t$, and then it is written $P_{ij}$.",
+        "(2) $X_t \\in \\mathbb{X}$ for all $t$; $X_0 \\sim q$, i.e. $P(X_0 = i) = q_i$ (a row vector); the Markov property; $P(X_{t+1} = j \\mid X_t = i) = P_{ij}$ for all $t$. Tuple $(\\mathbb{X}, q, P)$.",
+        "(3) $P_{ij} \\ge 0$ and every row sums to 1. Row $i$ is the law of the next state from $i$: $\\sum_j P(X_{t+1} = j \\mid X_t = i) = 1$.",
+        "(4) The recursion $X_{t+1} = f(X_t, Z_{t+1})$; the graph (an arc from $i$ to $j$ whenever $P_{ij} > 0$, labelled $P_{ij}$); the tuple $(\\mathbb{X}, q, P)$."
+      ],
+      "pit": "KE writes $p_0$ for the initial distribution and $P(i,j)$ for the entries. $P$ is called a matrix even when $\\mathbb{X}$ is infinite.",
+      "src": "S2 p18–29 · KE p12–16",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-08",
+      "g": "Transition matrix",
+      "k": "Two urns",
+      "q": "Three white and three black balls sit in two urns, three balls each; $X_t$ is the number of white balls in urn 1. At each step one ball is drawn uniformly from each urn and the two are swapped. (1) Why is $(X_t)$ a Markov chain? (2) Give $P_{i,i+1}$, $P_{i,i-1}$ and $P_{i,i}$. (3) Write $P$ on the states $0, 1, 2, 3$. (4) Are the states 0 and 3 absorbing?",
+      "pts": [
+        "(1) Given $X_t = i$, urn 1 holds $i$ white and $3 - i$ black balls and urn 2 holds $3 - i$ white and $i$ black. The two fresh uniform draws have a law that depends on $i$ only, not on the earlier history and not on $t$.",
+        "(2) Up (black from urn 1, white from urn 2): $\\tfrac{(3-i)^2}{9}$. Down (white from 1, black from 2): $\\tfrac{i^2}{9}$. Stay (same colours): $\\tfrac{2i(3-i)}{9}$. The three add to $\\tfrac{(3 - i + i)^2}{9} = 1$.",
+        "(3) $$P = \\begin{pmatrix}0&1&0&0\\\\[2pt]\\frac19&\\frac49&\\frac49&0\\\\[2pt]0&\\frac49&\\frac49&\\frac19\\\\[2pt]0&0&1&0\\end{pmatrix}$$",
+        "(4) No: from 0 the chain moves to 1 surely, and from 3 to 2 surely."
+      ],
+      "pit": "Derive $P_{i,i}$ directly as well; it is the row-sum check.",
+      "src": "KE p24",
+      "seen": [
+        "HW1 P2",
+        "Ex 2.2"
+      ]
+    },
+    {
+      "id": "MDP-02-09",
+      "g": "Transition matrix",
+      "k": "Service desk",
+      "q": "A service desk has room for at most 2 customers; $X_t$ is the number present at the end of period $t$. In each period, first, if someone is present, one service is completed with probability $0.6$; then one customer arrives with probability $0.5$ and joins if fewer than 2 are present (otherwise the arrival is lost). Services and arrivals in different periods are independent. (1) Why is $(X_t)$ a Markov chain? (2) Find the row of $P$ for $x = 0$. (3) The row for $x = 1$. (4) The row for $x = 2$.",
+      "pts": [
+        "(1) Given $X_t = x$, this period's service and arrival are independent of the past, so the law of $X_{t+1}$ depends on $x$ only.",
+        "(2) Nobody to serve; an arrival or not: $(0.5,\\ 0.5,\\ 0)$.",
+        "(3) Served ($0.6$): end at 0 or 1 with probability $0.3$ each. Not served ($0.4$): end at 1 or 2 with $0.2$ each. Row $(0.3,\\ 0.5,\\ 0.2)$.",
+        "(4) Served ($0.6$): end at 1 or 2 with $0.3$ each. Not served ($0.4$): the arrival is lost, end at 2. Row $(0,\\ 0.3,\\ 0.7)$."
+      ],
+      "pit": "The order of events inside a period (service first, then arrival) decides the matrix.",
+      "src": "",
+      "seen": [
+        "MkA P2"
+      ]
+    },
+    {
+      "id": "MDP-02-10",
+      "g": "Transition matrix",
+      "k": "Balls into baskets",
+      "q": "Nine balls are put into eight baskets. Model A: every occupancy vector $(n_1, \\dots, n_8)$ is equally likely. Model B: the balls are placed one at a time, each uniformly at random. (1) In model B, which state gives a Markov chain for the number of non-empty baskets, and what are its transitions? (2) Compute the expected number of non-empty baskets in model B. (3) Compute it in model A. (4) Why do the two answers differ?",
+      "pts": [
+        "(1) $N_t$ = number of non-empty baskets after $t$ balls, $N_0 = 0$: $P(k, k+1) = \\tfrac{8-k}{8}$, $P(k,k) = \\tfrac k8$. The next ball only depends on how many baskets are still empty.",
+        "(2) Each basket is empty with probability $(\\tfrac78)^9$, so $E\\,N_9 = 8\\big(1 - (\\tfrac78)^9\\big) \\approx 5.59$.",
+        "(3) There are $\\binom{16}{7} = 11440$ occupancy vectors, and basket 1 is empty in $\\binom{15}{6} = 5005$ of them: $8\\big(1 - \\tfrac{5005}{11440}\\big) = 4.5$.",
+        "(4) “Equally likely” refers to different objects. Independent throws do not make occupancy vectors equally likely; they favour spread-out configurations."
+      ],
+      "pit": "",
+      "src": "KE p24",
+      "seen": [
+        "Ex 2.1"
+      ]
+    },
+    {
+      "id": "MDP-02-11",
+      "g": "Transition matrix",
+      "k": "Stochastic matrix",
+      "q": "$P \\in \\mathbb{R}^{n \\times n}$ is a stochastic matrix and $e = (1, \\dots, 1)^\\top$. Prove: (1) $1$ is an eigenvalue of $P$; (2) $P^t$ is a stochastic matrix for every $t$; (3) every eigenvalue satisfies $|\\lambda| \\le 1$.",
+      "pts": [
+        "(1) $(Pe)_i = \\sum_j P_{ij} = 1$, so $Pe = e$.",
+        "(2) Induction: $P^{t+1} = P^t P$ is a product of non-negative matrices, and $P^{t+1}e = P^t(Pe) = P^t e = e$.",
+        "(3) Let $Pv = \\lambda v$ with $v \\ne 0$ (possibly complex) and choose $k$ with $|v_k|$ largest. Then $$|\\lambda|\\,|v_k| = \\Big|\\sum_j P_{kj}v_j\\Big| \\le \\sum_j P_{kj}|v_j| \\le |v_k|$$ so $|\\lambda| \\le 1$."
+      ],
+      "pit": "The slide orders $|\\lambda_1| \\ge \\dots \\ge |\\lambda_N|$ and concludes $\\lambda_1 = 1$; moduli can tie ($\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$ has eigenvalues $1$ and $-1$). Correct statement: 1 is an eigenvalue and none is larger in modulus. Non-negativity matters: $\\begin{pmatrix}2&-1\\\\0&1\\end{pmatrix}$ has row sums 1 and eigenvalue 2.",
+      "src": "KE p15 · S2 p61",
+      "seen": [
+        "Ex 2.6"
+      ]
+    },
+    {
+      "id": "MDP-02-12",
+      "g": "Distribution in time",
+      "k": "Path probability",
+      "q": "A Markov chain $(\\mathbb{X}, q, P)$. (1) Give the probability of the path $X_0 = x_0, X_1 = x_1, \\dots, X_t = x_t$. (2) Justify it in three steps. (3) A two-state chain on $\\{1, 2\\}$ moves from 1 to 2 with probability $0.2$ and from 2 to 1 with probability $0.3$: $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$, started in state 1. Compute the probability of the path $1 \\to 1 \\to 2$ and of $1 \\to 1 \\to 2 \\to 2$.",
+      "pts": [
+        "(1) $q_{x_0}\\,P_{x_0x_1}P_{x_1x_2}\\cdots P_{x_{t-1}x_t}$.",
+        "(2) First the chain rule $P(A \\cap B \\cap C) = P(A \\mid B \\cap C)P(B \\mid C)P(C)$, applied repeatedly; then the Markov property shortens every condition to the previous state; then the definitions of $q$ and $P$.",
+        "(3) $1 \\times 0.8 \\times 0.2 = 0.16$, and $0.16 \\times 0.7 = 0.112$."
+      ],
+      "pit": "",
+      "src": "S2 p41 · KE p16",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-13",
+      "g": "Distribution in time",
+      "k": "Distribution at t",
+      "q": "A Markov chain $(\\mathbb{X}, q, P)$; $p_t$ is the distribution of $X_t$, written as a row vector. (1) Derive $p_1$ from $q$ and $P$. (2) Give $p_t$ in general. (3) What do entry $(i,j)$ and row $i$ of $P^t$ mean? (4) A two-state chain on $\\{1, 2\\}$ moves from 1 to 2 with probability $0.2$ and from 2 to 1 with probability $0.3$: $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$. With $q = (1, 0)$ compute $p_1$, $p_2$, $p_3$.",
+      "pts": [
+        "(1) Law of total probability over $X_0$: $P(X_1 = j) = \\sum_i P(X_1 = j \\mid X_0 = i)P(X_0 = i) = \\sum_i q_i P_{ij}$, i.e. $p_1 = qP$.",
+        "(2) $p_t = p_{t-1}P = qP^t$.",
+        "(3) $P^t(i,j) = P(X_t = j \\mid X_0 = i)$; row $i$ is the distribution of $X_t$ given $X_0 = i$.",
+        "(4) $p_1 = (0.8,\\ 0.2)$; $p_2 = (0.64 + 0.06,\\ 0.16 + 0.14) = (0.7,\\ 0.3)$; $p_3 = (0.56 + 0.09,\\ 0.14 + 0.21) = (0.65,\\ 0.35)$."
+      ],
+      "pit": "Distributions are rows and multiply from the left ($qP$). A column multiplied from the right ($Pr$) gives expectations, not a distribution.",
+      "src": "S2 p45 · KE p16–17",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-14",
+      "g": "Distribution in time",
+      "k": "Multi-step",
+      "q": "Claim: $P(X_{t+s} = j \\mid X_t = i) = P^s(i,j)$ for all $s \\ge 1$. (1) Outline the induction step from $s$ to $s+1$. (2) Which two facts does it use? (3) Which identity for matrix powers follows?",
+      "pts": [
+        "(1) Split on the state at time $t+s$: $$\\begin{aligned}P(X_{t+s+1} = j \\mid X_t = i) &= \\sum_k P(k,j)\\,P^s(i,k)\\\\ &= P^{s+1}(i,j)\\end{aligned}$$",
+        "(2) The Markov property, for $P(X_{t+s+1} = j \\mid X_{t+s} = k, X_t = i) = P(k,j)$; the induction hypothesis, for $P(X_{t+s} = k \\mid X_t = i) = P^s(i,k)$.",
+        "(3) $P^{s+u} = P^s P^u$ (Chapman–Kolmogorov): the $t$-step transition matrices are the powers of $P$."
+      ],
+      "pit": "The first factor conditions on two time points, not on the full history. Strictly it needs the Markov property summed over all histories that pass through $X_t = i$.",
+      "src": "KE p15–16",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-15",
+      "g": "Distribution in time",
+      "k": "Coin flips",
+      "q": "$X_t$ is the number of heads in $t$ flips of a fair coin, $X_0 = 0$. (1) Describe $P$. (2) Compute $p_1$, $p_2$, $p_3$ by multiplying. (3) Which known distribution is $p_t$, and what is $P(X_{10} = 5)$? (4) Which row of $P$ belongs to state $x$?",
+      "pts": [
+        "(1) Row $x$ has $\\tfrac12$ in column $x$ and $\\tfrac12$ in column $x+1$: $$P = \\begin{pmatrix}\\frac12&\\frac12&0&\\cdots\\\\0&\\frac12&\\frac12&\\cdots\\\\\\vdots&&\\ddots&\\ddots\\end{pmatrix}$$",
+        "(2) $(\\tfrac12, \\tfrac12, 0, \\dots)$, $(\\tfrac14, \\tfrac12, \\tfrac14, 0, \\dots)$, $(\\tfrac18, \\tfrac38, \\tfrac38, \\tfrac18, 0, \\dots)$.",
+        "(3) Binomial: $P(X_t = j) = \\binom{t}{j}\\tfrac{1}{2^t}$; $P(X_{10} = 5) = \\tfrac{252}{1024} \\approx 0.246$.",
+        "(4) Row and column $i$ belong to state $x = i - 1$, because the states start at 0. Label rows and columns."
+      ],
+      "pit": "",
+      "src": "S2 p26, p48 · KE p14, p18",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-16",
+      "g": "Distribution in time",
+      "k": "Backward question",
+      "q": "A two-state chain on $\\{1, 2\\}$ moves from 1 to 2 with probability $0.2$ and from 2 to 1 with probability $0.3$: $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$. The initial distribution is $q = (\\tfrac12, \\tfrac12)$. (1) Compute $P^2$. (2) Compute $P(X_2 = 2)$. (3) Compute $P(X_0 = 1 \\mid X_2 = 2)$.",
+      "pts": [
+        "(1) $P^2 = \\begin{pmatrix}0.70&0.30\\\\0.45&0.55\\end{pmatrix}$.",
+        "(2) $\\tfrac12 \\times 0.30 + \\tfrac12 \\times 0.55 = 0.425$.",
+        "(3) Bayes: $\\dfrac{\\tfrac12 \\times 0.30}{0.425} = \\dfrac{6}{17} \\approx 0.353$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-17",
+      "g": "Distribution in time",
+      "k": "Count paths",
+      "q": "(1) A chain on $\\{1, 2, 3\\}$: from 1 it moves to 2 surely; from 2 it stays or moves to 3 with probability $\\tfrac12$ each; from 3 it stays or moves to 1 with probability $\\tfrac12$ each. Starting from 1, what is the probability of being in 1 after one step? (2) After three steps? (3) A chain on $\\{0, 1, 2\\}$ (customers at a service desk) has $P = \\begin{pmatrix}0.5&0.5&0\\\\0.3&0.5&0.2\\\\0&0.3&0.7\\end{pmatrix}$. Starting from 0, what is $P(X_2 = 0)$?",
+      "pts": [
+        "(1) $0$: from 1 the chain moves to 2.",
+        "(2) State 1 can be entered only from 3, so the only path is $1 \\to 2 \\to 3 \\to 1$: $1 \\cdot \\tfrac12 \\cdot \\tfrac12 = \\tfrac14$.",
+        "(3) $(P^2)_{00} = 0.5 \\times 0.5 + 0.5 \\times 0.3 = 0.4$."
+      ],
+      "pit": "For a few steps, count paths or multiply one row; do not compute full matrix powers.",
+      "src": "",
+      "seen": [
+        "HW1 P3",
+        "Ex 2.5",
+        "MkA P2"
+      ]
+    },
+    {
+      "id": "MDP-02-18",
+      "g": "Distribution in time",
+      "k": "Walk on a cycle",
+      "q": "A particle on four nodes $0, 1, 2, 3$ arranged in a cycle moves clockwise (from $i$ to $i + 1 \\bmod 4$) with probability $\\tfrac23$ and counter-clockwise with probability $\\tfrac13$; $X_t$ is its position after $t$ steps and $X_0 = 0$. (1) Write $P$. (2) Compute $P(X_2 = 0)$. (3) Find $P(X_{101} = 0)$ and $P(X_{100} = 1)$ without matrix powers. (4) Which property of the chain is this?",
+      "pts": [
+        "(1) $$P = \\begin{pmatrix}0&\\frac23&0&\\frac13\\\\[2pt]\\frac13&0&\\frac23&0\\\\[2pt]0&\\frac13&0&\\frac23\\\\[2pt]\\frac23&0&\\frac13&0\\end{pmatrix}$$",
+        "(2) One step each way, in two orders: $2 \\cdot \\tfrac23 \\cdot \\tfrac13 = \\tfrac49$.",
+        "(3) Every step changes the parity of the position. After an odd number of steps the particle is on an odd node and after an even number on an even node, so both are $0$.",
+        "(4) The chain has period 2."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MkB P2"
+      ]
+    },
+    {
+      "id": "MDP-02-19",
+      "g": "Powers of P",
+      "k": "Diagonalization",
+      "q": "$P \\in \\mathbb{R}^{n \\times n}$ is diagonalizable. (1) Write the decomposition and name its pieces. (2) Derive $P^t$. (3) Expand $P^t$ as a sum with one term per eigenvalue. (4) What are the rows $\\ell_i$ of $R^{-1}$?",
+      "pts": [
+        "(1) $P = R\\Lambda R^{-1}$ with $\\Lambda = \\operatorname{diag}(\\lambda_1, \\dots, \\lambda_n)$; the columns $r_i$ of $R$ are right eigenvectors, $Pr_i = \\lambda_i r_i$.",
+        "(2) $P^t = (R\\Lambda R^{-1})^t = R\\Lambda^t R^{-1}$: every inner $R^{-1}R$ cancels, and $\\Lambda^t = \\operatorname{diag}(\\lambda_1^t, \\dots, \\lambda_n^t)$.",
+        "(3) $P^t = \\sum_{i=1}^n \\lambda_i^t\\, r_i \\ell_i$. Each $r_i\\ell_i$ (column times row) is a fixed $n \\times n$ matrix; $t$ appears only in $\\lambda_i^t$.",
+        "(4) Left eigenvectors: $\\ell_i P = \\lambda_i \\ell_i$, normalized by $\\ell_i r_i = 1$ and $\\ell_i r_j = 0$ for $i \\ne j$ (from $R^{-1}R = I$)."
+      ],
+      "pit": "KE calls the rows of $R^{-1}$ $q_i$; here $q$ is the initial distribution, so they are written $\\ell_i$.",
+      "src": "S2 p50 · KE p19",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-20",
+      "g": "Powers of P",
+      "k": "Reading the spectrum",
+      "q": "$P$ is a diagonalizable stochastic matrix with eigenvalues $\\lambda_1 = 1, \\lambda_2, \\dots, \\lambda_n$. (1) What are $r_1$ and $\\ell_1$? (2) Write $P^t$ with the $\\lambda_1$ term separated. (3) What happens as $t \\to \\infty$ if $|\\lambda_i| < 1$ for all $i \\ge 2$, and how fast? (4) What if some $\\lambda_i \\ne 1$ has $|\\lambda_i| = 1$? (5) What if the eigenvalue 1 is repeated?",
+      "pts": [
+        "(1) $r_1 = e$ since $Pe = e$. $\\ell_1 = \\pi$: $\\ell_1 P = \\ell_1$ is $\\pi P = \\pi$, and $\\ell_1 e = 1$ is the normalization.",
+        "(2) $P^t = e\\pi + \\sum_{i \\ge 2} \\lambda_i^t\\, r_i\\ell_i$, where $e\\pi$ has every row equal to $\\pi$.",
+        "(3) $P^t \\to e\\pi$, with an error of order $|\\lambda_2|^t$ (the second largest modulus).",
+        "(4) That term does not decay: $P^t$ keeps oscillating and has no limit (a periodic chain). $\\pi$ still exists.",
+        "(5) $\\pi$ is not unique: the chain has more than one closed class."
+      ],
+      "pit": "",
+      "src": "KE p19–21",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-21",
+      "g": "Powers of P",
+      "k": "Two-state formula",
+      "q": "$P = \\begin{pmatrix}1-\\alpha&\\alpha\\\\\\beta&1-\\beta\\end{pmatrix}$ with $\\alpha + \\beta > 0$. (1) Find the eigenvalues without solving the characteristic equation. (2) Find a right eigenvector for $\\lambda_2$. (3) Find $R^{-1}$. (4) Write the formula for $P^t$.",
+      "pts": [
+        "(1) $\\lambda_1 = 1$; the trace is $2 - \\alpha - \\beta = 1 + \\lambda_2$, so $\\lambda_2 = 1 - \\alpha - \\beta$.",
+        "(2) $P - \\lambda_2 I = \\begin{pmatrix}\\beta&\\alpha\\\\\\beta&\\alpha\\end{pmatrix}$, so $r_2 = (\\alpha, -\\beta)^\\top$.",
+        "(3) $R = \\begin{pmatrix}1&\\alpha\\\\1&-\\beta\\end{pmatrix}$, $\\det R = -(\\alpha + \\beta)$, $R^{-1} = \\dfrac{1}{\\alpha+\\beta}\\begin{pmatrix}\\beta&\\alpha\\\\1&-1\\end{pmatrix}$. Its first row is $\\pi$.",
+        "(4) $$P^t = \\frac{1}{\\alpha+\\beta}\\begin{pmatrix}\\beta&\\alpha\\\\\\beta&\\alpha\\end{pmatrix} + \\frac{(1-\\alpha-\\beta)^t}{\\alpha+\\beta}\\begin{pmatrix}\\alpha&-\\alpha\\\\-\\beta&\\beta\\end{pmatrix}$$"
+      ],
+      "pit": "$2 \\times 2$ inverse: $\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}^{-1} = \\tfrac{1}{ad - bc}\\begin{pmatrix}d&-b\\\\-c&a\\end{pmatrix}$.",
+      "src": "KE p21–23",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-22",
+      "g": "Powers of P",
+      "k": "Two-state numbers",
+      "q": "A two-state chain on $\\{1, 2\\}$ moves from 1 to 2 with probability $0.2$ and from 2 to 1 with probability $0.3$: $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$. (1) Give $\\lambda_2$ and $\\pi$. (2) Write $P^t$ as a constant matrix plus a decaying one. (3) Check the formula at $t = 0$ and at $t = 2$. (4) How large is $|P^t(1,1) - 0.6|$ at $t = 10$?",
+      "pts": [
+        "(1) $\\lambda_2 = 0.8 + 0.7 - 1 = 0.5$; $\\pi = (0.6,\\ 0.4)$.",
+        "(2) $$P^t = \\begin{pmatrix}0.6&0.4\\\\0.6&0.4\\end{pmatrix} + 0.5^t\\begin{pmatrix}0.4&-0.4\\\\-0.6&0.6\\end{pmatrix}$$",
+        "(3) $t = 0$: the sum is $I$. $t = 2$: $P^2(1,1) = 0.6 + 0.25 \\times 0.4 = 0.7$, and directly $0.8^2 + 0.2 \\times 0.3 = 0.7$.",
+        "(4) $0.4 \\times 0.5^{10} \\approx 0.0004$; the error halves at every step."
+      ],
+      "pit": "",
+      "src": "S2 p24, p50",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-23",
+      "g": "Powers of P",
+      "k": "Practice 2×2",
+      "q": "$P = \\begin{pmatrix}0.5&0.5\\\\0.2&0.8\\end{pmatrix}$. (1) Find $\\lambda_2$ and $r_2$. (2) Find $\\pi$. (3) Write $P^t$. (4) Compute $P^3(1,1)$ and check it by direct multiplication.",
+      "pts": [
+        "(1) $\\lambda_2 = 0.5 + 0.8 - 1 = 0.3$; $r_2 = (0.5, -0.2)^\\top$.",
+        "(2) $\\pi = \\big(\\tfrac{0.2}{0.7}, \\tfrac{0.5}{0.7}\\big) = \\big(\\tfrac27, \\tfrac57\\big)$.",
+        "(3) $$P^t = \\begin{pmatrix}\\frac27&\\frac57\\\\\\frac27&\\frac57\\end{pmatrix} + 0.3^t\\begin{pmatrix}\\frac57&-\\frac57\\\\-\\frac27&\\frac27\\end{pmatrix}$$",
+        "(4) $\\tfrac27 + 0.027 \\times \\tfrac57 = 0.305$. Directly: row 1 of $P^2$ is $(0.35,\\ 0.65)$ and $0.35 \\times 0.5 + 0.65 \\times 0.2 = 0.305$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-24",
+      "g": "Powers of P",
+      "k": "3×3 by trace, det",
+      "q": "$P = \\begin{pmatrix}0.5&0.5&0\\\\0.25&0.5&0.25\\\\0&0.5&0.5\\end{pmatrix}$ on the states $1, 2, 3$. (1) Find the three eigenvalues from the trace and the determinant. (2) Find $\\pi$. (3) Estimate $P^{100}(1,3)$ without a full decomposition. (4) Find the exact formula for $P^t(1,3)$, $t \\ge 1$.",
+      "pts": [
+        "(1) $\\lambda_1 = 1$. The trace $1.5$ gives $\\lambda_2 + \\lambda_3 = 0.5$; $\\det P = 0$ gives $\\lambda_2\\lambda_3 = 0$. Eigenvalues $1,\\ 0.5,\\ 0$.",
+        "(2) Only neighbours communicate: $0.5\\pi_1 = 0.25\\pi_2$ and $0.25\\pi_2 = 0.5\\pi_3$, so $\\pi = (\\tfrac14, \\tfrac12, \\tfrac14)$.",
+        "(3) $P^{100}(1,3) \\approx \\pi_3 = \\tfrac14$, with an error of order $0.5^{100}$.",
+        "(4) $P^t(1,3) = \\tfrac14 + c \\cdot 0.5^t$ for $t \\ge 1$. From $P(1,3) = 0$: $c = -\\tfrac12$, so $P^t(1,3) = \\tfrac14 - (\\tfrac12)^{t+1}$. Check $t = 2$: $\\tfrac18 = 0.5 \\times 0.25$."
+      ],
+      "pit": "For $3 \\times 3$ or large $t$, do not decompose fully. Show the other eigenvalues have modulus below 1 and compute $\\pi$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-25",
+      "g": "Powers of P",
+      "k": "Step 1000",
+      "q": "A chain on $\\{1, 2, 3\\}$: from 1 it moves to 2 surely; from 2 it stays or moves to 3 with probability $\\tfrac12$ each; from 3 it stays or moves to 1 with probability $\\tfrac12$ each. The chain starts in 1 and $M$ denotes its transition matrix. (1) Find the eigenvalues of $M$. (2) Find the invariant distribution. (3) Give the probability of being in state 1 at step 1000 to accuracy $0.001$, with the reason. (4) Give the exact value at step 16.",
+      "pts": [
+        "(1) $\\det(M - \\lambda I) = -\\lambda(\\tfrac12 - \\lambda)^2 + \\tfrac14 = -(\\lambda - 1)(\\lambda^2 + \\tfrac14)$: eigenvalues $1$ and $\\pm\\tfrac{i}{2}$, of modulus $\\tfrac12$.",
+        "(2) Column by column: $\\pi_1 = \\tfrac12\\pi_3$; $\\pi_2 = \\pi_1 + \\tfrac12\\pi_2$, so $\\pi_2 = 2\\pi_1$; $\\pi_3 = \\pi_2$. Hence $\\pi = (\\tfrac15, \\tfrac25, \\tfrac25)$.",
+        "(3) $M^t(1,1) = \\pi_1 + O(2^{-t})$, so the answer is $0.200$.",
+        "(4) Fitting $t = 0, 1$: $$M^t(1,1) = \\tfrac15 + 2^{-t}\\big[\\tfrac45\\cos\\tfrac{\\pi t}{2} - \\tfrac25\\sin\\tfrac{\\pi t}{2}\\big]$$ At $t = 16$: $\\tfrac15 + \\tfrac{4/5}{65536} = \\tfrac{3277}{16384} \\approx 0.20001$."
+      ],
+      "pit": "Complex eigenvalues make the vanishing part oscillate; the rate is still their modulus. Without the closed form: the class is finite, irreducible and aperiodic (state 2 has a self-loop), so $M^t(1,1) \\to \\pi_1$.",
+      "src": "KE p24–25",
+      "seen": [
+        "HW1 P3",
+        "Ex 2.5"
+      ]
+    },
+    {
+      "id": "MDP-02-26",
+      "g": "Powers of P",
+      "k": "When the recipe fails",
+      "q": "(1) When is a matrix diagonalizable? Give a sufficient condition. (2) Why does the recipe fail for $P = \\begin{pmatrix}\\frac12&\\frac12&0\\\\0&\\frac12&\\frac12\\\\0&0&1\\end{pmatrix}$? (3) Compute $P^t(1,1)$ and $P^t(1,2)$ for this matrix directly and name the new feature. (4) A chain has eigenvalues $1$, $-0.9$, $0.2$. Does $P^t$ converge, how does the convergence look, and after roughly how many steps is the error $10^{-3}$?",
+      "pts": [
+        "(1) When it has $n$ linearly independent eigenvectors. Distinct eigenvalues are sufficient.",
+        "(2) $\\lambda = \\tfrac12$ is a double root, but $P - \\tfrac12 I$ has rank 2: there is only one eigenvector for it.",
+        "(3) $P^t(1,1) = 2^{-t}$ and $P^t(1,2) = t\\,2^{-t}$ ($t$ choices for the step at which the chain moves from 1 to 2). A factor $t$ appears; in general the rate is $t^m|\\lambda_2|^t$.",
+        "(4) It converges, since $|-0.9| < 1$ and $|0.2| < 1$. The deviation behaves like $(-0.9)^t$: it alternates in sign and decays slowly. $0.9^t = 10^{-3}$ at $t \\approx 66$ (with $0.5^t$, $t \\approx 10$)."
+      ],
+      "pit": "",
+      "src": "S2 p50 · KE p20–21",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-27",
+      "g": "Powers of P",
+      "k": "n strains",
+      "q": "A virus has $n > 1$ strains. In each period it mutates with probability $\\alpha$, and then changes to one of the other $n - 1$ strains uniformly. (1) Write $P$. (2) Find a one-step recursion for $q_t = P(X_t = X_0)$. (3) Solve it. (4) Read off the eigenvalues of $P$ and the limit of $q_t$.",
+      "pts": [
+        "(1) $P_{ii} = 1 - \\alpha$ and $P_{ij} = \\tfrac{\\alpha}{n-1}$ for $j \\ne i$.",
+        "(2) $q_{t+1} = (1 - \\alpha)q_t + \\tfrac{\\alpha}{n-1}(1 - q_t)$.",
+        "(3) The fixed point is $\\tfrac1n$ and $q_0 = 1$: $$q_t = \\frac1n + \\Big(1 - \\frac1n\\Big)\\Big(1 - \\frac{n\\alpha}{n-1}\\Big)^t$$",
+        "(4) Eigenvalues $1$ and $1 - \\tfrac{n\\alpha}{n-1}$ (multiplicity $n - 1$). $q_t \\to \\tfrac1n$, except for $n = 2$, $\\alpha = 1$, where the second eigenvalue is $-1$ and the chain is periodic."
+      ],
+      "pit": "For $\\alpha > \\tfrac{n-1}{n}$ the second eigenvalue is negative and $q_t$ oscillates around $\\tfrac1n$.",
+      "src": "KE p24",
+      "seen": [
+        "Ex 2.4"
+      ]
+    },
+    {
+      "id": "MDP-02-28",
+      "g": "Invariant and limit",
+      "k": "Invariant definition",
+      "q": "(1) Define an invariant distribution $\\pi$ of $P$, in matrix form and entry by entry. (2) Why is it called invariant? (3) How is it computed, and why is one equation dropped? (4) Why is “iterate $p_t$ until it stops changing” not a valid method?",
+      "pts": [
+        "(1) $\\pi_i \\ge 0$, $\\sum_i \\pi_i = 1$ and $\\pi P = \\pi$, i.e. $\\pi_j = \\sum_i \\pi_i P_{ij}$ for every $j$ (column $j$ of $P$).",
+        "(2) If $p_{t_0} = \\pi$ then $p_t = \\pi$ for all $t \\ge t_0$, since $\\pi P^t = \\pi$.",
+        "(3) The $n$ equations of $\\pi(P - I) = 0$ are dependent, because $(P - I)e = 0$. Drop one and add $\\sum_i \\pi_i = 1$.",
+        "(4) For a periodic chain $p_t$ never settles; for a chain with several closed classes it settles on something that depends on $q$."
+      ],
+      "pit": "On this slide the initial distribution is called $\\gamma$; from the reward slides on, $\\gamma$ is the discount factor.",
+      "src": "S2 p52 · KE p20",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-29",
+      "g": "Invariant and limit",
+      "k": "Two-state invariant",
+      "q": "$P = \\begin{pmatrix}1-\\alpha&\\alpha\\\\\\beta&1-\\beta\\end{pmatrix}$. (1) Find $\\pi$ for $\\alpha + \\beta > 0$ and give its flow interpretation. (2) Evaluate it for $\\alpha = 0.2$, $\\beta = 0.3$. (3) What happens for $\\alpha = \\beta = 0$? (4) What happens for $\\alpha = \\beta = 1$?",
+      "pts": [
+        "(1) $\\pi_1\\alpha = \\pi_2\\beta$: the flow out of state 1 equals the flow into it. With $\\pi_1 + \\pi_2 = 1$: $\\pi = \\big(\\tfrac{\\beta}{\\alpha+\\beta}, \\tfrac{\\alpha}{\\alpha+\\beta}\\big)$.",
+        "(2) $\\pi = (0.6,\\ 0.4)$.",
+        "(3) $P = I$: every $(c, 1 - c)$ is invariant, and $p_t = q$ for all $t$.",
+        "(4) $\\pi = (\\tfrac12, \\tfrac12)$ is unique, but $\\lambda_2 = -1$: $P^t$ equals $I$ for even $t$ and $P$ for odd $t$, so there is no limit."
+      ],
+      "pit": "The slide assumes $0 < \\alpha, \\beta < 1$. That is what makes $\\pi$ the limit as well; invariance and uniqueness only need $\\alpha + \\beta > 0$.",
+      "src": "S2 p53 · KE p21–22",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-30",
+      "g": "Invariant and limit",
+      "k": "Neighbour shortcut",
+      "q": "A chain moves only between neighbouring states or stays put. (1) Which shortcut replaces $\\pi P = \\pi$? (2) Apply it to the urn chain $P = \\begin{pmatrix}0&1&0&0\\\\[2pt]\\frac19&\\frac49&\\frac49&0\\\\[2pt]0&\\frac49&\\frac49&\\frac19\\\\[2pt]0&0&1&0\\end{pmatrix}$ on $0, 1, 2, 3$. (3) Apply it to the service-desk chain $P = \\begin{pmatrix}0.5&0.5&0\\\\0.3&0.5&0.2\\\\0&0.3&0.7\\end{pmatrix}$ on $0, 1, 2$. (4) In the service-desk chain, which fraction of periods end with a full room in the long run?",
+      "pts": [
+        "(1) $\\pi_i P_{i,i+1} = \\pi_{i+1}P_{i+1,i}$: the flow across each cut balances. Solve from left to right, then normalize.",
+        "(2) $\\pi_1 = 9\\pi_0$, $\\pi_2 = \\pi_1$, $\\pi_3 = \\tfrac19\\pi_2 = \\pi_0$, so $\\pi = \\tfrac{1}{20}(1, 9, 9, 1)$",
+        "(3) $\\pi_1 = \\tfrac{0.5}{0.3}\\pi_0 = \\tfrac53\\pi_0$ and $\\pi_2 = \\tfrac{0.2}{0.3}\\pi_1 = \\tfrac{10}{9}\\pi_0$: $\\pi = \\tfrac{1}{34}(9, 15, 10)$.",
+        "(4) $\\pi_2 = \\tfrac{10}{34} \\approx 0.294$. The chain is irreducible and has self-loops, so this is also the limit."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MkA P2"
+      ]
+    },
+    {
+      "id": "MDP-02-31",
+      "g": "Invariant and limit",
+      "k": "Inventory long run",
+      "q": "The inventory chain on the states $0, 1, 2, 3$ has $P = \\begin{pmatrix}0.1&0.2&0.4&0.3\\\\0.1&0.2&0.4&0.3\\\\0.3&0.4&0.3&0\\\\0.1&0.2&0.4&0.3\\end{pmatrix}$. (1) Find $\\pi_2$ from a single equation. (2) Find $\\pi_3$. (3) The full solution is $\\pi = \\big(\\tfrac{19}{110}, \\tfrac{3}{11}, \\tfrac{4}{11}, \\tfrac{21}{110}\\big)$. An order is placed whenever a period ends with stock at most 1; how often is that in the long run? (4) Compute the long-run average stock.",
+      "pts": [
+        "(1) Column 2: $\\pi_2 = 0.4(\\pi_0 + \\pi_1 + \\pi_3) + 0.3\\pi_2 = 0.4(1 - \\pi_2) + 0.3\\pi_2$, so $1.1\\pi_2 = 0.4$ and $\\pi_2 = \\tfrac{4}{11}$.",
+        "(2) Column 3: $\\pi_3 = 0.3(\\pi_0 + \\pi_1 + \\pi_3) = 0.3(1 - \\pi_2) = \\tfrac{21}{110}$.",
+        "(3) $\\pi_0 + \\pi_1 = \\tfrac{19 + 30}{110} = \\tfrac{49}{110} \\approx 0.445$.",
+        "(4) $\\pi r$ with $r = (0, 1, 2, 3)^\\top$: $\\tfrac{30 + 80 + 63}{110} = \\tfrac{173}{110} \\approx 1.57$."
+      ],
+      "pit": "Identical rows are worth spotting: they collapse several unknowns into one.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-32",
+      "g": "Invariant and limit",
+      "k": "Limiting distribution",
+      "q": "A finite-state Markov chain. (1) Define the limiting distribution $p_\\infty$. (2) State the equivalent condition on $P^t$ and why it is equivalent. (3) Prove that a limiting distribution is invariant. (4) Does the converse hold?",
+      "pts": [
+        "(1) $p_\\infty = \\lim_{t \\to \\infty} p_t$, the same limit for every initial distribution.",
+        "(2) $\\lim_t P^t = e\\,p_\\infty$ (every row equal to $p_\\infty$). Starting from state $i$ gives row $i$; conversely $q\\,e\\,p_\\infty = p_\\infty$ because $qe = 1$.",
+        "(3) $p_\\infty = \\lim_t p_{t+1} = \\lim_t (qP^t)P = p_\\infty P$.",
+        "(4) No. An invariant distribution always exists for a finite chain, but it need not be unique and need not be a limit."
+      ],
+      "pit": "",
+      "src": "KE p19–20",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-33",
+      "g": "Invariant and limit",
+      "k": "Eigenvalue test",
+      "q": "A finite chain has eigenvalues $1 = \\lambda_1 \\ge |\\lambda_2| \\ge \\dots \\ge |\\lambda_n|$ and an invariant distribution $\\pi$. (1) When is $\\pi$ unique? (2) When is $\\pi$ the limiting distribution? (3) What is the rate of convergence? (4) Translate both conditions into properties of the graph.",
+      "pts": [
+        "(1) Exactly when $\\lambda = 1$ is a simple eigenvalue ($\\lambda_i \\ne 1$ for $i \\ge 2$).",
+        "(2) Exactly when 1 is the only eigenvalue on the unit circle ($|\\lambda_i| < 1$ for $i \\ge 2$).",
+        "(3) $|P^t(i,j) - \\pi(j)| \\le C\\,t^m|\\lambda_2|^t$, where $m + 1$ is the size of the largest Jordan block of $\\lambda_2$; $m = 0$ when $P$ is diagonalizable.",
+        "(4) Unique: exactly one recurrent class (transient states allowed). Limit: that class is also aperiodic."
+      ],
+      "pit": "KE writes the bound with “lim” in front and $1 \\le m \\le n - 1$. The bound holds for every $t$, and $m = 0$ happens (two-state chain: the error is exactly $0.4 \\times 0.5^t$).",
+      "src": "KE p20–21",
+      "seen": [
+        "Ex 2.8"
+      ]
+    },
+    {
+      "id": "MDP-02-34",
+      "g": "Invariant and limit",
+      "k": "Classes and period",
+      "q": "Define for a finite chain: (1) a class and an irreducible chain; (2) recurrent and transient states; (3) the period of a state and aperiodicity, with a quick sufficient test. (4) A chain on $\\{1, \\dots, 7\\}$: from 1 to 2 surely; from 2 stay or go to 3 with probability $\\tfrac12$ each; from 3 stay or go to 1 with probability $\\tfrac12$ each; from 4 go to 3 with probability $\\tfrac14$, stay with $\\tfrac12$, go to 5 with $\\tfrac14$; from 5 go to 6 or 7 with probability $\\tfrac12$ each; from 6 to 4 surely; 7 is absorbing. Classify its states.",
+      "pts": [
+        "(1) A class is a set of states that communicate (each reachable from the other). Irreducible: all states form one class.",
+        "(2) Recurrent: starting there, the chain returns with probability 1. Transient: otherwise. All states of a class are of the same kind.",
+        "(3) $d(i) = \\gcd\\{t \\ge 1 : P^t(i,i) > 0\\}$; aperiodic when $d(i) = 1$. A self-loop $P_{ii} > 0$ is enough. The period is shared by a class.",
+        "(4) $\\{1, 2, 3\\}$: closed, recurrent, aperiodic (self-loop at 2). $\\{7\\}$: absorbing. $\\{4, 5, 6\\}$: transient, since the chain leaks to 3 or 7 and never returns."
+      ],
+      "pit": "KE's remark has slips: the class condition should range over the class, the recurrence condition should start from $X_0 = i$, and the letter $t$ is used twice in the period.",
+      "src": "KE p21",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-35",
+      "g": "Invariant and limit",
+      "k": "Four standard cases",
+      "q": "For each chain say whether an invariant distribution exists, whether it is unique, and whether a limiting distribution exists. (1) $P = \\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$. (2) $P = I$ on two states. (3) The number of heads in coin flips, on $\\{0, 1, 2, \\dots\\}$. (4) A chain on $\\{1, \\dots, 7\\}$: from 1 to 2 surely; from 2 stay or go to 3 with probability $\\tfrac12$ each; from 3 stay or go to 1 with probability $\\tfrac12$ each; from 4 go to 3 with probability $\\tfrac14$, stay with $\\tfrac12$, go to 5 with $\\tfrac14$; from 5 go to 6 or 7 with probability $\\tfrac12$ each; from 6 to 4 surely; 7 is absorbing.",
+      "pts": [
+        "(1) $\\pi = (\\tfrac12, \\tfrac12)$, unique. No limit: $p_t$ alternates. Time averages still converge to $\\tfrac12$.",
+        "(2) Every distribution is invariant. $\\lim_t p_t = q$ depends on the start, so there is no limiting distribution.",
+        "(3) None exists: $\\pi_0 = \\tfrac12\\pi_0$ gives $\\pi_0 = 0$, then $\\pi_j = \\tfrac12\\pi_{j-1} + \\tfrac12\\pi_j$ gives $\\pi_j = 0$ for all $j$. The mass drifts to infinity; the theory needs a finite state space.",
+        "(4) Two closed classes, so the eigenvalue 1 appears twice: $\\pi$ is not unique (any mixture of $(\\tfrac15, \\tfrac25, \\tfrac25)$ on $\\{1,2,3\\}$ and the point mass at 7) and there is no limiting distribution. Started in 1, the chain stays in $\\{1,2,3\\}$ and converges to $(\\tfrac15, \\tfrac25, \\tfrac25)$."
+      ],
+      "pit": "",
+      "src": "KE p20–22",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-36",
+      "g": "Invariant and limit",
+      "k": "Period and averages",
+      "q": "A particle on four nodes $0, 1, 2, 3$ arranged in a cycle moves clockwise (from $i$ to $i + 1 \\bmod 4$) with probability $\\tfrac23$ and counter-clockwise with probability $\\tfrac13$; $X_t$ is its position after $t$ steps and $X_0 = 0$. (1) Find the invariant distribution quickly. (2) Does $P(X_t = 0)$ converge to it? (3) What does converge for this chain? (4) State the general result that links a limit of $P(X_t = i)$ to time averages, and say whether its converse holds.",
+      "pts": [
+        "(1) The columns of $P$ also sum to 1 (doubly stochastic), so the uniform $\\pi = (\\tfrac14, \\tfrac14, \\tfrac14, \\tfrac14)$ is invariant; the chain is irreducible, so it is unique.",
+        "(2) No: it is $0$ for odd $t$ and positive for even $t$ ($\\tfrac49$ at $t = 2$, tending to $\\tfrac12$).",
+        "(3) The time average $\\tfrac1t\\sum_{s=1}^t P(X_s = 0) \\to \\tfrac14$: the long-run fraction of time.",
+        "(4) If $P(X_t = i) \\to \\pi(i)$, then $\\tfrac1t\\sum_{s=1}^t P(X_s = i) \\to \\pi(i)$ (Stolz–Cesàro with $a_t = \\sum_{s \\le t}P(X_s = i)$, $b_t = t$). The converse fails, as this chain shows."
+      ],
+      "pit": "",
+      "src": "KE p25–26",
+      "seen": [
+        "MkB P2",
+        "Ex 2.9"
+      ]
+    },
+    {
+      "id": "MDP-02-37",
+      "g": "Invariant and limit",
+      "k": "Designing a chain",
+      "q": "A surfer rotates over three pages: on page $i$ they stay with probability $1 - q_i$ and otherwise move on in the cyclic order $1 \\to 2 \\to 3 \\to 1$, with $q_i \\in (0,1)$. The limiting distribution must be $\\pi = (\\tfrac25, \\tfrac25, \\tfrac15)$. (1) Write $P$ and the balance equations. (2) Find all $(q_1, q_2, q_3)$. (3) Why does the limit exist for each of them? (4) For which is the convergence faster than $2^{-t}$?",
+      "pts": [
+        "(1) $P = \\begin{pmatrix}1-q_1&q_1&0\\\\0&1-q_2&q_2\\\\q_3&0&1-q_3\\end{pmatrix}$; $\\pi_1q_1 = \\pi_3q_3$ and $\\pi_2q_2 = \\pi_1q_1$, so $\\pi_i \\propto \\tfrac{1}{q_i}$.",
+        "(2) $q_1 = q_2 = c$ and $q_3 = 2c$; $q_3 < 1$ forces $0 < c < \\tfrac12$.",
+        "(3) The chain is irreducible (a 3-cycle) and aperiodic (self-loops). Eigenvalues: $\\lambda_{2,3} = 1 - 2c \\pm ic$ with $|\\lambda_{2,3}|^2 = 5c^2 - 4c + 1 < 1$.",
+        "(4) Need $|\\lambda_{2,3}| < \\tfrac12$: $5c^2 - 4c + 1 < \\tfrac14$, i.e. $20c^2 - 16c + 3 < 0$, i.e. $\\tfrac{3}{10} < c < \\tfrac12$."
+      ],
+      "pit": "Invariance of $\\pi$ alone does not answer part 2; convergence has to be argued. The boundary $c = \\tfrac{3}{10}$ is excluded.",
+      "src": "KE p26",
+      "seen": [
+        "Ex 2.10"
+      ]
+    },
+    {
+      "id": "MDP-02-38",
+      "g": "First-step analysis",
+      "k": "Reaching a state",
+      "q": "A chain on $\\{1, \\dots, 7\\}$: from 1 to 2 surely; from 2 stay or go to 3 with probability $\\tfrac12$ each; from 3 stay or go to 1 with probability $\\tfrac12$ each; from 4 go to 3 with probability $\\tfrac14$, stay with $\\tfrac12$, go to 5 with $\\tfrac14$; from 5 go to 6 or 7 with probability $\\tfrac12$ each; from 6 to 4 surely; 7 is absorbing. Let $h_i$ be the probability of ever reaching 7 from $i$. (1) Fix the boundary values. (2) Write the first-step equations for $h_4, h_5, h_6$. (3) Solve them. (4) Why are the boundary values essential?",
+      "pts": [
+        "(1) $h_7 = 1$, and $h_1 = h_2 = h_3 = 0$ because $\\{1,2,3\\}$ is a closed class that does not contain 7.",
+        "(2) $h_4 = \\tfrac14h_3 + \\tfrac12h_4 + \\tfrac14h_5$, $h_5 = \\tfrac12h_6 + \\tfrac12h_7$, $h_6 = h_4$.",
+        "(3) $h_4 = \\tfrac12h_4 + \\tfrac14\\big(\\tfrac12 + \\tfrac12h_4\\big)$, so $\\tfrac38h_4 = \\tfrac18$: $h_4 = \\tfrac13$, $h_5 = \\tfrac23$, $h_6 = \\tfrac13$.",
+        "(4) $h \\equiv 1$ also solves $h = Ph$, since the rows sum to 1. Only after $h$ is fixed on every closed class is the system for the transient states uniquely solvable."
+      ],
+      "pit": "",
+      "src": "KE p25",
+      "seen": [
+        "HW1 P3",
+        "Ex 2.5"
+      ]
+    },
+    {
+      "id": "MDP-02-39",
+      "g": "First-step analysis",
+      "k": "Matrix form",
+      "q": "$T$ is the set of transient states, $Q$ the block of $P$ on $T$, and $b_i$ the one-step probability from $i \\in T$ into the target state. (1) Write the system for the hitting probabilities $h_T$ and its solution. (2) Why is $I - Q$ invertible? (3) What does entry $(k,l)$ of $(I - Q)^{-1}$ mean, and what are its row sums?",
+      "pts": [
+        "(1) $h_T = Qh_T + b$, so $h_T = (I - Q)^{-1}b$.",
+        "(2) $Q^t(i,j)$ is the probability of staying in $T$ for $t$ steps and being at $j$; it tends to 0. So every eigenvalue of $Q$ has modulus below 1 and $\\sum_{k \\ge 0}Q^k = (I - Q)^{-1}$.",
+        "(3) The expected number of visits to $l$ when starting from $k$; the row sums are the expected numbers of steps before leaving $T$. For the seven-state chain: $$(I - Q)^{-1} = \\tfrac13\\begin{pmatrix}8&2&1\\\\4&4&2\\\\8&2&4\\end{pmatrix}$$ with row sums $\\tfrac{11}{3}, \\tfrac{10}{3}, \\tfrac{14}{3}$."
+      ],
+      "pit": "",
+      "src": "S2 p61",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-40",
+      "g": "First-step analysis",
+      "k": "Hitting times",
+      "q": "For $j \\ne i$ let $T_{ij}$ be the first time a chain started in $i$ is in $j$, $q_{ij}(s) = P(T_{ij} = s)$ and $t_{ij} = E\\,T_{ij}$; write $p_{ik} = P_{ik}$. (1) State and justify the recursion for $q_{ij}(s)$, $s \\ge 2$. (2) State the equation for $t_{ij}$. (3) Derive it. (4) Which assumption does it silently need?",
+      "pts": [
+        "(1) $q_{ij}(s) = \\sum_{k \\ne j} p_{ik}\\,q_{kj}(s-1)$: condition on $X_1 = k$ (the case $k = j$ would give $T_{ij} = 1$); by the Markov property and time-homogeneity the remaining time from $k$ is distributed as $T_{kj}$. Also $q_{ij}(1) = p_{ij}$.",
+        "(2) $t_{ij} = 1 + \\sum_{k \\ne j} p_{ik}\\,t_{kj}$.",
+        "(3) Multiply the recursion by $s$ and sum over $s$: $$\\begin{aligned}t_{ij} &= p_{ij} + \\sum_{k \\ne j} p_{ik}\\sum_{m \\ge 1}(m+1)\\,q_{kj}(m)\\\\ &= p_{ij} + \\sum_{k \\ne j} p_{ik}(t_{kj} + 1)\\end{aligned}$$ using $\\sum_m q_{kj}(m) = 1$; the row sum 1 gives the result.",
+        "(4) That $j$ is reached with probability 1 from every relevant $k$. “Reachable” is not enough: in the seven-state chain 7 is reachable from 4 but is reached only with probability $\\tfrac13$, so the expected time is infinite."
+      ],
+      "pit": "Here $q_{ij}(s)$ is KE's notation for a first-passage probability; it is unrelated to the initial distribution $q$.",
+      "src": "KE p25",
+      "seen": [
+        "Ex 2.7"
+      ]
+    },
+    {
+      "id": "MDP-02-41",
+      "g": "First-step analysis",
+      "k": "Expected time",
+      "q": "(1) A chain on $\\{0, 1, 2\\}$ (customers at a service desk) has $P = \\begin{pmatrix}0.5&0.5&0\\\\0.3&0.5&0.2\\\\0&0.3&0.7\\end{pmatrix}$. Starting from 0, find the expected number of periods until the chain first reaches 2. (2) A particle on four nodes $0, 1, 2, 3$ arranged in a cycle moves clockwise (from $i$ to $i + 1 \\bmod 4$) with probability $\\tfrac23$ and counter-clockwise with probability $\\tfrac13$; $X_t$ is its position after $t$ steps and $X_0 = 0$. Find the expected number of steps until the particle first visits node 2.",
+      "pts": [
+        "(1) $m_2 = 0$, $m_0 = 1 + 0.5m_0 + 0.5m_1$, $m_1 = 1 + 0.3m_0 + 0.5m_1$. The second gives $m_1 = 2 + 0.6m_0$; then $0.5m_0 = 2 + 0.3m_0$, so $m_0 = 10$ (and $m_1 = 8$).",
+        "(2) $m_1 = 1 + \\tfrac13m_0$, $m_3 = 1 + \\tfrac23m_0$, $m_0 = 1 + \\tfrac23m_1 + \\tfrac13m_3 = 2 + \\tfrac49m_0$, so $m_0 = \\tfrac{18}{5}$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MkA P2",
+        "MkB P2"
+      ]
+    },
+    {
+      "id": "MDP-02-42",
+      "g": "Rewards",
+      "k": "Expected reward",
+      "q": "A reward $r(i)$ is received in state $i$, and $r$ is the column vector of rewards. (1) Give the expected reward at time $t$. (2) What is the vector $P^t r$? (3) Give the expected total reward up to time $t$ and the property used. (4) How does this produce a probability such as “the server is busy at time $t$”?",
+      "pts": [
+        "(1) $E\\,r(X_t) = \\sum_j r(j)P(X_t = j) = p_t r = qP^t r$ (row × matrix × column = a number).",
+        "(2) Its component $i$ is $E[r(X_t) \\mid X_0 = i]$.",
+        "(3) $E\\sum_{k=0}^t r(X_k) = \\sum_{k=0}^t qP^k r$, by linearity of expectation alone.",
+        "(4) Use an indicator reward: $r(x) = 1$ for the busy states ($x > 0$) and $0$ otherwise. Then $E\\,r(X_t) = P(\\text{busy at } t)$."
+      ],
+      "pit": "The slide switches between “reward” and “cost”, and lists $r$ from $r(1)$ although the queue states start at 0.",
+      "src": "S2 p58 · KE p23",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-43",
+      "g": "Rewards",
+      "k": "Reward numbers",
+      "q": "(1) A two-state chain on $\\{1, 2\\}$ moves from 1 to 2 with probability $0.2$ and from 2 to 1 with probability $0.3$: $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$, started in state 1 with reward 1 in state 1 and 0 in state 2. Find the expected reward at $t = 2$. (2) Find the expected total reward over $k = 0, 1, 2$. (3) A chain on $\\{0, 1, 2\\}$ (customers at a service desk) has $P = \\begin{pmatrix}0.5&0.5&0\\\\0.3&0.5&0.2\\\\0&0.3&0.7\\end{pmatrix}$, started in 0 with $r = (0, 1, 1)^\\top$. Find the probability that the server is busy at $t = 2$. (4) Find the long-run fraction of busy periods.",
+      "pts": [
+        "(1) $p_2 r = 0.7$, which is $P(X_2 = 1)$.",
+        "(2) $1 + 0.8 + 0.7 = 2.5$.",
+        "(3) $p_1 = (0.5, 0.5, 0)$, $p_2 = (0.4, 0.5, 0.1)$, so $0.5 + 0.1 = 0.6$.",
+        "(4) $\\pi r = \\tfrac{15 + 10}{34} = \\tfrac{25}{34} \\approx 0.735$."
+      ],
+      "pit": "",
+      "src": "S2 p58",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-44",
+      "g": "Rewards",
+      "k": "Value equation",
+      "q": "$V(i) = E\\big[\\sum_{k \\ge 0} \\gamma^k r(X_k) \\mid X_0 = i\\big]$ with $0 < \\gamma < 1$. (1) Derive the equation $V$ satisfies by splitting off the first period. (2) Where are the Markov property and time-homogeneity used? (3) Solve for $V$. (4) Express the slide formula $q(I - \\gamma P)^{-1}r$ through $V$.",
+      "pts": [
+        "(1) $\\sum_{k \\ge 0}\\gamma^k r(X_k) = r(X_0) + \\gamma\\sum_{k \\ge 0}\\gamma^k r(X_{k+1})$. Taking the expectation given $X_0 = i$: $V(i) = r(i) + \\gamma\\sum_j P_{ij}V(j)$, i.e. $V = r + \\gamma PV$.",
+        "(2) Given $X_1 = j$, the expected remaining sum does not depend on how $j$ was reached (Markov) and equals the sum for a chain started at time 0 in $j$ (time-homogeneity): it is $V(j)$.",
+        "(3) $(I - \\gamma P)V = r$, so $V = (I - \\gamma P)^{-1}r$.",
+        "(4) $q(I - \\gamma P)^{-1}r = qV = \\sum_i q_iV(i)$: the average over a random starting state. $V$ is a column vector and $qV$ a number."
+      ],
+      "pit": "",
+      "src": "S2 p58–61",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-45",
+      "g": "Rewards",
+      "k": "Geometric series",
+      "q": "(1) State the series result behind $(I - \\gamma P)^{-1}$. (2) Why does it apply to $\\gamma P$ but not to $P$? (3) Write $V$ as a series and interpret its $k$-th term. (4) What happens for $\\gamma = 1$?",
+      "pts": [
+        "(1) If every eigenvalue of $A$ has modulus below 1, then $\\sum_{k \\ge 0} A^k = (I - A)^{-1}$.",
+        "(2) The eigenvalues of $P$ satisfy $|\\lambda| \\le 1$ and $\\lambda = 1$ is attained; those of $\\gamma P$ are bounded by $\\gamma < 1$.",
+        "(3) $V = \\sum_{k \\ge 0}\\gamma^k P^k r$; the term $\\gamma^k P^k r$ holds the expected discounted reward of period $k$ for each starting state.",
+        "(4) $I - P$ is singular, since $(I - P)e = 0$, and the total reward grows like $t \\cdot \\pi r$. One needs discounting or the average reward $\\pi r$."
+      ],
+      "pit": "The slide states the series theorem for a matrix with $1 > |\\lambda_1|$ right after showing $\\lambda_1 = 1$ for $P$; it is applied to $A = \\gamma P$.",
+      "src": "S2 p61",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-46",
+      "g": "Rewards",
+      "k": "Value, two states",
+      "q": "A two-state chain on $\\{1, 2\\}$ moves from 1 to 2 with probability $0.2$ and from 2 to 1 with probability $0.3$: $P = \\begin{pmatrix}0.8&0.2\\\\0.3&0.7\\end{pmatrix}$. The reward is $r = (1, 0)^\\top$ and $\\gamma = 0.9$. (1) Write the two equations of $V = r + \\gamma PV$. (2) Solve them. (3) Compare with the long-run average reward. (4) What does $(1 - \\gamma)V$ tend to as $\\gamma \\to 1$?",
+      "pts": [
+        "(1) $V(1) = 1 + 0.9\\,(0.8V(1) + 0.2V(2))$, i.e. $0.28V(1) - 0.18V(2) = 1$; $V(2) = 0.9\\,(0.3V(1) + 0.7V(2))$, i.e. $-0.27V(1) + 0.37V(2) = 0$.",
+        "(2) The determinant is $0.28 \\times 0.37 - 0.18 \\times 0.27 = 0.055$: $V(1) = \\tfrac{0.37}{0.055} = 6.727$ and $V(2) = \\tfrac{0.27}{0.055} = 4.909$.",
+        "(3) $\\pi r = 0.6$ and $\\tfrac{0.6}{1 - 0.9} = 6$ lies between the two values: starting in state 1 is better.",
+        "(4) To $\\pi r = 0.6$ for both starting states. $V$ itself grows like $\\tfrac{0.6}{1-\\gamma}$ while $V(1) - V(2)$ stays bounded (it tends to 2)."
+      ],
+      "pit": "After solving, substitute back: $1 + 0.9\\,(0.8 \\times 6.727 + 0.2 \\times 4.909) = 6.727$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-47",
+      "g": "Rewards",
+      "k": "Value without inverse",
+      "q": "$P = \\begin{pmatrix}\\frac12&\\frac12\\\\\\frac12&\\frac12\\end{pmatrix}$, $r = (1, 0)^\\top$, $\\gamma = \\tfrac12$. (1) What is $P^k$ for $k \\ge 1$? (2) Compute $V$ without inverting a matrix. (3) Verify $V = r + \\gamma PV$.",
+      "pts": [
+        "(1) $P = e\\pi$ with $\\pi = (\\tfrac12, \\tfrac12)$, so $P^k = P$ for all $k \\ge 1$.",
+        "(2) $V = r + \\sum_{k \\ge 1}\\gamma^k Pr = r + \\tfrac{\\gamma}{1-\\gamma}(\\pi r)\\,e = (1, 0)^\\top + \\tfrac12(1, 1)^\\top = (1.5,\\ 0.5)^\\top$.",
+        "(3) $PV = (1, 1)^\\top$ and $r + \\tfrac12(1, 1)^\\top = (1.5,\\ 0.5)^\\top$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-48",
+      "g": "Rewards",
+      "k": "Three kinds of total",
+      "q": "A chain with reward vector $r$. For each way of adding rewards over time give the formula and what it needs: (1) finite horizon; (2) discounted infinite horizon; (3) long-run average. (4) How does the discounted equation turn into dynamic programming?",
+      "pts": [
+        "(1) $\\sum_{k=0}^t qP^k r$; nothing beyond a finite sum.",
+        "(2) $q(I - \\gamma P)^{-1}r$; needs $\\gamma < 1$.",
+        "(3) $\\lim_t \\tfrac1t E\\sum_{k<t} r(X_k) = \\pi r$; needs a unique $\\pi$ so that the value does not depend on $q$.",
+        "(4) Let the reward and the transition depend on an action and optimize over it: $V_t(x) = \\min_u\\{g(x,u) + \\sum_y P_u(x,y)V_{t+1}(y)\\}$. $V = r + \\gamma PV$ is the evaluation of one fixed rule."
+      ],
+      "pit": "",
+      "src": "S2 p58–61",
+      "seen": []
+    },
+    {
+      "id": "MDP-02-49",
+      "g": "Overview",
+      "k": "Which tool",
+      "q": "Which tool answers each request about a Markov chain? (1) “Show that it is a Markov chain and find $P$.” (2) “The probability of being in $j$ after $n$ steps”, for small and for large $n$. (3) “Stationary, invariant, long-run fraction.” (4) “Limiting distribution.” (5) “Ever reach” and “expected time to reach”. (6) “Expected (discounted) reward.”",
+      "pts": [
+        "(1) Name the state; argue that given $X_t = i$ the law of $X_{t+1}$ depends on $i$ only (or write a recursion with independent noise); write the rows and check the row sums.",
+        "(2) $qP^n$. Small $n$: count paths. Large $n$: eigenvalues and $\\pi$, or a recursion.",
+        "(3) Solve $\\pi P = \\pi$ with $\\sum_i\\pi_i = 1$; use the neighbour shortcut when it applies.",
+        "(4) First check existence (one recurrent class and aperiodic, or the eigenvalues), then compute $\\pi$.",
+        "(5) First-step analysis with the boundary values fixed.",
+        "(6) $qP^t r$ for one period; $V = r + \\gamma PV$ for the discounted total; $\\pi r$ for the long-run average."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}
