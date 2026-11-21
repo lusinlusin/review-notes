@@ -1,0 +1,1141 @@
+{
+  "title": "Newton, line search, BFGS",
+  "notes": [
+    {
+      "h": "Optimality recap",
+      "items": [
+        {
+          "t": "SOSC proof",
+          "d": [
+            "Remainder $\\lVert d \\rVert^2\\alpha(d)$ with $\\alpha \\to 0$; with $\\mu = \\lambda_{\\min}(H(x^*))$ choose $|\\alpha| \\le \\mu/4$: $f(x^* + d) - f(x^*) \\ge \\tfrac{\\mu}{4}\\lVert d \\rVert^2$."
+          ],
+          "cards": [
+            "NLO-03-01"
+          ]
+        },
+        {
+          "t": "Coercive ⇒ a minimizer exists",
+          "d": [
+            "Continuous and coercive ⇒ at least one global minimizer; if differentiable it is a stationary point. Proof: bounded closed sublevel set + Weierstrass.",
+            "Convexity: stationary ⇒ global, but existence is not guaranteed."
+          ],
+          "cards": [
+            "NLO-03-02",
+            "NLO-03-04"
+          ]
+        },
+        {
+          "t": "Examples",
+          "d": [
+            "$x_1^4 + x_2^4 - 3x_1x_2$: coercive, saddle at $0$, global minima $-\\tfrac98$ at $\\pm(\\tfrac{\\sqrt3}{2},\\tfrac{\\sqrt3}{2})$.",
+            "$x_1^2 + 2x_2^2 - 2x_1 + 4x_2 = (x_1 - 1)^2 + 2(x_2 + 1)^2 - 3$."
+          ],
+          "cards": [
+            "NLO-03-03",
+            "NLO-03-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Descent directions",
+      "items": [
+        {
+          "t": "Definition and test",
+          "d": [
+            "$d$ is a descent direction at $\\bar x$ if $f(\\bar x + \\alpha d) < f(\\bar x)$ for all small $\\alpha > 0$.",
+            "Sufficient: $\\nabla f(\\bar x)^\\top d < 0$."
+          ],
+          "cards": [
+            "NLO-03-06"
+          ]
+        },
+        {
+          "t": "Scaled gradient",
+          "d": [
+            "$d = -B\\nabla f$ with $B \\succ 0$ and $\\nabla f \\ne 0$: $\\nabla f^\\top d = -\\nabla f^\\top B\\nabla f < 0$. Covers steepest descent, Newton with $H \\succ 0$, BFGS."
+          ],
+          "cards": [
+            "NLO-03-07"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Newton for systems",
+      "items": [
+        {
+          "t": "Iteration",
+          "d": [
+            "$J(x^{(k)})\\,d^{(k)} = -F(x^{(k)})$,  $x^{(k+1)} = x^{(k)} + d^{(k)}$. Solve, do not invert."
+          ],
+          "cards": [
+            "NLO-03-08",
+            "NLO-03-09"
+          ]
+        },
+        {
+          "t": "Local quadratic convergence",
+          "d": [
+            "$F(x^*) = 0$, $J(x^*)$ nonsingular, $J$ Lipschitz ⇒ $\\lVert x^{(k+1)} - x^* \\rVert \\le C\\lVert x^{(k)} - x^* \\rVert^2$ near $x^*$.",
+            "1-D: $e_{k+1} = \\frac{F''(\\xi)}{2F'(x_k)}e_k^2$."
+          ],
+          "cards": [
+            "NLO-03-11"
+          ]
+        },
+        {
+          "t": "Singular solutions",
+          "d": [
+            "If $J(x^*)$ (or $f''(x^*)$) is singular the rate drops to linear: ratio $\\tfrac12$ at a double root, $\\tfrac23$ for $(x - x_0)^4$."
+          ],
+          "cards": [
+            "NLO-03-10",
+            "NLO-03-12",
+            "NLO-03-13"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Newton minimization",
+      "items": [
+        {
+          "t": "Newton direction",
+          "d": [
+            "$H(x^{(k)})\\,d^{(k)} = -\\nabla g(x^{(k)})$. Descent direction if $H \\succ 0$ and $\\nabla g \\ne 0$, since $H^{-1} \\succ 0$."
+          ],
+          "cards": [
+            "NLO-03-14"
+          ]
+        },
+        {
+          "t": "One step on quadratics",
+          "d": [
+            "$g = \\tfrac12 x^\\top Q x - b^\\top x$, $Q \\succ 0$: $x^{(1)} = Q^{-1}b$ from any start."
+          ],
+          "cards": [
+            "NLO-03-15",
+            "NLO-03-16"
+          ]
+        },
+        {
+          "t": "Failure modes",
+          "d": [
+            "Indefinite $H$: ascent possible. Full step from far away: $\\sqrt{1 + x^2}$ gives $x^+ = -x^3$ (converge / cycle / diverge for $|x^{(0)}| <, =, > 1$). A full step can raise $f$ (Rosenbrock $1 \\to 100 \\to 0$)."
+          ],
+          "cards": [
+            "NLO-03-19",
+            "NLO-03-17",
+            "NLO-03-07"
+          ]
+        },
+        {
+          "t": "Costs",
+          "d": [
+            "$n(n+1)/2$ second derivatives, $O(n^3)$ solve, needs $H \\succ 0$. BFGS: gradients, $O(n^2)$, PD by construction."
+          ],
+          "cards": [
+            "NLO-03-20",
+            "NLO-03-18"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Line search",
+      "items": [
+        {
+          "t": "Constant step",
+          "d": [
+            "Gradient descent on a quadratic converges iff $0 < t < 2/\\mu_{\\max}$."
+          ],
+          "cards": [
+            "NLO-03-21"
+          ]
+        },
+        {
+          "t": "Exact step",
+          "d": [
+            "Quadratic: $\\alpha^* = -\\dfrac{g^\\top d}{d^\\top Q d}$; steepest descent: $\\dfrac{g^\\top g}{g^\\top Q g}$. New gradient ⟂ old direction."
+          ],
+          "cards": [
+            "NLO-03-22",
+            "NLO-03-23"
+          ]
+        },
+        {
+          "t": "Armijo and backtracking",
+          "d": [
+            "$f(x + \\alpha d) \\le f(x) + \\gamma\\alpha\\nabla f(x)^\\top d$, $\\gamma \\in (0,1)$. Try $s, \\beta s, \\beta^2 s, \\dots$ and accept the first that passes (equality counts).",
+            "Terminates when $d$ is a descent direction and $\\gamma < 1$."
+          ],
+          "cards": [
+            "NLO-03-24",
+            "NLO-03-25",
+            "NLO-03-26"
+          ]
+        },
+        {
+          "t": "γ < ½ for Newton",
+          "d": [
+            "Near a minimizer the full Newton step achieves about half of the linear prediction; $\\gamma \\ge \\tfrac12$ rejects $\\alpha = 1$ and the rate becomes linear."
+          ],
+          "cards": [
+            "NLO-03-28"
+          ]
+        },
+        {
+          "t": "Curvature condition",
+          "d": [
+            "$\\nabla f(x + \\alpha d)^\\top d \\ge \\sigma\\nabla f(x)^\\top d$ excludes very small steps and gives $y^\\top s > 0$."
+          ],
+          "cards": [
+            "NLO-03-29"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "BFGS",
+      "items": [
+        {
+          "t": "Secant condition",
+          "d": [
+            "$s = x^{(k+1)} - x^{(k)}$, $y = \\nabla g(x^{(k+1)}) - \\nabla g(x^{(k)})$:  $H_{k+1}s = y \\iff H_{k+1}^{-1}y = s$."
+          ],
+          "cards": [
+            "NLO-03-31",
+            "NLO-03-30"
+          ]
+        },
+        {
+          "t": "Inverse BFGS update",
+          "d": [
+            "$$H_{k+1}^{-1} = (I - \\rho s y^\\top)H_k^{-1}(I - \\rho y s^\\top) + \\rho s s^\\top,\\qquad \\rho = \\frac{1}{y^\\top s}$$",
+            "Symmetric, satisfies the secant condition, positive definite if $H_k^{-1} \\succ 0$ and $y^\\top s > 0$. Cost $O(n^2)$."
+          ],
+          "cards": [
+            "NLO-03-32",
+            "NLO-03-33"
+          ]
+        },
+        {
+          "t": "When is yᵀs > 0",
+          "d": [
+            "Strictly convex: $> 0$. Convex: only $\\ge 0$. Non-convex: can be $< 0$. Strongly convex: $\\ge m\\lVert s \\rVert^2$."
+          ],
+          "cards": [
+            "NLO-03-34"
+          ]
+        },
+        {
+          "t": "Strong convexity",
+          "d": [
+            "$f(y) \\ge f(x) + \\nabla f(x)^\\top(y - x) + \\tfrac{m}{2}\\lVert y - x \\rVert^2$; for $C^2$: $H(x) \\succeq mI$.",
+            "Strongly ⇒ strictly ⇒ convex. BFGS: global, superlinear."
+          ],
+          "cards": [
+            "NLO-03-35"
+          ]
+        },
+        {
+          "t": "Quadratic termination",
+          "d": [
+            "Strictly convex quadratic in $n$ variables with exact line search: at most $n$ steps, and $H_n^{-1} = Q^{-1}$."
+          ],
+          "cards": [
+            "NLO-03-37"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Overview",
+      "items": [
+        {
+          "t": "Directions and steps",
+          "d": [
+            "Directions: $-\\nabla f$ (cheap, zig-zag), Newton (Hessian, fast near a regular minimizer, can fail far away), BFGS (gradients only, superlinear).",
+            "Steps: constant (no guarantee), exact (best on the ray), Armijo backtracking (finite termination; use $\\gamma < \\tfrac12$ with Newton)."
+          ],
+          "cards": [
+            "NLO-03-40"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "System",
+          "d": [
+            "$x^{(0)} = (1,0,1)$ → $(\\tfrac32,\\tfrac12,1)$ → $(\\tfrac54,\\tfrac34,1)$ → … → $(1,1,1)$, halving."
+          ],
+          "cards": [
+            "NLO-03-09"
+          ]
+        },
+        {
+          "t": "Quadratic from the origin",
+          "d": [
+            "$Q = \\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$, $b = (1,2)$: Newton $(0,1)$, $f = -1$; exact $\\alpha = \\tfrac{5}{14}$, $f = -\\tfrac{25}{28}$; Armijo $\\alpha = \\tfrac12$, $f = -\\tfrac34$."
+          ],
+          "cards": [
+            "NLO-03-27"
+          ]
+        },
+        {
+          "t": "Steepest descent step",
+          "d": [
+            "$x_1^2 + 2x_2^2$ from $(1,1)$: $\\alpha = \\tfrac14$ → $(\\tfrac12, 0)$, $f = \\tfrac14$; exact $\\alpha = \\tfrac{5}{18}$ → $(\\tfrac49, -\\tfrac19)$, $f = \\tfrac29$."
+          ],
+          "cards": [
+            "NLO-03-23"
+          ]
+        },
+        {
+          "t": "Armijo table",
+          "d": [
+            "$\\tfrac14 t^4$ from $2$, $d = -8$: $\\alpha = 1$ reject, $\\tfrac12$ reject, $\\tfrac14$ accept; $t_1 = 0$."
+          ],
+          "cards": [
+            "NLO-03-26"
+          ]
+        },
+        {
+          "t": "BFGS on the quadratic",
+          "d": [
+            "$Q = \\begin{pmatrix}5&-3\\\\-3&2\\end{pmatrix}$, $b = (0,1)$: $x^{(1)} = (0,\\tfrac12)$, $H_1^{-1} = \\begin{pmatrix}1&3/2\\\\3/2&11/4\\end{pmatrix}$, $d^{(1)} = (\\tfrac32,\\tfrac94)$, $\\alpha = 2$, $x^{(2)} = (3,5)$."
+          ],
+          "cards": [
+            "NLO-03-36",
+            "NLO-03-37"
+          ]
+        },
+        {
+          "t": "Two small updates",
+          "d": [
+            "$s = (1,0)$, $y = (2,0)$: $B_1 = \\operatorname{diag}(\\tfrac12, 1)$.   $s = (1,1)$, $y = (1,3)$: $B_1 = \\tfrac18\\begin{pmatrix}11&-1\\\\-1&3\\end{pmatrix}$."
+          ],
+          "cards": [
+            "NLO-03-38",
+            "NLO-03-39"
+          ]
+        },
+        {
+          "t": "Newton runs",
+          "d": [
+            "Rosenbrock from $(0,0)$: $(1,0)$, then $(1,1)$.   $x_1^2 + 2x_2^2 + x_1x_2 - 4x_1 - 6x_2$: $(\\tfrac{10}{7}, \\tfrac87)$ in one step.   $\\tfrac14 t^4 + \\tfrac12 t^2$ from $1$: $\\tfrac12, \\tfrac17$."
+          ],
+          "cards": [
+            "NLO-03-17",
+            "NLO-03-15",
+            "NLO-03-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Proofs to know",
+      "items": [
+        {
+          "t": "Three to reproduce",
+          "d": [
+            "SOSC with the uniform bound; Newton direction is a descent direction; BFGS keeps positive definiteness."
+          ],
+          "cards": [
+            "NLO-03-01",
+            "NLO-03-14",
+            "NLO-03-33"
+          ]
+        },
+        {
+          "t": "Short ones",
+          "d": [
+            "Descent test; one step on quadratics; backtracking terminates; $y^\\top s > 0$ for strictly convex; secant condition; curvature condition excludes small steps."
+          ],
+          "cards": [
+            "NLO-03-06",
+            "NLO-03-15",
+            "NLO-03-25",
+            "NLO-03-34",
+            "NLO-03-32",
+            "NLO-03-29"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "H_k and B_k",
+          "d": [
+            "Slides: $H_k$ approximates the Hessian and the update is written for $H_k^{-1}$. Exercises: $B_k$ approximates the inverse Hessian. $B_k \\equiv H_k^{-1}$."
+          ],
+          "cards": [
+            "NLO-03-30",
+            "NLO-03-38"
+          ]
+        },
+        {
+          "t": "f and g",
+          "d": [
+            "In Newton for systems $f$ is the vector function and $\\nabla f$ its Jacobian; for minimization the objective is $g$ and the Jacobian of $\\nabla g$ is $H$."
+          ],
+          "cards": [
+            "NLO-03-08",
+            "NLO-03-14"
+          ]
+        },
+        {
+          "t": "γ, c and s",
+          "d": [
+            "Sufficient-decrease constant: $\\gamma$ (slides) = $c$ (exercises). $s$ is the initial trial step in backtracking and the step $x^{(k+1)} - x^{(k)}$ in BFGS."
+          ],
+          "cards": [
+            "NLO-03-24"
+          ]
+        },
+        {
+          "t": "Iteration index",
+          "d": [
+            "Superscript $x^{(k)}$ for iterates; subscripts are usually components, but the exercises use $t_k$ for scalar iterates."
+          ],
+          "cards": [
+            "NLO-03-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Taylor remainder",
+          "d": [
+            "Must be $\\lVert x - \\bar x \\rVert^2\\alpha(\\cdot)$, not the first power."
+          ],
+          "cards": [
+            "NLO-03-01"
+          ]
+        },
+        {
+          "t": "Newton formula",
+          "d": [
+            "$[\\nabla f(x^{(k)})^\\top]^{-1}$ should have no transpose."
+          ],
+          "cards": [
+            "NLO-03-08"
+          ]
+        },
+        {
+          "t": "Halving",
+          "d": [
+            "Called rapid convergence; it is linear, caused by a singular Jacobian at the root."
+          ],
+          "cards": [
+            "NLO-03-10"
+          ]
+        },
+        {
+          "t": "Square-root example",
+          "d": [
+            "“Diverges for $|x^{(0)}| \\ge 1$”: at $1$ it cycles. The 2-D run from $(1,1)$ converges only through round-off."
+          ],
+          "cards": [
+            "NLO-03-19"
+          ]
+        },
+        {
+          "t": "Convex ⇒ yᵀs > 0",
+          "d": [
+            "False; strict convexity is needed."
+          ],
+          "cards": [
+            "NLO-03-34"
+          ]
+        },
+        {
+          "t": "PD proof",
+          "d": [
+            "“The second term is zero only when $x = 0$” is wrong; it vanishes for all $x \\perp s$."
+          ],
+          "cards": [
+            "NLO-03-33"
+          ]
+        },
+        {
+          "t": "Frobenius norm",
+          "d": [
+            "BFGS minimizes a weighted Frobenius distance, not the plain one."
+          ],
+          "cards": [
+            "NLO-03-32"
+          ]
+        },
+        {
+          "t": "Coercivity hint",
+          "d": [
+            "The limit $3x_1x_2/(x_1^4 + x_2^4) \\to 0$ is asserted without proof; affine functions are never coercive, whatever $a, b$."
+          ],
+          "cards": [
+            "NLO-03-03",
+            "NLO-03-04"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "NLO-03-01",
+      "g": "Optimality recap",
+      "k": "SOSC remainder",
+      "q": "The proof of the second-order sufficient condition expands $f(x^* + d) - f(x^*) = \\tfrac12 d^\\top H(x^*) d + r(d)$ at a stationary point with $H(x^*) \\succ 0$. (1) Which order must the remainder $r(d)$ have, and why is $o(\\lVert d \\rVert)$ not enough? (2) Why is “$f(x^* + d) \\approx f(x^*) + \\tfrac12 d^\\top H d$ and $H$ is PD” not a proof? (3) Give the bound that closes the argument.",
+      "pts": [
+        "(1) $r(d) = \\lVert d \\rVert^2\\alpha(d)$ with $\\alpha(d) \\to 0$, i.e. $o(\\lVert d \\rVert^2)$. The quadratic term is only $\\ge \\tfrac{\\mu}{2}\\lVert d \\rVert^2$ with $\\mu = \\lambda_{\\min}(H(x^*))$; a remainder such as $\\lVert d \\rVert^{1.5}$ is $o(\\lVert d \\rVert)$ and dominates it for small $d$.",
+        "(2) “$\\approx$” hides the remainder. A lower bound on the quadratic term is needed that holds for every direction and beats the remainder.",
+        "(3) Choose $\\varepsilon$ with $|\\alpha(d)| \\le \\mu/4$ for $\\lVert d \\rVert \\le \\varepsilon$. Then $$f(x^* + d) - f(x^*) \\ge \\tfrac{\\mu}{2}\\lVert d \\rVert^2 - \\tfrac{\\mu}{4}\\lVert d \\rVert^2 > 0$$ for $0 < \\lVert d \\rVert \\le \\varepsilon$."
+      ],
+      "pit": "The slide writes the Taylor remainder with the first power of the norm; it must be the square.",
+      "src": "L3-1 s.3–12",
+      "seen": [
+        "MT26F P6"
+      ]
+    },
+    {
+      "id": "NLO-03-02",
+      "g": "Optimality recap",
+      "k": "Existence theorem",
+      "q": "Theorem: a continuous coercive $f: \\mathbb{R}^n \\to \\mathbb{R}$ has at least one global minimizer, and if $f$ is differentiable every global minimizer is a stationary point. (1) Prove existence. (2) Prove stationarity. (3) How is the theorem used to find a global minimum? (4) Compare what coercivity and convexity each give.",
+      "pts": [
+        "(1) Pick any $x^0$. Coercivity gives $R$ with $f(x) > f(x^0)$ for $\\lVert x \\rVert > R$. The sublevel set $L = \\{x : f(x) \\le f(x^0)\\}$ is closed (continuity), bounded and nonempty, hence compact. By Weierstrass $f$ attains its minimum on $L$ at some $x^*$, and points outside $L$ have $f > f(x^0) \\ge f(x^*)$.",
+        "(2) A global minimizer is a local one, so the first-order necessary condition gives $\\nabla f(x^*) = 0$.",
+        "(3) List all stationary points and compare their $f$-values; the smallest is the global minimum.",
+        "(4) Coercive: a minimizer exists among the stationary points, but some of them may be saddles or local minima. Convex: every stationary point is global, but none need exist ($e^x$)."
+      ],
+      "pit": "",
+      "src": "L3-1 s.13, 19",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-03",
+      "g": "Optimality recap",
+      "k": "Coercive, not convex",
+      "q": "Let $f(x) = x_1^4 + x_2^4 - 3x_1x_2$. (1) Show that $f$ is coercive. (2) Find the stationary points. (3) Classify them with the Hessian. (4) Give the global minimum. Is $f$ convex?",
+      "pts": [
+        "(1) $x_1^4 + x_2^4 \\ge \\tfrac12\\lVert x \\rVert^4$ (Cauchy–Schwarz on $(x_1^2, x_2^2)$) and $|x_1x_2| \\le \\tfrac12\\lVert x \\rVert^2$, so $f \\ge \\tfrac12\\lVert x \\rVert^4 - \\tfrac32\\lVert x \\rVert^2 \\to \\infty$.",
+        "(2) $\\nabla f = (4x_1^3 - 3x_2,\\ 4x_2^3 - 3x_1) = 0$. With $x_2 = \\tfrac43 x_1^3$: $\\tfrac{256}{27}x_1^9 = 3x_1$, so $x_1 = 0$ or $x_1^2 = \\tfrac34$. Points: $(0,0)$ and $\\pm(\\tfrac{\\sqrt3}{2}, \\tfrac{\\sqrt3}{2})$.",
+        "(3) $H = \\begin{pmatrix}12x_1^2 & -3\\\\ -3 & 12x_2^2\\end{pmatrix}$. At $0$: eigenvalues $\\pm 3$, a saddle. At the other two: $\\begin{pmatrix}9&-3\\\\-3&9\\end{pmatrix}$ with eigenvalues $6, 12$: strict local minima.",
+        "(4) $f = 2 \\times \\tfrac{9}{16} - 3 \\times \\tfrac34 = -\\tfrac98$ at both; by coercivity they are the global minimizers. Two global minimizers and a saddle: not convex."
+      ],
+      "pit": "The slide's hint asserts that $3x_1x_2/(x_1^4 + x_2^4) \\to 0$ without the two estimates in (1).",
+      "src": "L3-1 s.14–19",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-04",
+      "g": "Optimality recap",
+      "k": "Limits of coercivity",
+      "q": "Decide and justify: (1) Is any affine function $f(x) = a^\\top x + c$ on $\\mathbb{R}^n$ coercive? (2) Is $f(x) = x_1^2 + x_2^2 - x_1^4$ coercive, and does it have a global minimizer? (3) Give a coercive function whose infimum is not attained. Which hypothesis fails? (4) Give a function that has global minimizers but is not coercive.",
+      "pts": [
+        "(1) No. If $a \\ne 0$, along $x = -ta$ we get $f = c - t\\lVert a \\rVert^2 \\to -\\infty$; if $a = 0$, $f$ is constant.",
+        "(2) No: along $x_2 = 0$, $f = x_1^2 - x_1^4 \\to -\\infty$. So there is no global minimizer; $(0,0)$ is only a strict local minimizer ($H(0) = 2I$).",
+        "(3) $f(x) = x^2$ for $x \\ne 0$ and $f(0) = 1$: coercive, $\\inf f = 0$, not attained. Continuity fails.",
+        "(4) $f(x_1, x_2) = x_1^2$: minimized on the whole $x_2$-axis, yet $f(0, x_2) = 0$ along it."
+      ],
+      "pit": "Coercivity is sufficient for existence, not necessary.",
+      "src": "L3-1 s.18",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-05",
+      "g": "Optimality recap",
+      "k": "Completing the square",
+      "q": "Let $f(x) = x_1^2 + 2x_2^2 - 2x_1 + 4x_2$. (1) Compute $\\nabla f$ and $H$. (2) Find the stationary point and classify it with the Hessian. (3) Complete the squares to show it is the unique global minimizer, and give $f^*$. (4) Is $f$ coercive?",
+      "pts": [
+        "(1) $\\nabla f = (2x_1 - 2,\\ 4x_2 + 4)$ and $H = \\operatorname{diag}(2, 4)$.",
+        "(2) $x^* = (1, -1)$. $H \\succ 0$, so it is a strict local minimizer.",
+        "(3) $f = (x_1 - 1)^2 + 2(x_2 + 1)^2 - 3 \\ge -3$ with equality only at $(1, -1)$: $f^* = -3$.",
+        "(4) Yes: $f \\ge \\lVert x - x^* \\rVert^2 - 3 \\to \\infty$."
+      ],
+      "pit": "The Hessian test at the point gives only “local”. Global needs the completed square, or convexity ($H \\succ 0$ everywhere), or coercivity plus a single stationary point. Say which argument you use.",
+      "src": "",
+      "seen": [
+        "T3 P1"
+      ]
+    },
+    {
+      "id": "NLO-03-06",
+      "g": "Descent directions",
+      "k": "Descent test",
+      "q": "Iterative methods use $x^{(k+1)} = x^{(k)} + \\alpha^{(k)} d^{(k)}$. (1) Define a descent direction of $f$ at $\\bar x$. (2) State the gradient test. (3) Prove it. (4) Is the test necessary?",
+      "pts": [
+        "(1) $d$ is a descent direction at $\\bar x$ if there is $\\bar\\alpha > 0$ with $f(\\bar x + \\alpha d) < f(\\bar x)$ for all $\\alpha \\in (0, \\bar\\alpha]$.",
+        "(2) If $f$ is differentiable at $\\bar x$ and $\\nabla f(\\bar x)^\\top d < 0$, then $d$ is a descent direction.",
+        "(3) $\\frac{f(\\bar x + \\alpha d) - f(\\bar x)}{\\alpha} \\to \\nabla f(\\bar x)^\\top d < 0$ as $\\alpha \\downarrow 0$, so the quotient is negative for all sufficiently small $\\alpha > 0$.",
+        "(4) No, only sufficient. For $f = -x^2$ at $0$ every $d \\ne 0$ is a descent direction although $\\nabla f(0)^\\top d = 0$; for $f = x^2$ at $0$ the same value $0$ goes with ascent."
+      ],
+      "pit": "",
+      "src": "L3-1 s.20–26",
+      "seen": [
+        "MT24 P6"
+      ]
+    },
+    {
+      "id": "NLO-03-07",
+      "g": "Descent directions",
+      "k": "Scaled gradient",
+      "q": "Let $B$ be symmetric positive definite and $d = -B\\nabla f(x)$. (1) Show that $d$ is a descent direction. Which hypothesis is easy to forget? (2) Which three methods does this cover, and with which $B$? (3) Suppose $H$ is symmetric and invertible but indefinite. Is $-H^{-1}\\nabla f$ guaranteed to descend? Give an example.",
+      "pts": [
+        "(1) $\\nabla f^\\top d = -\\nabla f^\\top B\\,\\nabla f < 0$ because $B \\succ 0$ and $\\nabla f(x) \\ne 0$; then the gradient test applies. The forgotten clause is $\\nabla f(x) \\ne 0$.",
+        "(2) Steepest descent: $B = I$. Newton: $B = H(x)^{-1}$ when $H(x) \\succ 0$. Quasi-Newton (BFGS): $B = H_k^{-1}$, kept positive definite by the update.",
+        "(3) No. $H = \\operatorname{diag}(-1, 1)$ and $g = (1, 0)$ give $d = -H^{-1}g = (1, 0)$ and $g^\\top d = 1 > 0$. Invertibility guarantees a unique solution of the Newton system, not the sign of the directional derivative."
+      ],
+      "pit": "",
+      "src": "L3-1 s.26, 51",
+      "seen": [
+        "MT26F P7b"
+      ]
+    },
+    {
+      "id": "NLO-03-08",
+      "g": "Newton for systems",
+      "k": "Newton for F(x) = 0",
+      "q": "To solve $F(x) = 0$ with $F: \\mathbb{R}^n \\to \\mathbb{R}^n$ and Jacobian $J(x)$ (row $i$ is $\\nabla F_i(x)^\\top$): (1) Derive the Newton step from a linear model. (2) Write the iteration and the stopping test. (3) How should the step be computed? (4) What is wrong with $x^{(k+1)} = x^{(k)} - [J(x^{(k)})^\\top]^{-1}F(x^{(k)})$?",
+      "pts": [
+        "(1) $F(x^{(k)} + d) \\approx F(x^{(k)}) + J(x^{(k)})\\,d$; set the model to $0$.",
+        "(2) $J(x^{(k)})\\,d^{(k)} = -F(x^{(k)})$ and $x^{(k+1)} = x^{(k)} + d^{(k)}$ (step length $1$). Stop when $d^{(k)} \\approx 0$.",
+        "(3) Solve the linear system; never form $J^{-1}$.",
+        "(4) The transpose. With the gradients as rows of $J$ the correct matrix is $J$ itself. The transpose is harmless only when $J$ is symmetric, as for a Hessian."
+      ],
+      "pit": "In this part of the slides $f$ denotes the vector function and $\\nabla f$ its Jacobian; for minimization the objective is renamed $g$.",
+      "src": "L3-1 s.28–36",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-09",
+      "g": "Newton for systems",
+      "k": "System by hand",
+      "q": "$F(x) = \\begin{pmatrix} x_1^2 + x_2^2 + x_3^2 - 3 \\\\ x_1^2 + x_2^2 - x_3 - 1 \\\\ x_1 + x_2 + x_3 - 3 \\end{pmatrix}$ with start $x^{(0)} = (1, 0, 1)^\\top$. (1) Write the Jacobian. (2) Do the first Newton iteration. (3) Do the second. (4) What is the pattern?",
+      "pts": [
+        "(1) $$J(x) = \\begin{pmatrix} 2x_1 & 2x_2 & 2x_3 \\\\ 2x_1 & 2x_2 & -1 \\\\ 1 & 1 & 1 \\end{pmatrix}$$",
+        "(2) $F(x^{(0)}) = (-1,-1,-1)$. Solve $\\begin{pmatrix}2&0&2\\\\2&0&-1\\\\1&1&1\\end{pmatrix}d = \\begin{pmatrix}1\\\\1\\\\1\\end{pmatrix}$: row 1 − row 2 gives $3d_3 = 0$, then $2d_1 = 1$ and $d_2 = \\tfrac12$. So $x^{(1)} = (\\tfrac32, \\tfrac12, 1)$.",
+        "(3) $F(x^{(1)}) = (\\tfrac12, \\tfrac12, 0)$. Again $d_3 = 0$; $3d_1 + d_2 = -\\tfrac12$ and $d_1 + d_2 = 0$ give $d = (-\\tfrac14, \\tfrac14, 0)$. So $x^{(2)} = (\\tfrac54, \\tfrac34, 1)$.",
+        "(4) $x^{(k)} = (1 + 2^{-k},\\ 1 - 2^{-k},\\ 1)$ for $k \\ge 1$, tending to $(1,1,1)$; the step halves each time."
+      ],
+      "pit": "",
+      "src": "L3-1 s.29, 37–42",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-10",
+      "g": "Newton for systems",
+      "k": "Why only halving",
+      "q": "In the example with root $x^* = (1,1,1)$ the Newton iterates are $x^{(k)} = (1 + 2^{-k}, 1 - 2^{-k}, 1)$, and $J(x) = \\begin{pmatrix} 2x_1 & 2x_2 & 2x_3 \\\\ 2x_1 & 2x_2 & -1 \\\\ 1 & 1 & 1 \\end{pmatrix}$. (1) What is the rate of convergence? (2) Why is it not quadratic? (3) Distinguish the two “invertibility” requirements. (4) A Newton run shows the step halving every iteration. Name two possible causes.",
+      "pts": [
+        "(1) Linear with ratio $\\tfrac12$. The slide calls it rapid; halving is linear convergence.",
+        "(2) In $J(1,1,1)$ row 1 is twice row 3, so $J(x^*)$ is singular. The root is a double root, and Newton at a double root converges linearly with ratio $\\tfrac12$.",
+        "(3) $J(x^{(k)})$ invertible at every iterate: needed for the step to exist (true here). $J(x^*)$ nonsingular at the root: needed for the quadratic rate (false here).",
+        "(4) A singular Jacobian or Hessian at the solution; or Armijo backtracking with $\\gamma \\ge \\tfrac12$ accepting $\\alpha = \\tfrac12$ every time."
+      ],
+      "pit": "",
+      "src": "L3-1 s.42–43",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-11",
+      "g": "Newton for systems",
+      "k": "Quadratic convergence",
+      "q": "(1) State the local quadratic convergence theorem for Newton's method on $F(x) = 0$. (2) Prove it in one dimension for $F \\in C^2$, writing $e_k = x_k - x^*$. (3) Compare Newton on $F(x) = x^2$ and on $F(x) = x^2 - 1$.",
+      "pts": [
+        "(1) If $F(x^*) = 0$, $J(x^*)$ is nonsingular and $J$ is Lipschitz near $x^*$, there is $\\delta > 0$ such that for $\\lVert x^{(0)} - x^* \\rVert < \\delta$ pure Newton is well defined and $\\lVert x^{(k+1)} - x^* \\rVert \\le C\\lVert x^{(k)} - x^* \\rVert^2$.",
+        "(2) Taylor: $0 = F(x^*) = F(x_k) - F'(x_k)e_k + \\tfrac12 F''(\\xi)e_k^2$. Dividing by $F'(x_k) \\ne 0$: $$e_{k+1} = e_k - \\frac{F(x_k)}{F'(x_k)} = \\frac{F''(\\xi)}{2F'(x_k)}\\,e_k^2$$ so $|e_{k+1}| \\le C e_k^2$ with $C = \\sup|F''|/(2\\inf|F'|)$ near $x^*$.",
+        "(3) $x^2$: $x_{k+1} = x_k/2$, linear, because $F'(0) = 0$. $x^2 - 1$ near $1$: $F'(1) = 2 \\ne 0$, quadratic, with $e_{k+1}/e_k^2 \\to \\tfrac12$."
+      ],
+      "pit": "The slides only say “under suitable conditions”; the hypothesis that matters is the nonsingular Jacobian at the root.",
+      "src": "L3-1 s.31",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-12",
+      "g": "Newton for systems",
+      "k": "Quartic: rate 2/3",
+      "q": "Minimize $f(x) = (x - x_0)^4$ on $\\mathbb{R}$ with pure Newton ($x_0$ is a constant). (1) Write the recurrence. (2) With $y^{(k)} = |x^{(k)} - x_0|$ show $y^{(k+1)} = \\tfrac23 y^{(k)}$. (3) Show convergence from any start and give the rate. (4) Why is the rate not quadratic? (5) What happens for $f(x) = x^3$?",
+      "pts": [
+        "(1) $f' = 4(x - x_0)^3$ and $f'' = 12(x - x_0)^2$: $x^{(k+1)} = x^{(k)} - \\tfrac13(x^{(k)} - x_0)$.",
+        "(2) $x^{(k+1)} - x_0 = \\tfrac23(x^{(k)} - x_0)$; take absolute values.",
+        "(3) $y^{(k)} = (\\tfrac23)^k y^{(0)} \\to 0$ for every start: linear convergence with ratio $\\tfrac23$.",
+        "(4) $f''(x_0) = 0$: the second derivative is singular at the minimizer, so the quadratic convergence theorem does not apply.",
+        "(5) $x^{(k+1)} = x^{(k)} - \\frac{3x^2}{6x} = \\tfrac12 x^{(k)}$: linear with ratio $\\tfrac12$ toward the stationary point $0$, where again $f''(0) = 0$."
+      ],
+      "pit": "If an iterate equals $x_0$ exactly the step is $0/0$: the method has already arrived.",
+      "src": "",
+      "seen": [
+        "MT25 P3",
+        "MT26W P3"
+      ]
+    },
+    {
+      "id": "NLO-03-13",
+      "g": "Newton for systems",
+      "k": "Cubic: quadratic rate",
+      "q": "$f(t) = \\tfrac12 t^2 + \\tfrac13 t^3$, pure Newton for minimization from $0 < t^{(0)} \\le \\tfrac12$. (1) Simplify the recurrence. (2) Show $0 < t^{(k)} \\le \\tfrac12$ for all $k$ and $t^{(k)} \\to 0$. (3) Evaluate $e_{k+1}/e_k^2$ with $e_k = |t^{(k)}|$, and state the order and the asymptotic constant. (4) Classify $t = 0$. Is it a global minimizer?",
+      "pts": [
+        "(1) $f' = t + t^2$, $f'' = 1 + 2t$: $t^+ = t - \\frac{t + t^2}{1 + 2t} = \\frac{t^2}{1 + 2t}$.",
+        "(2) If $0 < t \\le \\tfrac12$ then $1 + 2t > 1$, so $0 < t^+ \\le t^2 \\le \\tfrac12 t \\le \\tfrac14$. By induction all iterates stay in $(0, \\tfrac12]$ and $t^{(k)} \\le 2^{-k}t^{(0)} \\to 0$.",
+        "(3) $e_{k+1}/e_k^2 = 1/(1 + 2t^{(k)}) \\to 1$: quadratic convergence with asymptotic constant $1$.",
+        "(4) $f'(0) = 0$ and $f''(0) = 1 > 0$: a strict local minimizer. Not global: $f(t) \\to -\\infty$ as $t \\to -\\infty$, e.g. $f(-2) = -\\tfrac23 < 0$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MT26F P3"
+      ]
+    },
+    {
+      "id": "NLO-03-14",
+      "g": "Newton minimization",
+      "k": "Newton direction",
+      "q": "To minimize a twice differentiable $g$, apply Newton's method to $\\nabla g(x) = 0$. (1) Write the Newton system and the update. (2) Which model does the Newton point minimize? (3) Prove: if $H(x^{(k)}) \\succ 0$ and $\\nabla g(x^{(k)}) \\ne 0$, the Newton direction is a descent direction. (4) What does Newton do on $g(x) = -x^2$?",
+      "pts": [
+        "(1) $H(x^{(k)})\\,d^{(k)} = -\\nabla g(x^{(k)})$ and $x^{(k+1)} = x^{(k)} + \\alpha^{(k)}d^{(k)}$; pure Newton takes $\\alpha^{(k)} = 1$.",
+        "(2) The quadratic model $m(d) = g + \\nabla g^\\top d + \\tfrac12 d^\\top H d$, whenever $H \\succ 0$.",
+        "(3) $H \\succ 0$ implies $H^{-1} \\succ 0$: for $v \\ne 0$ put $x = H^{-1}v$, then $0 < x^\\top H x = v^\\top H^{-1} v$. Hence $\\nabla g^\\top d = -\\nabla g^\\top H^{-1}\\nabla g < 0$.",
+        "(4) $x - g'/g'' = x - \\frac{-2x}{-2} = 0$: it jumps to the maximizer. Newton looks for stationary points, not for minima."
+      ],
+      "pit": "",
+      "src": "L3-1 s.50–53",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-15",
+      "g": "Newton minimization",
+      "k": "One step on quadratics",
+      "q": "(1) Prove: for $g(x) = \\tfrac12 x^\\top Q x - b^\\top x$ with $Q \\succ 0$, pure Newton reaches the minimizer in one step from any start. (2) Apply pure Newton to $f(x) = x_1^2 + 2x_2^2 + x_1x_2 - 4x_1 - 6x_2$ from $x^{(0)} = (0,0)^\\top$. (3) Show that the result is optimal and that the method stops.",
+      "pts": [
+        "(1) $\\nabla g = Qx - b$ and $H = Q$, so $x^{(1)} = x^{(0)} - Q^{-1}(Qx^{(0)} - b) = Q^{-1}b$, the unique stationary point. $g$ is strictly convex, so this is the global minimizer.",
+        "(2) $\\nabla f(0) = (-4, -6)$ and $H = \\begin{pmatrix}2&1\\\\1&4\\end{pmatrix}$. Solving $2d_1 + d_2 = 4$, $d_1 + 4d_2 = 6$ gives $d = (\\tfrac{10}{7}, \\tfrac87)$, so $x^{(1)} = (\\tfrac{10}{7}, \\tfrac87)$.",
+        "(3) $\\nabla f(x^{(1)}) = (\\tfrac{20}{7} + \\tfrac87 - 4,\\ \\tfrac{10}{7} + \\tfrac{32}{7} - 6) = (0, 0)$, and $H \\succ 0$ (minors $2$ and $7$), so $f$ is strictly convex and $x^{(1)}$ is its unique global minimizer. The next Newton direction is $0$."
+      ],
+      "pit": "",
+      "src": "L3-1 s.50",
+      "seen": [
+        "MT26W P4",
+        "MT26W P5"
+      ]
+    },
+    {
+      "id": "NLO-03-16",
+      "g": "Newton minimization",
+      "k": "Scalar Newton steps",
+      "q": "Minimize $f(t) = \\tfrac14 t^4 + \\tfrac12 t^2$ with pure Newton from $t_0 = 1$. (1) Compute $f'$, $f''$ and the minimizer. (2) Compute $t_1$. (3) Compute $t_2$ in exact fractions. (4) Verify that the first direction is a descent direction. Does Newton reach the minimizer in one step?",
+      "pts": [
+        "(1) $f' = t^3 + t = t(t^2 + 1)$ and $f'' = 3t^2 + 1 > 0$: strictly convex with unique minimizer $t^* = 0$.",
+        "(2) $d_0 = -\\tfrac24 = -\\tfrac12$, so $t_1 = \\tfrac12$.",
+        "(3) $f'(\\tfrac12) = \\tfrac58$ and $f''(\\tfrac12) = \\tfrac74$: $d_1 = -\\tfrac{5}{14}$ and $t_2 = \\tfrac12 - \\tfrac{5}{14} = \\tfrac17$.",
+        "(4) $f'(t_0)d_0 = 2 \\times (-\\tfrac12) = -1 < 0$. No: the distances to $0$ are $1, \\tfrac12, \\tfrac17$. One step is a property of quadratic objectives, not of Newton's method."
+      ],
+      "pit": "Keep exact fractions. The Newton map here is $t \\mapsto 2t^3/(3t^2 + 1)$, so the next iterate is $\\tfrac{1}{182}$.",
+      "src": "",
+      "seen": [
+        "T3 P2"
+      ]
+    },
+    {
+      "id": "NLO-03-17",
+      "g": "Newton minimization",
+      "k": "Rosenbrock: Newton",
+      "q": "$f(x) = 100(x_2 - x_1^2)^2 + (1 - x_1)^2$ with start $x^{(0)} = (0,0)^\\top$. (1) Compute $\\nabla f$ and $H$. (2) Do the first pure Newton iteration. (3) Do the second. (4) What is special about the result?",
+      "pts": [
+        "(1) $\\nabla f = \\big(-400x_1(x_2 - x_1^2) - 2(1 - x_1),\\ 200(x_2 - x_1^2)\\big)$ and $$H = \\begin{pmatrix} 1200x_1^2 - 400x_2 + 2 & -400x_1 \\\\ -400x_1 & 200 \\end{pmatrix}$$",
+        "(2) $\\nabla f(0,0) = (-2, 0)$ and $H = \\operatorname{diag}(2, 200)$: $d = (1, 0)$, $x^{(1)} = (1, 0)$.",
+        "(3) $\\nabla f(1,0) = (400, -200)$ and $H = \\begin{pmatrix}1202&-400\\\\-400&200\\end{pmatrix}$. Solving $Hd = (-400, 200)$ gives $d = (0, 1)$, so $x^{(2)} = (1, 1)$.",
+        "(4) $(1,1)$ is the global minimizer ($f = 0$), reached in two steps. But $f$ went $1 \\to 100 \\to 0$: the first full Newton step increased $f$."
+      ],
+      "pit": "A descent direction with a full step can still increase $f$. That is what a line search is for.",
+      "src": "",
+      "seen": [
+        "MT24 P4b",
+        "MT25 P4b"
+      ]
+    },
+    {
+      "id": "NLO-03-18",
+      "g": "Newton minimization",
+      "k": "Logistic-type Newton",
+      "q": "$f(x) = \\tfrac12 x^\\top Q x + c^\\top x + \\sum_{i=1}^2 \\log(1 + e^{a_i^\\top x})$ with $Q = \\operatorname{diag}(2, 1)$, $c = (-1,-1)^\\top$, $a_1 = (1,1)^\\top$, $a_2 = (-1,1)^\\top$. Let $\\sigma(u) = 1/(1 + e^{-u})$. (1) Give $\\nabla f$ and $H$. (2) Evaluate them at $x^{(0)} = (0,0)^\\top$. (3) Do one Newton step. (4) Why is the Newton direction a descent direction at every non-stationary point?",
+      "pts": [
+        "(1) $\\nabla f = Qx + c + \\sum_i \\sigma(a_i^\\top x)\\,a_i$ and $H = Q + \\sum_i \\sigma(a_i^\\top x)\\big(1 - \\sigma(a_i^\\top x)\\big)\\,a_i a_i^\\top$.",
+        "(2) $\\sigma(0) = \\tfrac12$: $\\nabla f(0) = (-1,-1) + \\tfrac12(0, 2) = (-1, 0)$, and $H(0) = \\operatorname{diag}(2,1) + \\tfrac14\\big(a_1a_1^\\top + a_2a_2^\\top\\big) = \\operatorname{diag}(2.5, 1.5)$.",
+        "(3) $d = (0.4, 0)$ and $x^{(1)} = (0.4, 0)$.",
+        "(4) $H = Q + (\\text{positive semidefinite terms}) \\succeq Q \\succ 0$ everywhere, so $f$ is strictly convex and $-H^{-1}\\nabla f$ descends."
+      ],
+      "pit": "The second step is tiny: $\\nabla f(x^{(1)}) \\approx (-0.0026, 0)$ and $x^{(2)} \\approx (0.4011, 0)$.",
+      "src": "",
+      "seen": [
+        "HW1 P6"
+      ]
+    },
+    {
+      "id": "NLO-03-19",
+      "g": "Newton minimization",
+      "k": "Pure Newton can fail",
+      "q": "Pure Newton on $f(x) = \\sqrt{1 + x^2}$, whose minimizer is $0$. (1) Compute $f'$, $f''$ and the Newton map. (2) What happens for $|x^{(0)}| < 1$, $= 1$ and $> 1$? (3) $f'' > 0$ everywhere. What then causes the failure? (4) The slides show the two-dimensional version $\\sqrt{x_1^2 + 1} + \\sqrt{x_2^2 + 1}$ from $(1,1)$ converging after about 37 iterations. Is that right?",
+      "pts": [
+        "(1) $f' = x(1 + x^2)^{-1/2}$ and $f'' = (1 + x^2)^{-3/2}$, so $f'/f'' = x(1 + x^2)$ and $x^+ = x - x(1 + x^2) = -x^3$.",
+        "(2) $< 1$: cubic convergence, $|x^{(k)}| = |x^{(0)}|^{3^k}$. $= 1$: the 2-cycle $1 \\to -1 \\to 1$, bounded but not convergent. $> 1$: divergence.",
+        "(3) The full step $\\alpha = 1$. The direction is a descent direction, but far from the minimizer the step is too long.",
+        "(4) No. In exact arithmetic it cycles $(1,1) \\leftrightarrow (-1,-1)$ forever with $f = 2\\sqrt2$. The printed convergence is round-off amplified by a factor of about $3$ per iteration."
+      ],
+      "pit": "The slide says the sequence diverges for $|x^{(0)}| \\ge 1$; at exactly $1$ it cycles.",
+      "src": "L3-1 s.47–49; L3-2 s.11",
+      "seen": [
+        "HW2 P3"
+      ]
+    },
+    {
+      "id": "NLO-03-20",
+      "g": "Newton minimization",
+      "k": "Cost of Newton",
+      "q": "(1) Name three costs or requirements of each Newton step for minimization in $n$ variables. (2) How does BFGS remove each one? (3) Compare the dominant arithmetic cost per iteration of dense Newton and of inverse BFGS. (4) When is BFGS attractive, and what does the cost comparison not show?",
+      "pts": [
+        "(1) All $n(n+1)/2$ second derivatives; an $O(n^3)$ linear solve; $H \\succ 0$, which can fail far from a minimizer.",
+        "(2) Gradients only (curvature is learned from the step $s$ and the gradient change $y$); $O(n^2)$ work; positive definiteness by construction when $y^\\top s > 0$.",
+        "(3) Newton: $O(n^3)$ for a fresh factorization (the triangular solves are $O(n^2)$). BFGS: $O(n^2)$ for the product $-B_k g_k$ and $O(n^2)$ for the rank-two update.",
+        "(4) When exact Hessians are expensive to evaluate or to factorize. The comparison does not show that BFGS needs fewer iterations: Newton converges quadratically, BFGS superlinearly."
+      ],
+      "pit": "",
+      "src": "L3-2 s.13",
+      "seen": [
+        "MT26F P7"
+      ]
+    },
+    {
+      "id": "NLO-03-21",
+      "g": "Line search",
+      "k": "Constant step",
+      "q": "Constant step $\\alpha^{(k)} = t$. (1) What are the risks of $t$ too small and too large? (2) For gradient descent on a quadratic with Hessian eigenvalues $\\mu_i > 0$, by which factor does the error in eigen-direction $i$ change per step? (3) For which $t$ does it converge? (4) Which constant step is pure Newton?",
+      "pts": [
+        "(1) Too small: many iterations. Too large: divergence or cycling.",
+        "(2) $1 - t\\mu_i$.",
+        "(3) $|1 - t\\mu_i| < 1$ for all $i$, i.e. $0 < t < 2/\\mu_{\\max}$.",
+        "(4) $t = 1$ with the Newton direction."
+      ],
+      "pit": "",
+      "src": "L3-2 s.5",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-22",
+      "g": "Line search",
+      "k": "Exact line search",
+      "q": "Exact line search minimizes $\\varphi(\\alpha) = f(x + \\alpha d)$ over $\\alpha \\ge 0$. (1) Derive the exact step for $f(x) = \\tfrac12 x^\\top Q x - b^\\top x$ with gradient $g = Qx - b$. (2) When is it positive? (3) Specialize to steepest descent. (4) What is the orthogonality property, and what does it imply?",
+      "pts": [
+        "(1) $\\varphi(\\alpha) = f(x) + \\alpha g^\\top d + \\tfrac{\\alpha^2}{2}d^\\top Q d$, so $\\varphi'(\\alpha) = g^\\top d + \\alpha\\,d^\\top Q d = 0$ gives $$\\alpha^* = -\\frac{g^\\top d}{d^\\top Q d}$$",
+        "(2) When $d$ is a descent direction ($g^\\top d < 0$) and $d^\\top Q d > 0$.",
+        "(3) $d = -g$: $\\alpha^* = \\dfrac{g^\\top g}{g^\\top Q g}$.",
+        "(4) $\\varphi'(\\alpha^*) = \\nabla f(x^{(k+1)})^\\top d^{(k)} = 0$: the new gradient is orthogonal to the old direction. Steepest descent with exact steps therefore zig-zags."
+      ],
+      "pit": "",
+      "src": "L3-2 s.6–7",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-23",
+      "g": "Line search",
+      "k": "Constant vs exact",
+      "q": "$f(x) = x_1^2 + 2x_2^2$, $x_0 = (1,1)^\\top$, steepest descent direction $d = -\\nabla f(x_0)$. (1) Compute $d$ and check descent. (2) Take the step $\\alpha = \\tfrac14$. (3) Find the exact step from $\\varphi(\\alpha) = f(1 - 2\\alpha, 1 - 4\\alpha)$. (4) Compute the exact-step iterate and compare. Does it reach the minimizer?",
+      "pts": [
+        "(1) $\\nabla f(x_0) = (2, 4)$, $d = (-2, -4)$, $\\nabla f^\\top d = -20 < 0$.",
+        "(2) $x_1 = (\\tfrac12, 0)$ with $f = \\tfrac14$.",
+        "(3) $\\varphi = (1 - 2\\alpha)^2 + 2(1 - 4\\alpha)^2 = 36\\alpha^2 - 20\\alpha + 3$, and $\\varphi' = 72\\alpha - 20 = 0$ gives $\\alpha^* = \\tfrac{5}{18}$.",
+        "(4) $x_1 = (\\tfrac49, -\\tfrac19)$ with $f = \\tfrac{16}{81} + \\tfrac{2}{81} = \\tfrac29 < \\tfrac14$. It is not the minimizer $(0,0)$: exact line search is best along the line and cannot fix the direction. $-\\nabla f$ misses the minimizer because $H = \\operatorname{diag}(2,4)$ is not a multiple of $I$; the Newton direction $(-1,-1)$ points at it."
+      ],
+      "pit": "The next gradient $(\\tfrac89, -\\tfrac49)$ is orthogonal to $d$: the zig-zag.",
+      "src": "",
+      "seen": [
+        "T3 P3"
+      ]
+    },
+    {
+      "id": "NLO-03-24",
+      "g": "Line search",
+      "k": "Armijo condition",
+      "q": "(1) State the sufficient-decrease (Armijo) condition with constant $\\gamma \\in (0,1)$. (2) Interpret its right-hand side. (3) Describe backtracking with initial step $s$ and factor $\\beta$. (4) Which step lengths can it return?",
+      "pts": [
+        "(1) $f(x + \\alpha d) \\le f(x) + \\gamma\\,\\alpha\\,\\nabla f(x)^\\top d$.",
+        "(2) A line through $(0, f(x))$ whose slope is $\\gamma$ times the tangent slope: the step must achieve at least the fraction $\\gamma$ of the decrease predicted by the linearization.",
+        "(3) Start with $\\alpha = s$. While the condition fails, set $\\alpha \\leftarrow \\beta\\alpha$ with $\\beta \\in (0,1)$. Accept the first $\\alpha$ that passes.",
+        "(4) Only $\\alpha \\in \\{s, \\beta s, \\beta^2 s, \\dots\\}$."
+      ],
+      "pit": "The condition is written with $\\le$: equality is accepted. The exercises write $c$ for $\\gamma$; and in BFGS the letter $s$ means the step $x^{(k+1)} - x^{(k)}$.",
+      "src": "L3-2 s.8–10",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-25",
+      "g": "Line search",
+      "k": "Backtracking stops",
+      "q": "Claim: if $f$ is differentiable, $\\nabla f(x)^\\top d < 0$ and $\\gamma < 1$, backtracking stops after finitely many reductions. (1) Prove it. (2) What happens if $d$ is not a descent direction? (3) What happens with $\\gamma = 1$ for $f(x) = x^2$ at $x = 1$ with $d = -2$?",
+      "pts": [
+        "(1) $\\frac{f(x + \\alpha d) - f(x)}{\\alpha} \\to \\nabla f^\\top d$ as $\\alpha \\downarrow 0$. Since $\\nabla f^\\top d < \\gamma\\nabla f^\\top d$ (a negative number times $\\gamma < 1$ is larger), the quotient is $\\le \\gamma\\nabla f^\\top d$ for all $\\alpha$ in some $(0, \\bar\\alpha]$, which is the condition. $\\beta^j s \\to 0$, so some trial lands in $(0, \\bar\\alpha]$.",
+        "(2) The right-hand side never drops below $f(x)$ while $f$ increases for small $\\alpha$: the loop never ends. Check descent first.",
+        "(3) The condition reads $1 - 4\\alpha + 4\\alpha^2 \\le 1 - 4\\alpha$, false for every $\\alpha > 0$: a strictly convex function lies strictly above its tangent line."
+      ],
+      "pit": "",
+      "src": "L3-2 s.9–10",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-26",
+      "g": "Line search",
+      "k": "Armijo by hand",
+      "q": "$f(t) = \\tfrac14 t^4$, $t_0 = 2$, $d = -f'(t_0)$, initial step $1$, $\\beta = \\tfrac12$, sufficient-decrease constant $\\tfrac14$. (1) Compute $f(t_0)$, $f'(t_0)$, $d$ and the Armijo right-hand side as a function of $\\alpha$. (2) Test $\\alpha = 1$. (3) Test $\\alpha = \\tfrac12$. (4) Test $\\alpha = \\tfrac14$ and give the new iterate.",
+      "pts": [
+        "(1) $f = 4$, $f' = 8$, $d = -8$, $f'd = -64$: the right-hand side is $4 + \\tfrac14\\alpha(-64) = 4 - 16\\alpha$.",
+        "(2) Trial point $-6$, $f = 324$, right-hand side $-12$: reject.",
+        "(3) Trial point $-2$, $f = 4$, right-hand side $-4$: reject. An unchanged objective is not a sufficient decrease.",
+        "(4) Trial point $0$, $f = 0$, right-hand side $0$: accept, since $0 \\le 0$. $t_1 = 0$, which happens to be the minimizer."
+      ],
+      "pit": "Typical slips: using $c\\,f'(t_0)$ without the factor $d$; taking $d = -1$ instead of $-8$; rejecting the equality case.",
+      "src": "",
+      "seen": [
+        "T3 P4"
+      ]
+    },
+    {
+      "id": "NLO-03-27",
+      "g": "Line search",
+      "k": "Three steps compared",
+      "q": "$f(x) = \\tfrac12 x^\\top Q x - b^\\top x$ with $Q = \\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}$, $b = (1,2)^\\top$, $x^{(0)} = (0,0)^\\top$. (1) Take a full Newton step and show the result is the global minimizer. (2) Use $d_G = -\\nabla f(x^{(0)})$ with exact line search. (3) Use $d_G$ with Armijo backtracking, $s = 1$, $\\beta = \\tfrac12$, $\\gamma = \\tfrac14$. (4) Compare the three iterates.",
+      "pts": [
+        "(1) $\\nabla f(0) = (-1,-2)$. Solving $2d_1 + d_2 = 1$, $d_1 + 2d_2 = 2$ gives $d_N = (0, 1)$ and $x = (0, 1)$. $Q \\succ 0$ (minors $2$, $3$) and $Qx = b$, so it is the unique global minimizer, with $f = -1$.",
+        "(2) $d_G = (1, 2)$, $d_G^\\top Q d_G = 14$, $b^\\top d_G = 5$: $\\varphi(\\alpha) = 7\\alpha^2 - 5\\alpha$, $\\alpha = \\tfrac{5}{14}$, $x = (\\tfrac{5}{14}, \\tfrac57)$, $f = -\\tfrac{25}{28}$.",
+        "(3) $f(x^{(0)}) = 0$ and $\\nabla f^\\top d_G = -5$, so the test is $7\\alpha^2 - 5\\alpha \\le -\\tfrac54\\alpha$. $\\alpha = 1$: $2 > -\\tfrac54$, reject. $\\alpha = \\tfrac12$: $-\\tfrac34 \\le -\\tfrac58$, accept. $x = (\\tfrac12, 1)$.",
+        "(4) $f$: Newton $-1$, exact $-\\tfrac{25}{28} \\approx -0.893$, Armijo $-0.75$. Only Newton reaches the minimizer; exact line search is best on its ray only."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MT26F P4"
+      ]
+    },
+    {
+      "id": "NLO-03-28",
+      "g": "Line search",
+      "k": "Newton with Armijo",
+      "q": "Newton's method with backtracking ($s = 1$, $\\beta = \\tfrac12$) on $\\sqrt{x_1^2 + 1} + \\sqrt{x_2^2 + 1}$ from $(10, 10)$. (1) With $\\gamma = 0.5$ the accepted step is $\\tfrac12$ at every iteration from the third on. Which rate results? (2) Explain why $\\alpha = 1$ is rejected near the minimizer. (3) State the general rule for $\\gamma$. (4) What happens with $\\gamma = 0.25$?",
+      "pts": [
+        "(1) The error halves each time: linear convergence, about 18 iterations.",
+        "(2) Near $x = 0$ the full Newton step $x \\to -x^3$ gives the actual decrease $\\sqrt{1 + x^2} - \\sqrt{1 + x^6} \\approx \\tfrac12 x^2$, while the required decrease is $\\gamma\\,|\\nabla f^\\top d| = \\gamma x^2\\sqrt{1 + x^2} \\approx \\gamma x^2$. With $\\gamma = \\tfrac12$ the requirement narrowly exceeds what the step delivers.",
+        "(3) Near a minimizer the full Newton step achieves about half of its linear prediction. So Armijo keeps the full step, and the quadratic rate, only if $\\gamma < \\tfrac12$.",
+        "(4) $\\alpha = 1$ is accepted from iteration 3 and the run finishes in 5 iterations."
+      ],
+      "pit": "",
+      "src": "L3-2 s.12",
+      "seen": [
+        "HW2 P3"
+      ]
+    },
+    {
+      "id": "NLO-03-29",
+      "g": "Line search",
+      "k": "Curvature condition",
+      "q": "A line search requires $d$ to be a descent direction at $x$ and $\\nabla f(x + \\alpha d)^\\top d \\ge \\sigma\\,\\nabla f(x)^\\top d$ for a constant $0 < \\sigma < 1$, where $f$ is continuously differentiable. (1) Show that arbitrarily small step lengths are not allowed. (2) What is the role of such a condition next to sufficient decrease? (3) What does it give for BFGS?",
+      "pts": [
+        "(1) As $\\alpha \\downarrow 0$, $\\nabla f(x + \\alpha d)^\\top d \\to \\nabla f(x)^\\top d$ by continuity. Since $\\nabla f(x)^\\top d < 0$ and $\\sigma < 1$, $\\nabla f(x)^\\top d < \\sigma\\nabla f(x)^\\top d$. So for all sufficiently small $\\alpha$ the left side is below the right side and the condition fails.",
+        "(2) Sufficient decrease rules out steps that are too long; this condition rules out steps that are too short.",
+        "(3) With $s = \\alpha d$: $y^\\top s = \\alpha\\,[\\nabla f(x + \\alpha d) - \\nabla f(x)]^\\top d \\ge \\alpha(\\sigma - 1)\\nabla f(x)^\\top d > 0$, the curvature condition BFGS needs, even for non-convex $f$."
+      ],
+      "pit": "This condition is not in the slides; it appeared in a past paper as a short proof.",
+      "src": "",
+      "seen": [
+        "MT25 P6"
+      ]
+    },
+    {
+      "id": "NLO-03-30",
+      "g": "BFGS",
+      "k": "Quasi-Newton idea",
+      "q": "(1) What is a quasi-Newton direction, and why is it a descent direction? (2) List the steps of the general quasi-Newton loop. (3) True or false: unlike in Newton's method, one should explicitly invert $H_k$ to form the search direction. Explain.",
+      "pts": [
+        "(1) $d^{(k)} = -H_k^{-1}\\nabla g(x^{(k)})$ with $H_k$ a positive definite approximation of the Hessian. $H_k^{-1} \\succ 0$ gives $\\nabla g^\\top d < 0$.",
+        "(2) $H_0 \\succ 0$ (e.g. $I$) → $d^{(k)} = -H_k^{-1}\\nabla g$ → backtracking step → $x^{(k+1)} = x^{(k)} + \\alpha^{(k)}d^{(k)}$ → update $H_k^{-1}$ to $H_{k+1}^{-1}$.",
+        "(3) False. No inverse is ever computed: the method stores and updates the inverse approximation directly, so the direction is a matrix–vector product. (Newton's method does not invert either; it solves $Hd = -\\nabla g$.)"
+      ],
+      "pit": "The slides write the update for $H_k^{-1}$; the exercises call the same matrix $B_k$.",
+      "src": "L3-2 s.14–15",
+      "seen": [
+        "MT25 P5"
+      ]
+    },
+    {
+      "id": "NLO-03-31",
+      "g": "BFGS",
+      "k": "Secant condition",
+      "q": "Let $s = x^{(k+1)} - x^{(k)}$ and $y = \\nabla g(x^{(k+1)}) - \\nabla g(x^{(k)})$. (1) State the secant condition in both forms. (2) What does it say in one dimension? (3) Show that for $g = \\tfrac12 x^\\top Q x - b^\\top x$ the true Hessian satisfies it. (4) Which information does it use?",
+      "pts": [
+        "(1) $H_{k+1}s = y$, equivalently $H_{k+1}^{-1}y = s$.",
+        "(2) $H_{k+1} = \\dfrac{g'(x^{(k+1)}) - g'(x^{(k)})}{x^{(k+1)} - x^{(k)}}$: the slope of the secant through two derivative values, an approximation of $g''$.",
+        "(3) $y = Qx^{(k+1)} - Qx^{(k)} = Qs$.",
+        "(4) Only iterates and gradients: the curvature observed along the last step, without evaluating the Hessian."
+      ],
+      "pit": "",
+      "src": "L3-2 s.17–18",
+      "seen": [
+        "MT26F P7a"
+      ]
+    },
+    {
+      "id": "NLO-03-32",
+      "g": "BFGS",
+      "k": "Inverse BFGS update",
+      "q": "(1) Write the inverse BFGS update. (2) Which three properties does $H_{k+1}^{-1}$ have when $H_k^{-1}$ is symmetric positive definite and $y^\\top s > 0$? (3) Prove symmetry. (4) Prove the secant condition. (5) What does the update cost?",
+      "pts": [
+        "(1) With $\\rho = 1/(y^\\top s)$: $$H_{k+1}^{-1} = (I - \\rho s y^\\top)\\,H_k^{-1}\\,(I - \\rho y s^\\top) + \\rho s s^\\top$$",
+        "(2) It is symmetric, satisfies $H_{k+1}^{-1}y = s$, and is positive definite.",
+        "(3) The two outer factors are transposes of each other, and $ss^\\top$ is symmetric.",
+        "(4) $(I - \\rho y s^\\top)y = y - \\rho y(s^\\top y) = 0$, so the first term vanishes on $y$; and $\\rho s s^\\top y = s$.",
+        "(5) $O(n^2)$."
+      ],
+      "pit": "The slides claim the update minimizes the plain Frobenius distance to $H_k^{-1}$; that holds only for a weighted norm. Only the closed form matters.",
+      "src": "L3-2 s.19–25",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-33",
+      "g": "BFGS",
+      "k": "BFGS keeps PD",
+      "q": "Prove: if $H_k^{-1}$ is symmetric positive definite and $y^\\top s > 0$, then $H_{k+1}^{-1} = (I - \\rho s y^\\top)H_k^{-1}(I - \\rho y s^\\top) + \\rho s s^\\top$ with $\\rho = 1/(y^\\top s)$ is positive definite. (1) Write the quadratic form for a vector $x$. (2) Why is it nonnegative? (3) Show that it is zero only for $x = 0$. (4) Which shortcut is wrong?",
+      "pts": [
+        "(1) With $w = (I - \\rho y s^\\top)x = x - \\rho(s^\\top x)\\,y$: $$x^\\top H_{k+1}^{-1}x = w^\\top H_k^{-1}w + \\rho(s^\\top x)^2$$",
+        "(2) $H_k^{-1} \\succ 0$ and $\\rho > 0$.",
+        "(3) Two cases. If $s^\\top x \\ne 0$ the second term is positive. If $s^\\top x = 0$ then $w = x \\ne 0$ and the first term is positive.",
+        "(4) “The second term is zero only when $x = 0$”: it is zero for every $x \\perp s$. Neither term alone is positive for all $x \\ne 0$."
+      ],
+      "pit": "",
+      "src": "L3-2 s.24–25",
+      "seen": [
+        "MT24 P5",
+        "MT26F P5b"
+      ]
+    },
+    {
+      "id": "NLO-03-34",
+      "g": "BFGS",
+      "k": "Curvature yᵀs",
+      "q": "With $s = x^{(k+1)} - x^{(k)} \\ne 0$ and $y = \\nabla g(x^{(k+1)}) - \\nabla g(x^{(k)})$: (1) Prove $y^\\top s > 0$ for strictly convex $g$. (2) Does convexity alone give $y^\\top s > 0$? (3) What can happen for non-convex $g$, and what do codes do? (4) If $H_k^{-1} \\succ 0$ but $y^\\top s \\le 0$, can the updated matrix be positive definite?",
+      "pts": [
+        "(1) Write $x' = x + s$. The strict gradient inequality both ways: $g(x') > g(x) + \\nabla g(x)^\\top s$ and $g(x) > g(x') - \\nabla g(x')^\\top s$. Adding gives $(\\nabla g(x') - \\nabla g(x))^\\top s > 0$.",
+        "(2) No, only $y^\\top s \\ge 0$. Example: $g(u, v) = \\tfrac12 u^2$ from $(0,0)$ to $(0,1)$: $s = (0,1)$, $y = 0$, $y^\\top s = 0$. Then $\\rho$ is undefined and the update cannot be applied.",
+        "(3) $y^\\top s$ can be negative ($g = -\\tfrac12 z^2$, $s = 1$ gives $-1$). Codes skip the update or use a line search that enforces $y^\\top s > 0$.",
+        "(4) No. For $y^\\top s = 0$ the formula is undefined. For $y^\\top s < 0$ the secant condition gives $y^\\top H_{k+1}^{-1}y = y^\\top s < 0$ with $y \\ne 0$."
+      ],
+      "pit": "The slide's “convex ⇒ $y^\\top s > 0$” is false; it needs strict convexity.",
+      "src": "L3-2 s.23",
+      "seen": [
+        "MT24 P5b",
+        "MT26F P5c"
+      ]
+    },
+    {
+      "id": "NLO-03-35",
+      "g": "BFGS",
+      "k": "Strong convexity",
+      "q": "(1) Define $m$-strong convexity of a differentiable $f$. (2) Give the Hessian characterization for $C^2$ functions. (3) State the hierarchy strongly / strictly / convex with examples showing that neither implication reverses. (4) Is $e^x$ strongly convex on $\\mathbb{R}$? On $[0,1]$? (5) What does strong convexity give for BFGS?",
+      "pts": [
+        "(1) For some $m > 0$ and all $x, y$: $$f(y) \\ge f(x) + \\nabla f(x)^\\top(y - x) + \\tfrac{m}{2}\\lVert y - x \\rVert^2$$",
+        "(2) $H(x) \\succeq mI$ for all $x$: the eigenvalues are bounded away from $0$ uniformly.",
+        "(3) Strongly ⇒ strictly ⇒ convex. $|x|$ is convex but not strictly; $x^4$ is strictly but not strongly convex ($f''(0) = 0$); $x^2$ is $2$-strongly convex.",
+        "(4) On $\\mathbb{R}$ no: $f'' = e^x \\to 0$ as $x \\to -\\infty$, so no uniform $m$ exists. On $[0,1]$ yes, with $m = 1$.",
+        "(5) $y^\\top s \\ge m\\lVert s \\rVert^2 > 0$ at every step, so every update is defined and positive definite. With Lipschitz $\\nabla g$ and $H$ and backtracking, BFGS converges from any start to the unique minimizer, superlinearly."
+      ],
+      "pit": "",
+      "src": "L3-2 s.26–29",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-36",
+      "g": "BFGS",
+      "k": "BFGS example: step 1",
+      "q": "Minimize $\\tfrac12 x^\\top Q x - b^\\top x$ with $Q = \\begin{pmatrix}5&-3\\\\-3&2\\end{pmatrix}$, $b = (0,1)^\\top$ by BFGS from $x^{(0)} = 0$ and $H_0 = I$, with exact line search $\\alpha = -g^\\top d/(d^\\top Q d)$, $g = Qx - b$. (1) Find $x^*$. (2) Do iteration $k = 0$. (3) Compute $s$, $y$ and $\\rho$. (4) Compute $H_1^{-1}$.",
+      "pts": [
+        "(1) $\\det Q = 1$ and $Q^{-1} = \\begin{pmatrix}2&3\\\\3&5\\end{pmatrix}$, so $x^* = Q^{-1}b = (3, 5)$.",
+        "(2) $g_0 = (0, -1)$, $d = (0, 1)$, $g_0^\\top d = -1$, $d^\\top Q d = 2$: $\\alpha = \\tfrac12$ and $x^{(1)} = (0, \\tfrac12)$.",
+        "(3) $g_1 = Qx^{(1)} - b = (-\\tfrac32, 0)$. $s = (0, \\tfrac12)$, $y = g_1 - g_0 = (-\\tfrac32, 1)$, $y^\\top s = \\tfrac12$, $\\rho = 2$.",
+        "(4) $I - \\rho s y^\\top = \\begin{pmatrix}1&0\\\\ 3/2&0\\end{pmatrix}$; times its transpose: $\\begin{pmatrix}1&3/2\\\\3/2&9/4\\end{pmatrix}$; adding $\\rho ss^\\top = \\begin{pmatrix}0&0\\\\0&1/2\\end{pmatrix}$: $$H_1^{-1} = \\begin{pmatrix}1&3/2\\\\3/2&11/4\\end{pmatrix}$$"
+      ],
+      "pit": "Finish every update with the check $H_{k+1}^{-1}y = s$. Here: $(-\\tfrac32 + \\tfrac32,\\ -\\tfrac94 + \\tfrac{11}{4}) = (0, \\tfrac12)$.",
+      "src": "L3-2 s.30–32",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-37",
+      "g": "BFGS",
+      "k": "BFGS example: step 2",
+      "q": "Continue with $Q = \\begin{pmatrix}5&-3\\\\-3&2\\end{pmatrix}$, $x^{(1)} = (0, \\tfrac12)^\\top$, $g_1 = (-\\tfrac32, 0)^\\top$, $H_1^{-1} = \\begin{pmatrix}1&3/2\\\\3/2&11/4\\end{pmatrix}$ and exact line search. (1) Compute $d^{(1)}$. (2) Compute $\\alpha^{(1)}$. (3) Compute $x^{(2)}$ and $g_2$. (4) Which general property does this illustrate?",
+      "pts": [
+        "(1) $d = -H_1^{-1}g_1 = (\\tfrac32, \\tfrac94)$, and $g_1^\\top d = -\\tfrac94$.",
+        "(2) $d^\\top Q d = 5 \\times \\tfrac94 - 6 \\times \\tfrac32 \\times \\tfrac94 + 2 \\times \\tfrac{81}{16} = \\tfrac98$, so $\\alpha = \\tfrac94 \\div \\tfrac98 = 2$.",
+        "(3) $x^{(2)} = (0, \\tfrac12) + 2(\\tfrac32, \\tfrac94) = (3, 5) = x^*$ and $g_2 = 0$: stop.",
+        "(4) Quadratic termination: on an $n$-dimensional strictly convex quadratic with exact line search, BFGS stops in at most $n$ steps, and $H_n^{-1} = Q^{-1}$ (here $\\begin{pmatrix}2&3\\\\3&5\\end{pmatrix}$)."
+      ],
+      "pit": "",
+      "src": "L3-2 s.30–32",
+      "seen": []
+    },
+    {
+      "id": "NLO-03-38",
+      "g": "BFGS",
+      "k": "Diagonal update",
+      "q": "Inverse BFGS with $B_0 = I$ (here $B$ approximates the inverse Hessian), $s = (1,0)^\\top$, $y = (2,0)^\\top$. (1) Compute $y^\\top s$ and $\\rho$. (2) Compute $B_1$. (3) Verify $B_1 y = s$ and positive definiteness, and interpret $B_1$. (4) For $g_1 = (2,2)^\\top$ compute $d_1 = -B_1 g_1$ and check descent.",
+      "pts": [
+        "(1) $y^\\top s = 2 > 0$ and $\\rho = \\tfrac12$.",
+        "(2) $I - \\rho s y^\\top = \\operatorname{diag}(0, 1) = I - \\rho y s^\\top$ and $\\rho ss^\\top = \\operatorname{diag}(\\tfrac12, 0)$, so $B_1 = \\operatorname{diag}(\\tfrac12, 1)$.",
+        "(3) $B_1 y = (1, 0) = s$. Diagonal with positive entries: positive definite. The curvature along $e_1$ was measured as $y_1/s_1 = 2$, so the inverse curvature became $\\tfrac12$; along $e_2$ nothing was learned and the entry stays $1$.",
+        "(4) $d_1 = (-1, -2)$ and $g_1^\\top d_1 = -2 - 4 = -6 < 0$."
+      ],
+      "pit": "Diagonal entries decide positive definiteness only because $B_1$ is diagonal; a general symmetric matrix needs minors or eigenvalues.",
+      "src": "",
+      "seen": [
+        "T3 P5"
+      ]
+    },
+    {
+      "id": "NLO-03-39",
+      "g": "BFGS",
+      "k": "Update by hand",
+      "q": "Inverse BFGS with $B_0 = I$, $s = (1,1)^\\top$, $y = (1,3)^\\top$. (1) Compute $\\rho$. (2) Compute $A = I - \\rho s y^\\top$ and $AA^\\top$. (3) Compute $B_1$. (4) Verify $B_1 y = s$ and that $B_1$ is positive definite.",
+      "pts": [
+        "(1) $y^\\top s = 4$, $\\rho = \\tfrac14$.",
+        "(2) $A = \\tfrac14\\begin{pmatrix}3&-3\\\\-1&1\\end{pmatrix}$ and $AA^\\top = \\tfrac{1}{16}\\begin{pmatrix}18&-6\\\\-6&2\\end{pmatrix}$.",
+        "(3) $\\rho ss^\\top = \\tfrac{1}{16}\\begin{pmatrix}4&4\\\\4&4\\end{pmatrix}$, so $B_1 = \\tfrac{1}{16}\\begin{pmatrix}22&-2\\\\-2&6\\end{pmatrix} = \\tfrac18\\begin{pmatrix}11&-1\\\\-1&3\\end{pmatrix}$.",
+        "(4) $B_1 y = \\tfrac18(11 - 3,\\ -1 + 9) = (1, 1) = s$. Minors: $\\tfrac{11}{8} > 0$ and $\\det B_1 = \\tfrac{33 - 1}{64} = \\tfrac12 > 0$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MT26F P5a"
+      ]
+    },
+    {
+      "id": "NLO-03-40",
+      "g": "Overview",
+      "k": "Method comparison",
+      "q": "Compare the steepest descent, Newton and BFGS directions on (1) what each needs, (2) what each guarantees, (3) how each fails. Then (4) compare constant, exact and Armijo step lengths in the same way.",
+      "pts": [
+        "(1) $-\\nabla f$: the gradient. Newton: the Hessian and an $O(n^3)$ solve. BFGS: gradients and $O(n^2)$ work.",
+        "(2) $-\\nabla f$: descent if $\\nabla f \\ne 0$. Newton: descent if $H \\succ 0$; one step on quadratics; quadratic rate near a minimizer with nonsingular Hessian. BFGS: positive definiteness kept if $y^\\top s > 0$; global and superlinear for strongly convex objectives; at most $n$ steps on quadratics with exact line search.",
+        "(3) $-\\nabla f$: zig-zag, slow when ill-conditioned. Newton: ascent if $H$ is indefinite; cycling or divergence from far away; linear rate at a singular solution. BFGS: breaks when $y^\\top s \\le 0$.",
+        "(4) Constant: needs nothing, guarantees nothing, may diverge. Exact: best along $d$ with the new gradient orthogonal to $d$, but closed form only for quadratics. Armijo: needs a descent direction and $\\gamma \\in (0,1)$, terminates finitely, but $\\gamma \\ge \\tfrac12$ caps Newton at $\\alpha = \\tfrac12$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}

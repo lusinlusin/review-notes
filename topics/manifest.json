@@ -8,6 +8,10 @@
           "file": "nlo/ch02-optimality-convexity.json"
         },
         {
+          "title": "Newton, line search, BFGS",
+          "file": "nlo/ch03-newton-bfgs.json"
+        },
+        {
           "title": "KKT conditions",
           "file": "nlo/ch06-kkt.json"
         },
