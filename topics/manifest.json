@@ -16,6 +16,10 @@
           "file": "nlo/ch07-second-order-duality.json"
         },
         {
+          "title": "Interior point methods",
+          "file": "nlo/ch08-interior-point.json"
+        },
+        {
           "title": "Core concepts",
           "file": "nlo/core-concepts.json"
         }
