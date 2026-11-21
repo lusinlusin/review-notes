@@ -1,0 +1,1185 @@
+{
+  "title": "Continuous-time Markov chains",
+  "notes": [
+    {
+      "h": "Big picture",
+      "items": [
+        {
+          "t": "Where it sits",
+          "d": [
+            "Before: a discrete-time chain moves once per time step. Irreducible chains are transient, null recurrent or positive recurrent; the tests are $\\sum_n p_n(x, x)$, the hitting function, and the search for an invariant probability. Running example there: the walk with a partially reflecting wall, $p = \\tfrac13$, $\\pi(x) = (\\tfrac12)^{x+1}$.",
+            "This chapter: the Poisson process (3.1); finite state space, with rates, the generator $A$, $P_t = e^{tA}$, limits and mean passage times (3.2); birth-and-death processes, with queues, populations, two series tests and explosion (3.3); general countable state space, with forward and backward equations (3.4).",
+            "After: back to discrete time, for the question of when to stop a Markov chain."
+          ],
+          "cards": [
+            "STO-03-01"
+          ]
+        },
+        {
+          "t": "The question",
+          "d": [
+            "What is a Markov chain when time is continuous, so that the chain can jump at any moment? Answer: in each short interval $\\Delta t$ the chain jumps from $x$ to $y$ with probability about $\\alpha(x, y)\\Delta t$. The numbers $\\alpha(x, y)$ are rates, and everything else is computed from them.",
+            "Data: a transition matrix with rows summing to 1 becomes a generator with rows summing to 0. Transition probabilities: $P^n$ becomes $P_t = e^{tA}$. Equilibrium: $\\bar\\pi P = \\bar\\pi$ becomes $\\bar\\pi A = \\bar 0$.",
+            "Time in a state: one step becomes an exponential random time. Periodicity disappears. New phenomenon: explosion, infinitely many jumps in finite time."
+          ],
+          "cards": [
+            "STO-03-01",
+            "STO-03-07"
+          ]
+        },
+        {
+          "t": "Running example",
+          "d": [
+            "One story for the whole chapter: customers arrive at a service desk at rate $\\lambda = 1$ per minute and a customer being served finishes at rate $\\mu = 2$ per minute.",
+            "3.1, arrivals only: Poisson process, $\\mathbb{P}\\{X_2 = k\\} = e^{-2}\\tfrac{2^k}{k!}$.",
+            "3.2, desk with no waiting room (0 = idle, 1 = busy): $\\alpha(0, 1) = 1$, $\\alpha(1, 0) = 2$, and every row of $P_t$ tends to $(\\tfrac23, \\tfrac13)$.",
+            "3.3, desk with an unlimited queue: the $M/M/1$ queue, $\\pi(n) = (\\tfrac12)^{n+1}$, mean queue length 1. This is the same $\\pi$ as for the discrete walk with $p = \\tfrac13$, and not by coincidence."
+          ],
+          "cards": [
+            "STO-03-08",
+            "STO-03-21",
+            "STO-03-23"
+          ]
+        },
+        {
+          "t": "Insights",
+          "d": [
+            "A continuous-time chain is a discrete-time jump chain whose steps take exponential amounts of time. The exponential is forced: it is the only waiting time without memory.",
+            "$A$ plays the role of $P - I$ per unit time. With $a \\ge \\max_x\\alpha(x)$ the matrix $I + A/a$ is an ordinary transition matrix with the same equilibrium, so the discrete-time results carry over.",
+            "Waiting times are spread over all of $(0, \\infty)$, so any path can be completed by any time $t > 0$. That is why periodicity disappears."
+          ],
+          "cards": [
+            "STO-03-10",
+            "STO-03-12",
+            "STO-03-13"
+          ]
+        },
+        {
+          "t": "Key symbols",
+          "d": [
+            "$X_t$: state at time $t$. $\\lambda$: arrival rate of a Poisson process. $P_k(t)$, $P_n(t)$: $\\mathbb{P}\\{X_t = k\\}$, numbers and not a matrix.",
+            "$T_n$: gap between arrivals; $Y_n = T_1 + \\dots + T_n$: time of the $n$-th arrival.",
+            "$\\alpha(x, y)$: rate of jumping from $x$ to $y$; $\\alpha(x) = \\sum_{y \\ne x}\\alpha(x, y)$: total rate of leaving $x$. $A$: generator. $p_t(x, y)$ and the matrix $P_t = e^{tA}$.",
+            "$\\bar\\pi$: equilibrium, $\\bar\\pi A = \\bar 0$. $b(x)$: mean time to reach a fixed state from $x$. $\\lambda_n$, $\\mu_n$: birth and death rates."
+          ],
+          "cards": [
+            "STO-03-07",
+            "STO-03-14",
+            "STO-03-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "3.1 Poisson process",
+      "items": [
+        {
+          "t": "Three assumptions",
+          "d": [
+            "$X_t$ = number of arrivals by time $t$. In words: arrivals in disjoint intervals do not influence each other; the average rate is constant; customers come one at a time.",
+            "Precisely: independent increments, and over $[t, t + \\Delta t]$ the probabilities of 0, 1 and at least 2 arrivals are $1 - \\lambda\\Delta t + o(\\Delta t)$, $\\lambda\\Delta t + o(\\Delta t)$ and $o(\\Delta t)$ (book (3.1)–(3.3)), where $o(\\Delta t)/\\Delta t \\to 0$.",
+            "Running example: $\\lambda = 1$ per minute; over $0.01$ minutes the chance of an arrival is about $0.01$."
+          ],
+          "cards": [
+            "STO-03-02"
+          ]
+        },
+        {
+          "t": "Route 1: chop into n pieces",
+          "d": [
+            "$X_t$ is a sum of $n$ independent, identically distributed increments; the chance that some piece holds two arrivals is at most $n \\cdot o(t/n) \\to 0$. So $X_t$ is approximately binomial with $n$ trials and success probability $\\tfrac{\\lambda t}{n}$.",
+            "Limit: $\\binom nkn^{-k} \\to \\tfrac{1}{k!}$ and $(1 - \\tfrac{\\lambda t}{n})^{n-k} \\to e^{-\\lambda t}$, hence $\\mathbb{P}\\{X_t = k\\} = e^{-\\lambda t}\\tfrac{(\\lambda t)^k}{k!}$.",
+            "$\\lambda = 1$, $t = 2$, $k = 0, 1, 2, 3$: 10 pieces give $0.1074, 0.2684, 0.3020, 0.2013$; 100 pieces give $0.1326, 0.2707, 0.2734, 0.1823$; the Poisson limit is $0.1353, 0.2707, 0.2707, 0.1804$."
+          ],
+          "cards": [
+            "STO-03-03"
+          ]
+        },
+        {
+          "t": "Route 2: differential equations",
+          "d": [
+            "$\\mathbb{P}\\{X_{t+\\Delta t} = k\\} = P_k(t)(1 - \\lambda\\Delta t) + P_{k-1}(t)\\lambda\\Delta t + o(\\Delta t)$ gives $P_k' = \\lambda P_{k-1} - \\lambda P_k$: inflow minus outflow.",
+            "$P_0 = e^{-\\lambda t}$; with $f_k = e^{\\lambda t}P_k$, $f_k' = \\lambda f_{k-1}$, so $f_k = \\tfrac{(\\lambda t)^k}{k!}$. The same answer as route 1."
+          ],
+          "cards": [
+            "STO-03-04"
+          ]
+        },
+        {
+          "t": "Route 3: exponential gaps",
+          "d": [
+            "The gaps $T_i$ are independent with no memory: $\\mathbb{P}\\{T_i \\ge s + t \\mid T_i \\ge s\\} = \\mathbb{P}\\{T_i \\ge t\\}$, which forces $\\mathbb{P}\\{T_i \\ge t\\} = e^{-bt}$, and $b = \\lambda$.",
+            "Construction: draw independent exponential gaps with rate $\\lambda$ and let $X_t = n$ for $Y_n \\le t < Y_{n+1}$.",
+            "Numbers ($\\lambda = 1$): having waited 1 minute, the chance of waiting 0.5 more is $e^{-0.5} \\approx 0.6065$, as for a fresh wait."
+          ],
+          "cards": [
+            "STO-03-05"
+          ]
+        },
+        {
+          "t": "Three routes, one answer",
+          "d": [
+            "Route 1 uses independence and “no double arrivals”: a binomial limit. Route 2 uses the three short-interval relations at time t: an ODE. Route 3 uses no memory: a way to simulate.",
+            "Routes 2 and 3 are the two descriptions every later chain gets: “rates over $\\Delta t$”, which generalises to $\\bar p\\,' = \\bar pA$, and “exponential waiting time, then jump”."
+          ],
+          "cards": [
+            "STO-03-04",
+            "STO-03-05",
+            "STO-03-10"
+          ]
+        },
+        {
+          "t": "Properties used in the exercises",
+          "d": [
+            "The sum of independent Poisson processes is a Poisson process whose rate is the sum of the rates.",
+            "Each arrival of the merged process belongs to process 1 with probability $\\tfrac{\\lambda_1}{\\lambda_1 + \\lambda_2}$, independently of the others.",
+            "Given the number of arrivals in an interval, the arrival times are independent and uniform on it, so counts in sub-intervals are binomial."
+          ],
+          "cards": [
+            "STO-03-29",
+            "STO-03-30",
+            "STO-03-31"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "3.2 Finite state space",
+      "items": [
+        {
+          "t": "Competing exponential clocks",
+          "d": [
+            "Independent clocks with rates $b_1, \\dots, b_n$: the first ring is exponential with rate $b_1 + \\dots + b_n$, and clock $i$ is the first with probability $b_i/(b_1 + \\dots + b_n)$.",
+            "Running example: at a busy desk the next event comes after an exponential time with rate 3; it is an arrival with probability $\\tfrac13$, a departure with probability $\\tfrac23$."
+          ],
+          "cards": [
+            "STO-03-06"
+          ]
+        },
+        {
+          "t": "Rates and the generator",
+          "d": [
+            "For $x \\ne y$, $\\alpha(x, y) \\ge 0$ is the rate of jumping from $x$ to $y$ and $\\alpha(x) = \\sum_{y \\ne x}\\alpha(x, y)$. The chain is defined by $\\mathbb{P}\\{X_{t+\\Delta t} = x \\mid X_t = x\\} = 1 - \\alpha(x)\\Delta t + o(\\Delta t)$ (3.5) and $\\mathbb{P}\\{X_{t+\\Delta t} = x \\mid X_t = y\\} = \\alpha(y, x)\\Delta t + o(\\Delta t)$ (3.6).",
+            "As in route 2: $p_x'(t) = -\\alpha(x)p_x(t) + \\sum_{y \\ne x}\\alpha(y, x)p_y(t)$. With the generator $A$ (off-diagonal $\\alpha(x, y)$, diagonal $-\\alpha(x)$): $\\bar p\\,'(t) = \\bar p(t)A$ (3.7), so $\\bar p(t) = \\bar p(0)e^{tA}$.",
+            "For the transition matrix: $\\tfrac{d}{dt}P_t = P_tA$, $P_0 = I$ (3.8), so $P_t = e^{tA}$.",
+            "Compared with a transition matrix: an off-diagonal entry is a probability per unit time instead of a probability; the diagonal is $-\\alpha(x) \\le 0$ instead of $p(x, x) \\ge 0$; rows sum to 0 instead of 1; over a short time $P_{\\Delta t} \\approx I + \\Delta t\\,A$."
+          ],
+          "cards": [
+            "STO-03-07"
+          ]
+        },
+        {
+          "t": "Running example: the desk",
+          "d": [
+            "$A = \\begin{pmatrix}-1&1\\\\2&-2\\end{pmatrix}$, eigenvalues 0 and $-3$, eigenvectors as columns of $Q = \\begin{pmatrix}1&1\\\\1&-2\\end{pmatrix}$.",
+            "$$P_t = \\begin{pmatrix}2/3&1/3\\\\2/3&1/3\\end{pmatrix} + e^{-3t}\\begin{pmatrix}1/3&-1/3\\\\-2/3&2/3\\end{pmatrix}$$",
+            "$p_t(0, 0) = \\tfrac23 + \\tfrac13e^{-3t}$: $0.741$ at $t = 0.5$, $0.6675$ at $t = 2$. $p_t(1, 0) = \\tfrac23 - \\tfrac23e^{-3t}$: $0.518$ at $t = 0.5$. Both rows tend to $(\\tfrac23, \\tfrac13)$; the start is forgotten at rate 3."
+          ],
+          "cards": [
+            "STO-03-08"
+          ]
+        },
+        {
+          "t": "A four-state example",
+          "d": [
+            "For the symmetric generator on $\\{0, 1, 2, 3\\}$ with rows $(-1, 1, 0, 0)$, $(1, -3, 1, 1)$, $(0, 1, -2, 1)$, $(0, 1, 1, -2)$ the eigenvalues are $0, -1, -3, -4$ and $P_t = \\Pi + e^{-t}B_1 + e^{-3t}B_3 + e^{-4t}B_4$.",
+            "Every row tends to $(\\tfrac14, \\tfrac14, \\tfrac14, \\tfrac14)$; the slowest correction decays like $e^{-t}$. For example $p_t(0, 0) = \\tfrac14 + \\tfrac23e^{-t} + \\tfrac{1}{12}e^{-4t}$."
+          ],
+          "cards": [
+            "STO-03-09"
+          ]
+        },
+        {
+          "t": "Wait an exponential time, then jump",
+          "d": [
+            "From $x$ the first jump comes after an exponential time with rate $\\alpha(x)$ and goes to $y$ with probability $\\alpha(x, y)/\\alpha(x)$. In clock language: one clock per target $y$ with rate $\\alpha(x, y)$.",
+            "The sequence of states visited is the jump chain, $p(x, y) = \\alpha(x, y)/\\alpha(x)$.",
+            "Rates description: good for differential equations. Clock description: good for simulation, first-step arguments and passage times."
+          ],
+          "cards": [
+            "STO-03-10"
+          ]
+        },
+        {
+          "t": "Long-run behaviour",
+          "d": [
+            "A limit does not change in time, so $\\bar\\pi A = \\bar 0$: $\\bar\\pi$ is a left eigenvector of $A$ for the eigenvalue 0. Column by column: flow in = flow out.",
+            "Fact, for an irreducible chain on a finite state space: there is a unique probability vector with $\\bar\\pi A = \\bar 0$; all other eigenvalues of $A$ have negative real part; $P_t$ tends to the matrix with every row $\\bar\\pi$. There is no periodicity.",
+            "Why: uniformization. With $a > \\max_x\\alpha(x)$, $P = I + A/a$ is an irreducible aperiodic transition matrix with eigenvalues $1 + \\nu/a$ and the same invariant vector.",
+            "Why no periodicity: any path with positive rates can be completed before time $t$ with positive probability. The two-state flip chain has $p_t(0, 0) = \\tfrac12 + \\tfrac12e^{-2t} > 0$."
+          ],
+          "cards": [
+            "STO-03-11",
+            "STO-03-12",
+            "STO-03-13"
+          ]
+        },
+        {
+          "t": "Mean passage times",
+          "d": [
+            "Target $z$, $b(x)$ = mean time to reach $z$ from $x$, $b(z) = 0$. Split on the first jump: $\\alpha(x)b(x) = 1 + \\sum_{y \\ne x, z}\\alpha(x, y)b(y)$.",
+            "Matrix form: $\\bar b = [-\\tilde A]^{-1}\\bar 1$ with $\\tilde A$ = $A$ without row and column $z$.",
+            "Desk holding at most 2 customers ($\\lambda = 1$, $\\mu = 2$), time from empty to full: $b(0) = 1 + b(1)$, $3b(1) = 1 + 2b(0)$, so $b = (4, 3)$.",
+            "Four-state example, target 3: $\\bar b = (\\tfrac83, \\tfrac53, \\tfrac43)$."
+          ],
+          "cards": [
+            "STO-03-14",
+            "STO-03-15"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "3.3 Birth-and-death processes",
+      "items": [
+        {
+          "t": "The model",
+          "d": [
+            "State $n$ = population size; up at the birth rate $\\lambda_n$, down at the death rate $\\mu_n$ ($\\mu_0 = 0$).",
+            "$P_n'(t) = \\mu_{n+1}P_{n+1}(t) + \\lambda_{n-1}P_{n-1}(t) - (\\mu_n + \\lambda_n)P_n(t)$ (3.9)."
+          ],
+          "cards": [
+            "STO-03-16"
+          ]
+        },
+        {
+          "t": "Examples",
+          "d": [
+            "Poisson process: $\\lambda_n = \\lambda$, $\\mu_n = 0$. $M/M/1$: $\\lambda$, $\\mu$. $M/M/k$: $\\lambda$, $\\min(n, k)\\mu$. $M/M/\\infty$: $\\lambda$, $n\\mu$.",
+            "Population: $n\\lambda$, $n\\mu$ (0 absorbing; $\\mu = 0$ is the Yule process). With immigration: $n\\lambda + \\nu$, $n\\mu$. Fast-growing: $n^2\\lambda$, 0."
+          ],
+          "cards": [
+            "STO-03-17"
+          ]
+        },
+        {
+          "t": "Recurrent or transient",
+          "d": [
+            "The chain is recurrent exactly when its jump chain is. Let $a(n)$ = probability of ever reaching 0 from $n$: $a(n)(\\mu_n + \\lambda_n) = a(n-1)\\mu_n + a(n+1)\\lambda_n$ (3.10).",
+            "Regroup: $a(n) - a(n+1) = \\tfrac{\\mu_n}{\\lambda_n}[a(n-1) - a(n)]$; iterate; telescope: $a(n+1) = 1 + [a(1) - 1]\\sum_{j=0}^n\\tfrac{\\mu_1\\cdots\\mu_j}{\\lambda_1\\cdots\\lambda_j}$.",
+            "Fact: transient if and only if $\\sum_{n \\ge 1}\\tfrac{\\mu_1\\cdots\\mu_n}{\\lambda_1\\cdots\\lambda_n} < \\infty$ (3.11).",
+            "Queues: $M/M/1$ transient exactly when $\\mu < \\lambda$; $M/M/k$ when $k\\mu < \\lambda$; $M/M/\\infty$ never. With $\\lambda = 2$, $\\mu = 1$: $a(n) = (\\tfrac12)^n$."
+          ],
+          "cards": [
+            "STO-03-18",
+            "STO-03-19"
+          ]
+        },
+        {
+          "t": "Positive recurrence and equilibrium",
+          "d": [
+            "Equilibrium equation (3.12): $0 = \\lambda_{n-1}\\pi(n-1) + \\mu_{n+1}\\pi(n+1) - (\\lambda_n + \\mu_n)\\pi(n)$. It reduces to $\\lambda_n\\pi(n) = \\mu_{n+1}\\pi(n+1)$: flow up across an edge = flow down.",
+            "Fact: positive recurrent if and only if $q = \\sum_{n \\ge 0}\\tfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n} < \\infty$; then $\\pi(n) = \\tfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n}q^{-1}$ (3.13).",
+            "$M/M/1$: $\\pi(n) = (1 - \\tfrac\\lambda\\mu)(\\tfrac\\lambda\\mu)^n$, mean $\\tfrac{\\lambda}{\\mu - \\lambda}$. With $\\lambda = 1$, $\\mu = 2$: $(\\tfrac12)^{n+1}$, mean 1.",
+            "Same rates, more servers: $M/M/2$ has $q = \\tfrac53$, $\\pi(0) = \\tfrac35$, mean $\\tfrac{8}{15}$; $M/M/\\infty$ has $q = e^{1/2}$, a Poisson equilibrium with mean $\\tfrac12$.",
+            "Null recurrence: $M/M/1$ with $\\lambda = \\mu$; both series have all terms equal to 1."
+          ],
+          "cards": [
+            "STO-03-20",
+            "STO-03-21",
+            "STO-03-22"
+          ]
+        },
+        {
+          "t": "The running example seen three ways",
+          "d": [
+            "Continuous time: up at rate 1, down at rate 2; $\\pi(n) = (\\tfrac12)^{n+1}$ is the fraction of time.",
+            "Watched at the rings of a rate-3 clock ($I + A/3$): up $\\tfrac13$, down $\\tfrac23$, at 0 stay with $\\tfrac23$. This is the discrete walk with $p = \\tfrac13$ and it has the same $\\pi$.",
+            "Jump chain: from 0 up with probability 1. Its equilibrium $\\hat\\pi(n) \\propto \\pi(n)\\alpha(n)$ is different: $\\hat\\pi(0) = \\tfrac14$, $\\hat\\pi(n) = \\tfrac34(\\tfrac12)^n$, the fraction of jumps made from $n$."
+          ],
+          "cards": [
+            "STO-03-23",
+            "STO-03-36"
+          ]
+        },
+        {
+          "t": "Pure birth: Yule process and explosion",
+          "d": [
+            "Yule process, $\\lambda_n = n\\lambda$, from one individual: $P_n(t) = e^{-\\lambda t}[1 - e^{-\\lambda t}]^{n-1}$, geometric, $\\mathbb{E}(X_t) = e^{\\lambda t}$. $\\lambda = 1$, $t = 1$: $0.368, 0.233, 0.147$.",
+            "Time to reach $n$: $\\mathbb{E}(Y_n) = \\sum_{i < n}\\tfrac{1}{i\\lambda} \\sim \\tfrac{\\ln n}{\\lambda}$.",
+            "Fast-growing population, $\\lambda_n = n^2\\lambda$: $\\mathbb{E}(Y_\\infty) = \\tfrac{\\pi^2}{6\\lambda} < \\infty$, so the population is infinite after a finite time.",
+            "Fact: a pure birth process explodes if and only if $\\sum_n\\tfrac{1}{\\lambda_n} < \\infty$. Deterministic analogues: $p' = cp$ gives $e^{ct}$; $p' = cp^2$ gives $\\tfrac{1}{1 - ct}$, infinite at $t = \\tfrac1c$."
+          ],
+          "cards": [
+            "STO-03-24",
+            "STO-03-25"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "3.4 General case",
+      "items": [
+        {
+          "t": "Countable state space",
+          "d": [
+            "Rates with $\\alpha(x) < \\infty$ for each $x$; the alarm clocks build a chain with $\\mathbb{P}\\{X_{t+\\Delta t} = y \\mid X_t = x\\} = \\alpha(x, y)\\Delta t + o_x(\\Delta t)$, where the error may depend on $x$. Explosion is set aside.",
+            "When a chain explodes, the rows of $P_t$ no longer sum to 1."
+          ],
+          "cards": [
+            "STO-03-26"
+          ]
+        },
+        {
+          "t": "Forward and backward equations",
+          "d": [
+            "Forward: short interval at the end, split on the state just before arriving at $y$; rates indexed by the target: $p_t'(x, y) = -\\alpha(y)p_t(x, y) + \\sum_{z \\ne y}\\alpha(z, y)p_t(x, z)$. Needs $\\sum_z p_t(x, z)o_z(\\Delta t) = o(\\Delta t)$ (3.14).",
+            "Backward: short interval at the start, split on the first move from $x$; rates indexed by the start: $p_t'(x, y) = -\\alpha(x)p_t(x, y) + \\sum_{z \\ne x}\\alpha(x, z)p_t(z, y)$. Always valid.",
+            "Matrix forms on a finite state space: $\\tfrac{d}{dt}P_t = P_tA$ and $\\tfrac{d}{dt}P_t = AP_t$; both are solved by $e^{tA}$.",
+            "Birth-and-death: forward uses $\\lambda_{n-1}, \\mu_{n+1}, \\lambda_n + \\mu_n$ (the target $n$); backward uses $\\lambda_m, \\mu_m$ (the start $m$)."
+          ],
+          "cards": [
+            "STO-03-27",
+            "STO-03-28"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Exercise map",
+      "items": [
+        {
+          "t": "After 3.1 and 3.2",
+          "d": [
+            "3.1 (calls at rate 4): $5e^{-4}$; $1 - 5e^{-4}$; $\\tfrac{15}{4}$ hours; $\\tfrac{7}{32}$; $\\binom kj(\\tfrac14)^j(\\tfrac34)^{k-j}$.",
+            "3.2 (two stores), $p = \\tfrac{\\lambda_1}{\\lambda_1 + \\lambda_2}$: $p$; Poisson probability of 4 with parameter $\\lambda_1 + \\lambda_2$; $p^4$; $\\mathbb{P}\\{X_T = k\\} = (1 - p)p^k$.",
+            "3.3 (two phones): rate $\\lambda_1 + \\lambda_2$; $F(t) = (1 - e^{-\\lambda_1t})(1 - e^{-\\lambda_2t})$.",
+            "3.5: $P_t = \\tfrac15\\begin{pmatrix}4&1\\\\4&1\\end{pmatrix} + \\tfrac{e^{-5t}}{5}\\begin{pmatrix}1&-1\\\\-4&4\\end{pmatrix}$. 3.6: eigenvalues $0, -3, -7$, $\\bar\\pi = \\tfrac{1}{21}(16, 4, 1)$.",
+            "3.8: $\\bar\\pi = \\tfrac{1}{38}(3, 7, 9, 19)$; $\\tfrac13$; 1. 3.9: $\\bar\\pi = \\tfrac18(1, 3, 2, 2)$; $\\tfrac12$; 4. 3.10: $\\hat\\pi(x) \\propto \\pi(x)\\alpha(x)$.",
+            "Proofs: 3.4 (uniformization) and 3.7 (no periodicity)."
+          ],
+          "cards": [
+            "STO-03-29",
+            "STO-03-30",
+            "STO-03-31",
+            "STO-03-32",
+            "STO-03-33",
+            "STO-03-34",
+            "STO-03-35",
+            "STO-03-36",
+            "STO-03-12",
+            "STO-03-13"
+          ]
+        },
+        {
+          "t": "After 3.3 and 3.4",
+          "d": [
+            "3.11: both chains are null recurrent. 3.12: extinction is certain exactly when $\\mu \\ge \\lambda$; otherwise $a(n) = (\\tfrac\\mu\\lambda)^n$.",
+            "3.13 (immigration): positive recurrent for $\\lambda < \\mu$; null for $\\lambda = \\mu$, $\\nu \\le \\lambda$; transient for $\\lambda > \\mu$, or $\\lambda = \\mu$ and $\\nu > \\lambda$.",
+            "3.14: $\\pi(n) = \\tfrac{e^{-1}}{n!}$. 3.15: $p(t) = \\tfrac{1}{1 - ct}$. 3.16: the backward equations for a birth-and-death process."
+          ],
+          "cards": [
+            "STO-03-37",
+            "STO-03-38",
+            "STO-03-39",
+            "STO-03-25",
+            "STO-03-28"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Decision flow",
+      "items": [
+        {
+          "t": "Steps",
+          "d": [
+            "1. Finite state space? Write $A$; $P_t = e^{tA}$; $\\bar\\pi$ from $\\bar\\pi A = \\bar 0$; passage times from $-\\tilde A\\bar b = \\bar 1$.",
+            "2. Birth-and-death and irreducible? If not: pure birth explodes exactly when $\\sum 1/\\lambda_n < \\infty$; with an absorbing 0, find the extinction probability $a(n)$.",
+            "3. $\\sum_{n \\ge 1}\\tfrac{\\mu_1\\cdots\\mu_n}{\\lambda_1\\cdots\\lambda_n} < \\infty$? Then transient. Otherwise recurrent.",
+            "4. $q = \\sum_{n \\ge 0}\\tfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n} < \\infty$? Then positive recurrent with $\\pi$ by (3.13). Otherwise null recurrent.",
+            "Steps 3 and 4 are mirror images: the same ratios of rates, once as μ/λ and once as λ/μ."
+          ],
+          "cards": [
+            "STO-03-40",
+            "STO-03-41"
+          ]
+        },
+        {
+          "t": "From discrete to continuous",
+          "d": [
+            "Probabilities at a time: diagonalise and take powers of the eigenvalues, against diagonalise and exponentiate them.",
+            "Convergence needs irreducible and aperiodic, against irreducible only.",
+            "Mean hitting time: first step, $b = 1 + \\sum pb$, against first jump, $\\alpha(x)b(x) = 1 + \\sum\\alpha(x, y)b(y)$."
+          ],
+          "cards": [
+            "STO-03-01",
+            "STO-03-14"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "α and a",
+          "d": [
+            "Here $\\alpha(x, y)$ is a rate and $\\alpha(x)$ the total rate of leaving $x$; for countable chains in discrete time $\\alpha(x)$ was a hitting probability, a role played here by $a(n)$. In the uniformization exercise $a$ is a positive number."
+          ],
+          "cards": [
+            "STO-03-07",
+            "STO-03-18",
+            "STO-03-12"
+          ]
+        },
+        {
+          "t": "P and p",
+          "d": [
+            "$P_k(t)$, $P_n(t)$: numbers $\\mathbb{P}\\{X_t = k\\}$. $P_t$: the matrix of $p_t(x, y)$. $p_x(t) = \\mathbb{P}\\{X_t = x\\}$. $p(x, y)$: jump-chain probabilities."
+          ],
+          "cards": [
+            "STO-03-04",
+            "STO-03-07",
+            "STO-03-10"
+          ]
+        },
+        {
+          "t": "T and Y",
+          "d": [
+            "3.1: $T_n$ = gap before arrival $n$, $Y_n$ = time of arrival $n$. 3.2: $T$ = first jump time, $Y$ = time to reach $z$. Yule process: $Y_n = T_1 + \\dots + T_{n-1}$, shifted because the process starts at 1."
+          ],
+          "cards": [
+            "STO-03-05",
+            "STO-03-14",
+            "STO-03-25"
+          ]
+        },
+        {
+          "t": "b",
+          "d": [
+            "$b$, $b_i$: rates of exponential clocks. $b(x)$, $\\bar b$: mean passage times."
+          ],
+          "cards": [
+            "STO-03-06",
+            "STO-03-14"
+          ]
+        },
+        {
+          "t": "λ, μ, q",
+          "d": [
+            "$\\lambda$: Poisson rate or birth rate per individual; $\\lambda_n$, $\\mu_n$: rates in state $n$. For branching processes $\\mu$ was the mean number of offspring and $q$ earlier a return probability; here $q$ is the normalising sum."
+          ],
+          "cards": [
+            "STO-03-20"
+          ]
+        },
+        {
+          "t": "A and Q",
+          "d": [
+            "The book calls the generator $A$ and uses $Q$ for the matrix of eigenvectors. Many other books call the generator $Q$."
+          ],
+          "cards": [
+            "STO-03-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Errata",
+      "items": [
+        {
+          "t": "LW p71",
+          "d": [
+            "The fourth eigenvector is printed as $(-\\tfrac13, 1, -\\tfrac13, \\tfrac13)$; it should be $(-\\tfrac13, 1, -\\tfrac13, -\\tfrac13)$, as in the fourth column of the book's $Q$."
+          ],
+          "cards": [
+            "STO-03-09"
+          ]
+        },
+        {
+          "t": "LW p73",
+          "d": [
+            "$\\mathbb{P}\\{X_t = y \\mid X_0 = x\\} = \\alpha(x, y)/\\alpha(x)$ should read $\\mathbb{P}\\{X_T = y \\mid X_0 = x\\}$, with $T$ the first jump time."
+          ],
+          "cards": [
+            "STO-03-14"
+          ]
+        },
+        {
+          "t": "LW p83",
+          "d": [
+            "“$a$ greater than all the entries of $A$” must be read as $a > \\max_x\\alpha(x)$; otherwise $I + A/a$ can have a negative diagonal entry."
+          ],
+          "cards": [
+            "STO-03-12"
+          ]
+        },
+        {
+          "t": "LW p84",
+          "d": [
+            "One of the rates is printed without its equals sign, “$\\alpha(2, 1)\\ 4$”."
+          ],
+          "cards": [
+            "STO-03-33"
+          ]
+        },
+        {
+          "t": "LW p68",
+          "d": [
+            "“The only real-valued functions satisfying $f(s + t) = f(s)f(t)$ are of the form $e^{-bt}$” is true for monotone functions that are not identically 0, which covers survival functions. A matter of precision, not an error in the result."
+          ],
+          "cards": [
+            "STO-03-05"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "STO-03-01",
+      "g": "3.1 Poisson process",
+      "k": "Discrete vs continuous",
+      "q": "Compare a Markov chain in discrete time with one in continuous time: (1) the data that define the chain; (2) the transition probabilities; (3) the equilibrium equation; (4) the time spent in a state before moving; (5) periodicity and what is new.",
+      "pts": [
+        "(1) Discrete: a transition matrix $P$ whose rows sum to 1. Continuous: a generator $A$ of rates whose rows sum to 0; in a short interval $\\Delta t$ the chain jumps from $x$ to $y$ with probability about $\\alpha(x, y)\\Delta t$.",
+        "(2) $P^n$ against $P_t = e^{tA}$.",
+        "(3) $\\bar\\pi P = \\bar\\pi$ against $\\bar\\pi A = \\bar 0$.",
+        "(4) One step (or a geometric number of steps) against an exponential random time.",
+        "(5) Periodicity is possible in discrete time and does not exist in continuous time. New: explosion, infinitely many jumps in finite time."
+      ],
+      "pit": "A continuous-time chain is a discrete-time jump chain whose steps take exponential amounts of time.",
+      "src": "LW p65–82",
+      "seen": []
+    },
+    {
+      "id": "STO-03-02",
+      "g": "3.1 Poisson process",
+      "k": "Three assumptions",
+      "q": "$X_t$ is the number of customers who have arrived by time $t$, $X_0 = 0$. (1) State the three assumptions in words. (2) State them precisely for a short interval $[t, t + \\Delta t]$. (3) What does $o(\\Delta t)$ mean? (4) What is such a process called?",
+      "pts": [
+        "(1) Arrivals in disjoint time intervals do not influence each other; the average rate $\\lambda$ is constant; customers come one at a time.",
+        "(2) Increments over disjoint intervals are independent, and $$\\begin{aligned}\\mathbb{P}\\{X_{t+\\Delta t} = X_t\\} &= 1 - \\lambda\\Delta t + o(\\Delta t)\\\\ \\mathbb{P}\\{X_{t+\\Delta t} = X_t + 1\\} &= \\lambda\\Delta t + o(\\Delta t)\\\\ \\mathbb{P}\\{X_{t+\\Delta t} \\ge X_t + 2\\} &= o(\\Delta t)\\end{aligned}$$",
+        "(3) Any term that is negligible compared with $\\Delta t$: $o(\\Delta t)/\\Delta t \\to 0$ as $\\Delta t \\to 0$.",
+        "(4) A Poisson process with rate $\\lambda$."
+      ],
+      "pit": "",
+      "src": "LW p65",
+      "seen": []
+    },
+    {
+      "id": "STO-03-03",
+      "g": "3.1 Poisson process",
+      "k": "Route 1: n pieces",
+      "q": "Poisson process with rate $\\lambda$. Derive the distribution of $X_t$ by cutting $[0, t]$ into $n$ equal pieces. (1) Write $X_t$ as a sum and describe the terms. (2) Why can each piece be treated as a 0/1 coin? (3) Write the binomial expression and take the limit factor by factor. (4) State the result.",
+      "pts": [
+        "(1) $X_t = \\sum_{j=1}^n\\big[X_{jt/n} - X_{(j-1)t/n}\\big]$: $n$ independent, identically distributed increments.",
+        "(2) The chance that some piece contains two or more arrivals is at most $n\\,\\mathbb{P}\\{X_{t/n} \\ge 2\\} = n \\cdot o(t/n) \\to 0$. So each piece has one arrival with probability about $\\tfrac{\\lambda t}{n}$, otherwise none.",
+        "(3) $\\mathbb{P}\\{X_t = k\\} = \\lim_n\\dbinom nk\\big(\\tfrac{\\lambda t}{n}\\big)^k\\big(1 - \\tfrac{\\lambda t}{n}\\big)^{n-k}$, with $\\dbinom nkn^{-k} \\to \\tfrac{1}{k!}$ and $\\big(1 - \\tfrac{\\lambda t}{n}\\big)^{n-k} \\to e^{-\\lambda t}$.",
+        "(4) $\\mathbb{P}\\{X_t = k\\} = e^{-\\lambda t}\\dfrac{(\\lambda t)^k}{k!}$: $X_t$ is Poisson with parameter $\\lambda t$."
+      ],
+      "pit": "With $\\lambda = 1$, $t = 2$: $n = 10$ pieces give $0.107, 0.268, 0.302, 0.201$ for $k = 0, \\dots, 3$; the limit is $0.1353, 0.2707, 0.2707, 0.1804$.",
+      "src": "LW p66",
+      "seen": []
+    },
+    {
+      "id": "STO-03-04",
+      "g": "3.1 Poisson process",
+      "k": "Route 2: ODE",
+      "q": "Poisson process with rate $\\lambda$, $P_k(t) = \\mathbb{P}\\{X_t = k\\}$. (1) Express $\\mathbb{P}\\{X_{t+\\Delta t} = k\\}$ through $P_k(t)$ and $P_{k-1}(t)$. (2) Derive the differential equations and read them. (3) Solve for $k = 0$. (4) Solve for $k \\ge 1$.",
+      "pts": [
+        "(1) At $k$ and nothing arrived, or at $k - 1$ and one arrived: $P_k(t)(1 - \\lambda\\Delta t) + P_{k-1}(t)\\lambda\\Delta t + o(\\Delta t)$.",
+        "(2) Subtract $P_k(t)$, divide by $\\Delta t$, let $\\Delta t \\to 0$: $P_k'(t) = \\lambda P_{k-1}(t) - \\lambda P_k(t)$ (with $P_{-1} \\equiv 0$): inflow from $k - 1$ minus outflow from $k$.",
+        "(3) $P_0' = -\\lambda P_0$, $P_0(0) = 1$: $P_0(t) = e^{-\\lambda t}$.",
+        "(4) With $f_k(t) = e^{\\lambda t}P_k(t)$: $f_k' = \\lambda f_{k-1}$, $f_0 = 1$, $f_k(0) = 0$, so $f_k = \\tfrac{(\\lambda t)^k}{k!}$ and $P_k(t) = e^{-\\lambda t}\\tfrac{(\\lambda t)^k}{k!}$."
+      ],
+      "pit": "$P_k(t)$ is one number for each $k$, the law of the count. It is not the matrix $P_t$ of the later sections.",
+      "src": "LW p66–67",
+      "seen": []
+    },
+    {
+      "id": "STO-03-05",
+      "g": "3.1 Poisson process",
+      "k": "Route 3: gaps",
+      "q": "Poisson process with rate $\\lambda$; $T_n$ is the time between arrivals $n - 1$ and $n$, and $Y_n = T_1 + \\dots + T_n$ the time of the $n$-th arrival. (1) State the no-memory property and the functional equation it gives. (2) Which distribution follows? Give density, distribution function and mean. (3) Why is its rate $\\lambda$? (4) How does this construct the process?",
+      "pts": [
+        "(1) $\\mathbb{P}\\{T_i \\ge s + t \\mid T_i \\ge s\\} = \\mathbb{P}\\{T_i \\ge t\\}$. With $f(t) = \\mathbb{P}\\{T_i \\ge t\\}$: $f(s + t) = f(s)f(t)$.",
+        "(2) $f(t) = e^{-bt}$: exponential with rate $b$; density $be^{-bz}$ for $z > 0$, $\\mathbb{P}\\{T_i \\le z\\} = 1 - e^{-bz}$, mean $\\tfrac1b$.",
+        "(3) By time $t$ about $\\lambda t$ customers have come, and $Y_n \\approx \\tfrac nb$, so $\\tfrac{\\lambda t}{b} \\approx t$. Directly: $\\mathbb{P}\\{T_1 > t\\} = \\mathbb{P}\\{X_t = 0\\} = e^{-\\lambda t}$.",
+        "(4) Draw independent $T_1, T_2, \\dots$ exponential with rate $\\lambda$ and set $X_t = n$ for $Y_n \\le t < Y_{n+1}$."
+      ],
+      "pit": "Numbers for $\\lambda = 1$: after waiting 1 minute, the chance of waiting at least 0.5 more is $e^{-0.5} \\approx 0.607$, the same as for a fresh wait. A wait uniform on $[0, 2]$ has memory: $0.5$ against $0.75$.",
+      "src": "LW p67–68",
+      "seen": []
+    },
+    {
+      "id": "STO-03-06",
+      "g": "3.2 Finite chains",
+      "k": "Competing clocks",
+      "q": "$n$ alarm clocks ring at independent times $T_1, \\dots, T_n$, with $T_i$ exponential with rate $b_i$; $T = \\min\\{T_1, \\dots, T_n\\}$. (1) Find the distribution of $T$. (2) Find the probability that clock 1 rings first. (3) Apply both to a busy service desk with two clocks, next arrival (rate 1) and end of service (rate 2).",
+      "pts": [
+        "(1) $\\mathbb{P}\\{T \\ge t\\} = \\prod_i e^{-b_it} = e^{-(b_1 + \\dots + b_n)t}$: exponential with the summed rate.",
+        "(2) Condition on the time at which clock 1 rings: $\\int_0^\\infty e^{-(b_2 + \\dots + b_n)t}\\,b_1e^{-b_1t}\\,dt = \\dfrac{b_1}{b_1 + \\dots + b_n}$. Each clock wins with probability proportional to its rate.",
+        "(3) The next event comes after an exponential time with rate 3 (mean $\\tfrac13$ minute); it is an arrival with probability $\\tfrac13$ and a departure with probability $\\tfrac23$."
+      ],
+      "pit": "Both statements still hold for infinitely many clocks if $b_1 + b_2 + \\dots < \\infty$.",
+      "src": "LW p69",
+      "seen": []
+    },
+    {
+      "id": "STO-03-07",
+      "g": "3.2 Finite chains",
+      "k": "Rates and generator",
+      "q": "Continuous-time Markov chain on a finite state space $S$ with rates $\\alpha(x, y) \\ge 0$ for $x \\ne y$; $\\alpha(x) = \\sum_{y \\ne x}\\alpha(x, y)$. (1) State the two defining relations for a short interval. (2) Derive the equation for $p_x(t) = \\mathbb{P}\\{X_t = x\\}$. (3) Define the generator $A$ and give its properties. (4) Write the equation in matrix form and solve it for the transition probabilities.",
+      "pts": [
+        "(1) $\\mathbb{P}\\{X_{t+\\Delta t} = x \\mid X_t = x\\} = 1 - \\alpha(x)\\Delta t + o(\\Delta t)$ and $\\mathbb{P}\\{X_{t+\\Delta t} = x \\mid X_t = y\\} = \\alpha(y, x)\\Delta t + o(\\Delta t)$ for $y \\ne x$.",
+        "(2) At $x$ and stayed, or at some $y$ and jumped to $x$: $p_x'(t) = -\\alpha(x)p_x(t) + \\sum_{y \\ne x}\\alpha(y, x)p_y(t)$.",
+        "(3) Entry $(x, y)$ is $\\alpha(x, y)$ for $x \\ne y$ and $-\\alpha(x)$ on the diagonal. Rows sum to 0, off-diagonal entries are nonnegative, diagonal entries nonpositive.",
+        "(4) $\\bar p\\,'(t) = \\bar p(t)A$, so $\\bar p(t) = \\bar p(0)e^{tA}$. For the matrix $P_t$ of $p_t(x, y) = \\mathbb{P}\\{X_t = y \\mid X_0 = x\\}$: $\\tfrac{d}{dt}P_t = P_tA$, $P_0 = I$, hence $P_t = e^{tA} = \\sum_{n \\ge 0}\\tfrac{(tA)^n}{n!}$."
+      ],
+      "pit": "Over a short time $P_{\\Delta t} \\approx I + \\Delta t\\,A$: the generator is “$P - I$ per unit time”.",
+      "src": "LW p69–70",
+      "seen": []
+    },
+    {
+      "id": "STO-03-08",
+      "g": "3.2 Finite chains",
+      "k": "Desk example",
+      "q": "A service desk with no waiting room: state 0 = idle, 1 = busy. Customers arrive at rate $\\lambda = 1$ per minute (an arrival at a busy desk goes away) and a service ends at rate $\\mu = 2$ per minute. (1) Write the generator. (2) Find its eigenvalues and say why. (3) Give $P_t$ as limit plus decaying part. (4) Give $p_t(0, 0)$ at $t = 0.5$, the limit, and the time after which the start is forgotten to within 1%.",
+      "pts": [
+        "(1) $A = \\begin{pmatrix}-1&1\\\\2&-2\\end{pmatrix}$ (states in the order 0, 1).",
+        "(2) 0, because the rows sum to 0 ($A\\bar 1 = \\bar 0$); and $-3$, because the trace is $-3$.",
+        "(3) $$\\begin{aligned}P_t &= \\begin{pmatrix}2/3&1/3\\\\2/3&1/3\\end{pmatrix}\\\\ &\\quad + e^{-3t}\\begin{pmatrix}1/3&-1/3\\\\-2/3&2/3\\end{pmatrix}\\end{aligned}$$",
+        "(4) $p_{0.5}(0, 0) = \\tfrac23 + \\tfrac13e^{-1.5} \\approx 0.741$. Both rows tend to $\\bar\\pi = (\\tfrac23, \\tfrac13)$: the desk is idle two thirds of the time. $e^{-3t} < 0.01$ once $t > \\tfrac{\\ln 100}{3} \\approx 1.54$ minutes."
+      ],
+      "pit": "Method: diagonalise $A = QDQ^{-1}$; then $e^{tA} = Qe^{tD}Q^{-1}$ and only the eigenvalues are exponentiated. Check at $t = 0$: the two matrices add up to $I$.",
+      "src": "LW p70–71",
+      "seen": []
+    },
+    {
+      "id": "STO-03-09",
+      "g": "3.2 Finite chains",
+      "k": "Four-state example",
+      "q": "Continuous-time chain on $\\{0, 1, 2, 3\\}$ with generator $A = \\begin{pmatrix}-1&1&0&0\\\\1&-3&1&1\\\\0&1&-2&1\\\\0&1&1&-2\\end{pmatrix}$, whose eigenvalues are $0, -1, -3, -4$. (1) What does the symmetry of $A$ give? (2) What is the form of $P_t$? (3) Give the limit of $P_t$ and the speed of convergence. (4) Give $p_t(0, 0)$ and $p_t(1, 1)$.",
+      "pts": [
+        "(1) Right and left eigenvectors coincide; in particular the left eigenvector for 0 is constant, so $\\bar\\pi$ is uniform.",
+        "(2) $P_t = Qe^{tD}Q^{-1}$ splits into one fixed matrix per eigenvalue: $P_t = \\Pi + e^{-t}B_1 + e^{-3t}B_3 + e^{-4t}B_4$, and the four matrices add up to $I$.",
+        "(3) Every row tends to $\\bar\\pi = (\\tfrac14, \\tfrac14, \\tfrac14, \\tfrac14)$. The slowest correction decays like $e^{-t}$, set by the eigenvalue closest to 0.",
+        "(4) $p_t(0, 0) = \\tfrac14 + \\tfrac23e^{-t} + \\tfrac{1}{12}e^{-4t}$ and $p_t(1, 1) = \\tfrac14 + \\tfrac34e^{-4t}$."
+      ],
+      "pit": "The book prints the eigenvector for $-4$ as $(-\\tfrac13, 1, -\\tfrac13, \\tfrac13)$; the last entry should be $-\\tfrac13$, as in its own matrix $Q$.",
+      "src": "LW p71–72",
+      "seen": []
+    },
+    {
+      "id": "STO-03-10",
+      "g": "3.2 Finite chains",
+      "k": "Wait, then jump",
+      "q": "Continuous-time Markov chain on a finite state space $S$ with rates $\\alpha(x, y) \\ge 0$ for $x \\ne y$, started at $x$; $T$ is the time of the first jump and $\\alpha(x) = \\sum_{y \\ne x}\\alpha(x, y)$. (1) Give the distribution of $T$ and the reason. (2) Where does the chain jump? (3) Describe this with alarm clocks. (4) Define the jump chain, and describe it for a desk that alternates between idle and busy.",
+      "pts": [
+        "(1) By the Markov property $T$ has no memory, so it is exponential; $\\mathbb{P}\\{T \\le \\Delta t\\} = \\alpha(x)\\Delta t + o(\\Delta t)$ gives the rate $\\alpha(x)$.",
+        "(2) To $y$ with probability $\\dfrac{\\alpha(x, y)}{\\alpha(x)}$.",
+        "(3) Put one clock on each possible target $y$, ringing at rate $\\alpha(x, y)$; the chain stays at $x$ until the first clock rings and then moves to that clock's state.",
+        "(4) The sequence of states visited, ignoring the times: a discrete-time chain with $p(x, y) = \\tfrac{\\alpha(x, y)}{\\alpha(x)}$. For the desk it is $0, 1, 0, 1, \\dots$"
+      ],
+      "pit": "The rate description is good for differential equations; the clock description for simulation, first-step arguments and passage times.",
+      "src": "LW p72",
+      "seen": []
+    },
+    {
+      "id": "STO-03-11",
+      "g": "3.2 Finite chains",
+      "k": "Long-run behaviour",
+      "q": "Continuous-time Markov chain on a finite state space $S$ with rates $\\alpha(x, y) \\ge 0$ for $x \\ne y$ and generator $A$. (1) Which equation does a limiting distribution satisfy, and why? (2) Read the equation as a flow balance. (3) Define irreducibility. (4) State the three facts for an irreducible chain. (5) What replaces “aperiodic”?",
+      "pts": [
+        "(1) $\\bar\\pi A = \\bar 0$: a limit must not change in time, and $\\bar p\\,'(t) = \\bar p(t)A$.",
+        "(2) Column $y$: $\\pi(y)\\alpha(y) = \\sum_{x \\ne y}\\pi(x)\\alpha(x, y)$, flow out of $y$ = flow into $y$.",
+        "(3) For each $x, y$ there is a path $x \\to z_1 \\to \\dots \\to z_j \\to y$ along which all rates are positive.",
+        "(4) There is a unique probability vector with $\\bar\\pi A = \\bar 0$; all other eigenvalues of $A$ have negative real part; $\\lim_{t \\to \\infty}P_t$ is the matrix with every row $\\bar\\pi$.",
+        "(5) Nothing: $P_t$ has all entries strictly positive for every $t > 0$."
+      ],
+      "pit": "Desk example: $(\\tfrac23, \\tfrac13)A = \\bar 0$, i.e. $\\tfrac23 \\cdot 1 = \\tfrac13 \\cdot 2$.",
+      "src": "LW p72–73",
+      "seen": [
+        "Ex 3.4",
+        "Ex 3.7"
+      ]
+    },
+    {
+      "id": "STO-03-12",
+      "g": "3.2 Finite chains",
+      "k": "Uniformization",
+      "q": "$A$ is the generator of an irreducible continuous-time chain on a finite state space, $\\alpha(x) = -A(x, x)$. Choose a number $a > \\max_x\\alpha(x)$ and put $P = I + \\tfrac1aA$. (1) Show that $P$ is a transition matrix. (2) Why is it irreducible and aperiodic? (3) Relate eigenvalues and invariant vectors of $P$ and $A$. (4) Conclude.",
+      "pts": [
+        "(1) Off the diagonal $\\tfrac{\\alpha(x, y)}{a} \\ge 0$; on the diagonal $1 - \\tfrac{\\alpha(x)}{a} > 0$; row sums $1 + 0 = 1$.",
+        "(2) It has the same arrows as $A$, plus a self-loop at every state.",
+        "(3) $A = a(P - I)$: the eigenvectors are the same, the eigenvalues correspond by $\\nu = a(\\lambda_P - 1)$, and $\\bar\\pi P = \\bar\\pi$ exactly when $\\bar\\pi A = \\bar 0$.",
+        "(4) From the discrete-time theory: a unique $\\bar\\pi$, and all other $|\\lambda_P| < 1$, hence $\\operatorname{Re}\\nu \\le a(|\\lambda_P| - 1) < 0$ and $e^{tA} \\to$ the matrix with rows $\\bar\\pi$."
+      ],
+      "pit": "The exercise says “$a$ greater than all the entries of $A$”; read it as $a > \\max_x\\alpha(x)$. With $a = 3$ and a state of rate $\\alpha = 4$ the diagonal entry would be $-\\tfrac13$.",
+      "src": "LW p83",
+      "seen": [
+        "Ex 3.4"
+      ]
+    },
+    {
+      "id": "STO-03-13",
+      "g": "3.2 Finite chains",
+      "k": "No periodicity",
+      "q": "Irreducible continuous-time Markov chain. Show $p_t(i, j) > 0$ for all states $i, j$ and every $t > 0$. (1) Choose a path. (2) Describe an event on which $X_t = j$. (3) Why does it have positive probability? (4) Contrast the chain that flips between two states at rate 1 with its discrete-time version.",
+      "pts": [
+        "(1) By irreducibility there is a path $i = x_0 \\to x_1 \\to \\dots \\to x_n = j$ with all rates $\\alpha(x_{k-1}, x_k) > 0$.",
+        "(2) The chain makes exactly these $n$ jumps, each within time $\\tfrac{t}{n+1}$ of the previous one, and then stays at $j$ for longer than $t$.",
+        "(3) Its probability is a product of the positive factors $1 - e^{-\\alpha(x_{k-1})t/(n+1)}$, $\\tfrac{\\alpha(x_{k-1}, x_k)}{\\alpha(x_{k-1})}$ and $e^{-\\alpha(j)t}$.",
+        "(4) Discrete time: $p_n(0, 0) = 0$ for every odd $n$. Continuous time with $\\alpha(0, 1) = \\alpha(1, 0) = 1$: $p_t(0, 0) = \\tfrac12 + \\tfrac12e^{-2t} > 0$ for all $t$."
+      ],
+      "pit": "Waiting times are spread over all of (0, ∞), so any path can be completed by any time.",
+      "src": "LW p84",
+      "seen": [
+        "Ex 3.7"
+      ]
+    },
+    {
+      "id": "STO-03-14",
+      "g": "3.2 Finite chains",
+      "k": "Mean passage times",
+      "q": "Continuous-time Markov chain on a finite state space $S$ with rates $\\alpha(x, y) \\ge 0$ for $x \\ne y$, irreducible. Fix a target $z$, let $Y = \\inf\\{t : X_t = z\\}$ and $b(x) = \\mathbb{E}(Y \\mid X_0 = x)$. (1) Split on the first jump at time $T$. (2) Substitute the known quantities and simplify. (3) Write the result in matrix form. (4) Why is the matrix invertible?",
+      "pts": [
+        "(1) $b(x) = \\mathbb{E}(T \\mid X_0 = x) + \\sum_y\\mathbb{P}\\{X_T = y \\mid X_0 = x\\}\\,b(y)$ for $x \\ne z$, and $b(z) = 0$.",
+        "(2) $\\mathbb{E}(T \\mid X_0 = x) = \\tfrac{1}{\\alpha(x)}$ and $\\mathbb{P}\\{X_T = y \\mid X_0 = x\\} = \\tfrac{\\alpha(x, y)}{\\alpha(x)}$: $$\\alpha(x)b(x) = 1 + \\sum_{y \\ne x, z}\\alpha(x, y)b(y)$$",
+        "(3) With $\\tilde A$ = the generator with row and column $z$ deleted: $\\bar 0 = \\bar 1 + \\tilde A\\bar b$, so $\\bar b = [-\\tilde A]^{-1}\\bar 1$.",
+        "(4) Its row sums are at most 0, at least one is negative (a state that jumps directly to $z$), and the chain is irreducible."
+      ],
+      "pit": "The book writes $\\mathbb{P}\\{X_t = y \\mid X_0 = x\\} = \\alpha(x, y)/\\alpha(x)$ here; it should be $X_T$, the state right after the first jump.",
+      "src": "LW p73–74",
+      "seen": []
+    },
+    {
+      "id": "STO-03-15",
+      "g": "3.2 Finite chains",
+      "k": "Passage: numbers",
+      "q": "(1) A desk holds at most 2 customers (one in service, one waiting); arrivals at rate 1, service at rate 2; the state is the number present. Write the first-jump equations for the mean time to reach state 2. (2) Solve them. (3) Check with the matrix formula. (4) For the generator $A = \\begin{pmatrix}-1&1&0&0\\\\1&-3&1&1\\\\0&1&-2&1\\\\0&1&1&-2\\end{pmatrix}$ on $\\{0, 1, 2, 3\\}$, find the mean time from 0 to 3.",
+      "pts": [
+        "(1) $\\alpha(0) = 1$, $\\alpha(1) = 3$: $b(0) = 1 + b(1)$ and $3b(1) = 1 + 2b(0)$.",
+        "(2) $3b(1) = 3 + 2b(1)$, so $b(1) = 3$ and $b(0) = 4$ minutes.",
+        "(3) $\\tilde A = \\begin{pmatrix}-1&1\\\\2&-3\\end{pmatrix}$ and $[-\\tilde A]^{-1}\\bar 1 = (4, 3)$.",
+        "(4) Delete row and column 3: $\\tilde A = \\begin{pmatrix}-1&1&0\\\\1&-3&1\\\\0&1&-2\\end{pmatrix}$, $\\bar b = (\\tfrac83, \\tfrac53, \\tfrac43)$: the answer is $\\tfrac83$."
+      ],
+      "pit": "The desk first fills after 4 minutes on average although an arrival comes every minute: from state 1 it falls back to 0 two times out of three.",
+      "src": "LW p74",
+      "seen": []
+    },
+    {
+      "id": "STO-03-16",
+      "g": "3.3 Birth and death",
+      "k": "Model",
+      "q": "Birth-and-death process on $\\{0, 1, 2, \\dots\\}$: from $n$ the chain moves to $n + 1$ at rate $\\lambda_n$ and to $n - 1$ at rate $\\mu_n$ (with $\\mu_0 = 0$). (1) State the three relations for a short interval $\\Delta t$. (2) Derive the equation for $P_n(t) = \\mathbb{P}\\{X_t = n\\}$. (3) How are the transition probabilities $p_t(m, n)$ obtained from it? (4) When is the chain irreducible?",
+      "pts": [
+        "(1) From $n$: stay with probability $1 - (\\mu_n + \\lambda_n)\\Delta t + o(\\Delta t)$, go to $n + 1$ with $\\lambda_n\\Delta t + o(\\Delta t)$, go to $n - 1$ with $\\mu_n\\Delta t + o(\\Delta t)$.",
+        "(2) Inflow minus outflow: $P_n'(t) = \\mu_{n+1}P_{n+1}(t) + \\lambda_{n-1}P_{n-1}(t) - (\\mu_n + \\lambda_n)P_n(t)$.",
+        "(3) Solve it with $P_m(0) = 1$ and $P_n(0) = 0$ for $n \\ne m$.",
+        "(4) When all $\\lambda_n > 0$ ($n \\ge 0$) and all $\\mu_n > 0$ ($n \\ge 1$)."
+      ],
+      "pit": "",
+      "src": "LW p74–75",
+      "seen": []
+    },
+    {
+      "id": "STO-03-17",
+      "g": "3.3 Birth and death",
+      "k": "Examples",
+      "q": "Give the birth rates $\\lambda_n$ and death rates $\\mu_n$ of these birth-and-death processes: (1) the queues $M/M/1$, $M/M/k$ and $M/M/\\infty$ with arrival rate $\\lambda$ and service rate $\\mu$ per server; (2) a population in which each individual gives birth at rate $\\lambda$ and dies at rate $\\mu$, and the Yule process; (3) the population with immigration at rate $\\nu$; (4) the fast-growing population.",
+      "pts": [
+        "(1) All have $\\lambda_n = \\lambda$. $M/M/1$: $\\mu_n = \\mu$ for $n \\ge 1$. $M/M/k$: $\\mu_n = n\\mu$ for $n \\le k$ and $k\\mu$ for $n \\ge k$ (with $n$ people, $\\min(n, k)$ are being served). $M/M/\\infty$: $\\mu_n = n\\mu$.",
+        "(2) $\\lambda_n = n\\lambda$, $\\mu_n = n\\mu$; 0 is absorbing. Yule process: $\\mu = 0$.",
+        "(3) $\\lambda_n = n\\lambda + \\nu$, $\\mu_n = n\\mu$.",
+        "(4) $\\lambda_n = n^2\\lambda$, $\\mu_n = 0$: births at a rate proportional to the square of the size."
+      ],
+      "pit": "The letter M stands for exponential (Markovian) arrival and service times. The Poisson process itself is the case of constant birth rate and no deaths.",
+      "src": "LW p75–76",
+      "seen": []
+    },
+    {
+      "id": "STO-03-18",
+      "g": "3.3 Birth and death",
+      "k": "Transient test",
+      "q": "Birth-and-death process on $\\{0, 1, 2, \\dots\\}$: from $n$ the chain moves to $n + 1$ at rate $\\lambda_n$ and to $n - 1$ at rate $\\mu_n$ (with $\\mu_0 = 0$), irreducible. Let $a(n)$ be the probability of ever reaching 0 from $n$. (1) Why can the question be settled on the jump chain, and what are its transition probabilities? (2) Write the first-step equation and regroup it. (3) Iterate and telescope. (4) State the test.",
+      "pts": [
+        "(1) Returning to a state depends on the sequence of states visited, not on the times. $p(n, n-1) = \\tfrac{\\mu_n}{\\mu_n + \\lambda_n}$, $p(n, n+1) = \\tfrac{\\lambda_n}{\\mu_n + \\lambda_n}$.",
+        "(2) $a(n)(\\mu_n + \\lambda_n) = a(n-1)\\mu_n + a(n+1)\\lambda_n$ for $n > 0$, i.e. $a(n) - a(n+1) = \\tfrac{\\mu_n}{\\lambda_n}\\big[a(n-1) - a(n)\\big]$.",
+        "(3) $a(n) - a(n+1) = \\tfrac{\\mu_1\\cdots\\mu_n}{\\lambda_1\\cdots\\lambda_n}\\big[a(0) - a(1)\\big]$, and with $a(0) = 1$: $a(n+1) = 1 + [a(1) - 1]\\sum_{j=0}^n\\tfrac{\\mu_1\\cdots\\mu_j}{\\lambda_1\\cdots\\lambda_j}$. If the full sum $\\Sigma$ is finite, $a(1) = 1 - \\tfrac1\\Sigma$ gives a solution decreasing to 0; if it is infinite only $a \\equiv 1$ stays in $[0, 1]$.",
+        "(4) Transient if and only if $\\sum_{n=1}^\\infty\\dfrac{\\mu_1\\cdots\\mu_n}{\\lambda_1\\cdots\\lambda_n} < \\infty$."
+      ],
+      "pit": "",
+      "src": "LW p76–77",
+      "seen": []
+    },
+    {
+      "id": "STO-03-19",
+      "g": "3.3 Birth and death",
+      "k": "Queues: transient?",
+      "q": "Queues with arrival rate $\\lambda$ and service rate $\\mu$ per server. The birth-and-death chain is transient exactly when $\\sum_{n \\ge 1}\\tfrac{\\mu_1\\cdots\\mu_n}{\\lambda_1\\cdots\\lambda_n} < \\infty$. Apply this to (1) $M/M/1$; (2) $M/M/k$; (3) $M/M/\\infty$. (4) For $M/M/1$ with $\\lambda = 2$, $\\mu = 1$, find the probability $a(n)$ of ever emptying from $n$ customers.",
+      "pts": [
+        "(1) Terms $\\big(\\tfrac\\mu\\lambda\\big)^n$: transient exactly when $\\mu < \\lambda$.",
+        "(2) For $n \\ge k$ the terms are $\\tfrac{k!}{k^k}\\big(\\tfrac{k\\mu}{\\lambda}\\big)^n$: transient exactly when $k\\mu < \\lambda$.",
+        "(3) Terms $n!\\big(\\tfrac\\mu\\lambda\\big)^n \\to \\infty$: always recurrent.",
+        "(4) $\\Sigma = \\sum_{j \\ge 0}\\big(\\tfrac12\\big)^j = 2$, $a(1) = 1 - \\tfrac1\\Sigma = \\tfrac12$ and $a(n) = \\big(\\tfrac12\\big)^n$."
+      ],
+      "pit": "A queue grows without bound exactly when the maximal service rate is below the arrival rate. Part 4 is the same $(\\tfrac12)^n$ as for the discrete walk with $p = \\tfrac23$.",
+      "src": "LW p77",
+      "seen": []
+    },
+    {
+      "id": "STO-03-20",
+      "g": "3.3 Birth and death",
+      "k": "Equilibrium",
+      "q": "Birth-and-death process on $\\{0, 1, 2, \\dots\\}$: from $n$ the chain moves to $n + 1$ at rate $\\lambda_n$ and to $n - 1$ at rate $\\mu_n$ (with $\\mu_0 = 0$), irreducible. (1) Define positive recurrent, and write the equilibrium equation. (2) Solve it. (3) Interpret the key identity. (4) State the criterion and the invariant probability.",
+      "pts": [
+        "(1) $\\lim_{t \\to \\infty}\\mathbb{P}\\{X_t = n \\mid X_0 = m\\} = \\pi(n)$ for a probability distribution $\\pi$ and every $m$. In equilibrium $P_n' = 0$: $0 = \\lambda_{n-1}\\pi(n-1) + \\mu_{n+1}\\pi(n+1) - (\\lambda_n + \\mu_n)\\pi(n)$.",
+        "(2) At $n = 0$: $\\mu_1\\pi(1) - \\lambda_0\\pi(0) = 0$. For $n \\ge 1$ regroup as $\\mu_{n+1}\\pi(n+1) - \\lambda_n\\pi(n) = \\mu_n\\pi(n) - \\lambda_{n-1}\\pi(n-1)$; iterating down, both sides are 0. So $\\pi(n+1) = \\tfrac{\\lambda_n}{\\mu_{n+1}}\\pi(n)$.",
+        "(3) $\\lambda_n\\pi(n) = \\mu_{n+1}\\pi(n+1)$: the flow up across the edge between $n$ and $n + 1$ equals the flow down.",
+        "(4) Positive recurrent if and only if $q = \\sum_{n=0}^\\infty\\dfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n} < \\infty$ (the term for $n = 0$ is 1); then $\\pi(n) = \\dfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n}\\,q^{-1}$."
+      ],
+      "pit": "This $q$ is a normalising sum, unrelated to a return probability. A recurrent chain that is not positive recurrent is null recurrent.",
+      "src": "LW p78",
+      "seen": []
+    },
+    {
+      "id": "STO-03-21",
+      "g": "3.3 Birth and death",
+      "k": "M/M/1 queue",
+      "q": "$M/M/1$ queue: arrivals at rate $\\lambda$, one server with service rate $\\mu$; the state is the number of customers present. (1) Give the ratios $\\tfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n}$ and their sum $q$. (2) Give $\\pi$ and the mean number present. (3) Evaluate for $\\lambda = 1$, $\\mu = 2$ and check the equilibrium equation at $n = 1$. (4) Classify the three cases $\\lambda < \\mu$, $\\lambda = \\mu$, $\\lambda > \\mu$.",
+      "pts": [
+        "(1) $\\big(\\tfrac\\lambda\\mu\\big)^n$; $q = \\big(1 - \\tfrac\\lambda\\mu\\big)^{-1}$ if $\\lambda < \\mu$, infinite otherwise.",
+        "(2) $\\pi(n) = \\big(1 - \\tfrac\\lambda\\mu\\big)\\big(\\tfrac\\lambda\\mu\\big)^n$; mean $\\dfrac{\\lambda}{\\mu - \\lambda}$.",
+        "(3) $\\pi(n) = \\big(\\tfrac12\\big)^{n+1}$, mean 1: the desk is empty half of the time. Check: $1 \\cdot \\tfrac12 + 2 \\cdot \\tfrac18 - 3 \\cdot \\tfrac14 = 0$.",
+        "(4) Positive recurrent; null recurrent (both series have all terms equal to 1: the queue empties again with probability 1 but after an infinite expected time); transient."
+      ],
+      "pit": "The mean $\\tfrac{\\lambda}{\\mu - \\lambda}$ blows up as $\\lambda$ approaches $\\mu$. For $\\lambda = 3$, $\\mu = 4$: idle with probability $\\tfrac14$, mean 3.",
+      "src": "LW p79",
+      "seen": []
+    },
+    {
+      "id": "STO-03-22",
+      "g": "3.3 Birth and death",
+      "k": "Three queues",
+      "q": "Queues with arrival rate $\\lambda = 1$ and service rate $\\mu = 2$ per server: $M/M/1$, $M/M/2$ and $M/M/\\infty$. For each give (1) the condition for positive recurrence in general; (2) the ratios $\\tfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n}$ for $n = 0, 1, 2, 3$ and the sum $q$; (3) $\\pi(0)$ and the shape of the equilibrium; (4) the mean number present.",
+      "pts": [
+        "(1) $\\lambda < \\mu$; $\\lambda < 2\\mu$; always.",
+        "(2) $1, \\tfrac12, \\tfrac14, \\tfrac18$ with $q = 2$; $1, \\tfrac12, \\tfrac18, \\tfrac{1}{32}$ with $q = 1 + \\tfrac12 + \\tfrac{1/8}{1 - 1/4} = \\tfrac53$; $1, \\tfrac12, \\tfrac18, \\tfrac{1}{48}$ with $q = \\sum_n\\tfrac{1}{n!}\\big(\\tfrac12\\big)^n = e^{1/2}$.",
+        "(3) $\\tfrac12$, geometric; $\\tfrac35$, then $\\pi(1) = \\tfrac{3}{10}$ and geometric with ratio $\\tfrac14$; $e^{-1/2} \\approx 0.607$, Poisson with mean $\\tfrac\\lambda\\mu$.",
+        "(4) $1$; $\\tfrac{8}{15} \\approx 0.53$; $\\tfrac12$."
+      ],
+      "pit": "Adding servers only changes the death rates from n = 2 on, so the three agree up to n = 1 and differ in the tail.",
+      "src": "LW p79",
+      "seen": []
+    },
+    {
+      "id": "STO-03-23",
+      "g": "3.3 Birth and death",
+      "k": "Queue, three views",
+      "q": "$M/M/1$ queue with $\\lambda = 1$, $\\mu = 2$, equilibrium $\\pi(n) = \\big(\\tfrac12\\big)^{n+1}$. (1) Form $I + \\tfrac13A$ and describe the discrete chain it defines. (2) What is its invariant distribution, and why? (3) Describe the jump chain and give its invariant distribution $\\hat\\pi$. (4) Explain the difference between $\\pi(0) = \\tfrac12$ and $\\hat\\pi(0) = \\tfrac14$.",
+      "pts": [
+        "(1) For $n \\ge 1$: up with probability $\\tfrac13$, down with $\\tfrac23$; at 0: up with $\\tfrac13$, stay with $\\tfrac23$. This is the walk with partially reflecting boundary and $p = \\tfrac13$: the queue watched at the rings of a rate-3 clock.",
+        "(2) The same $\\pi$, because $\\bar\\pi A = \\bar 0$ exactly when $\\bar\\pi(I + \\tfrac13A) = \\bar\\pi$.",
+        "(3) From 0 up with probability 1; from $n \\ge 1$ up $\\tfrac13$, down $\\tfrac23$. $\\hat\\pi(n) \\propto \\pi(n)\\alpha(n)$ with $\\sum_n\\pi(n)\\alpha(n) = \\tfrac12 \\cdot 1 + \\tfrac12 \\cdot 3 = 2$: $\\hat\\pi(0) = \\tfrac14$, $\\hat\\pi(n) = \\tfrac34\\big(\\tfrac12\\big)^n$.",
+        "(4) $\\pi$ is the fraction of time, $\\hat\\pi$ the fraction of jumps made from a state. The chain leaves 0 at rate 1 but leaves $n \\ge 1$ at rate 3, so each visit to 0 lasts three times as long."
+      ],
+      "pit": "Time share = visit share × mean visit length. Rings come at a constant rate, so counting rings is the same as measuring time; counting jumps is not.",
+      "src": "LW p84",
+      "seen": [
+        "Ex 3.10"
+      ]
+    },
+    {
+      "id": "STO-03-24",
+      "g": "3.3 Birth and death",
+      "k": "Yule process",
+      "q": "Yule process: pure birth with $\\lambda_n = n\\lambda$, started from one individual; $P_n(t) = \\mathbb{P}\\{X_t = n\\}$. (1) Write the differential equations and the solution. (2) Which distribution is this, and what is $\\mathbb{E}(X_t)$? (3) Derive the mean directly from the equations. (4) Give $P_1, P_2, P_3$ and the mean for $\\lambda = 1$, $t = 1$.",
+      "pts": [
+        "(1) $P_n'(t) = (n-1)\\lambda P_{n-1}(t) - n\\lambda P_n(t)$ for $n \\ge 1$; $P_n(t) = e^{-\\lambda t}\\big[1 - e^{-\\lambda t}\\big]^{n-1}$.",
+        "(2) Geometric on $\\{1, 2, \\dots\\}$ with success probability $e^{-\\lambda t}$; $\\mathbb{E}(X_t) = e^{\\lambda t}$.",
+        "(3) With $f(t) = \\sum_n nP_n(t)$: $f' = \\sum_{m \\ge 1}(m+1)m\\lambda P_m - \\sum_{m \\ge 1}m^2\\lambda P_m = \\lambda f$, and $f(0) = 1$, so $f(t) = e^{\\lambda t}$.",
+        "(4) $e^{-1} \\approx 0.368$, $e^{-1}(1 - e^{-1}) \\approx 0.233$, $\\approx 0.147$; mean $e \\approx 2.72$."
+      ],
+      "pit": "The book states the solution without deriving it.",
+      "src": "LW p79–80",
+      "seen": []
+    },
+    {
+      "id": "STO-03-25",
+      "g": "3.3 Birth and death",
+      "k": "Explosion",
+      "q": "Pure birth process started from one individual; $T_i$ is the time spent at size $i$ and $Y_n = T_1 + \\dots + T_{n-1}$ the time to reach size $n$. (1) For the Yule process ($\\lambda_n = n\\lambda$) find $\\mathbb{E}(Y_n)$ and its growth. (2) For the fast-growing population ($\\lambda_n = n^2\\lambda$) find the expected time $\\mathbb{E}(Y_\\infty)$ to pass through all sizes. (3) State the general criterion for explosion. (4) Give the deterministic analogues $p' = cp$ and $p' = cp^2$ with $p(0) = 1$.",
+      "pts": [
+        "(1) $T_i$ is exponential with rate $i\\lambda$: $\\mathbb{E}(Y_n) = \\sum_{i=1}^{n-1}\\tfrac{1}{i\\lambda} \\sim \\tfrac{\\ln n}{\\lambda}$, with bounded variance. No explosion; consistent with $X_t \\approx e^{\\lambda t}$.",
+        "(2) $\\mathbb{E}(Y_\\infty) = \\sum_{i \\ge 1}\\tfrac{1}{i^2\\lambda} = \\tfrac{\\pi^2}{6\\lambda} < \\infty$. A variable with finite mean is finite with probability 1: the population becomes infinite in finite time.",
+        "(3) A pure birth process explodes if and only if $\\sum_{n=1}^\\infty\\tfrac{1}{\\lambda_n} < \\infty$.",
+        "(4) $p = e^{ct}$, finite for every $t$; and $p = \\tfrac{1}{1 - ct}$, which blows up at $t = \\tfrac1c$."
+      ],
+      "pit": "For $\\lambda = 1$: $\\mathbb{E}(Y_{1000}) \\approx 7.48$ while $\\ln 1000 \\approx 6.91$; the sign $\\sim$ refers to the ratio, the difference tends to about $0.577$. In the fast-growing case $\\mathbb{E}(Y_\\infty) \\approx 1.645$.",
+      "src": "LW p80–81",
+      "seen": [
+        "Ex 3.15"
+      ]
+    },
+    {
+      "id": "STO-03-26",
+      "g": "3.4 General case",
+      "k": "Countable state space",
+      "q": "Continuous-time chain on a countable state space $S$ with rates $\\alpha(x, y)$. (1) Which condition is imposed on the rates, and how is the chain built? (2) What is new in the short-interval relation? (3) What can go wrong when the rates are unbounded, and what does the book assume? (4) What does explosion do to the transition probabilities?",
+      "pts": [
+        "(1) $\\alpha(x) = \\sum_{y \\ne x}\\alpha(x, y) < \\infty$ for each $x$; the chain is built with exponential alarm clocks as in the finite case.",
+        "(2) $\\mathbb{P}\\{X_{t+\\Delta t} = y \\mid X_t = x\\} = \\alpha(x, y)\\Delta t + o_x(\\Delta t)$: the size of the error may depend on the state $x$.",
+        "(3) The chain may explode, as the fast-growing population does; the book assumes for now that it does not.",
+        "(4) The rows of $P_t$ no longer sum to 1: part of the mass has left every finite set. For $\\lambda_n = n^2$ started at 1, only about $0.27$ of the mass is left at $t = 2$."
+      ],
+      "pit": "",
+      "src": "LW p81",
+      "seen": []
+    },
+    {
+      "id": "STO-03-27",
+      "g": "3.4 General case",
+      "k": "Forward and backward",
+      "q": "Continuous-time chain on a countable state space with rates $\\alpha(x, y)$, $\\alpha(x) = \\sum_{y \\ne x}\\alpha(x, y)$, and transition probabilities $p_t(x, y)$. (1) Derive the forward equations and say what is needed. (2) Derive the backward equations. (3) Which rates appear in each? (4) Which system always holds, and why? (5) Give the matrix forms on a finite state space.",
+      "pts": [
+        "(1) Put $\\Delta t$ at the end and split on the state $z$ at time $t$: $p_{t+\\Delta t}(x, y) = p_t(x, y)[1 - \\alpha(y)\\Delta t] + \\sum_{z \\ne y}p_t(x, z)\\alpha(z, y)\\Delta t + \\sum_z p_t(x, z)o_z(\\Delta t)$. If the last sum is $o(\\Delta t)$: $p_t'(x, y) = -\\alpha(y)p_t(x, y) + \\sum_{z \\ne y}\\alpha(z, y)p_t(x, z)$.",
+        "(2) Put $\\Delta t$ at the start and split on the state at time $\\Delta t$: $p_t'(x, y) = -\\alpha(x)p_t(x, y) + \\sum_{z \\ne x}\\alpha(x, z)p_t(z, y)$.",
+        "(3) Forward: rates into and out of the target $y$. Backward: rates out of the start $x$.",
+        "(4) The backward equations: all error terms belong to the single starting state $x$. The forward ones collect one error term per intermediate state and need their sum to be $o(\\Delta t)$.",
+        "(5) Forward $\\tfrac{d}{dt}P_t = P_tA$, backward $\\tfrac{d}{dt}P_t = AP_t$; both are solved by $P_t = e^{tA}$, because $A$ commutes with $e^{tA}$."
+      ],
+      "pit": "The extra condition holds in most cases of interest, including every example of this chapter, but not always.",
+      "src": "LW p81–82",
+      "seen": []
+    },
+    {
+      "id": "STO-03-28",
+      "g": "3.4 General case",
+      "k": "Ex 3.16: birth–death",
+      "q": "Birth-and-death process on $\\{0, 1, 2, \\dots\\}$: from $n$ the chain moves to $n + 1$ at rate $\\lambda_n$ and to $n - 1$ at rate $\\mu_n$ (with $\\mu_0 = 0$); $p_t(m, n) = \\mathbb{P}\\{X_t = n \\mid X_0 = m\\}$. (1) Write the forward equation. (2) Write the backward equation. (3) How can the two be told apart at a glance? (4) How is the forward equation related to the equation for $P_n(t) = \\mathbb{P}\\{X_t = n\\}$?",
+      "pts": [
+        "(1) $p_t'(m, n) = \\lambda_{n-1}p_t(m, n-1) + \\mu_{n+1}p_t(m, n+1) - (\\lambda_n + \\mu_n)p_t(m, n)$.",
+        "(2) $p_t'(m, n) = \\lambda_mp_t(m+1, n) + \\mu_mp_t(m-1, n) - (\\lambda_m + \\mu_m)p_t(m, n)$.",
+        "(3) By the subscripts of the rates: the target $n$ in the forward equation, the start $m$ in the backward one.",
+        "(4) It is that equation for the chain started at $m$."
+      ],
+      "pit": "",
+      "src": "LW p85",
+      "seen": [
+        "Ex 3.16"
+      ]
+    },
+    {
+      "id": "STO-03-29",
+      "g": "Exercises",
+      "k": "Ex 3.1: calls",
+      "q": "Calls arrive as a Poisson process with rate 4 per hour. (1) Find the probability of fewer than 2 calls in the first hour. (2) Given 6 calls in the first hour, find the probability of at least 2 in the second hour. (3) Find the expected time until the 15th call. (4) Given exactly 8 calls in the first two hours, find the probability that exactly 5 came in the first hour. (5) Given exactly $k$ calls in four hours, find the probability that exactly $j$ came in the first hour.",
+      "pts": [
+        "(1) $e^{-4} + 4e^{-4} = 5e^{-4} \\approx 0.092$.",
+        "(2) Increments over disjoint intervals are independent: $1 - 5e^{-4} \\approx 0.908$.",
+        "(3) A sum of 15 independent exponential gaps with rate 4: $\\tfrac{15}{4}$ hours.",
+        "(4) Given the total, the arrival times are independent and uniform on the interval, so each falls in the first hour with probability $\\tfrac12$: $\\dbinom85\\big(\\tfrac12\\big)^8 = \\tfrac{7}{32}$.",
+        "(5) $\\dbinom kj\\big(\\tfrac14\\big)^j\\big(\\tfrac34\\big)^{k-j}$."
+      ],
+      "pit": "The last two answers do not depend on the rate: after conditioning on the total, only the proportions of time matter.",
+      "src": "LW p82–83",
+      "seen": [
+        "Ex 3.1"
+      ]
+    },
+    {
+      "id": "STO-03-30",
+      "g": "Exercises",
+      "k": "Ex 3.2: two stores",
+      "q": "$X_t$ and $Y_t$ are independent Poisson processes with rates $\\lambda_1$ and $\\lambda_2$ counting the customers of two stores; put $p = \\tfrac{\\lambda_1}{\\lambda_1 + \\lambda_2}$. (1) Find the probability that store 1 gets the first customer. (2) Find the probability of exactly 4 customers in total in the first hour. (3) Given 4 in total, find the probability that all went to store 1. (4) Let $T$ be the arrival time of the first customer at store 2. Find the distribution of $X_T$.",
+      "pts": [
+        "(1) Two competing exponential clocks: $p$.",
+        "(2) The total is Poisson with parameter $\\lambda_1 + \\lambda_2$: $e^{-(\\lambda_1 + \\lambda_2)}\\dfrac{(\\lambda_1 + \\lambda_2)^4}{4!}$.",
+        "(3) Each arrival of the merged process belongs to store 1 with probability $p$, independently: $p^4$.",
+        "(4) $X_T$ counts the arrivals labelled “1” before the first one labelled “2”: $\\mathbb{P}\\{X_T = k\\} = (1 - p)p^k$ for $k = 0, 1, 2, \\dots$"
+      ],
+      "pit": "Part 4 can also be done by integrating $\\mathbb{P}\\{X_t = k\\}$ against the density $\\lambda_2e^{-\\lambda_2t}$; the labelling argument avoids the integral.",
+      "src": "LW p83",
+      "seen": [
+        "Ex 3.2"
+      ]
+    },
+    {
+      "id": "STO-03-31",
+      "g": "Exercises",
+      "k": "Ex 3.3: two phones",
+      "q": "$X_t$ and $Y_t$ are independent Poisson processes with rates $\\lambda_1$ and $\\lambda_2$ (calls on two phones), and $Z_t = X_t + Y_t$. (1) Show that $Z_t$ is a Poisson process and give its rate. (2) Find the probability that the first call comes on phone 1. (3) Let $T$ be the first time at which both phones have rung. Find its distribution function and density. (4) Is $T$ exponential?",
+      "pts": [
+        "(1) Check the definition: over a short interval the probabilities of one arrival add, $(\\lambda_1 + \\lambda_2)\\Delta t + o(\\Delta t)$, two or more arrivals have probability $o(\\Delta t)$, and increments over disjoint intervals are independent. Rate $\\lambda_1 + \\lambda_2$.",
+        "(2) $\\dfrac{\\lambda_1}{\\lambda_1 + \\lambda_2}$.",
+        "(3) $T$ is the maximum of two independent exponential times: $F(t) = (1 - e^{-\\lambda_1t})(1 - e^{-\\lambda_2t})$ and $$\\begin{aligned}f(t) &= \\lambda_1e^{-\\lambda_1t} + \\lambda_2e^{-\\lambda_2t}\\\\ &\\quad - (\\lambda_1 + \\lambda_2)e^{-(\\lambda_1 + \\lambda_2)t}\\end{aligned}$$",
+        "(4) No. The minimum of exponentials is exponential, the maximum is not: after the first ring the remaining wait has a rate that depends on which phone rang."
+      ],
+      "pit": "$\\mathbb{E}(T) = \\tfrac{1}{\\lambda_1} + \\tfrac{1}{\\lambda_2} - \\tfrac{1}{\\lambda_1 + \\lambda_2}$.",
+      "src": "LW p83",
+      "seen": [
+        "Ex 3.3"
+      ]
+    },
+    {
+      "id": "STO-03-32",
+      "g": "Exercises",
+      "k": "Ex 3.5: two states",
+      "q": "Continuous-time chain on $\\{1, 2\\}$ with $\\alpha(1, 2) = 1$ and $\\alpha(2, 1) = 4$. (1) Write the generator and find its eigenvalues. (2) Find $\\bar\\pi$. (3) Give $P_t$. (4) Do the same for a chain on $\\{0, 1\\}$ with $\\alpha(0, 1) = 3$, $\\alpha(1, 0) = 1$: $\\bar\\pi$ and $p_t(0, 0)$.",
+      "pts": [
+        "(1) $A = \\begin{pmatrix}-1&1\\\\4&-4\\end{pmatrix}$; eigenvalues 0 (rows sum to 0) and $-5$ (the trace).",
+        "(2) $-\\pi(1) + 4\\pi(2) = 0$: $\\bar\\pi = (\\tfrac45, \\tfrac15)$.",
+        "(3) With $\\Pi$ the matrix whose rows are $\\bar\\pi$: $P_t = \\Pi + (I - \\Pi)e^{-5t}$, i.e. $$P_t = \\frac15\\begin{pmatrix}4&1\\\\4&1\\end{pmatrix} + \\frac{e^{-5t}}{5}\\begin{pmatrix}1&-1\\\\-4&4\\end{pmatrix}$$",
+        "(4) $3\\pi(0) = \\pi(1)$: $\\bar\\pi = (\\tfrac14, \\tfrac34)$; eigenvalues 0 and $-4$: $p_t(0, 0) = \\tfrac14 + \\tfrac34e^{-4t}$."
+      ],
+      "pit": "For two states always $P_t = \\Pi + (I - \\Pi)e^{-(\\alpha(1,2) + \\alpha(2,1))t}$.",
+      "src": "LW p84",
+      "seen": [
+        "Ex 3.5"
+      ]
+    },
+    {
+      "id": "STO-03-33",
+      "g": "Exercises",
+      "k": "Ex 3.6: three states",
+      "q": "Continuous-time chain on $\\{1, 2, 3\\}$ with $\\alpha(1, 2) = \\alpha(2, 3) = 1$, $\\alpha(2, 1) = \\alpha(3, 2) = 4$ and no direct jumps between 1 and 3. (1) Write the generator. (2) Find the eigenvalues. (3) Find $\\bar\\pi$. (4) Give the form of $P_t$ and the entry $p_t(1, 1)$.",
+      "pts": [
+        "(1) $A = \\begin{pmatrix}-1&1&0\\\\4&-5&1\\\\0&4&-4\\end{pmatrix}$.",
+        "(2) $\\det(A - \\nu I) = -\\nu(\\nu + 3)(\\nu + 7)$: $0, -3, -7$.",
+        "(3) Flow across each edge: $\\pi(1) = 4\\pi(2)$ and $\\pi(2) = 4\\pi(3)$, so $\\bar\\pi = \\tfrac{1}{21}(16, 4, 1)$.",
+        "(4) $P_t = \\Pi + e^{-3t}B + e^{-7t}C$ with $B$, $C$ of rank one (right eigenvector times left eigenvector, divided by their inner product); $p_t(1, 1) = \\tfrac{16}{21} + \\tfrac16e^{-3t} + \\tfrac{1}{14}e^{-7t}$."
+      ],
+      "pit": "The speed of convergence is set by the slowest nonzero eigenvalue, $-3$. Check at $t = 0$: $\\tfrac{16}{21} + \\tfrac16 + \\tfrac{1}{14} = 1$.",
+      "src": "LW p84",
+      "seen": [
+        "Ex 3.6"
+      ]
+    },
+    {
+      "id": "STO-03-34",
+      "g": "Exercises",
+      "k": "Ex 3.8: four states",
+      "q": "Continuous-time chain on $\\{1, 2, 3, 4\\}$ with generator $A = \\begin{pmatrix}-3&1&1&1\\\\0&-3&2&1\\\\1&2&-4&1\\\\0&0&1&-1\\end{pmatrix}$. (1) Find the equilibrium distribution. (2) Starting in state 1, find the expected time until the first change of state. (3) Starting in state 1, find the expected time to reach state 4. (4) Why is the last answer so simple?",
+      "pts": [
+        "(1) Column 1: $\\pi(3) = 3\\pi(1)$; column 2: $\\pi(1) - 3\\pi(2) + 2\\pi(3) = 0$, so $\\pi(2) = \\tfrac73\\pi(1)$; column 4: $\\pi(4) = \\pi(1) + \\pi(2) + \\pi(3) = \\tfrac{19}{3}\\pi(1)$. Hence $\\bar\\pi = \\tfrac{1}{38}(3, 7, 9, 19)$.",
+        "(2) The holding time is exponential with rate $\\alpha(1) = 3$: $\\tfrac13$.",
+        "(3) $3b(1) - b(2) - b(3) = 1$, $3b(2) - 2b(3) = 1$, $4b(3) - b(1) - 2b(2) = 1$: $b(1) = b(2) = b(3) = 1$.",
+        "(4) From each of the states 1, 2, 3 the rate of jumping to 4 is 1, so the time to reach 4 is exponential with rate 1 whatever the start."
+      ],
+      "pit": "",
+      "src": "LW p84",
+      "seen": [
+        "Ex 3.8"
+      ]
+    },
+    {
+      "id": "STO-03-35",
+      "g": "Exercises",
+      "k": "Ex 3.9: four states II",
+      "q": "Continuous-time chain on $\\{1, 2, 3, 4\\}$ with generator $A = \\begin{pmatrix}-2&1&1&0\\\\0&-1&1&0\\\\1&1&-3&1\\\\0&0&1&-1\\end{pmatrix}$. (1) Find the equilibrium distribution. (2) Starting in state 1, find the expected time until the first change of state. (3) Find the expected time to reach state 4 from each of the states 1, 2, 3. (4) Why are these times much larger than for a chain in which every state jumps to 4 at rate 1?",
+      "pts": [
+        "(1) Column 1: $\\pi(3) = 2\\pi(1)$; column 2: $\\pi(2) = \\pi(1) + \\pi(3) = 3\\pi(1)$; column 4: $\\pi(4) = \\pi(3)$. Hence $\\bar\\pi = \\tfrac18(1, 3, 2, 2)$.",
+        "(2) $\\tfrac{1}{\\alpha(1)} = \\tfrac12$.",
+        "(3) $2b(1) - b(2) - b(3) = 1$, $b(2) - b(3) = 1$, $3b(3) - b(1) - b(2) = 1$: $b(2) = b(1) = 1 + b(3)$ and then $b(3) = 3$, so $\\bar b = (4, 4, 3)$.",
+        "(4) Here $\\alpha(1, 4) = \\alpha(2, 4) = 0$: from 1 or 2 the chain must first get to 3, and from 3 it leaves towards 4 only one time in three."
+      ],
+      "pit": "",
+      "src": "LW p84",
+      "seen": [
+        "Ex 3.9"
+      ]
+    },
+    {
+      "id": "STO-03-36",
+      "g": "Exercises",
+      "k": "Ex 3.10: jump chain",
+      "q": "Irreducible continuous-time chain on a finite state space with rates $\\alpha(x, y)$, $\\alpha(x) = \\sum_{y \\ne x}\\alpha(x, y)$ and equilibrium distribution $\\pi$. Its jump chain has $p(x, y) = \\tfrac{\\alpha(x, y)}{\\alpha(x)}$. (1) Write column $y$ of $\\bar\\pi A = \\bar 0$. (2) Show that $\\nu(x) = \\pi(x)\\alpha(x)$ is invariant for the jump chain. (3) Give its invariant probability. (4) Evaluate it for $\\bar\\pi = \\tfrac{1}{38}(3, 7, 9, 19)$ with $\\alpha = (3, 3, 4, 1)$.",
+      "pts": [
+        "(1) $\\pi(y)\\alpha(y) = \\sum_{x \\ne y}\\pi(x)\\alpha(x, y)$.",
+        "(2) $\\sum_{x \\ne y}\\nu(x)p(x, y) = \\sum_{x \\ne y}\\pi(x)\\alpha(x)\\dfrac{\\alpha(x, y)}{\\alpha(x)} = \\pi(y)\\alpha(y) = \\nu(y)$.",
+        "(3) $\\hat\\pi(x) = \\dfrac{\\pi(x)\\alpha(x)}{\\sum_y\\pi(y)\\alpha(y)}$.",
+        "(4) $\\pi\\alpha \\propto (9, 21, 36, 19)$: $\\hat\\pi = \\tfrac{1}{85}(9, 21, 36, 19)$."
+      ],
+      "pit": "Multiply by $\\alpha$, do not divide: $\\pi$ measures time, $\\hat\\pi$ counts visits, and each visit to $x$ lasts $1/\\alpha(x)$ on average.",
+      "src": "LW p84",
+      "seen": [
+        "Ex 3.10"
+      ]
+    },
+    {
+      "id": "STO-03-37",
+      "g": "Exercises",
+      "k": "Ex 3.11: on the border",
+      "q": "Birth-and-death processes with $\\mu_n = 1$ and (a) $\\lambda_n = 1 + \\tfrac{1}{n+1}$, (b) $\\lambda_n = 1 - \\tfrac{1}{n+2}$. (1) For (a), compute the two products and decide. (2) For (b), do the same. (3) What explains that both land on the border?",
+      "pts": [
+        "(1) $\\lambda_n = \\tfrac{n+2}{n+1}$: $\\lambda_1\\cdots\\lambda_n = \\tfrac{n+2}{2}$ and $\\lambda_0\\cdots\\lambda_{n-1} = n + 1$. $\\sum_n\\tfrac{2}{n+2} = \\infty$, so recurrent; $\\sum_n(n+1) = \\infty$, so not positive recurrent: null recurrent.",
+        "(2) $\\lambda_n = \\tfrac{n+1}{n+2}$: $\\lambda_1\\cdots\\lambda_n = \\tfrac{2}{n+2}$ and $\\lambda_0\\cdots\\lambda_{n-1} = \\tfrac{1}{n+1}$. $\\sum_n\\tfrac{n+2}{2} = \\infty$, recurrent; $\\sum_n\\tfrac{1}{n+1} = \\infty$, not positive recurrent: null recurrent.",
+        "(3) With $\\lambda_n \\approx 1 + \\tfrac an$ the two products behave like $n^{-a}$ and $n^a$: transient needs $a > 1$, positive recurrent needs $a < -1$. Here $a = +1$ and $a = -1$, exactly the border values."
+      ],
+      "pit": "When the drift decays like 1/n, its sign does not decide the type; the size of the coefficient does.",
+      "src": "LW p84",
+      "seen": [
+        "Ex 3.11"
+      ]
+    },
+    {
+      "id": "STO-03-38",
+      "g": "Exercises",
+      "k": "Ex 3.12/13: population",
+      "q": "Population in which each individual gives birth at rate $\\lambda$ and dies at rate $\\mu$: $\\lambda_n = n\\lambda$, $\\mu_n = n\\mu$, and 0 is absorbing. (1) When is extinction certain? (2) Otherwise, what is the extinction probability from $n$ individuals? (3) Add immigration at rate $\\nu > 0$, $\\lambda_n = n\\lambda + \\nu$: classify the chain. (4) Explain the role of immigration at $\\lambda = \\mu$.",
+      "pts": [
+        "(1) $\\tfrac{\\mu_1\\cdots\\mu_n}{\\lambda_1\\cdots\\lambda_n} = \\big(\\tfrac\\mu\\lambda\\big)^n$, and the series diverges exactly when $\\mu \\ge \\lambda$: extinction is certain if and only if $\\mu \\ge \\lambda$.",
+        "(2) $a(n) = \\big(\\tfrac\\mu\\lambda\\big)^n$.",
+        "(3) The terms of the two series behave like $\\big(\\tfrac\\mu\\lambda\\big)^nn^{-\\nu/\\lambda}$ and $\\big(\\tfrac\\lambda\\mu\\big)^nn^{\\nu/\\lambda - 1}$. Positive recurrent if and only if $\\lambda < \\mu$; transient if $\\lambda > \\mu$, or $\\lambda = \\mu$ and $\\nu > \\lambda$; null recurrent if $\\lambda = \\mu$ and $\\nu \\le \\lambda$.",
+        "(4) Without immigration a critical population dies out for sure. With it, 0 is no longer absorbing, and the chain escapes to infinity exactly when $\\tfrac\\nu\\lambda > 1$."
+      ],
+      "pit": "$a(n) = a(1)^n$ is the same product rule as for a branching process: the $n$ family lines die out independently.",
+      "src": "LW p85",
+      "seen": [
+        "Ex 3.12",
+        "Ex 3.13"
+      ]
+    },
+    {
+      "id": "STO-03-39",
+      "g": "Exercises",
+      "k": "Ex 3.14: Poisson limit",
+      "q": "Birth-and-death process with $\\lambda_n = \\tfrac{1}{n+1}$ and $\\mu_n = 1$. (1) Compute the ratios $\\tfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n}$. (2) Compute $q$ and decide. (3) Give the equilibrium distribution. (4) Which queue has the same kind of equilibrium?",
+      "pts": [
+        "(1) $\\tfrac11\\cdot\\tfrac12\\cdots\\tfrac1n = \\tfrac{1}{n!}$.",
+        "(2) $q = \\sum_{n \\ge 0}\\tfrac{1}{n!} = e < \\infty$: positive recurrent.",
+        "(3) $\\pi(n) = \\dfrac{e^{-1}}{n!}$, the Poisson distribution with mean 1.",
+        "(4) The $M/M/\\infty$ queue ($\\lambda_n = \\lambda$, $\\mu_n = n\\mu$), whose equilibrium is Poisson with mean $\\tfrac\\lambda\\mu$."
+      ],
+      "pit": "A birth rate that falls like 1/n and a death rate that grows like n have the same effect on the equilibrium: a factor 1/n!.",
+      "src": "LW p85",
+      "seen": [
+        "Ex 3.14"
+      ]
+    },
+    {
+      "id": "STO-03-40",
+      "g": "Recipe",
+      "k": "Decision flow",
+      "q": "A continuous-time Markov chain is given by its rates. (1) What is done when the state space is finite? (2) What is done for a birth-and-death chain that is not irreducible? (3) For an irreducible birth-and-death chain, which two series are examined, in which order? (4) How are the two series related?",
+      "pts": [
+        "(1) Write $A$; $P_t = e^{tA}$ by diagonalising; $\\bar\\pi$ from $\\bar\\pi A = \\bar 0$; mean passage times from $-\\tilde A\\bar b = \\bar 1$.",
+        "(2) Pure birth: explosion if and only if $\\sum\\tfrac{1}{\\lambda_n} < \\infty$. Absorbing state 0: extinction through the function $a(n)$.",
+        "(3) First $\\sum_{n \\ge 1}\\tfrac{\\mu_1\\cdots\\mu_n}{\\lambda_1\\cdots\\lambda_n}$: finite means transient. If infinite, then $q = \\sum_{n \\ge 0}\\tfrac{\\lambda_0\\cdots\\lambda_{n-1}}{\\mu_1\\cdots\\mu_n}$: finite means positive recurrent with $\\pi(n)$ equal to the $n$-th term divided by $q$; infinite means null recurrent.",
+        "(4) They are mirror images: the same ratios of rates, once as $\\tfrac\\mu\\lambda$ and once as $\\tfrac\\lambda\\mu$. For the $M/M/1$ queue they give $\\lambda > \\mu$, $\\lambda = \\mu$, $\\lambda < \\mu$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-03-41",
+      "g": "Recipe",
+      "k": "Practice",
+      "q": "(1) Three independent exponential clocks have rates 1, 2, 3. Find the probability that the rate-2 clock rings first, and the mean time until the first ring. (2) A pure birth process has $\\lambda_n = n^{3/2}$. Does it explode? And with $\\lambda_n = n$? (3) For the two-state chain with $\\alpha(0, 1) = 1$, $\\alpha(1, 0) = 2$, compare $\\bar\\pi$ with the invariant distribution of the jump chain. (4) Calls arrive as a Poisson process. Given exactly 3 calls in the first hour, find the probability that all 3 came in the first 30 minutes. (5) What is the difference between $P_k(t)$ for a Poisson process and the matrix $P_t$?",
+      "pts": [
+        "(1) $\\tfrac{2}{1+2+3} = \\tfrac13$; the first ring is exponential with rate 6, mean $\\tfrac16$.",
+        "(2) $\\sum n^{-3/2} < \\infty$: it explodes. $\\sum n^{-1} = \\infty$: the Yule process does not.",
+        "(3) $\\bar\\pi = (\\tfrac23, \\tfrac13)$ is the share of time. The jump chain alternates $0, 1, 0, 1$, so $\\hat\\pi = (\\tfrac12, \\tfrac12)$ is the share of jumps; indeed $\\pi\\alpha = (\\tfrac23 \\cdot 1, \\tfrac13 \\cdot 2)$.",
+        "(4) Given the total, the three arrival times are independent and uniform on the hour: $\\big(\\tfrac12\\big)^3 = \\tfrac18$.",
+        "(5) $P_k(t) = \\mathbb{P}\\{X_t = k\\}$ is one number for each $k$. $P_t$ is a matrix whose entry $(x, y)$ is $\\mathbb{P}\\{X_t = y \\mid X_0 = x\\}$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}

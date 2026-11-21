@@ -84,6 +84,10 @@
         {
           "title": "Countable Markov chains",
           "file": "stochastic/ch02-countable-markov-chains.json"
+        },
+        {
+          "title": "Continuous-time Markov chains",
+          "file": "stochastic/ch03-continuous-time-markov-chains.json"
         }
       ]
     },
