@@ -12,6 +12,10 @@
           "file": "nlo/ch06-kkt.json"
         },
         {
+          "title": "Second order & duality",
+          "file": "nlo/ch07-second-order-duality.json"
+        },
+        {
           "title": "Core concepts",
           "file": "nlo/core-concepts.json"
         }
