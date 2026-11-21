@@ -49,6 +49,10 @@
           "file": "mdp/ch02-markov-chains.json"
         },
         {
+          "title": "Dynamic programming",
+          "file": "mdp/ch03-dynamic-programming.json"
+        },
+        {
           "title": "Core concepts",
           "file": "mdp/core-concepts.json"
         }

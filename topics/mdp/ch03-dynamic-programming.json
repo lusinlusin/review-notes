@@ -1,0 +1,1480 @@
+{
+  "title": "Dynamic programming",
+  "notes": [
+    {
+      "h": "Control problem",
+      "items": [
+        {
+          "t": "Why a new method",
+          "d": [
+            "Sequential decisions on a dynamical system under uncertainty: decisions interact over time and must react to what is revealed. One optimizes functions (policies), and backward induction makes that tractable."
+          ],
+          "cards": [
+            "MDP-03-01"
+          ]
+        },
+        {
+          "t": "Controlled process",
+          "d": [
+            "$X_{t+1} = f(X_t, U_t, Z_{t+1})$; minimize $E\\big[\\sum_{t<T} g(X_t, U_t) + G(X_T) \\mid X_0 = x_0\\big]$.",
+            "Order in a period: observe $X_t$, choose $U_t$, then $Z_{t+1}$ is revealed."
+          ],
+          "cards": [
+            "MDP-03-02",
+            "MDP-03-04"
+          ]
+        },
+        {
+          "t": "Markov decision process",
+          "d": [
+            "The disturbance is conditionally independent of the past given $(X_t, U_t)$. Finite case: one matrix $P_u$ per action. Under $U_t = \\mu_t(X_t)$ the state is a Markov chain."
+          ],
+          "cards": [
+            "MDP-03-03"
+          ]
+        },
+        {
+          "t": "Machine replacement data",
+          "d": [
+            "States repair, new, 1, 2, 3, 4, broken; $T = 10$. Wait: stay $\\tfrac23$, one down $\\tfrac13$, cost 0 (10 when broken). Fix: cost $0, 1, \\dots, 6$, to repair. $G = 6$ if broken."
+          ],
+          "cards": [
+            "MDP-03-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Open vs closed loop",
+      "items": [
+        {
+          "t": "Policy classes",
+          "d": [
+            "Open-loop: numbers fixed at time 0. Closed-loop: causal functions of the observed states. Memoryless: functions of the current state.",
+            "Optimal costs: history-dependent ≤ memoryless ≤ open-loop (nested classes)."
+          ],
+          "cards": [
+            "MDP-03-06"
+          ]
+        },
+        {
+          "t": "When they coincide",
+          "d": [
+            "Memoryless = history-dependent when the noise is Markov and minima are attained. Open-loop = closed-loop when there is no noise.",
+            "The gap between open-loop and closed-loop is the value of information."
+          ],
+          "cards": [
+            "MDP-03-07",
+            "MDP-03-09",
+            "MDP-03-08"
+          ]
+        },
+        {
+          "t": "Interchange lemma",
+          "d": [
+            "$\\min_\\mu \\sum_x p(x)F(x, \\mu(x)) = \\sum_x p(x)\\min_u F(x, u)$; over constants only $\\min_u E \\ge E\\min_u$."
+          ],
+          "cards": [
+            "MDP-03-08",
+            "MDP-03-18"
+          ]
+        },
+        {
+          "t": "Counting",
+          "d": [
+            "Open-loop $m^T$; memoryless $m^{1 + (T-1)n}$; dynamic programming $m + (T-1)mn$ evaluations."
+          ],
+          "cards": [
+            "MDP-03-10"
+          ]
+        },
+        {
+          "t": "Examples",
+          "d": [
+            "Two projects from $a$: open-loop $\\tfrac92$, closed-loop $\\tfrac{19}{4}$. Machine from new: $1.815$ against $1.259$. Scheduling: $10 = 10$."
+          ],
+          "cards": [
+            "MDP-03-11",
+            "MDP-03-12",
+            "MDP-03-23"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "DP algorithm",
+      "items": [
+        {
+          "t": "Tail problem and principle of optimality",
+          "d": [
+            "$V_t(x)$ = optimal cost-to-go from $x$ at time $t$. The tail of an optimal policy is optimal for the tail problem, at states reached with positive probability."
+          ],
+          "cards": [
+            "MDP-03-13",
+            "MDP-03-20"
+          ]
+        },
+        {
+          "t": "Algorithm",
+          "d": [
+            "$V_T = G$; $Q_t(x, u) = g(x, u) + \\sum_y P_u(x, y)V_{t+1}(y)$; $V_t = \\min_u Q_t$; $\\hat\\mu_t \\in \\arg\\min_u Q_t$; $t = T-1, \\dots, 0$."
+          ],
+          "cards": [
+            "MDP-03-14",
+            "MDP-03-15"
+          ]
+        },
+        {
+          "t": "Optimality theorem",
+          "d": [
+            "$\\hat\\mu$ is optimal for $(P_0)$ and $V_t$ is the optimal value of every tail problem. Used forward in time; $V_0(x_0)$ is an expectation, not the cost of a run."
+          ],
+          "cards": [
+            "MDP-03-16"
+          ]
+        },
+        {
+          "t": "Proof",
+          "d": [
+            "Induction backward in t. Split off stage t. For the tail: (a) tower property and independence; (b) exchange min and expectation, possible because the tail is closed-loop; (c) induction hypothesis; (d) dynamics.",
+            "Then unroll $V_0$ along $\\hat\\mu$ to see that the policy attains it."
+          ],
+          "cards": [
+            "MDP-03-17",
+            "MDP-03-18",
+            "MDP-03-19"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Shortest path",
+      "items": [
+        {
+          "t": "Project scheduling",
+          "d": [
+            "State = ordered list of finished tasks; deterministic; $V_t(x) = \\min_u\\{\\text{arc cost} + V_{t+1}(\\text{next})\\}$.",
+            "$V_3 = (6, 1, 3, 1, 3, 2)$ for $ABC, ACB, ACD, CAB, CAD, CDA$; $V_2 = (9, 5, 3, 5)$ for $AB, AC, CA, CD$; $V_1 = (8, 7)$; $V_0 = 10$ via $CABD$."
+          ],
+          "cards": [
+            "MDP-03-21",
+            "MDP-03-22"
+          ]
+        },
+        {
+          "t": "Deterministic problems",
+          "d": [
+            "Open-loop and closed-loop costs are equal. Dynamic programming reuses shared tails; enumeration does not."
+          ],
+          "cards": [
+            "MDP-03-23"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Machine replacement",
+      "items": [
+        {
+          "t": "One cell",
+          "d": [
+            "$V_t(x) = \\min\\{g(x, \\text{fix}) + V_{t+1}(\\text{repair}),\\ \\tfrac23 V_{t+1}(x) + \\tfrac13 V_{t+1}(x+1)\\}$; broken: $\\min\\{6 + V_{t+1}(\\text{repair}),\\ 10 + V_{t+1}(\\text{broken})\\}$."
+          ],
+          "cards": [
+            "MDP-03-24"
+          ]
+        },
+        {
+          "t": "Table",
+          "d": [
+            "$V_9 = (0,0,0,0,0,2,6)$, $V_8 = (0,0,0,0,\\tfrac23,\\tfrac{10}{3},6)$, $V_7(2) = \\tfrac29$; $V_0(\\text{new}) = 1.26$, $V_0(1) = 2.45$.",
+            "Fix: broken always; state 4 for $t \\le 5$; state 3 for $t \\le 3$; state 2 for $t \\le 1$."
+          ],
+          "cards": [
+            "MDP-03-24",
+            "MDP-03-25"
+          ]
+        },
+        {
+          "t": "Comparing policies by simulation",
+          "d": [
+            "Standard errors must be small relative to the gap; use common random numbers or exact forward evaluation."
+          ],
+          "cards": [
+            "MDP-03-26"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Two projects",
+      "items": [
+        {
+          "t": "Model and table",
+          "d": [
+            "State = state of project 2. $V_3 = (2, 1)$, $V_2 = (\\tfrac72, 2)$, $V_1 = (\\tfrac{19}{4}, \\tfrac72)$ for $(a, b)$.",
+            "Project 2 in $a$ always; in $b$: project 2 at $t = 1$, tie at $t = 2$, project 1 at $t = 3$."
+          ],
+          "cards": [
+            "MDP-03-27",
+            "MDP-03-28",
+            "MDP-03-11"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Structure of V",
+      "items": [
+        {
+          "t": "Replacement problem",
+          "d": [
+            "$V_t(i) = \\min\\{c(i) + \\gamma\\sum_j p_{ij}V_{t+1}(j),\\ K_t\\}$ with $K_t = C_r + c(1) + \\gamma\\sum_j p_{1j}V_{t+1}(j)$ independent of $i$."
+          ],
+          "cards": [
+            "MDP-03-29"
+          ]
+        },
+        {
+          "t": "Order-preserving lemma",
+          "d": [
+            "If $\\sum_{j \\ge k}p_{ij}$ is increasing in $i$ for every $k$ and $v$ is increasing, then $\\sum_j p_{ij}v(j) = v(1) + \\sum_{k \\ge 2}[v(k) - v(k-1)]\\sum_{j \\ge k}p_{ij}$ is increasing in $i$."
+          ],
+          "cards": [
+            "MDP-03-30"
+          ]
+        },
+        {
+          "t": "Monotone value, control limit",
+          "d": [
+            "Induction from $V_{T+1} \\equiv 0$: keep value increasing, replace value constant, minimum increasing. Hence replace iff $i > a_t = \\max\\{i : \\text{keep}_t(i) \\le K_t\\}$."
+          ],
+          "cards": [
+            "MDP-03-31",
+            "MDP-03-32"
+          ]
+        },
+        {
+          "t": "Bellman operator",
+          "d": [
+            "$(\\mathcal{T}J)(x) = \\min_u\\{g(x, u) + E\\,J(f(x, u, W))\\}$, $J_t = \\mathcal{T}J_{t+1}$. Order-preserving: $J \\le \\bar J \\Rightarrow \\mathcal{T}J \\le \\mathcal{T}\\bar J$.",
+            "$J_{T-1} \\le J_T \\Rightarrow J_t \\le J_{t+1}$ for all $t$ (time-invariant problems). $G \\equiv 0$, $g \\ge 0 \\Rightarrow J_t \\ge J_{t+1}$."
+          ],
+          "cards": [
+            "MDP-03-33",
+            "MDP-03-34",
+            "MDP-03-35"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Extensions",
+      "items": [
+        {
+          "t": "Random initial state",
+          "d": [
+            "Value $\\sum_x q(x)V_0(x)$, same policy; needs $X_0$ observed before $U_0$."
+          ],
+          "cards": [
+            "MDP-03-36"
+          ]
+        },
+        {
+          "t": "Random, time-varying cost",
+          "d": [
+            "$V_t(x) = \\min_{u \\in \\mathbb{U}(x)}\\{\\bar g_t(x, u) + E\\,V_{t+1}(f_t(x, u, Z_{t+1}))\\}$, $\\bar g_t = E\\,g_t(x, u, W_{t+1})$."
+          ],
+          "cards": [
+            "MDP-03-37",
+            "MDP-03-43"
+          ]
+        },
+        {
+          "t": "Discounting",
+          "d": [
+            "$V_t = \\min_u\\{g + \\gamma E\\,V_{t+1}\\}$, or $\\tilde V_t = \\min_u\\{\\gamma^t g + E\\,\\tilde V_{t+1}\\}$ with $\\tilde V_t = \\gamma^t V_t$."
+          ],
+          "cards": [
+            "MDP-03-40"
+          ]
+        },
+        {
+          "t": "Minimax",
+          "d": [
+            "$V_t(x) = \\min_u\\max_{z \\in \\mathbb{Z}}\\{g(x, u) + V_{t+1}(f(x, u, z))\\}$. The nesting order is the information structure; a max does not split sums."
+          ],
+          "cards": [
+            "MDP-03-41"
+          ]
+        },
+        {
+          "t": "Inventory example",
+          "d": [
+            "$H = (3, \\tfrac43, 1)$; expected cost: $V_1 = (\\tfrac{11}{6}, \\tfrac43, 1)$, $V_0 = (\\tfrac{61}{18}, \\tfrac{26}{9}, \\tfrac{43}{18})$, order up to 2 then up to 1.",
+            "Worst case: $V_1 = (3, 2.5, 2)$, $V_0 = (5, 4.5, 4)$, order up to 2 twice."
+          ],
+          "cards": [
+            "MDP-03-38",
+            "MDP-03-39",
+            "MDP-03-42"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Modelling",
+      "items": [
+        {
+          "t": "Checklist",
+          "d": [
+            "Timing; state (smallest sufficient information seen before the decision); actions U(x); disturbance; dynamics; cost or reward, min or max; recursion and terminal condition.",
+            "Probability of an event: terminal indicator reward. Death, sale, stopping: absorbing state. Irreversible choices: remember them in the state."
+          ],
+          "cards": [
+            "MDP-03-44",
+            "MDP-03-45",
+            "MDP-03-51"
+          ]
+        },
+        {
+          "t": "State-dependent action sets",
+          "d": [
+            "From capacity (order at most 2 − x), from what is left (offer at most x), or from a constraint that must hold for every disturbance."
+          ],
+          "cards": [
+            "MDP-03-47",
+            "MDP-03-48",
+            "MDP-03-52",
+            "MDP-03-46"
+          ]
+        },
+        {
+          "t": "Continuous problems",
+          "d": [
+            "Guess a parametric form of the value function and verify that a backward step preserves it; check corner solutions on bounded action sets."
+          ],
+          "cards": [
+            "MDP-03-49",
+            "MDP-03-50"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Limits of DP",
+      "items": [
+        {
+          "t": "Complexity",
+          "d": [
+            "$O(nmp)$ per stage for finite problems; continuous spaces need closed forms or approximation; $N^d$ cells for a $d$-dimensional state."
+          ],
+          "cards": [
+            "MDP-03-53"
+          ]
+        },
+        {
+          "t": "Infinite horizon",
+          "d": [
+            "$J^\\star = \\mathcal{T}[J^\\star]$ with a discount factor; for a fixed policy it is $V = r + \\gamma PV$."
+          ],
+          "cards": [
+            "MDP-03-54"
+          ]
+        },
+        {
+          "t": "Which tool",
+          "d": [
+            "Formulate: checklist. Solve: backward table. Compare loops: enumeration against the table. Structure: induction with an order-preserving lemma. Variants: change one line of the recursion."
+          ],
+          "cards": [
+            "MDP-03-55"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "Maintain or replace",
+          "d": [
+            "$G = 10$, $p_m = 0.9$, $p_{nm} = 0.6$, $C_m = 2$, $C_r = 4$, $C_l = 6$: $J_2 = (7, 5)$, $J_1 = (13.8, 11.8)$."
+          ],
+          "cards": [
+            "MDP-03-46"
+          ]
+        },
+        {
+          "t": "Tickets",
+          "d": [
+            "$J_2 = (0, 40, 80, 120, 150, 160, 160)$; sell 2 on day 1; revenue 190."
+          ],
+          "cards": [
+            "MDP-03-47"
+          ]
+        },
+        {
+          "t": "Guaranteed constraints",
+          "d": [
+            "$\\mathbb{U}(x) = \\{u : -1 \\le x + u \\le 3\\}$; $J_0(0) = 9$ with $U_0 = +1$."
+          ],
+          "cards": [
+            "MDP-03-48"
+          ]
+        },
+        {
+          "t": "Linear terminal cost",
+          "d": [
+            "$J_1 = x - \\tfrac14$, $J_0 = x - \\tfrac12$, $u \\equiv -\\tfrac12$."
+          ],
+          "cards": [
+            "MDP-03-49"
+          ]
+        },
+        {
+          "t": "State-dependent noise",
+          "d": [
+            "$J^\\star = 1 + \\tfrac{(1-a)^2}{2}$ with $u \\equiv 0$."
+          ],
+          "cards": [
+            "MDP-03-50"
+          ]
+        },
+        {
+          "t": "Well and upgrade",
+          "d": [
+            "4600 without the option; 4760 with it: install in year 2 only after a price rise."
+          ],
+          "cards": [
+            "MDP-03-51"
+          ]
+        },
+        {
+          "t": "Shop with revenue",
+          "d": [
+            "$V_1 = (0.8, 1.8, 1.8)$, $V_0 = (1.8, 2.8, 2.9)$; order up to 1."
+          ],
+          "cards": [
+            "MDP-03-52"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "Backward table",
+          "d": [
+            "Rows (time, state); one column per action with the formula written out; minimum and minimizer; ties reported; policy stated in words; answer for the requested initial state."
+          ],
+          "cards": [
+            "MDP-03-28",
+            "MDP-03-24",
+            "MDP-03-39"
+          ]
+        },
+        {
+          "t": "Structure proofs",
+          "d": [
+            "Write the recursion so that one branch is constant in the state; prove an order-preserving lemma for the expectation; induct backward."
+          ],
+          "cards": [
+            "MDP-03-31",
+            "MDP-03-32",
+            "MDP-03-34"
+          ]
+        },
+        {
+          "t": "Operator comparisons",
+          "d": [
+            "Compare two operators on the same function, use order preservation, induct from the common terminal cost."
+          ],
+          "cards": [
+            "MDP-03-35",
+            "MDP-03-33"
+          ]
+        },
+        {
+          "t": "Non-myopic decisions",
+          "d": [
+            "A zero or negative immediate payoff can be optimal because of the state it leads to."
+          ],
+          "cards": [
+            "MDP-03-28",
+            "MDP-03-51",
+            "MDP-03-47"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "V and J, Z and W",
+          "d": [
+            "Slides: $V_t$, $Z_{t+1}$. KE and the exercises: $J_t$, $W_{t+1}$. On one slide $W$ enters the cost and $Z$ the dynamics."
+          ],
+          "cards": [
+            "MDP-03-02",
+            "MDP-03-37"
+          ]
+        },
+        {
+          "t": "Indexing",
+          "d": [
+            "Slides: $t = 0, \\dots, T-1$, $V_T = G$. Some problems: $t = 1, \\dots, T$ with $V_{T+1} \\equiv 0$."
+          ],
+          "cards": [
+            "MDP-03-27",
+            "MDP-03-29"
+          ]
+        },
+        {
+          "t": "Min or max",
+          "d": [
+            "Costs are minimized, rewards maximized; a problem may also carry a discount factor in a finite horizon."
+          ],
+          "cards": [
+            "MDP-03-27",
+            "MDP-03-45"
+          ]
+        },
+        {
+          "t": "Operator and horizon",
+          "d": [
+            "The same letter is used for the horizon and the Bellman operator; here the operator is $\\mathcal{T}$."
+          ],
+          "cards": [
+            "MDP-03-33"
+          ]
+        },
+        {
+          "t": "Threshold convention",
+          "d": [
+            "Order when $X_t < s$ on these slides, when $X_t \\le s$ elsewhere."
+          ],
+          "cards": [
+            "MDP-03-04"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Memoryless theorem",
+          "d": [
+            "Needs Markov noise and attained minima; it asserts existence of a memoryless optimal policy."
+          ],
+          "cards": [
+            "MDP-03-09"
+          ]
+        },
+        {
+          "t": "Principle of optimality",
+          "d": [
+            "Holds at states reached with positive probability."
+          ],
+          "cards": [
+            "MDP-03-13",
+            "MDP-03-20"
+          ]
+        },
+        {
+          "t": "Quality function",
+          "d": [
+            "The conditional expectation must be given $U_t = u_t$ as well as $X_t = x_t$."
+          ],
+          "cards": [
+            "MDP-03-14"
+          ]
+        },
+        {
+          "t": "Proof steps",
+          "d": [
+            "Step a uses independence only; step b is the min–expectation interchange for a closed-loop tail."
+          ],
+          "cards": [
+            "MDP-03-18"
+          ]
+        },
+        {
+          "t": "KE count",
+          "d": [
+            "$2 + 9 \\cdot 2^4 = 146$ should be $2 + 9 \\cdot 8 = 74$."
+          ],
+          "cards": [
+            "MDP-03-10"
+          ]
+        },
+        {
+          "t": "Final-time cell",
+          "d": [
+            "No decision is taken at the final time, so no action should be marked there."
+          ],
+          "cards": [
+            "MDP-03-25"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MDP-03-01",
+      "g": "Control problem",
+      "k": "Why not optimize once",
+      "q": "A consumer uses a battery to shave the peak of an uncertain electricity demand over 24 hours, choosing charge, discharge or idle each hour. (1) Which two features separate this from an ordinary optimization problem? (2) What kind of object must therefore be optimized? (3) How does the dynamic programming algorithm make that tractable? (4) Place stochastic control between designing for an exactly known disturbance and designing for a merely bounded one.",
+      "pts": [
+        "(1) It is dynamic: a sequence of decisions drives a dynamical system, so decisions cannot be judged in isolation (a cost now may avoid a larger cost later). It is uncertain: the demand is revealed sequentially.",
+        "(2) A closed-loop policy: a sequence of functions $\\mu_t$ from the state to the action, instead of a fixed sequence of actions.",
+        "(3) It breaks the problem over $t = 0, \\dots, 23$ into 24 simpler problems solved backward in time; at each $t$ the best decisions from $t + 1$ on are already known.",
+        "(4) Exact model of the disturbance: a predictive, open-loop design works. Only bounds: design for the worst case (robust). A probability distribution: stochastic control, in between."
+      ],
+      "pit": "",
+      "src": "KE p1–5",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-02",
+      "g": "Control problem",
+      "k": "Controlled process",
+      "q": "(1) Write the controlled stochastic process and name its three ingredients. (2) Define the two cost functions and the control objective. (3) Give the order of events within a period and say why the disturbance carries the index $t + 1$. (4) What changes if the goal is a reward?",
+      "pts": [
+        "(1) $X_{t+1} = f(X_t, U_t, Z_{t+1})$, $X_0 = x_0$: state $X_t \\in \\mathbb{X}$, control $U_t \\in \\mathbb{U}$, disturbance $Z_{t+1}$ (i.i.d. on the slides).",
+        "(2) $g(x, u)$: cost of applying $u$ in state $x$; $G(x)$: cost of being in $x$ at time $T$. Minimize $$E\\Big[\\sum_{t=0}^{T-1} g(X_t, U_t) + G(X_T) \\,\\Big|\\, X_0 = x_0\\Big]$$",
+        "(3) Observe $X_t$, choose $U_t$, then $Z_{t+1}$ is revealed and the state moves to $X_{t+1}$. The index $t + 1$ records that the disturbance is seen only after $U_t$ is committed.",
+        "(4) $g$ and $G$ become rewards and every min becomes a max."
+      ],
+      "pit": "KE writes $W_{t+1}$ for the disturbance and $J_t$ for the value; the slides write $Z_{t+1}$ and $V_t$. The total cost is a random variable; its mean is what is optimized.",
+      "src": "S3 s.3, s.10 · KE p27–30",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-03",
+      "g": "Control problem",
+      "k": "MDP definition",
+      "q": "(1) Which property of the disturbance makes a controlled process a Markov decision process? (2) How is a finite one described by matrices? (3) What does the process become under a memoryless policy $U_t = \\mu_t(X_t)$? (4) Write the class of policies and the optimal cost-to-go that define the problem.",
+      "pts": [
+        "(1) $Z_{t+1}$ is conditionally independent of the past given $(X_t, U_t)$: the pair (state, action) is all that matters for the law of the next state.",
+        "(2) One transition matrix per action: $P_u(x, y) = P(X_{t+1} = y \\mid X_t = x, U_t = u)$.",
+        "(3) A Markov chain, $X_{t+1} = f(X_t, \\mu_t(X_t), Z_{t+1})$, with transition matrix $P_{\\mu_t}$ at time $t$.",
+        "(4) Policies $\\mu = (\\mu_0, \\dots, \\mu_{T-1})$ with $\\mu_t : \\mathbb{X} \\to \\mathbb{U}$; $V_0(x) = \\min_\\mu E\\big[\\sum_{t<T} g(X_t, \\mu_t(X_t)) + G(X_T) \\mid X_0 = x\\big]$."
+      ],
+      "pit": "",
+      "src": "S3 s.21 · KE p29–30",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-04",
+      "g": "Control problem",
+      "k": "Inventory control",
+      "q": "Inventory control: $X_t$ is the stock at the end of period $t$, $U_t$ the quantity ordered (delivered immediately) and $Z_{t+1}$ the next demand; state and action spaces are $\\mathbb{R}_+$. (1) Write the dynamics. (2) Write the $(S, s)$ rule as a policy $\\mu(x)$. (3) What is the controlled process under this policy, in terms of the previous topic? (4) Which convention differs between the two slide decks?",
+      "pts": [
+        "(1) $X_{t+1} = (X_t + U_t - Z_{t+1})^+$.",
+        "(2) $\\mu(x) = S - x$ if $x < s$ and $0$ otherwise.",
+        "(3) The $(S, s)$ inventory Markov chain: an uncontrolled chain is a controlled one with the policy frozen.",
+        "(4) This deck orders when $X_t < s$; the Markov-chain deck and KE order when $X_t \\le s$. The two chains differ when $X_t = s$ can occur."
+      ],
+      "pit": "The slide calls $U_t$ the “ordering level”; it is the order quantity, and $S$ is the order-up-to level.",
+      "src": "S3 s.6–7",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-05",
+      "g": "Control problem",
+      "k": "Machine: formulation",
+      "q": "A machine has the states repair, new, 1, 2, 3, 4, broken (in order of wear) and is used for $T = 10$ periods; each period the action is wait or fix. Wait: each of new, 1, 2, 3, 4 stays with probability $\\tfrac23$ and moves one state down with probability $\\tfrac13$ (4 goes to broken), at cost 0; broken stays broken at cost 10. Fix: costs $1, 2, 3, 4, 5, 6$ in new, 1, 2, 3, 4, broken and leads to repair. From repair the next state is new, at cost 0. Terminal cost: 6 if broken, 0 otherwise. (1) Give the planning horizon, state space and action space. (2) Give the rows of $P_{\\text{wait}}$ and of $P_{\\text{fix}}$. (3) Give the running cost table and the terminal cost. (4) In repair only one thing can happen, and a broken machine may not be left broken. How are these state-dependent restrictions handled while keeping the action space $\\{\\text{wait}, \\text{fix}\\}$?",
+      "pts": [
+        "(1) $T = 10$; $\\mathbb{X} = \\{\\text{repair}, \\text{new}, 1, 2, 3, 4, \\text{broken}\\}$; $\\mathbb{U} = \\{\\text{wait}, \\text{fix}\\}$.",
+        "(2) Wait: repair to new; each of new, 1, 2, 3, 4 stays with $\\tfrac23$ and moves one down with $\\tfrac13$; broken to broken. Fix: repair to new; every other state to repair.",
+        "(3) $g(\\cdot, \\text{wait}) = (0, 0, 0, 0, 0, 0, 10)$ and $g(\\cdot, \\text{fix}) = (0, 1, 2, 3, 4, 5, 6)$ along the list of states; $G = 6$ if broken, else 0.",
+        "(4) Two standard tricks: in repair the admissible action is copied under both labels; in broken, wait is kept but given a very large cost (10) so that it is never optimal."
+      ],
+      "pit": "The slides ask about a machine that is initially new; KE asks about initial state 1. The same table answers both.",
+      "src": "S3 s.46–51 · KE p30–32",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-06",
+      "g": "Open vs closed loop",
+      "k": "Three policy classes",
+      "q": "(1) Define open-loop actions. (2) Define a closed-loop policy and causality. (3) Define a memoryless policy. (4) Order the optimal costs of the three classes and give the reason.",
+      "pts": [
+        "(1) Fixed values $u_0, \\dots, u_{T-1}$, all determined at time 0.",
+        "(2) Functions decided “just in time”: $U_t = \\mu_t(X_t, X_{t-1}, \\dots, X_0)$. Causal (non-anticipative): the action may depend on present and past states, not on future ones.",
+        "(3) $U_t = \\mu_t(X_t)$: only the current state is used.",
+        "(4) history-dependent $\\le$ memoryless $\\le$ open-loop. The classes are nested: an open-loop sequence is a memoryless policy that ignores the state, and a memoryless policy is a history-dependent one that ignores the past; minimizing over a larger set cannot give more."
+      ],
+      "pit": "",
+      "src": "S3 s.12–17 · KE p28",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-07",
+      "g": "Open vs closed loop",
+      "k": "No noise: equal",
+      "q": "(1) Prove that without disturbances, $X_{t+1} = f(X_t, U_t)$, the optimal open-loop and closed-loop costs coincide. (2) With disturbances, what is the difference between the two optimal costs called? (3) How do the two approaches compare computationally?",
+      "pts": [
+        "(1) From the known $x_0$ any policy generates one deterministic trajectory and hence one action sequence $u_t = \\mu_t(x_t, \\dots, x_0)$. Applying that sequence open-loop reproduces the same cost, so open-loop is at least as good as every policy; the reverse inequality always holds.",
+        "(2) The value of information: what it is worth to see the state before deciding. It grows with the amount of randomness.",
+        "(3) Open-loop is easier (search over sequences); closed-loop is far more demanding (search over functions) and is what dynamic programming solves."
+      ],
+      "pit": "",
+      "src": "S3 s.17, s.44",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-08",
+      "g": "Open vs closed loop",
+      "k": "Value of information",
+      "q": "A fair coin $X \\in \\{0, 1\\}$ is tossed and a guess $u \\in \\{0, 1\\}$ costs 1 if $u \\ne X$ and 0 otherwise. (1) What is the best expected cost if $u$ is fixed before the toss? (2) If $u$ may depend on $X$? (3) State the general relation between $\\min_u E$ and $E \\min_u$ that this illustrates. (4) State the lemma that says when the two are equal.",
+      "pts": [
+        "(1) $\\tfrac12$ for either guess.",
+        "(2) $0$, with $\\mu(x) = x$.",
+        "(3) $E[\\min_u F(X, u)] \\le \\min_u E[F(X, u)]$: choosing after seeing $X$ is never worse. The gap $\\tfrac12$ is the value of information.",
+        "(4) Minimizing over functions decouples: $\\min_{\\mu}\\sum_x p(x)F(x, \\mu(x)) = \\sum_x p(x)\\min_u F(x, u)$, because $\\mu(x)$ can be chosen separately for each $x$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-09",
+      "g": "Open vs closed loop",
+      "k": "Memoryless suffices",
+      "q": "(1) State the theorem on memoryless policies with the two assumptions it needs. (2) Give the intuition. (3) Let $Z_1, Z_2$ be independent fair $\\pm 1$ signs and $Z_3 = Z_1$; $X_1 = Z_1$, $X_2 = Z_2$, and the only cost is 1 if $U_2 \\ne Z_3$. Compare the best memoryless rule $U_2 = \\mu_2(X_2)$ with the best history-dependent rule. (4) How is such a problem repaired?",
+      "pts": [
+        "(1) If the noise is Markov (given $(X_t, U_t)$ the next state does not depend on earlier history) and the minima are attained, there is an optimal policy of the form $U_t = \\mu_t(X_t)$.",
+        "(2) The future evolution and the future costs depend on the past only through the current state, so the best action can only depend on it.",
+        "(3) $X_2 = Z_2$ is independent of $Z_3$, so a memoryless rule costs $\\tfrac12$; the rule $U_2 = X_1$ costs 0.",
+        "(4) State augmentation: with the state $(X_t, X_{t-1})$ the noise is Markov again."
+      ],
+      "pit": "The slide states “the optimal control policy is memoryless” without hypotheses; read it as “there exists an optimal policy that is memoryless”.",
+      "src": "S3 s.21 · KE p29",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-10",
+      "g": "Open vs closed loop",
+      "k": "Counting policies",
+      "q": "A finite problem with $n$ states, $m$ actions, horizon $T$ and a given initial state. (1) How many open-loop sequences are there? (2) How many memoryless policies? (3) How many (state, action) evaluations does dynamic programming need? (4) Evaluate all three for $n = 4$, $m = 2$, $T = 10$.",
+      "pts": [
+        "(1) $m^T$.",
+        "(2) $m^{1 + (T-1)n}$: one action at $t = 0$, then a function from states to actions at each of the $T - 1$ later stages.",
+        "(3) $m + (T - 1)mn$: linear in $T$, because each stage is optimized state by state.",
+        "(4) $2^{10} = 1024$; $2^{37} \\approx 1.4 \\times 10^{11}$; $2 + 9 \\cdot 8 = 74$."
+      ],
+      "pit": "KE prints $2 + 9 \\cdot 2^4 = 146$ for the last number; that is $m + (T-1)m^n$ and contradicts its own formula.",
+      "src": "KE p29, p39",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-11",
+      "g": "Open vs closed loop",
+      "k": "Open loop: projects",
+      "q": "Each period one of two projects is chosen. Project 1 always pays 1 and changes nothing. Project 2 has a state $a$ or $b$ that moves only when it is chosen: in $a$ it pays 2 and the state becomes $b$ with probability $\\tfrac12$; in $b$ it pays 0 and the state returns to $a$ surely. The expected total reward over three periods $t = 1, 2, 3$ is maximized, with $V_4 \\equiv 0$. The initial state of project 2 is $a$. (1) Which fixed sequence of choices is the best open-loop plan, and what does it earn? (2) The optimal closed-loop value is $\\tfrac{19}{4}$. What is the value of information? (3) Where does the closed-loop policy use the state?",
+      "pts": [
+        "(1) Always project 2. It is in state $a$ with probability $1, \\tfrac12, \\tfrac34$ in the three periods, so the expected rewards are $2 + 1 + 1.5 = 4.5$; none of the other 7 sequences does better.",
+        "(2) $\\tfrac{19}{4} - \\tfrac92 = \\tfrac14$.",
+        "(3) In the last period it takes project 1 when project 2 is in state $b$ (reward 1 instead of 0); a fixed plan cannot react to that."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "HW1 P4"
+      ]
+    },
+    {
+      "id": "MDP-03-12",
+      "g": "Open vs closed loop",
+      "k": "Open loop, machine",
+      "q": "A machine has the states repair, new, 1, 2, 3, 4, broken (in order of wear) and is used for $T = 10$ periods; each period the action is wait or fix. Wait: each of new, 1, 2, 3, 4 stays with probability $\\tfrac23$ and moves one state down with probability $\\tfrac13$ (4 goes to broken), at cost 0; broken stays broken at cost 10. Fix: costs $1, 2, 3, 4, 5, 6$ in new, 1, 2, 3, 4, broken and leads to repair. From repair the next state is new, at cost 0. Terminal cost: 6 if broken, 0 otherwise. (1) Why is an open-loop instruction such as “wait at $t = 4$” wrong, if the machine starts in state 1? (2) Why is “fix at $t = 4$” also unsatisfactory? (3) From a new machine the best of the $2^{10}$ open-loop sequences costs $\\tfrac{49}{27} \\approx 1.815$ and the optimal policy costs $1.259$. What is the difference?",
+      "pts": [
+        "(1) With probability $(\\tfrac13)^4 = \\tfrac{1}{81}$ the machine is broken at $t = 4$, and waiting then costs 10.",
+        "(2) With positive probability the machine is still in state 1, where a fix is wasted.",
+        "(3) About $0.556$: the value of observing the state before each decision."
+      ],
+      "pit": "",
+      "src": "KE p31",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-13",
+      "g": "DP algorithm",
+      "k": "Tail problem",
+      "q": "(1) Define the tail subproblem $(P_t)$ and the value function $V_t$. (2) State the principle of optimality. (3) Which qualifier does the precise statement need? (4) How is the principle used to solve the problem?",
+      "pts": [
+        "(1) $V_t(x_t) = \\min_{\\mu_{t:T-1}} E\\big[\\sum_{k=t}^{T-1} g(X_k, \\mu_k(X_k)) + G(X_T) \\mid X_t = x_t\\big]$: the cost-to-go from state $x_t$ at time $t$. $(P_0)$ is the original problem and $V_T = G$.",
+        "(2) If $\\mu^\\star = (\\mu_0^\\star, \\dots, \\mu_{T-1}^\\star)$ is optimal in $(P_0)$, then the tail policy $(\\mu_t^\\star, \\dots, \\mu_{T-1}^\\star)$ is optimal in $(P_t)$.",
+        "(3) Only at states that occur at time $t$ with positive probability under $\\mu^\\star$.",
+        "(4) In reverse: if the best decisions from $t + 1$ on are known, only the current decision remains. So solve $(P_{T-1}), (P_{T-2}), \\dots, (P_0)$ by backward induction."
+      ],
+      "pit": "",
+      "src": "S3 s.24 · KE p32–34",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-14",
+      "g": "DP algorithm",
+      "k": "The algorithm",
+      "q": "(1) Write the initialization of the dynamic programming algorithm. (2) Write the quality function $Q_t$, in expectation form and with transition matrices. (3) Write $V_t$ and the policy. (4) Describe the tabular picture and the work per stage for $n$ states, $m$ actions and at most $p$ next states.",
+      "pts": [
+        "(1) $V_T(x) = G(x)$ for all $x$.",
+        "(2) For $t = T - 1, \\dots, 0$: $$\\begin{aligned}Q_t(x, u) &= g(x, u) + E\\big[V_{t+1}(f(x, u, Z_{t+1}))\\big]\\\\ &= g(x, u) + \\sum_y P_u(x, y)V_{t+1}(y)\\end{aligned}$$",
+        "(3) $V_t(x) = \\min_{u} Q_t(x, u)$ and $\\hat\\mu_t(x) \\in \\arg\\min_u Q_t(x, u)$.",
+        "(4) $V_{t+1}$ is a vector of length $n$; $Q_t$ an $n \\times m$ table; $V_t$ its row-wise minimum and $\\hat\\mu_t$ the column where it is attained. One stage costs $O(nmp)$ operations."
+      ],
+      "pit": "On the slide the expectation is conditioned on $X_t = x_t$ only; it must also be given $U_t = u_t$. The argmin can be a set (ties); any selection is optimal.",
+      "src": "S3 s.29–31 · KE p34, p39",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-15",
+      "g": "DP algorithm",
+      "k": "g, G, Q, V",
+      "q": "(1) What is the difference between $g(x, u)$ and $Q_t(x, u)$? (2) Between $G(x)$ and $V_t(x)$? (3) For the machine problem with $V_{10} = (0, 0, 0, 0, 0, 0, 6)$ in the order repair, new, 1, 2, 3, 4, broken, compute $Q_9(4, \\cdot)$ and $Q_9(\\text{broken}, \\cdot)$, where fix costs 5 and 6 and leads to repair, waiting in 4 leads to broken with probability $\\tfrac13$, and waiting when broken costs 10. (4) Read off $V_9$ and the actions in these two states.",
+      "pts": [
+        "(1) $g$ counts this period only. $Q_t(x, u)$ is this period's cost for $u$ (not necessarily optimal) plus the optimal expected cost afterwards.",
+        "(2) $G$ is the cost at the final time. $V_t(x)$ is the optimal expected cost from time $t$ on; $V_T = G$.",
+        "(3) $Q_9(4, \\text{fix}) = 5 + 0 = 5$, $Q_9(4, \\text{wait}) = \\tfrac23 \\cdot 0 + \\tfrac13 \\cdot 6 = 2$; $Q_9(\\text{broken}, \\text{fix}) = 6$, $Q_9(\\text{broken}, \\text{wait}) = 10 + 6 = 16$.",
+        "(4) $V_9(4) = 2$, wait; $V_9(\\text{broken}) = 6$, fix."
+      ],
+      "pit": "",
+      "src": "S3 s.29, s.53",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-16",
+      "g": "DP algorithm",
+      "k": "What DP delivers",
+      "q": "(1) State the optimality theorem for the dynamic programming algorithm. (2) What else does the algorithm compute besides the answer for the given $x_0$, and what is the price? (3) How is the computed policy used? (4) Is the realized cost of one run equal to $V_0(x_0)$?",
+      "pts": [
+        "(1) $\\hat\\mu = (\\hat\\mu_0, \\dots, \\hat\\mu_{T-1})$ is an optimal policy for $(P_0)$, and $V_t(x_t)$ is the optimal value of $(P_t)$ for every $t$ and $x_t$.",
+        "(2) It solves all tail subproblems, for every state and time, reachable or not. That can be computationally expensive.",
+        "(3) Forward in time: observe $X_t$, apply $\\hat\\mu_t(X_t)$, let the disturbance move the state, repeat.",
+        "(4) No. $V_0(x_0)$ is an expected value; individual runs differ, and only their average is close to it."
+      ],
+      "pit": "",
+      "src": "S3 s.33 · KE p34, p37",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-17",
+      "g": "DP algorithm",
+      "k": "Proof: split stage t",
+      "q": "Proof that the algorithm's $V_t$ is the optimal value of $(P_t)$, by induction backward in $t$; expectations are conditional on $X_t = x_t$. (1) Give the base step. (2) State the induction hypothesis. (3) Write the first rewriting of $V_t(x_t)$, which separates stage $t$ from the tail, and justify it.",
+      "pts": [
+        "(1) $V_T(x_T) = G(x_T)$ by construction: there is no decision left.",
+        "(2) $V_{t+1}(x_{t+1})$ is the optimal value of $(P_{t+1})$ for all $x_{t+1}$.",
+        "(3) With the tail cost $C_{t+1} = \\sum_{k=t+1}^{T-1} g(X_k, \\mu_k(X_k)) + G(X_T)$: $$V_t(x_t) = \\min_{u_t}\\Big\\{g(x_t, u_t) + \\min_{\\mu_{t+1:T-1}} E\\big[C_{t+1}\\big]\\Big\\}$$ Given $X_t = x_t$ the stage cost $g(x_t, u_t)$ is not random and leaves the expectation; the minimization over $(\\mu_t, \\mu_{t+1:T-1})$ is done in two stages, with $u_t = \\mu_t(x_t)$."
+      ],
+      "pit": "",
+      "src": "S4 s.12",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-18",
+      "g": "DP algorithm",
+      "k": "Proof: four steps",
+      "q": "In the proof of the algorithm, the tail term $\\min_{\\mu_{t+1:T-1}} E[\\text{tail cost}]$ is turned into $E[V_{t+1}(f(x_t, u_t, Z_{t+1}))]$ in four equalities. Give each step and what it uses. (1) Step a. (2) Step b. (3) Step c. (4) Step d.",
+      "pts": [
+        "(1) Write $E = E_{Z_{t+1}}E_{Z_{t+2}, \\dots, Z_T}$: the tower property together with the independence of $Z_{t+1}$ from the later disturbances.",
+        "(2) Exchange the minimization over the tail policy with $E_{Z_{t+1}}$. The tail policy is closed-loop: it sees $X_{t+1}$, so it can be optimized separately for each value of $X_{t+1}$.",
+        "(3) The inner minimum is $V_{t+1}(X_{t+1})$: the induction hypothesis, applied at each realized $X_{t+1}$.",
+        "(4) $X_{t+1} = f(x_t, u_t, Z_{t+1})$: the dynamics; the law of $X_{t+1}$ depends only on $(x_t, u_t)$ and the new disturbance (Markov property)."
+      ],
+      "pit": "The slide cites “$Z_t, \\dots, Z_T$ i.i.d.” for step a; only independence is used and the index should start at $t + 1$. It calls step b the principle of optimality; the working reason is the closed-loop tail.",
+      "src": "S4 s.14",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-19",
+      "g": "DP algorithm",
+      "k": "Proof: policy attains",
+      "q": "After the recursion $V_t(x_t) = \\min_{u_t}\\{g(x_t, u_t) + E\\,V_{t+1}(f(x_t, u_t, Z_{t+1}))\\}$ is established, it remains to show that $\\hat\\mu$ is optimal in $(P_0)$. (1) Write the first unrolling step of $V_0(x_0)$. (2) What does repeating it give? (3) Which facts are used?",
+      "pts": [
+        "(1) $V_0(x_0) = g(x_0, \\hat\\mu_0(x_0)) + E_{Z_1}\\big[V_1(f(x_0, \\hat\\mu_0(x_0), Z_1))\\big]$, by the definition of $\\hat\\mu_0$ as the minimizer.",
+        "(2) Substituting $V_1$, then $V_2$, and so on: $V_0(x_0) = E\\big[\\sum_{t=0}^{T-1} g(X_t, \\hat\\mu_t(X_t)) + G(X_T)\\big]$. The cost of running $\\hat\\mu$ equals the optimal value.",
+        "(3) The definitions of $\\hat\\mu_0, \\dots, \\hat\\mu_{T-1}$ at each layer, and the independence of the disturbances to merge the nested expectations into one."
+      ],
+      "pit": "The whole proof uses two things: independent disturbances, and the fact that a closed-loop tail can react to the state.",
+      "src": "S4 s.18",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-20",
+      "g": "DP algorithm",
+      "k": "Unreached states",
+      "q": "Two states $0$ and $1$, both absorbing; actions $u \\in \\{0, 1\\}$; $T = 2$; $g(0, u) = 0$, $g(1, u) = u$, $G \\equiv 0$; the initial state is $0$. Consider the policy $\\mu_0 \\equiv 0$, $\\mu_1(0) = 0$, $\\mu_1(1) = 1$. (1) Is it optimal for the original problem? (2) Is its tail optimal for the tail problem started in state 1 at $t = 1$? (3) What does this say about the principle of optimality? (4) Why is dynamic programming not affected?",
+      "pts": [
+        "(1) Yes: its cost is 0, because state 1 is never visited.",
+        "(2) No: it pays 1 there, while $u = 0$ pays 0.",
+        "(3) Optimality of the whole policy says nothing about states that are reached with probability 0; the principle needs that qualifier.",
+        "(4) It minimizes at every state, reachable or not; this is exactly why it solves all tail problems."
+      ],
+      "pit": "",
+      "src": "S3 s.24",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-21",
+      "g": "Shortest path",
+      "k": "Project scheduling",
+      "q": "Tasks $A, B, C, D$ must all be done, $A$ before $B$ and $C$ before $D$. Start-up costs $S_A = 5$, $S_C = 3$; set-up costs $C_{AB} = 2$, $C_{AC} = 3$, $C_{AD} = 4$, $C_{BC} = 3$, $C_{BD} = 1$, $C_{CA} = 4$, $C_{CB} = 4$, $C_{CD} = 6$, $C_{DA} = 3$, $C_{DB} = 3$. A valid order such as $ACDB$ costs $S_A + C_{AC} + C_{CD} + C_{DB}$. (1) Cast the problem as a controlled process: time, state, action, transition, cost. (2) List the valid orders and their costs. (3) What is the optimal open-loop cost?",
+      "pts": [
+        "(1) Time $t$ = number of tasks done ($0$ to $4$); state = the ordered list of tasks done, e.g. $CA$; action = the next admissible task; transition = append it; cost = the start-up cost at the first step and the set-up cost $C_{ij}$ afterwards; no disturbance and $G = 0$.",
+        "(2) $ABCD$: 16, $ACBD$: 13, $ACDB$: 17, $CABD$: 10, $CADB$: 14, $CDAB$: 14.",
+        "(3) $10$, for $CABD$: $3 + 4 + 2 + 1$."
+      ],
+      "pit": "",
+      "src": "S3 s.36–41",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-22",
+      "g": "Shortest path",
+      "k": "Backward labelling",
+      "q": "Tasks $A, B, C, D$ must all be done, $A$ before $B$ and $C$ before $D$. Start-up costs $S_A = 5$, $S_C = 3$; set-up costs $C_{AB} = 2$, $C_{AC} = 3$, $C_{AD} = 4$, $C_{BC} = 3$, $C_{BD} = 1$, $C_{CA} = 4$, $C_{CB} = 4$, $C_{CD} = 6$, $C_{DA} = 3$, $C_{DB} = 3$. Solve by dynamic programming on the staged graph, where $V_t(x)$ is the cheapest cost of finishing from state $x$. (1) Give $V_3$ for the six states with three tasks done. (2) Give $V_2$ for $AB$, $AC$, $CA$, $CD$. (3) Give $V_1(A)$, $V_1(C)$ and $V_0$. (4) Read off the optimal order.",
+      "pts": [
+        "(1) $V_3$: $ABC$ 6, $ACB$ 1, $ACD$ 3, $CAB$ 1, $CAD$ 3, $CDA$ 2 (the cost of the single remaining task).",
+        "(2) $V_2(AB) = 3 + 6 = 9$; $V_2(AC) = \\min\\{4 + 1,\\ 6 + 3\\} = 5$; $V_2(CA) = \\min\\{2 + 1,\\ 4 + 3\\} = 3$; $V_2(CD) = 3 + 2 = 5$.",
+        "(3) $V_1(A) = \\min\\{2 + 9,\\ 3 + 5\\} = 8$; $V_1(C) = \\min\\{4 + 3,\\ 6 + 5\\} = 7$; $V_0 = \\min\\{5 + 8,\\ 3 + 7\\} = 10$.",
+        "(4) Follow the minimizers forward: $C$, then $A$, then $B$, then $D$: $CABD$ with cost $3 + 4 + 2 + 1 = 10$."
+      ],
+      "pit": "Without noise the expectation in a step is just the value of the next state.",
+      "src": "S3 s.42–43",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-23",
+      "g": "Shortest path",
+      "k": "Why 10 = 10",
+      "q": "In the project-scheduling example the optimal open-loop cost and the optimal closed-loop cost are both 10. (1) Why are they equal? (2) What does the backward pass reuse that enumeration does not? (3) How do the two methods scale with the number $k$ of tasks?",
+      "pts": [
+        "(1) The problem is deterministic: no information arrives along the way, so a policy and its generated sequence are the same thing.",
+        "(2) Shared tails: the value of a state such as $CA$ is computed once and used by every route through it.",
+        "(3) Enumeration grows like $k!$; dynamic programming like the number of reachable states, of order $2^k$."
+      ],
+      "pit": "",
+      "src": "S3 s.44",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-24",
+      "g": "Machine replacement",
+      "k": "Stages 9, 8, 7",
+      "q": "A machine has the states repair, new, 1, 2, 3, 4, broken (in order of wear) and is used for $T = 10$ periods; each period the action is wait or fix. Wait: each of new, 1, 2, 3, 4 stays with probability $\\tfrac23$ and moves one state down with probability $\\tfrac13$ (4 goes to broken), at cost 0; broken stays broken at cost 10. Fix: costs $1, 2, 3, 4, 5, 6$ in new, 1, 2, 3, 4, broken and leads to repair. From repair the next state is new, at cost 0. Terminal cost: 6 if broken, 0 otherwise. Values are listed in the order repair, new, 1, 2, 3, 4, broken. (1) Write the two candidates for $V_t(x)$ in a working state $x$, and for broken. (2) Compute $V_9$. (3) Compute $V_8(3)$ and $V_8(4)$. (4) Compute $V_7(2)$ and the action.",
+      "pts": [
+        "(1) Fix: $g(x, \\text{fix}) + V_{t+1}(\\text{repair})$. Wait: $\\tfrac23 V_{t+1}(x) + \\tfrac13 V_{t+1}(x + 1)$, where $x + 1$ is one state worse. Broken: $\\min\\{6 + V_{t+1}(\\text{repair}),\\ 10 + V_{t+1}(\\text{broken})\\}$.",
+        "(2) $V_9 = (0, 0, 0, 0, 0, 2, 6)$: in 4, wait gives $\\tfrac13 \\cdot 6 = 2 < 5$; in broken, fix gives $6 < 16$.",
+        "(3) $V_8(3) = \\tfrac23 \\cdot 0 + \\tfrac13 \\cdot 2 = \\tfrac23$ (fix: 4); $V_8(4) = \\tfrac23 \\cdot 2 + \\tfrac13 \\cdot 6 = \\tfrac{10}{3}$ (fix: 5). Wait in both.",
+        "(4) Wait: $\\tfrac23 V_8(2) + \\tfrac13 V_8(3) = \\tfrac13 \\cdot \\tfrac23 = \\tfrac29 \\approx 0.22$; fix: 3. Wait."
+      ],
+      "pit": "Always write both candidates in every cell; the pattern of minimizers is the policy.",
+      "src": "S3 s.52–54 · KE p36",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-25",
+      "g": "Machine replacement",
+      "k": "Reading the table",
+      "q": "A machine has the states repair, new, 1, 2, 3, 4, broken (in order of wear) and is used for $T = 10$ periods; each period the action is wait or fix. Wait: each of new, 1, 2, 3, 4 stays with probability $\\tfrac23$ and moves one state down with probability $\\tfrac13$ (4 goes to broken), at cost 0; broken stays broken at cost 10. Fix: costs $1, 2, 3, 4, 5, 6$ in new, 1, 2, 3, 4, broken and leads to repair. From repair the next state is new, at cost 0. Terminal cost: 6 if broken, 0 otherwise. The completed table gives $V_0(\\text{new}) = 1.26$ and $V_0(1) = 2.45$. (1) Describe the optimal policy. (2) When does state 4 first choose fix (counting backward), and with which numbers? (3) What is its shape called, and what drives it? (4) Why can the answer not be reported as a single sequence of actions?",
+      "pts": [
+        "(1) Fix when broken at every $t \\le 9$; fix in state 4 for $t \\le 5$; in state 3 for $t \\le 3$; in state 2 for $t \\le 1$; otherwise wait.",
+        "(2) At $t = 5$: fix costs $5 + V_6(\\text{repair}) = 5$ and wait costs $\\tfrac23 V_6(4) + \\tfrac13 \\cdot 6 = \\tfrac{422}{81} \\approx 5.21$.",
+        "(3) A threshold (control-limit) policy in both the state and the time: the worse the machine and the longer the remaining horizon, the more a fix pays.",
+        "(4) Whether the machine deteriorates is revealed only as time passes; the answer is a rule for every time and state, i.e. a closed-loop policy."
+      ],
+      "pit": "On the slide the cell for broken at $t = 10$ is bold, but no decision is taken at the final time. The exact values are $\\tfrac{8260}{6561}$ and $\\tfrac{5365}{2187}$.",
+      "src": "S3 s.55 · KE p37",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-26",
+      "g": "Machine replacement",
+      "k": "Sub-optimal policy",
+      "q": "A machine has the states repair, new, 1, 2, 3, 4, broken (in order of wear) and is used for $T = 10$ periods; each period the action is wait or fix. Wait: each of new, 1, 2, 3, 4 stays with probability $\\tfrac23$ and moves one state down with probability $\\tfrac13$ (4 goes to broken), at cost 0; broken stays broken at cost 10. Fix: costs $1, 2, 3, 4, 5, 6$ in new, 1, 2, 3, 4, broken and leads to repair. From repair the next state is new, at cost 0. Terminal cost: 6 if broken, 0 otherwise. From initial state 1 the optimal policy costs $2.453$ in expectation. A second policy waits in states 2 and 3 and otherwise follows the optimal one; its exact expected cost is $2.566$. Both are simulated $N$ times. (1) What is the true gap? (2) With $N = 10$ the sample means were $3.10$ and $3.80$; with $N = 1000$, $2.573 \\pm 0.074$ and $2.461 \\pm 0.088$. What went wrong? (3) Roughly how many runs resolve the gap, given a per-run standard deviation of about 2.3? (4) Name two better ways to compare the policies.",
+      "pts": [
+        "(1) $0.112$.",
+        "(2) The standard errors (about 0.08) are as large as the gap, so the sample ranking can reverse, as it did.",
+        "(3) The standard error of a difference of independent means is $\\sigma\\sqrt{2/N}$; for $3$ standard errors to equal $0.112$ one needs $N \\approx (3 \\cdot 2.3 \\cdot \\sqrt2 / 0.112)^2 \\approx 8000$.",
+        "(4) Use the same disturbance sequence for both policies (common random numbers), or evaluate each policy exactly by propagating the state distribution forward."
+      ],
+      "pit": "",
+      "src": "KE p41",
+      "seen": [
+        "Ex 3.1"
+      ]
+    },
+    {
+      "id": "MDP-03-27",
+      "g": "Two projects",
+      "k": "Formulation",
+      "q": "Each period one of two projects is chosen. Project 1 always pays 1 and changes nothing. Project 2 has a state $a$ or $b$ that moves only when it is chosen: in $a$ it pays 2 and the state becomes $b$ with probability $\\tfrac12$; in $b$ it pays 0 and the state returns to $a$ surely. The expected total reward over three periods $t = 1, 2, 3$ is maximized, with $V_4 \\equiv 0$. (1) What is the state, and why? (2) Write the rewards and transitions of both actions. (3) Write the recursion for $V_t(a)$ and $V_t(b)$.",
+      "pts": [
+        "(1) The state of project 2. It evolves only when project 2 is selected, so choosing project 1 freezes it; project 1 itself has nothing to remember.",
+        "(2) Project 1: reward 1, state unchanged. Project 2: in $a$ reward 2 and next state $a$ or $b$ with probability $\\tfrac12$ each; in $b$ reward 0 and next state $a$.",
+        "(3) $V_t(a) = \\max\\{1 + V_{t+1}(a),\\ 2 + \\tfrac12 V_{t+1}(a) + \\tfrac12 V_{t+1}(b)\\}$ and $V_t(b) = \\max\\{1 + V_{t+1}(b),\\ 0 + V_{t+1}(a)\\}$."
+      ],
+      "pit": "This is a maximization, and the periods are indexed $t = 1, 2, 3$ with $V_4 \\equiv 0$ rather than $t = 0, \\dots, T-1$ with $V_T = G$. The original statement calls the two states $u$ and $v$; they are $a$ and $b$ here because $u$ denotes an action.",
+      "src": "",
+      "seen": [
+        "HW1 P4"
+      ]
+    },
+    {
+      "id": "MDP-03-28",
+      "g": "Two projects",
+      "k": "Backward table",
+      "q": "Each period one of two projects is chosen. Project 1 always pays 1 and changes nothing. Project 2 has a state $a$ or $b$ that moves only when it is chosen: in $a$ it pays 2 and the state becomes $b$ with probability $\\tfrac12$; in $b$ it pays 0 and the state returns to $a$ surely. The expected total reward over three periods $t = 1, 2, 3$ is maximized, with $V_4 \\equiv 0$. (1) Compute $V_3$. (2) Compute $V_2$. (3) Compute $V_1$. (4) State an optimal policy and what is special about it.",
+      "pts": [
+        "(1) $V_3(a) = \\max\\{1, 2\\} = 2$ (project 2); $V_3(b) = \\max\\{1, 0\\} = 1$ (project 1).",
+        "(2) $V_2(a) = \\max\\{1 + 2,\\ 2 + \\tfrac12 \\cdot 2 + \\tfrac12 \\cdot 1\\} = \\tfrac72$ (project 2); $V_2(b) = \\max\\{1 + 1,\\ 0 + 2\\} = 2$ (tie).",
+        "(3) $V_1(a) = \\max\\{1 + \\tfrac72,\\ 2 + \\tfrac12 \\cdot \\tfrac72 + \\tfrac12 \\cdot 2\\} = \\tfrac{19}{4}$ (project 2); $V_1(b) = \\max\\{1 + 2,\\ 0 + \\tfrac72\\} = \\tfrac72$ (project 2).",
+        "(4) In $a$ always project 2. In $b$: project 2 at $t = 1$, either at $t = 2$, project 1 at $t = 3$. At $t = 1$ in $b$ it accepts a reward of 0 to reset project 2: the myopic rule (project 1 in $b$) earns only 3 from $b$."
+      ],
+      "pit": "Report the tie and give the value for both initial states when none is specified.",
+      "src": "",
+      "seen": [
+        "HW1 P4"
+      ]
+    },
+    {
+      "id": "MDP-03-29",
+      "g": "Structure of V",
+      "k": "Replacement equation",
+      "q": "A machine is in a state $i \\in \\{1, \\dots, N\\}$ (1 is new, $N$ failed) at the start of each period $t = 1, \\dots, T$. Decision 0 keeps it; decision 1 replaces it at cost $C_r$, immediately, so that it is in state 1. The machine is then operated at cost $c(i)$, increasing in $i$, and moves from $i$ to $j$ with probability $p_{ij}$; the discount factor is $\\gamma$ and $V_{T+1} \\equiv 0$. (1) Write the optimality equation. (2) Which branch does not depend on $i$, and why? (3) When is replacing optimal?",
+      "pts": [
+        "(1) $$\\begin{aligned}V_t(i) = \\min\\Big\\{&c(i) + \\gamma\\sum_j p_{ij}V_{t+1}(j),\\\\ &C_r + c(1) + \\gamma\\sum_j p_{1j}V_{t+1}(j)\\Big\\}\\end{aligned}$$",
+        "(2) The replace branch $K_t = C_r + c(1) + \\gamma\\sum_j p_{1j}V_{t+1}(j)$: after replacement the machine is new whatever it was before, and $C_r$ does not depend on $i$.",
+        "(3) When the keep value $c(i) + \\gamma\\sum_j p_{ij}V_{t+1}(j)$ exceeds $K_t$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "HW1 P5"
+      ]
+    },
+    {
+      "id": "MDP-03-30",
+      "g": "Structure of V",
+      "k": "Order-preserving",
+      "q": "In the replacement problem assume that $\\sum_{j \\ge k} p_{ij}$ is increasing in $i$ for every $k$. (1) Interpret the assumption. (2) State the lemma it yields for an increasing function $v$ on $\\{1, \\dots, N\\}$. (3) Prove the lemma.",
+      "pts": [
+        "(1) From a worse state the machine is at least as likely to be in any given bad range $\\{k, \\dots, N\\}$ next period: deterioration does not reverse, a worse machine never overtakes a better one.",
+        "(2) $i \\mapsto \\sum_j p_{ij}v(j)$ is increasing: the expectation of an increasing function after one transition is still increasing in the starting state.",
+        "(3) Summation by parts: $$\\sum_{j=1}^N p_{ij}v(j) = v(1) + \\sum_{k=2}^N \\big[v(k) - v(k-1)\\big]\\sum_{j \\ge k} p_{ij}$$ Each bracket is $\\ge 0$ and each tail sum is increasing in $i$."
+      ],
+      "pit": "The assumption says nothing about the operating cost; that $c$ is increasing is a separate assumption.",
+      "src": "",
+      "seen": [
+        "HW1 P5"
+      ]
+    },
+    {
+      "id": "MDP-03-31",
+      "g": "Structure of V",
+      "k": "V increasing in state",
+      "q": "Replacement problem with keep value $c(i) + \\gamma\\sum_j p_{ij}V_{t+1}(j)$ and replace value $K_t$ independent of $i$; $c$ is increasing and $\\sum_{j \\ge k} p_{ij}$ is increasing in $i$. Prove that $V_t(i)$ is increasing in $i$ for all $t$. (1) Base step. (2) Induction step. (3) Why is “$c$ is increasing” alone not enough?",
+      "pts": [
+        "(1) $V_{T+1} \\equiv 0$ is (weakly) increasing.",
+        "(2) If $V_{t+1}$ is increasing, the order-preserving lemma makes $\\sum_j p_{ij}V_{t+1}(j)$ increasing in $i$; adding the increasing $c(i)$ keeps the keep value increasing; $K_t$ is constant; the minimum of an increasing function and a constant is increasing.",
+        "(3) Without the assumption on the transitions the expectation term can decrease in $i$. Example: three states with $1 \\to 1$, $2 \\to 3$, $3 \\to 1$, $c = (0, 1, 1.2)$, $C_r = 1.5$, $\\gamma = 1$, $T = 2$ gives $V_1 = (0, 1.5, 1.2)$."
+      ],
+      "pit": "“Increasing” is meant weakly; that is what the proof uses.",
+      "src": "",
+      "seen": [
+        "HW1 P5"
+      ]
+    },
+    {
+      "id": "MDP-03-32",
+      "g": "Structure of V",
+      "k": "Control-limit policy",
+      "q": "Replacement problem: at time $t$ the keep value is increasing in the state $i$ and the replace value $K_t$ is constant. (1) Define the critical number $a_t$. (2) Show that “replace iff $i > a_t$” is optimal. (3) Why is $a_t \\ge 1$? (4) In the three-state example with $1 \\to 1$, $2 \\to 3$, $3 \\to 1$, $c = (0, 1, 1.2)$, $C_r = 1.5$, $\\gamma = 1$, $T = 2$, what does the first stage look like?",
+      "pts": [
+        "(1) $a_t = \\max\\{i : \\text{keep}_t(i) \\le K_t\\}$.",
+        "(2) By monotonicity keep is at most $K_t$ for all $i \\le a_t$ and exceeds it for all $i > a_t$, so the rule picks a minimizing action in every state, which is optimal.",
+        "(3) $\\text{keep}_t(1) = K_t - C_r \\le K_t$: a new machine is never replaced.",
+        "(4) Keep values $(0,\\ 2.2,\\ 1.2)$ against $K_1 = 1.5$: replace in state 2 but keep in state 3. No critical number exists once the assumption on the transitions is dropped."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "HW1 P5"
+      ]
+    },
+    {
+      "id": "MDP-03-33",
+      "g": "Structure of V",
+      "k": "Bellman operator",
+      "q": "A time-invariant problem with $J_T = G$. (1) Define the operator $\\mathcal{T}$ and write the algorithm with it. (2) Prove: $J \\le \\bar J$ pointwise implies $\\mathcal{T}J \\le \\mathcal{T}\\bar J$. (3) What does the operator have to do with infinite-horizon discounted problems?",
+      "pts": [
+        "(1) $(\\mathcal{T}J)(x) = \\min_u\\{g(x, u) + E\\,J(f(x, u, W))\\}$; then $J_t = \\mathcal{T}J_{t+1}$, so $J_t = \\mathcal{T}^{T-t}G$.",
+        "(2) Fix $x$ and let $\\bar u$ attain $(\\mathcal{T}\\bar J)(x)$. Then $(\\mathcal{T}J)(x) \\le g(x, \\bar u) + E\\,J(f(x, \\bar u, W)) \\le g(x, \\bar u) + E\\,\\bar J(f(x, \\bar u, W)) = (\\mathcal{T}\\bar J)(x)$: a minimum is below any candidate, and expectation preserves order.",
+        "(3) With a factor $\\gamma \\in (0, 1)$ in front of the expectation, the optimal value of the discounted infinite-horizon problem is the fixed point $J^\\star = \\mathcal{T}J^\\star$."
+      ],
+      "pit": "KE and the exercises write $J_t$ for the value function; the same letter $T$ is used there for the horizon and the operator.",
+      "src": "KE p39",
+      "seen": [
+        "HW2 P2"
+      ]
+    },
+    {
+      "id": "MDP-03-34",
+      "g": "Structure of V",
+      "k": "Monotone in time",
+      "q": "Time-invariant problem, $J_t = \\mathcal{T}J_{t+1}$, with $\\mathcal{T}$ order-preserving. (1) Show that $J_{T-1} \\le J_T$ implies $J_t \\le J_{t+1}$ for all $t$. (2) Where is time-invariance used? Give a time-varying counterexample. (3) Show that $G \\equiv 0$ and $g \\ge 0$ imply $J_t \\ge J_{t+1}$, and interpret.",
+      "pts": [
+        "(1) Induction downward: if $J_t \\le J_{t+1}$ then $J_{t-1} = \\mathcal{T}J_t \\le \\mathcal{T}J_{t+1} = J_t$.",
+        "(2) In $\\mathcal{T}J_{t+1} = J_t$: the same operator acts at every stage. One state, one action, $T = 2$, $G = 0$, $g_0 = 5$, $g_1 = 0$: $J_1 = 0 \\le J_2 = 0$ but $J_0 = 5 > J_1$.",
+        "(3) $J_{T-1}(x) = \\min_u g(x, u) \\ge 0 = J_T(x)$, and the reversed inequality propagates in the same way. $J_t$ is the optimal cost with $T - t$ stages left: with non-negative costs, more remaining stages cost more."
+      ],
+      "pit": "The premise concerns only the last two value functions; the sentence that the operator does not depend on the stage completes the induction.",
+      "src": "",
+      "seen": [
+        "HW2 P2"
+      ]
+    },
+    {
+      "id": "MDP-03-35",
+      "g": "Structure of V",
+      "k": "Comparing problems",
+      "q": "Two time-invariant problems share state space, dynamics, disturbance law and terminal cost $G$. (1) Their running costs satisfy $g \\le \\bar g$. Show $\\mathcal{T}J \\le \\bar{\\mathcal{T}}J$ for every $J$. (2) Prove $J_t \\le \\bar J_t$ for all $t$. (3) Where is “same dynamics and same disturbance law” used? (4) Now the costs are equal but the action sets satisfy $\\mathbb{U} \\subseteq \\bar{\\mathbb{U}}$. Which value function is smaller?",
+      "pts": [
+        "(1) For each $u$: $g(x, u) + E\\,J(f(x, u, W)) \\le \\bar g(x, u) + E\\,J(f(x, u, W))$; evaluate at the minimizer of the right side.",
+        "(2) $J_T = \\bar J_T = G$. If $J_{t+1} \\le \\bar J_{t+1}$ then $J_t = \\mathcal{T}J_{t+1} \\le \\mathcal{T}\\bar J_{t+1} \\le \\bar{\\mathcal{T}}\\bar J_{t+1} = \\bar J_t$, by order preservation and then part 1.",
+        "(3) In part 1: the expectation terms on both sides are the same number, so only the running costs are compared.",
+        "(4) The one with the larger action set: a minimum over a larger set is not larger, so $\\bar{\\mathcal{T}}J \\le \\mathcal{T}J$ and by the same induction $\\bar J_t \\le J_t$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "MkA P4"
+      ]
+    },
+    {
+      "id": "MDP-03-36",
+      "g": "Extensions",
+      "k": "Random initial state",
+      "q": "The initial state is random, $X_0 \\sim q$, and the objective is $E\\big[\\sum_{t<T} g(X_t, U_t) + G(X_T)\\big]$. (1) Express the optimal value through $V_0$. (2) What is the optimal policy? (3) Prove both. (4) Which assumption is hidden, and what happens without it?",
+      "pts": [
+        "(1) $\\sum_x q(x)V_0(x) = E_q[V_0(X_0)]$.",
+        "(2) The same policy $\\hat\\mu$; the backward pass does not involve $q$ at all.",
+        "(3) For any policy, its cost is $\\sum_x q(x)J_\\mu(x) \\ge \\sum_x q(x)V_0(x)$ (law of total expectation, then optimality of $V_0$ for each $x$); $\\hat\\mu$ attains $V_0(x)$ from every $x$ at once.",
+        "(4) $X_0$ is observed before $U_0$ is chosen. With a fair coin $X_0$ and cost 1 for $U_0 \\ne X_0$, the formula gives 0 but a blind first decision costs $\\tfrac12$."
+      ],
+      "pit": "Two-project example with $q = (\\tfrac12, \\tfrac12)$: $\\tfrac12 \\cdot \\tfrac{19}{4} + \\tfrac12 \\cdot \\tfrac72 = \\tfrac{33}{8}$.",
+      "src": "S4 s.20",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-37",
+      "g": "Extensions",
+      "k": "Random stage cost",
+      "q": "The stage cost is $g_t(X_t, U_t, W_{t+1})$: it varies with time and depends on a disturbance revealed after the decision. (1) Write the recursion. (2) Why may the random cost be replaced by its mean? (3) What requirement on $(W_{t+1}, Z_{t+1})$ remains? (4) What changes if $W_{t+1}$ is seen before the decision?",
+      "pts": [
+        "(1) $V_t(x) = \\min_u\\{\\bar g_t(x, u) + E\\,V_{t+1}(f_t(x, u, Z_{t+1}))\\}$ with $\\bar g_t(x, u) = E\\,g_t(x, u, W_{t+1})$.",
+        "(2) The decision cannot react to $W_{t+1}$, and the expectation is linear, so it splits the sum of the stage cost and the future value whatever their joint law.",
+        "(3) The pair is independent of the past given $(X_t, U_t)$. $W$ and $Z$ may be correlated or even the same variable.",
+        "(4) Then it is information, not noise: it belongs in the state and the minimum moves inside the expectation, $E[\\min_u \\cdot]$ instead of $\\min_u E[\\cdot]$."
+      ],
+      "pit": "",
+      "src": "S4 s.21 · KE p38–39",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-38",
+      "g": "Extensions",
+      "k": "Inventory: stage cost",
+      "q": "A storeroom holds at most 2 units and is run for two periods $t = 0, 1$. In each period the stock $x$ is observed, $u$ units are ordered and arrive at once ($y = x + u \\le 2$), and then the demand $W \\in \\{0, 1, 2\\}$ is revealed. Costs: $0.5$ per unit ordered, 1 per unsold unit, 3 per unit of unmet demand. Unsold units carry over, $X_{t+1} = (y - W)^+$, and there is no terminal cost; the three demand values have probability $\\tfrac13$ each. (1) Write the stage cost $g(x, u, W)$. (2) Compute $H(y) = E[(y - W)^+ + 3(W - y)^+]$ for $y = 0, 1, 2$. (3) Write one step of the recursion using “order up to $y$”. (4) Is the demand a $W$ or a $Z$ here?",
+      "pts": [
+        "(1) $g = 0.5u + (y - W)^+ + 3(W - y)^+$ with $y = x + u$.",
+        "(2) $H(0) = \\tfrac{0 + 3 + 6}{3} = 3$; $H(1) = \\tfrac{1 + 0 + 3}{3} = \\tfrac43$; $H(2) = \\tfrac{2 + 1 + 0}{3} = 1$.",
+        "(3) $Q_t(x, y) = 0.5(y - x) + H(y) + E\\,V_{t+1}((y - W)^+)$ and $V_t(x) = \\min_{y \\in \\{x, \\dots, 2\\}} Q_t(x, y)$.",
+        "(4) Both: it enters this period's cost and next period's stock."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-39",
+      "g": "Extensions",
+      "k": "Inventory: solution",
+      "q": "A storeroom holds at most 2 units and is run for two periods $t = 0, 1$. In each period the stock $x$ is observed, $u$ units are ordered and arrive at once ($y = x + u \\le 2$), and then the demand $W \\in \\{0, 1, 2\\}$ is revealed. Costs: $0.5$ per unit ordered, 1 per unsold unit, 3 per unit of unmet demand. Unsold units carry over, $X_{t+1} = (y - W)^+$, and there is no terminal cost; the three demand values have probability $\\tfrac13$ each, and the expected holding-plus-shortage cost after ordering up to $y$ is $H(0) = 3$, $H(1) = \\tfrac43$, $H(2) = 1$. (1) Compute $V_1$. (2) Compute $E\\,V_1((y - W)^+)$ for $y = 0, 1, 2$. (3) Compute $V_0$. (4) Describe the policy and explain why the target level differs between the periods.",
+      "pts": [
+        "(1) From $x = 0$: $3$, $0.5 + \\tfrac43 = \\tfrac{11}{6}$, $1 + 1 = 2$, so $V_1(0) = \\tfrac{11}{6}$ (order 1); $V_1(1) = \\min\\{\\tfrac43, \\tfrac32\\} = \\tfrac43$; $V_1(2) = 1$.",
+        "(2) $y = 0$: $\\tfrac{11}{6}$; $y = 1$: $\\tfrac13(\\tfrac43 + \\tfrac{11}{6} + \\tfrac{11}{6}) = \\tfrac53$; $y = 2$: $\\tfrac13(1 + \\tfrac43 + \\tfrac{11}{6}) = \\tfrac{25}{18}$.",
+        "(3) $V_0(0) = \\min\\{\\tfrac{29}{6}, \\tfrac72, \\tfrac{61}{18}\\} = \\tfrac{61}{18} \\approx 3.39$; $V_0(1) = \\min\\{3, \\tfrac{26}{9}\\} = \\tfrac{26}{9}$; $V_0(2) = \\tfrac{43}{18}$.",
+        "(4) Order up to 2 in period 0 and up to 1 in period 1. Stock left after the last period is worthless, while stock left after period 0 saves ordering cost and shortage risk later; that carry-over value enters through $E\\,V_1$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-40",
+      "g": "Extensions",
+      "k": "Discounting",
+      "q": "Objective $E\\big[\\sum_{t=0}^{T-1}\\gamma^t g(X_t, U_t) + \\gamma^T G(X_T)\\big]$ with $\\gamma \\in (0, 1)$. (1) Write the recursion with the discount in front of the future value. (2) Write the alternative with time-dependent costs. (3) How are the two value functions related, and why is the policy the same? (4) Each period one of two projects is chosen. Project 1 always pays 1 and changes nothing. Project 2 has a state $a$ or $b$ that moves only when it is chosen: in $a$ it pays 2 and the state becomes $b$ with probability $\\tfrac12$; in $b$ it pays 0 and the state returns to $a$ surely. The expected total reward over three periods $t = 1, 2, 3$ is maximized, with $V_4 \\equiv 0$. With $\\gamma = 0.9$ compute $V_2$ and $V_1(a)$.",
+      "pts": [
+        "(1) $V_T = G$, $V_t(x) = \\min_u\\{g(x, u) + \\gamma E\\,V_{t+1}(f(x, u, Z_{t+1}))\\}$: values in time-$t$ units.",
+        "(2) $\\tilde V_T = \\gamma^T G$, $\\tilde V_t(x) = \\min_u\\{\\gamma^t g(x, u) + E\\,\\tilde V_{t+1}(f(x, u, Z_{t+1}))\\}$: values in time-0 units.",
+        "(3) $\\tilde V_t = \\gamma^t V_t$ by backward induction; a positive factor changes neither the minimizer nor the ordering.",
+        "(4) $V_3 = (2, 1)$; $V_2(a) = \\max\\{1 + 1.8,\\ 2 + 0.9 \\cdot 1.5\\} = 3.35$, $V_2(b) = \\max\\{1.9,\\ 1.8\\} = 1.9$; $V_1(a) = \\max\\{1 + 0.9 \\cdot 3.35,\\ 2 + 0.9 \\cdot \\tfrac{3.35 + 1.9}{2}\\} = \\max\\{4.015,\\ 4.3625\\} = 4.3625$."
+      ],
+      "pit": "Discount once: $\\gamma^t$ inside the cost or $\\gamma$ in front of the future value, never both.",
+      "src": "S4 s.22",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-41",
+      "g": "Extensions",
+      "k": "Minimax",
+      "q": "No probabilities are given; the disturbance lies in a set $\\mathbb{Z}$ and the worst-case cost $\\min_{U_0}\\max_{Z_1}\\cdots\\min_{U_{T-1}}\\max_{Z_T}\\big[\\sum_t g(X_t, U_t) + G(X_T)\\big]$ is minimized. (1) Write the recursion. (2) What does the nesting order of min and max encode? (3) Why can a stage cost that depends on $z$ not be treated separately from the future value, as it can in expectation? (4) Evaluate $\\min_u\\max_z$ and $\\max_z\\min_u$ of the cost 1 if $u \\ne z$, 0 otherwise, for $u, z \\in \\{0, 1\\}$.",
+      "pts": [
+        "(1) $V_T = G$, $V_t(x) = \\min_u\\max_{z \\in \\mathbb{Z}}\\{g(x, u) + V_{t+1}(f(x, u, z))\\}$ (with a factor $\\gamma$ in front of $V_{t+1}$ in the discounted case).",
+        "(2) The information structure: $U_t$ is chosen knowing $Z_1, \\dots, Z_t$, and nature picks $Z_{t+1}$ after seeing $U_t$.",
+        "(3) A max does not split sums: $\\max_z[a(z) + b(z)] \\le \\max_z a(z) + \\max_z b(z)$, with equality only if the same $z$ is worst for both. Expectations do split.",
+        "(4) $\\min_u\\max_z = 1$ (the controller moves first); $\\max_z\\min_u = 0$ (the controller sees $z$)."
+      ],
+      "pit": "The slide assumes $\\mathbb{Z}$ compact so that the max is attained; strictly that also needs some continuity. Two-project example in the worst case: $V_2(a) = \\max\\{3,\\ 2 + \\min\\{2, 1\\}\\} = 3$ and $V_1(a) = \\max\\{4,\\ 2 + \\min\\{3, 2\\}\\} = 4$; project 2 no longer dominates.",
+      "src": "S4 s.24",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-42",
+      "g": "Extensions",
+      "k": "Inventory: worst case",
+      "q": "A storeroom holds at most 2 units and is run for two periods $t = 0, 1$. In each period the stock $x$ is observed, $u$ units are ordered and arrive at once ($y = x + u \\le 2$), and then the demand $W \\in \\{0, 1, 2\\}$ is revealed. Costs: $0.5$ per unit ordered, 1 per unsold unit, 3 per unit of unmet demand. Unsold units carry over, $X_{t+1} = (y - W)^+$, and there is no terminal cost. Now the demand is chosen by an opponent after the order is placed, and the worst-case total cost is minimized. (1) For the last period give the worst holding-plus-shortage cost after ordering up to $y = 0, 1, 2$. (2) Compute $V_1$. (3) For the first period give the worst value of “this period's cost plus $V_1$ of the next stock” for $y = 0, 1, 2$, and $V_0$. (4) Compare the policy and the value from an empty storeroom with the expected-cost solution (order up to 2, then up to 1; value $\\tfrac{61}{18}$).",
+      "pts": [
+        "(1) $6$ (demand 2), $3$ (demand 2), $2$ (demand 0).",
+        "(2) $V_1(0) = \\min\\{6,\\ 0.5 + 3,\\ 1 + 2\\} = 3$; $V_1(1) = \\min\\{3,\\ 0.5 + 2\\} = 2.5$; $V_1(2) = 2$: order up to 2.",
+        "(3) $y = 0$: $6 + 3 = 9$; $y = 1$: $\\max\\{1 + 2.5,\\ 0 + 3,\\ 3 + 3\\} = 6$; $y = 2$: $\\max\\{2 + 2,\\ 1 + 2.5,\\ 0 + 3\\} = 4$. $V_0 = (5,\\ 4.5,\\ 4)$: order up to 2.",
+        "(4) The worst-case policy fills up to 2 in both periods; its guaranteed cost is 5 against an expected cost of about $3.39$ for the other criterion. It is robust but gives up average performance."
+      ],
+      "pit": "In the row $y = 2$ of the first period the worst demand for this period's cost alone is 0 (cost 2) and for the future alone is 2 (value 3); adding the two separate maxima gives 5, but the true worst case is 4.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-43",
+      "g": "Extensions",
+      "k": "General recursion",
+      "q": "(1) Write the recursion that covers time-varying dynamics and costs, a stage cost depending on the disturbance, and state-dependent action sets. (2) How do state-dependent action sets enter? (3) Name the two ways to keep one common action space instead. (4) Which of the four extensions (random start, random cost, discounting, worst case) changes the recursion least and which most?",
+      "pts": [
+        "(1) $V_t(x) = \\min_{u \\in \\mathbb{U}(x)} E\\big[g_t(x, u, W_{t+1}) + V_{t+1}(f_t(x, u, W_{t+1}))\\big]$.",
+        "(2) Any policy must satisfy $\\mu_t(x) \\in \\mathbb{U}(x)$; the minimization at each $x$ runs over $\\mathbb{U}(x)$ only.",
+        "(3) Copy an admissible action under the label of an inadmissible one, or keep the inadmissible action with a cost so large that it is never optimal.",
+        "(4) Random start: nothing changes, only the final average over $q$. Random cost: $g$ becomes its mean. Discounting: a factor in front of the future value. Worst case: the expectation becomes a max."
+      ],
+      "pit": "",
+      "src": "KE p37–39 · S4 s.20–24",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-44",
+      "g": "Modelling",
+      "k": "Formulation checklist",
+      "q": "A verbal decision problem is to be written as a finite-horizon Markov decision process. (1) List the items to specify, in order. (2) How is the state chosen? (3) How is an objective of the form “maximize the probability of an event” encoded? (4) How are “dead”, “sold” or “stopped” handled?",
+      "pts": [
+        "(1) Horizon and the order of events in a period; state; actions $\\mathbb{U}(x)$; disturbance and its law; dynamics; costs or rewards with min or max; the recursion with its terminal condition.",
+        "(2) The smallest information, seen before the decision, that fixes the law of the next state given the action. If the past is needed, augment the state.",
+        "(3) No running reward and terminal reward $G = \\mathbf{1}\\{\\text{event}\\}$, because $E[\\mathbf{1}\\{\\text{event}\\}] = P(\\text{event})$.",
+        "(4) By an extra absorbing state with value fixed once and for all."
+      ],
+      "pit": "Anything observed before the decision belongs in the state; anything revealed after it is noise.",
+      "src": "KE p32",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-45",
+      "g": "Modelling",
+      "k": "Survival problem",
+      "q": "An animal with energy reserve $x \\in [0, 30]$ (kg) decides each day whether to rest or to hunt in a group of $n$. A day costs 6; a chase costs a further $0.5$ and succeeds with probability $p(n)$, where $p(1) = 0.15$, $p(2) = 0.33$, $p(3) = 0.37$, $p(4) = 0.40$, $p(5) = 0.42$ and $p(n) = 0.43$ for $n \\ge 6$; a success yields $164/n$, capped at 30. The probability of being alive after $T$ days is maximized. (1) Formulate the state, action, disturbance and dynamics. (2) Give the objective and the terminal condition. (3) Write the recursion. (4) Which group sizes can be discarded, and why?",
+      "pts": [
+        "(1) State: the reserve, plus an absorbing state “dead”. Action: rest, or hunt with $n \\ge 1$. Disturbance: success of the chase, Bernoulli with parameter $p(n)$. Rest: $x - 6$. Hunt: $\\min\\{30,\\ x - 6.5 + 164/n\\}$ on success, $x - 6.5$ on failure. A negative value means dead.",
+        "(2) Maximize $E[\\mathbf{1}\\{X_T \\ne \\text{dead}\\}]$: no running reward, $V_T(x) = 1$ for $x \\ge 0$ and $V_t(\\text{dead}) = 0$.",
+        "(3) $V_t(x) = \\max\\big\\{V_{t+1}(x - 6),\\ \\max_n\\big[p(n)V_{t+1}(\\min\\{30, x - 6.5 + \\tfrac{164}{n}\\}) + (1 - p(n))V_{t+1}(x - 6.5)\\big]\\big\\}$.",
+        "(4) $V_t$ is increasing in $x$. $n \\ge 7$ is dominated by $n = 6$ (same probability, less meat). $n \\le 3$ is dominated by $n = 4$: for $n \\le 4$ a success always fills the reserve to 30 ($x - 6.5 + 41 \\ge 30$), and $n = 4$ succeeds most often. Remaining choices: rest, 4, 5, 6."
+      ],
+      "pit": "State the timing assumptions (when the meat is eaten, where the cap applies, that a failed chase also costs 0.5).",
+      "src": "",
+      "seen": [
+        "HW2 P1"
+      ]
+    },
+    {
+      "id": "MDP-03-46",
+      "g": "Modelling",
+      "k": "Maintain or replace",
+      "q": "A machine is running (R) or broken (B) at the start of each of $N$ weeks. If it runs through the week the profit is $G$. In R: maintain at cost $C_m$ (runs through the week with probability $p_m$) or not (probability $p_{nm} < p_m$). In B: repair at cost $C_r$ (probability $p_m$) or replace at cost $C_l$ (probability 1). After week $N$ nothing remains. (1) Formulate the state, action sets and dynamics. (2) Give the decisions in week $N$. (3) How do the conditions change in week $N - 1$? (4) For $G = 10$, $p_m = 0.9$, $p_{nm} = 0.6$, $C_m = 2$, $C_r = 4$, $C_l = 6$, $N = 2$, compute $J_2$ and $J_1$.",
+      "pts": [
+        "(1) State in $\\{R, B\\}$; $\\mathbb{U}(R) = \\{\\text{maintain}, \\text{not}\\}$, $\\mathbb{U}(B) = \\{\\text{repair}, \\text{replace}\\}$; the next state is R with the success probability of the action, else B; reward $= G$ if the week is completed, minus the action cost; $J_{N+1} \\equiv 0$.",
+        "(2) In R: maintain iff $(p_m - p_{nm})G > C_m$. In B: repair iff $C_l - C_r \\ge (1 - p_m)G$.",
+        "(3) $G$ is replaced by $G + \\Delta$ with $\\Delta = J_N(R) - J_N(B) \\ge 0$, the value of entering the next week running: maintenance becomes more attractive, repair less attractive relative to replacement.",
+        "(4) Week 2: $7$ against $6$ in R, $5$ against $4$ in B, so $J_2 = (7, 5)$. Week 1 in R: $0.9 \\cdot 17 + 0.1 \\cdot 5 - 2 = 13.8$ against $0.6 \\cdot 17 + 0.4 \\cdot 5 = 12.2$; in B: $15.8 - 4 = 11.8$ against $17 - 6 = 11$. $J_1 = (13.8,\\ 11.8)$: maintain and repair."
+      ],
+      "pit": "Profit and transition come from the same random event (does the machine run through the week); take one expectation over it.",
+      "src": "KE p41–42",
+      "seen": [
+        "Ex 3.3"
+      ]
+    },
+    {
+      "id": "MDP-03-47",
+      "g": "Modelling",
+      "k": "Selling over two days",
+      "q": "There are 6 tickets and two days. On day 1 the price is 20 and every ticket offered is sold. On day 2 the price is 40 and the demand is 3, 4 or 5 with probabilities $0.25$, $0.5$, $0.25$. Each morning the number of tickets offered is chosen; unsold tickets are worthless. (1) Formulate the state, action set, dynamics and reward. (2) Compute $J_2(x)$ for $x = 0, \\dots, 6$. (3) Find the best number to sell on day 1 and the expected revenue. (4) Explain the answer through the marginal value of the 4th, 5th and 6th ticket.",
+      "pts": [
+        "(1) State: tickets left $x$. Action: tickets offered, $u \\in \\{0, \\dots, x\\}$. Sales $\\min(u, D)$, reward price times sales, next state $x - \\min(u, D)$; maximize, $J_3 \\equiv 0$.",
+        "(2) Offer everything on the last day: $J_2(x) = 40\\,E\\min(x, D_2) = 0, 40, 80, 120, 150, 160, 160$.",
+        "(3) $J_1(6) = \\max_u\\{20u + J_2(6 - u)\\}$, with values $160, 180, 190, 180, 160, 140, 120$ for $u = 0, \\dots, 6$: sell 2 on day 1; revenue 190.",
+        "(4) On day 2 the 4th ticket is worth $40 \\cdot 0.75 = 30 > 20$, the 5th $40 \\cdot 0.25 = 10 < 20$ and the 6th 0: keep four."
+      ],
+      "pit": "",
+      "src": "KE p42",
+      "seen": [
+        "Ex 3.4"
+      ]
+    },
+    {
+      "id": "MDP-03-48",
+      "g": "Modelling",
+      "k": "Robust constraints",
+      "q": "$X_{k+1} = X_k + U_k + W_{k+1}$ for $k = 0, 1, 2, 3$ with $U_k \\in \\{-1, 0, 1\\}$ and $W = \\pm 1$ with probability $\\tfrac12$ each. The constraint $-2 \\le X_k \\le 4$ must hold for $k = 1, \\dots, 4$ whatever the disturbance. The stage cost is $x^2 + u^2 + a(x)$ with $a(x) = 0$ for $x \\in [0, 2]$ and 13 otherwise; there is no terminal cost. (1) Turn the constraint into an action set. (2) Compute $J_3(x)$ for $x = 0, 1, 2$ and for $x = -2$. (3) Given $J_1 = (33,\\ 27.75,\\ 6,\\ 6,\\ 10,\\ 41.75,\\ 57)$ on $x = -2, \\dots, 4$, compute $J_0(0)$ and the first action. (4) What does the policy aim for?",
+      "pts": [
+        "(1) The state after the action must absorb both disturbance values: $\\mathbb{U}(x) = \\{u : -1 \\le x + u \\le 3\\}$.",
+        "(2) With no terminal cost the last stage picks the cheapest admissible action: $J_3(0) = 0$, $J_3(1) = 1$, $J_3(2) = 4$ with $u = 0$; at $x = -2$ only $u = +1$ is admissible: $4 + 1 + 13 = 18$.",
+        "(3) $u = +1$: $1 + \\tfrac12(6 + 10) = 9$; $u = 0$: $\\tfrac12(27.75 + 6) = 16.875$; $u = -1$: $1 + \\tfrac12(33 + 6) = 20.5$. So $J_0(0) = 9$ with $U_0 = +1$.",
+        "(4) It steers towards $x = 1$, the centre of the cost-free band, so that the $\\pm 1$ disturbance keeps the state in $[0, 2]$."
+      ],
+      "pit": "“Guaranteed despite the disturbance” is a worst-case requirement inside an expected-cost problem: it becomes a state-dependent action set.",
+      "src": "KE p42",
+      "seen": [
+        "Ex 3.5"
+      ]
+    },
+    {
+      "id": "MDP-03-49",
+      "g": "Modelling",
+      "k": "Guess the form of V",
+      "q": "$X_{k+1} = X_k + U_k + W_{k+1}$ for $k = 0, 1$, with unconstrained $U_k$ and $W$ uniform on $[-1, 1]$. The cost is $E[X_2 + U_1^2 + U_0^2]$. (1) Compute $J_1$. (2) Compute $J_0$ and the policy. (3) Why does the disturbance play no role, and what is unusual about the optimal policy? (4) What is the general method for continuous state spaces illustrated here?",
+      "pts": [
+        "(1) $J_2(x) = x$; $J_1(x) = \\min_u\\{u^2 + E[x + u + W]\\} = \\min_u\\{u^2 + u\\} + x = x - \\tfrac14$ at $u = -\\tfrac12$.",
+        "(2) $J_0(x) = \\min_u\\{u^2 + x + u - \\tfrac14\\} = x - \\tfrac12$ at $u = -\\tfrac12$. Policy: $\\mu_0 = \\mu_1 \\equiv -\\tfrac12$.",
+        "(3) It enters linearly and has mean zero, so it drops out of every expectation. The optimal policy is constant: open-loop is optimal here although the problem is stochastic.",
+        "(4) A table is impossible, so guess a parametric form of $J_k$ (here linear in $x$) and verify that one backward step preserves it."
+      ],
+      "pit": "",
+      "src": "KE p43",
+      "seen": [
+        "Ex 3.6"
+      ]
+    },
+    {
+      "id": "MDP-03-50",
+      "g": "Modelling",
+      "k": "State-dependent noise",
+      "q": "$X_{k+1} = aU_k + (1 - a)W_{k+1}$ for $k = 0, 1$, with $a \\in [0, 1]$, $U_k \\in [0, 1]$ and $X_0 = -1$. If $X_k < 0$ then $W_{k+1} = 0$; otherwise $W_{k+1}$ is 0 or 1 with probability $\\tfrac12$ each. The cost is $E[X_2^2 + \\sum_{k=0}^{1}(X_k^2 + U_k^2)]$. (1) Is a disturbance whose law depends on the state allowed? (2) Compute $J_1(x)$ for $x \\ge 0$. (3) Compute the optimal cost and policy. (4) Which two traps does the problem contain?",
+      "pts": [
+        "(1) Yes: it only has to be conditionally independent of the past given $(X_k, U_k)$.",
+        "(2) $E(au + (1 - a)W)^2 = a^2u^2 + a(1 - a)u + \\tfrac{(1 - a)^2}{2}$, so the objective $x^2 + (1 + a^2)u^2 + a(1 - a)u + \\tfrac{(1-a)^2}{2}$ is increasing on $[0, 1]$: $u = 0$ and $J_1(x) = x^2 + \\tfrac{(1 - a)^2}{2}$.",
+        "(3) From $x_0 = -1$: $W_1 = 0$ and $X_1 = au \\ge 0$, so $J_0 = \\min_u\\{1 + u^2 + a^2u^2 + \\tfrac{(1 - a)^2}{2}\\} = 1 + \\tfrac{(1 - a)^2}{2}$ with $\\mu_0 = \\mu_1 = 0$.",
+        "(4) The unconstrained minimizer in part 2 is negative, so the solution sits at the corner $u = 0$. And “steer $X_1$ below 0 to switch the noise off” is impossible, since $X_1 = aU_0 \\ge 0$."
+      ],
+      "pit": "",
+      "src": "KE p41",
+      "seen": [
+        "Ex 3.2"
+      ]
+    },
+    {
+      "id": "MDP-03-51",
+      "g": "Modelling",
+      "k": "Irreversible upgrade",
+      "q": "A well yields 100 barrels a year at a cost of 85 per barrel. The price is 100 this year and each year rises or falls by $10\\%$ with probability $\\tfrac12$; at the start of each of three years one decides whether to extract. (1) Compute the maximal expected profit. (2) Now a machine can be installed at the start of any year and stays: capacity 140 barrels, cost 91 per barrel. What must the state contain? (3) Compare installing and waiting in year 2 at the prices 110 and 90, using year-3 values without the machine of $4200$ (install), $1400$, $0$ at prices 121, 99, 81 and with it $4200$, $1120$, $0$. (4) Give the year-1 decision and the optimal profit.",
+      "pts": [
+        "(1) Each year is separate: extract iff the price exceeds 85. $1500 + \\tfrac12(2500 + 500) + \\tfrac14 \\cdot 3600 + \\tfrac12 \\cdot 1400 = 4600$.",
+        "(2) (price, installed or not): installation is irreversible, so the state must remember it.",
+        "(3) At 110: install $2660 + \\tfrac12(4200 + 1120) = 5320$, wait $2500 + \\tfrac12(4200 + 1400) = 5300$: install. At 90: install $0 + \\tfrac12(1120 + 0) = 560$, wait $500 + \\tfrac12(1400 + 0) = 1200$: wait.",
+        "(4) Year 1: install $1260 + \\tfrac12(5320 + 560) = 4200$, wait $1500 + \\tfrac12(5320 + 1200) = 4760$. Do not install in year 1; install in year 2 only if the price rose. Profit 4760; the option is worth 160."
+      ],
+      "pit": "",
+      "src": "KE p43",
+      "seen": [
+        "Ex 3.7"
+      ]
+    },
+    {
+      "id": "MDP-03-52",
+      "g": "Modelling",
+      "k": "Base-stock policy",
+      "q": "A shop holds at most 2 units. On each of two days it observes the stock $x$, orders $u$ units (delivered at once, 1 per unit, $x + u \\le 2$), then faces demand 1 with probability $0.6$ and 0 with probability $0.4$. A unit sold brings 3; a unit left overnight costs $0.5$; after day 1 leftovers are salvaged at $0.5$ each. Profit is maximized. (1) Write the terminal value and the recursion. (2) With $R_t(y)$ the expected value of starting the day's sales with $y$ units, compute $R_1$ and $V_1$. (3) Compute $R_0$ and $V_0$. (4) State the policy, its form, and why a second unit is never ordered.",
+      "pts": [
+        "(1) $V_2(x) = 0.5x$; $V_t(x) = \\max_{u \\le 2 - x}\\{-u + R_t(x + u)\\}$ with $R_t(y) = E\\big[3\\min(y, D) - 0.5(y - D)^+ + V_{t+1}((y - D)^+)\\big]$.",
+        "(2) $R_1 = (0,\\ 1.8,\\ 1.8)$; $V_1(0) = \\max\\{0,\\ 0.8,\\ -0.2\\} = 0.8$, $V_1(1) = 1.8$, $V_1(2) = 1.8$.",
+        "(3) $R_0(1) = 0.6 \\cdot 3.8 + 0.4 \\cdot 1.3 = 2.8$, $R_0(2) = 0.6 \\cdot 4.3 + 0.4 \\cdot 0.8 = 2.9$, $R_0(0) = 0.8$; $V_0 = (1.8,\\ 2.8,\\ 2.9)$.",
+        "(4) Order 1 if the stock is 0, otherwise nothing, on both days: order up to $S = 1$ (base-stock form). Demand is at most 1 per day, so a second unit cannot be sold today, costs $0.5$ to hold, and can be bought tomorrow at the same price."
+      ],
+      "pit": "The reward depends on the demand, which is revealed after ordering: the recursion uses its expectation.",
+      "src": "",
+      "seen": [
+        "MkA P3"
+      ]
+    },
+    {
+      "id": "MDP-03-53",
+      "g": "Limits of DP",
+      "k": "Curse of dimension",
+      "q": "(1) Which three nested operations does one iteration of the algorithm contain? (2) What happens when the state space is continuous, and what is fitted value iteration? (3) What happens with continuous actions or disturbances? (4) What is the curse of dimensionality?",
+      "pts": [
+        "(1) A functional equation (a value for every state), a minimization over the action for each state, and an expectation over the disturbance for each (state, action) pair: $O(nmp)$ per iteration for finite spaces.",
+        "(2) There are infinitely many minimization problems per iteration. Either a closed form exists, or the value function is parameterized, e.g. $J_\\theta(x) = \\theta^\\top\\phi(x)$, and fitted by regression of the one-step target on finitely many sample states.",
+        "(3) The minimization may be non-convex and the expectation becomes an integral; both are numerically demanding.",
+        "(4) Discretizing a $d$-dimensional state with $N$ bins per coordinate gives $N^d$ cells: the size of the problem grows exponentially with the dimension."
+      ],
+      "pit": "",
+      "src": "KE p39–40",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-54",
+      "g": "Limits of DP",
+      "k": "Fixed-point preview",
+      "q": "(1) Write the Bellman operator with a discount factor. (2) What is known about the discounted infinite-horizon problem? (3) What does the operator reduce to for one fixed stationary policy, and which equation from Markov chains with rewards is that? (4) How do finite-horizon and infinite-horizon optimal policies differ in form?",
+      "pts": [
+        "(1) $\\mathcal{T}[J](x) = \\min_u\\{g(x, u) + \\gamma\\sum_y P_u(x, y)J(y)\\}$.",
+        "(2) Its optimal value is the fixed point $J^\\star = \\mathcal{T}[J^\\star]$; $\\mathcal{T}$ is a $\\gamma$-contraction in the maximum norm, so iterating it converges.",
+        "(3) $J = g_\\mu + \\gamma P_\\mu J$, i.e. $V = r + \\gamma PV$ with solution $(I - \\gamma P_\\mu)^{-1}g_\\mu$: the evaluation of a fixed chain.",
+        "(4) Finite horizon: time-varying $\\mu_t(x)$ (thresholds move with $t$). Infinite horizon: one stationary $\\mu(x)$."
+      ],
+      "pit": "",
+      "src": "KE p39",
+      "seen": []
+    },
+    {
+      "id": "MDP-03-55",
+      "g": "Limits of DP",
+      "k": "Which tool",
+      "q": "Which method answers each request? (1) “Formulate as a dynamic program.” (2) “Find the optimal policy” for a small finite problem. (3) “Compare open-loop and closed-loop.” (4) “Show the value function is monotone or the policy is a threshold.” (5) “Prove the algorithm is optimal.” (6) A discount factor, a random start, a random cost or a worst case appears.",
+      "pts": [
+        "(1) The checklist: timing, state, actions, disturbance, dynamics, costs, recursion with terminal condition.",
+        "(2) A backward table with one row per (time, state), both candidates in each cell, the minimizer marked; then the policy in words.",
+        "(3) Enumerate sequences against the table; the difference is the value of information, zero without noise.",
+        "(4) Backward induction with an order-preserving lemma.",
+        "(5) Induction on the tail problems: split stage $t$, then the four steps for the tail.",
+        "(6) Change one line of the recursion: a factor $\\gamma$, a final average over $q$, the mean cost, or a max in place of the expectation."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}
