@@ -2,26 +2,73 @@
   "title": "Probability",
   "notes": [
     {
+      "h": "Big picture",
+      "items": [
+        {
+          "t": "What this topic is about",
+          "d": [
+            "Every question asks for an expectation or a probability. What changes is the tool that gets you there without brute force:",
+            "$$\\begin{array}{ll} \\textsf{Section} & \\textsf{Tool and the question it answers} \\\\ \\hline \\textsf{Optimal stopping} & \\textsf{first-step analysis, Bellman: when to stop a game you may stop any time} \\\\ \\textsf{Distributions} & \\textsf{normal, order statistics, counting, Poisson process: how big, how long} \\\\ \\textsf{Patterns \\& walks} & \\textsf{states, martingales, indicators: waiting times, which barrier first} \\\\ \\textsf{Bayes \\& estimation} & \\textsf{likelihood, prior, odds: what the data say about a parameter} \\\\ \\textsf{Dependence} & \\textsf{covariance, conditional expectation: what one variable says about another} \\\\ \\textsf{Returns \\& LLN} & \\textsf{sums, Jensen, LLN: what an average can and cannot tell you} \\\\ \\textsf{Edge \\& sizing} & \\textsf{Kelly: with a positive edge, how much to bet} \\end{array}$$",
+            "Each item: what it answers → definition → symbols → worked example with numbers → key points."
+          ],
+          "cards": []
+        },
+        {
+          "t": "Four running examples",
+          "d": [
+            "Offer stream (stopping, distributions): buyers arrive one by one with independent offers $U_i\\sim\\mathrm{Unif}(0,1)$; seeing another offer costs $c=0.01$. It is #1's 100-sided die divided by 100.",
+            "Signal Q (counting, estimation, Bayes): a signal calls the market's daily direction, right with unknown probability $p$, days independent; over 20 days it was right 12 times, wrong 8.",
+            "Position (walks, Poisson): orders arrive as a Poisson process with rate $\\lambda=2$ per minute; each order moves the price $\\pm1$ tick with probability 1/2. Take-profit at $+3$, stop-loss at $-2$.",
+            "Strategy S (returns, LLN, Kelly): daily return with mean $\\mu=0.04\\%$, sd $\\sigma=1\\%$, $T=252$ days a year, days independent."
+          ],
+          "cards": []
+        }
+      ]
+    },
+    {
       "h": "Optimal stopping",
       "items": [
         {
-          "t": "Bellman equation (stationary game)",
+          "t": "Expectation, Geometric, first step",
           "d": [
-            "$V=E[\\max(X,\\,V-c)]$; stop iff $x\\ge V-c$.",
-            "Indifference: $c=E[(X-m)^+]$ at $m=V-c$. Uniform $\\{1..N\\}$: $N-m\\approx\\sqrt{2Nc}$.",
-            "$N=100$: $c=1\\to k^*=87,\\ V=87.357$; $c=0.5\\to91$; $c=2\\to81$; $c=5\\to69$."
+            "Answers: in the offer stream, how many offers until a \"good\" one?",
+            "Expectation: $E(X)=\\sum_jx_jP(X=x_j)$ or $\\int xf(x)\\,dx$. Linearity $E(X+Y)=E(X)+E(Y)$ holds with no independence.",
+            "Geometric: independent trials with success probability $p$, $q=1-p$. Failures before the first success $X\\sim\\mathrm{Geom}(p)$: $P(X=k)=q^kp$, $E(X)=q/p$. Total trials $Y=X+1\\sim\\mathrm{FS}(p)$: $E(Y)=1/p$.",
+            "First-step analysis (law of total expectation, conditioning on the first trial): if a failure puts you back at the start, $$E(X)=0\\cdot p+\\big(1+E(X)\\big)q\\ \\Rightarrow\\ E(X)=\\frac qp$$",
+            "Example (offers): \"good\" = $U>0.9$, $p=0.1$: 10 offers on average, 9 of them rejected.",
+            "Key point: in #1 under \"stop at $\\ge k$\", the paid rerolls are $\\mathrm{Geom}(p)$ with mean $1/p-1$. #1's Bellman equation and #3's HH equations are both first-step analysis."
           ],
           "cards": [
             "BAG-A-01",
+            "BAG-A-07"
+          ]
+        },
+        {
+          "t": "Finite horizon: backward induction",
+          "d": [
+            "Answers: with a limited number of tries, when do you stop?",
+            "DP: $J_N(x)=g_N(x)$, $J_k(x)=\\max_u E\\{g_k+J_{k+1}(\\text{next state})\\}$. $J_k$ = value of being at stage $k$ in state $x$, playing optimally from then on. The tail of an optimal policy is optimal (principle of optimality).",
+            "Example: 6-sided die, at most 3 rolls, take the value when you stop.",
+            "$$\\begin{array}{llll} \\textsf{Roll} & \\textsf{value of continuing} & \\textsf{rule} & \\textsf{value here} \\\\ \\hline \\textsf{3} & \\textsf{-} & \\textsf{must take} & \\textsf{3.5} \\\\ \\textsf{2} & \\textsf{3.5} & \\textsf{stop at} \\ge4 & \\tfrac36(3.5)+\\tfrac16(4+5+6)=4.25 \\\\ \\textsf{1} & \\textsf{4.25} & \\textsf{stop at} \\ge5 & \\tfrac46(4.25)+\\tfrac16(5+6)=14/3 \\end{array}$$",
+            "Relationship: more rolls left → higher value of continuing → higher threshold."
+          ],
+          "cards": [
             "BAG-A-02"
           ]
         },
         {
-          "t": "Finite horizon",
+          "t": "Infinite horizon: Bellman, indifference",
           "d": [
-            "Backward induction; threshold falls as rolls run out. 6-sided, 3 rolls: 3.5 → stop $\\ge4$ (4.25) → stop $\\ge5$ ($14/3$)."
+            "Answers: unlimited tries, each costs $c$. When do you accept?",
+            "The situation after a reroll equals the start, so the value is one number $V$: $$V=E\\big[\\max(X,\\,V-c)\\big]$$ $X$ = this roll or offer; $V-c$ = value of continuing.",
+            "Consequence 1: $V-c$ is constant, so stop iff $X\\ge m$ with $m=V-c$ (a threshold).",
+            "Consequence 2: subtract $m$ from both sides: $$c=E\\big[(X-m)^+\\big]$$ At the threshold, the expected improvement from one more look equals its cost.",
+            "Example (offers, $c=0.01$): $E[(U-m)^+]=\\int_m^1(u-m)\\,du=\\frac{(1-m)^2}{2}=0.01$, so $m=1-\\sqrt{0.02}=0.859$, $V=0.869$. Check: accept with probability 0.141, so 7.07 offers seen; accepted mean $(1+m)/2=0.929$; $0.929-0.01\\times6.07=0.869$.",
+            "$$\\begin{array}{lc} \\textsf{Policy} & \\textsf{expected net payoff} \\\\ \\hline \\textsf{fix } n=9 \\textsf{ in advance, take the best: } \\tfrac{9}{10}-0.08 & \\textsf{0.820} \\\\ \\textsf{decide as you go, stop at} \\ge0.859 & \\textsf{0.869} \\end{array}$$",
+            "Discrete version (#1, $N=100$, $c=1$): $\\frac{(N-m)(N-m+1)}{2N}=c$ gives $m=86.35$, threshold 87, $V=87.36$; $N-m\\approx\\sqrt{2Nc}$."
           ],
           "cards": [
+            "BAG-A-01",
             "BAG-A-02"
           ]
         }
@@ -31,40 +78,57 @@
       "h": "Distributions",
       "items": [
         {
-          "t": "Linear combination of jointly normal",
+          "t": "Normal, covariance, MVN",
           "d": [
-            "$X-Y\\sim N(\\mu_X-\\mu_Y,\\ \\sigma_X^2+\\sigma_Y^2-2\\rho\\sigma_X\\sigma_Y)$; needs joint normality."
+            "Answers: two buyers score your item with normal, possibly correlated scores. How likely is A's score higher?",
+            "$X=\\mu+\\sigma Z$ with $Z\\sim N(0,1)$ is $N(\\mu,\\sigma^2)$ (the second parameter is the variance). Independent normals add: means add, variances add.",
+            "$\\mathrm{Cov}(X,Y)=E[(X-EX)(Y-EY)]$, $\\mathrm{Corr}=\\mathrm{Cov}/\\sqrt{\\mathrm{Var}X\\,\\mathrm{Var}Y}\\in[-1,1]$, and $$\\mathrm{Var}(X-Y)=\\mathrm{Var}X+\\mathrm{Var}Y-2\\,\\mathrm{Cov}(X,Y)$$",
+            "Multivariate normal: every linear combination $t_1X_1+\\dots+t_kX_k$ is normal. Each $X_j$ normal on its own is not enough.",
+            "Example (scores, sd 1, A higher by 0.5 on average): $P(X>Y)=\\Phi(0.5/\\mathrm{SD}(X-Y))$.",
+            "$$\\begin{array}{lcc} \\rho & \\mathrm{SD}(X-Y) & P(X>Y) \\\\ \\hline \\textsf{0} & \\textsf{1.414} & \\textsf{0.638} \\\\ \\textsf{0.5} & \\textsf{1.000} & \\textsf{0.691} \\\\ \\textsf{0.9} & \\textsf{0.447} & \\textsf{0.868} \\end{array}$$ With equal means the answer is 1/2 for every $\\rho<1$: correlation changes the scale of $X-Y$, not its centre.",
+            "Counterexample: $Y=SX$ with a random sign $S$. $Y\\sim N(0,1)$ but $(X,Y)$ is not jointly normal; $P(X>Y)=P(S=-1)P(X>0)=1/4$ and $P(X=Y)=1/2$."
           ],
           "cards": [
             "BAG-A-03"
           ]
         },
         {
-          "t": "Order statistics of uniforms",
+          "t": "CDF, survival, order statistics",
           "d": [
-            "$P(\\max\\le x)=x^n$, $E\\max=\\frac{n}{n+1}$, $E\\min=\\frac1{n+1}$, $U_{(j)}\\sim\\mathrm{Beta}(j,n-j+1)$, mean $\\frac{j}{n+1}$.",
-            "Tail formula: $X\\ge0 \\Rightarrow E[X]=\\int_0^\\infty P(X>x)\\,dx$."
+            "Answers: after $n$ offers, how high is the best one on average?",
+            "$F(x)=P(X\\le x)$; survival $P(X>x)=1-F(x)$. For $X\\ge0$: $$E(X)=\\int_0^\\infty P(X>x)\\,dx$$",
+            "Order statistics $X_{(1)}\\le\\dots\\le X_{(n)}$. \"The $j$-th smallest $\\le x$\" = \"at least $j$ of them $\\le x$\", so for i.i.d. $X_i$: $P(X_{(n)}\\le x)=F(x)^n$, $P(X_{(1)}>x)=(1-F(x))^n$.",
+            "Uniform case: $U_{(j)}\\sim\\mathrm{Beta}(j,\\,n-j+1)$, mean $\\frac{j}{n+1}$. Max: $\\int_0^1(1-x^n)dx=\\frac{n}{n+1}$; min: $\\frac{1}{n+1}$.",
+            "$$\\begin{array}{lccccc} \\textsf{n} & \\textsf{1} & \\textsf{2} & \\textsf{5} & \\textsf{10} & \\textsf{20} \\\\ \\hline E(\\textsf{best offer}) & \\textsf{0.500} & \\textsf{0.667} & \\textsf{0.833} & \\textsf{0.909} & \\textsf{0.952} \\end{array}$$ The marginal gain $\\frac{1}{(n+1)(n+2)}$ shrinks, which is why paid search must stop.",
+            "Key point: the best of $n$ zero-alpha backtests looks better as $n$ grows: selection bias."
           ],
           "cards": [
             "BAG-A-04"
           ]
         },
         {
-          "t": "Indicators + symmetry",
+          "t": "Counting and indicators",
           "d": [
-            "First ace: $P(k)=\\binom{52-k}{3}/\\binom{52}{4}$; $E[\\text{position}]=1+48/5=10.6$.",
-            "General: $w$ special, $b$ other items, expected others before the first special $=b/(w+1)$."
+            "Answers: when does the first ace (or first crash) arrive?",
+            "Naive probability: with equally likely outcomes, $P(A)=\\frac{\\#\\text{favourable}}{\\#\\text{total}}$. Choose a sample space where outcomes really are equally likely: here, the set of positions of the 4 aces, $\\binom{52}{4}$ sets.",
+            "First ace at $k$: position $k$ is an ace, the other 3 are among the $52-k$ later ones: $$P(k)=\\frac{\\binom{52-k}{3}}{\\binom{52}{4}},\\quad k=1,\\dots,49$$",
+            "Indicator trick (fundamental bridge $E(I_A)=P(A)$): $I_j=1$ if non-ace $j$ precedes all 4 aces, probability 1/5. $E(\\text{non-aces before first ace})=48/5=9.6$, position 10.6.",
+            "Example (Q-style): 4 crash weeks among 52, placed at random. Expected week of the first crash 10.6; $P(\\text{first within 10 weeks})=1-\\binom{42}{4}/\\binom{52}{4}=0.587$.",
+            "Key point: with replacement the wait is geometric with mean 13; without replacement it is shorter because the share of aces rises."
           ],
           "cards": [
             "BAG-A-05"
           ]
         },
         {
-          "t": "Poisson process",
+          "t": "Poisson process, Expo, Gamma",
           "d": [
-            "$N_t\\sim\\mathrm{Pois}(\\lambda t)$, disjoint intervals independent.",
-            "$T_1\\sim\\mathrm{Expo}(\\lambda)$, $T_k\\sim\\mathrm{Gamma}(k,\\lambda)$ (mean $k/\\lambda$, var $k/\\lambda^2$); $P(T_k>t)=P(N_t<k)$.",
-            "Memoryless: $P(T>s+t\\mid T>s)=P(T>t)$. Inspection paradox: the gap containing a random time has mean $2/\\lambda$."
+            "Answers: orders arrive at random. How long until the next one, or the $k$-th?",
+            "Poisson process with rate $\\lambda$: arrivals in a window of length $t$ are $\\mathrm{Pois}(\\lambda t)$; disjoint windows independent. $N_t$ = count in $[0,t]$, $T_k$ = time of the $k$-th arrival.",
+            "Count-time duality: $P(T_1>t)=P(N_t=0)=e^{-\\lambda t}$, so $T_1\\sim\\mathrm{Expo}(\\lambda)$, mean $1/\\lambda$. Gaps are i.i.d. Expo, so $T_k\\sim\\mathrm{Gamma}(k,\\lambda)$, mean $k/\\lambda$, variance $k/\\lambda^2$, and $P(T_k>t)=P(N_t<k)$.",
+            "Memoryless: $P(T>s+t\\mid T>s)=P(T>t)$.",
+            "Example (position, $\\lambda=2$/min): the 3rd order arrives after 1.5 minutes on average; $P(T_3>1)=P(N_1<3)=e^{-2}(1+2+2)=0.677$.",
+            "Inspection paradox: arriving at a random time, the gap you land in has mean $2/\\lambda$, not $1/\\lambda$ (long gaps are more likely to be hit)."
           ],
           "cards": [
             "BAG-A-06"
@@ -76,10 +140,13 @@
       "h": "Patterns & walks",
       "items": [
         {
-          "t": "First-step analysis",
+          "t": "Waiting for a pattern",
           "d": [
-            "State = longest matched prefix; $e_i=1+\\sum_j P_{ij}e_j$.",
-            "HH: $e_0=6$; HT: 4. Pattern formula: $\\sum_k 2^k\\mathbf 1\\{\\text{prefix}_k=\\text{suffix}_k\\}$ (HHH 14, THH 8, HHTTHH 70)."
+            "Answers: how many offers until two in a row above 0.5? Call \"above 0.5\" H: it is waiting for HH with a fair coin.",
+            "States = longest matched prefix. HH: $e_0=1+\\tfrac12e_1+\\tfrac12e_0$, $e_1=1+\\tfrac12e_0$ ⇒ $e_1=4$, $e_0=6$. HT: after H another H keeps progress, so 2 + 2 = 4.",
+            "General formula (a gambler arrives before each toss, bets on the pattern at fair odds; total net winnings is a martingale): $$E[T_A]=\\sum_{k=1}^{n}2^k\\,\\mathbf 1\\{A_{1:k}=A_{n-k+1:n}\\}$$",
+            "$$\\begin{array}{lcc} \\textsf{Pattern} & k \\textsf{ with prefix = suffix} & E[T_A] \\\\ \\hline \\textsf{HT} & \\textsf{2} & \\textsf{4} \\\\ \\textsf{HH} & \\textsf{1,2} & \\textsf{6} \\\\ \\textsf{THH} & \\textsf{3} & \\textsf{8} \\\\ \\textsf{HHH} & \\textsf{1,2,3} & \\textsf{14} \\\\ \\textsf{HHTTHH} & \\textsf{1,2,6} & \\textsf{70} \\end{array}$$",
+            "Key points: the difference is not the probability (HH and HT each 1/4 in two tosses) but whether progress survives a failure. \"Which comes first, HH or HT\" is a race: 1/2 each."
           ],
           "cards": [
             "BAG-A-07",
@@ -87,21 +154,39 @@
           ]
         },
         {
-          "t": "Optional stopping",
+          "t": "Martingales and optional stopping",
           "d": [
-            "Martingale $Z_n$, stopping time $\\tau$: $E[Z_\\tau]=Z_0$ if $\\tau<\\infty$ a.s. and $Z_{\\tau\\wedge n}$ bounded (or $E\\tau<\\infty$ with bounded increments).",
-            "Symmetric: $P(+a\\text{ first})=\\frac{b}{a+b}$, $E\\tau=ab$ (via $S_n^2-n$).",
-            "Drift: martingale $(q/p)^{S_n}$, $P=\\frac{1-(q/p)^b}{1-(q/p)^{a+b}}$; Wald $E S_\\tau=(p-q)E\\tau$."
+            "Answers: the position exits at $+3$ or $-2$. Which first, and after how many orders?",
+            "Martingale: $E|Z_n|<\\infty$ and $E[Z_{n+1}\\mid Z_n,\\dots,Z_1]=Z_n$. The symmetric walk $S_n$ is one. Stopping time $\\tau$: whether you have stopped by $n$ depends only on the path up to $n$.",
+            "Optional stopping: $E[S_\\tau]=S_0$ if $\\tau<\\infty$ with $E\\tau<\\infty$ and the stopped walk is bounded. Then $aP-b(1-P)=0$: $$P(+a\\text{ first})=\\frac{b}{a+b},\\qquad E[\\tau]=ab\\ \\ (\\text{via the martingale } S_n^2-n)$$",
+            "Example (position, $a=3$, $b=2$): take-profit probability $2/5=0.4$; $3\\times2=6$ orders; at 2 orders a minute, 3 minutes.",
+            "Counterexample: no lower barrier, stop at the first $+1$: $E[S_\\tau]=1\\ne0$, because $E\\tau=\\infty$ and the walk is unbounded below. Stating the conditions matters."
           ],
           "cards": [
-            "BAG-A-09",
+            "BAG-A-09"
+          ]
+        },
+        {
+          "t": "Walk with drift",
+          "d": [
+            "Up with probability $p$, down $q=1-p$. $S_n$ is no longer a martingale; $Z_n=(q/p)^{S_n}$ is: $E[(q/p)^X]=p\\frac qp+q\\frac pq=1$.",
+            "$$P(+a\\text{ first})=\\frac{1-(q/p)^{b}}{1-(q/p)^{a+b}},\\qquad E\\tau=\\frac{aP-b(1-P)}{p-q}\\ \\ (\\text{Wald})$$",
+            "$$\\begin{array}{lcccc} a=b & \\textsf{p} & P(+a\\textsf{ first}) & E\\tau \\\\ \\hline \\textsf{10} & \\textsf{0.50} & \\textsf{0.500} & \\textsf{100} \\\\ \\textsf{10} & \\textsf{0.51} & \\textsf{0.599} & \\textsf{98.7} \\\\ \\textsf{10} & \\textsf{0.55} & \\textsf{0.882} & \\textsf{76.3} \\\\ \\textsf{50} & \\textsf{0.51} & \\textsf{0.881} & \\textsf{1904} \\end{array}$$",
+            "Example (position with $p=0.51$): take-profit probability 0.424 instead of 0.4.",
+            "Relationship: a tiny edge matters little over short distances and a lot over long ones."
+          ],
+          "cards": [
             "BAG-A-10"
           ]
         },
         {
-          "t": "Matching problem",
+          "t": "Indicators and Poisson paradigm",
           "d": [
-            "Fixed points: $E=1$, $\\mathrm{Var}=1$, limit Poisson(1), $P(\\text{none})\\to1/e$."
+            "Answers: in a random permutation, how many items stay in place?",
+            "$X=\\sum_jI_j$ with $E(I_j)=1/n$, so $E(X)=1$ for every $n$; the $I_j$ are dependent but linearity does not care.",
+            "Variance: $\\mathrm{Cov}(I_i,I_j)=\\frac{1}{n(n-1)}-\\frac1{n^2}=\\frac{1}{n^2(n-1)}$, so $\\mathrm{Var}(X)=(1-\\tfrac1n)+\\tfrac1n=1$.",
+            "Poisson paradigm: the count of many rare, weakly dependent events is about $\\mathrm{Pois}(\\lambda)$ with $\\lambda=\\sum p_j$.",
+            "$$\\begin{array}{lccccc} \\textsf{k} & \\textsf{0} & \\textsf{1} & \\textsf{2} & \\textsf{3} & \\textsf{4} \\\\ \\hline n=10 \\textsf{ (simulated)} & \\textsf{0.366} & \\textsf{0.369} & \\textsf{0.184} & \\textsf{0.061} & \\textsf{0.016} \\\\ \\mathrm{Pois}(1) & \\textsf{0.368} & \\textsf{0.368} & \\textsf{0.184} & \\textsf{0.061} & \\textsf{0.015} \\end{array}$$ $P(\\text{no fixed point})\\to1/e=0.368$."
           ],
           "cards": [
             "BAG-A-11"
@@ -113,30 +198,49 @@
       "h": "Bayes & estimation",
       "items": [
         {
-          "t": "Beta-Binomial",
+          "t": "Likelihood and MLE",
           "d": [
-            "Prior $\\mathrm{Beta}(a,b)$ + $h$ heads, $t$ tails → $\\mathrm{Beta}(a+h,b+t)$.",
-            "Mean $\\frac{a+h}{a+b+n}$ (weight $\\frac{n}{a+b+n}$ on the MLE); MAP $\\frac{a+h-1}{a+b+n-2}$."
+            "Answers: from the data alone, what is signal Q's hit rate?",
+            "Likelihood: the probability of the observed data as a function of the parameter. $h$ hits, $t$ misses: $$L(p)=p^h(1-p)^t,\\qquad \\ell'(p)=\\frac hp-\\frac{t}{1-p}=0\\ \\Rightarrow\\ \\hat p=\\frac{h}{h+t}$$",
+            "Example (Q): 12 right, 8 wrong: $\\hat p=0.6$. With 3 right, 0 wrong: $\\hat p=1$, \"never wrong\". With little data the MLE goes to extremes."
           ],
           "cards": [
             "BAG-A-12"
           ]
         },
         {
-          "t": "Odds form of Bayes",
+          "t": "Prior, posterior, Beta-Binomial",
           "d": [
-            "Posterior odds = prior odds × likelihood ratio; in logs each observation adds a term (SPRT).",
-            "Sequential updating = updating once with all data (coherency)."
+            "Posterior ∝ likelihood × prior. Prior $p\\sim\\mathrm{Beta}(a,b)$ (density $\\propto p^{a-1}(1-p)^{b-1}$; read $a-1$, $b-1$ as hits and misses already seen): $$p^h(1-p)^t\\cdot p^{a-1}(1-p)^{b-1}\\ \\Rightarrow\\ \\mathrm{Beta}(a+h,\\,b+t)$$ Conjugacy: recognise the shape, no integral needed.",
+            "Posterior mean as a weighted average: $$\\frac{a+h}{a+b+n}=w\\,\\frac hn+(1-w)\\frac{a}{a+b},\\qquad w=\\frac{n}{a+b+n}$$ MAP $=\\frac{a+h-1}{a+b+n-2}$ (equals the MLE under the uniform prior).",
+            "$$\\begin{array}{llccc} \\textsf{Prior} & \\textsf{meaning} & \\textsf{posterior} & \\textsf{mean} & \\textsf{95\\% interval} \\\\ \\hline \\mathrm{Beta}(1,1) & \\textsf{knows nothing} & \\mathrm{Beta}(13,9) & \\textsf{0.591} & (0.38,\\,0.78) \\\\ \\mathrm{Beta}(10,10) & \\textsf{18 days seen, half right} & \\mathrm{Beta}(22,18) & \\textsf{0.550} & (0.40,\\,0.70) \\\\ \\textsf{none} & \\textsf{MLE} & \\textsf{-} & \\textsf{0.600} & \\textsf{-} \\end{array}$$",
+            "Key point: short-history hit rates, ICs and Sharpe ratios should be shrunk toward a sensible prior; with much data $w\\to1$ and the approaches agree."
+          ],
+          "cards": [
+            "BAG-A-12"
+          ]
+        },
+        {
+          "t": "Bayes odds, conditional independence",
+          "d": [
+            "Answers: is Q a real signal (right 55% of days) or noise (50%)?",
+            "Odds form: $$\\frac{P(A\\mid D)}{P(B\\mid D)}=\\frac{P(A)}{P(B)}\\cdot\\frac{P(D\\mid A)}{P(D\\mid B)}$$ The likelihood is a product only because days are independent given which hypothesis is true (conditional independence). Unconditionally they are not.",
+            "In logs each day adds a term: a right day $\\log(0.55/0.5)=+0.0953$, a wrong day $\\log(0.45/0.5)=-0.1054$. Updating day by day equals updating once with all data.",
+            "$$\\begin{array}{lcc} \\textsf{Right / wrong} & \\textsf{log LR} & P(\\textsf{real}\\mid D) \\\\ \\hline 12/8 & \\textsf{0.301} & \\textsf{0.575} \\\\ 60/40 & \\textsf{1.504} & \\textsf{0.818} \\\\ 550/450 & \\textsf{5.008} & \\textsf{0.993} \\end{array}$$ If Q is real the log LR grows only 0.005 a day: about $\\log19/0.005\\approx590$ days to reach 95%.",
+            "Several coins per box: \"redraw each flip\" gives the mixture probability per flip; \"draw once and keep\" gives a mixture of products. Ask which."
           ],
           "cards": [
             "BAG-A-13"
           ]
         },
         {
-          "t": "p-value vs posterior",
+          "t": "p-value vs P(H0 | data)",
           "d": [
-            "$p=P(\\text{data at least this extreme}\\mid H_0)$, not $P(H_0\\mid\\text{data})$.",
-            "$P(H_0\\mid D)=\\frac{\\pi L_0}{\\pi L_0+(1-\\pi)L_1}$."
+            "Answers: 10 heads in a row. Is the coin fair?",
+            "p-value $=P(\\text{data this extreme}\\mid H_0)=2^{-10}\\approx0.001$ (one-sided): reject at usual levels. It is not $P(H_0\\mid\\text{data})$, which needs a prior and an alternative.",
+            "Prior: fair with probability $\\pi$, otherwise two-headed: $$P(\\text{fair}\\mid D)=\\frac{\\pi\\,2^{-10}}{\\pi\\,2^{-10}+(1-\\pi)}$$",
+            "$$\\begin{array}{lc} \\pi & P(\\textsf{fair}\\mid 10\\textsf{ heads}) \\\\ \\hline \\textsf{0.99} & \\textsf{0.088} \\\\ \\textsf{0.999} & \\textsf{0.494} \\end{array}$$",
+            "Key points: how was the coin found (picked from many for its streak = multiple testing)? Was $n=10$ fixed, or did someone stop at the streak? The p-value depends on the stopping rule; the Bayesian posterior, which uses only the likelihood, does not."
           ],
           "cards": [
             "BAG-A-14"
@@ -148,19 +252,27 @@
       "h": "Dependence",
       "items": [
         {
-          "t": "Zero corr ≠ indep.",
+          "t": "Uncorrelated vs independent",
           "d": [
-            "Independent ⇒ $\\mathrm{Cov}=0$; converse holds for jointly normal vectors and for two Bernoullis.",
-            "Counterexamples: $Y=X^2$; $Y=SX$ (normal marginals, not jointly normal)."
+            "Answers: Q's IC is 0. Does Q tell you nothing?",
+            "Independent ⇒ $\\mathrm{Cov}=0$, not conversely: covariance measures only linear dependence. $X\\sim N(0,1)$, $Y=X^2$: $\\mathrm{Cov}=E(X^3)=0$, yet $Y$ is a function of $X$.",
+            "Converse holds for jointly normal vectors (zero covariance ⇒ the density factors) and for two 0/1 variables.",
+            "Example: signal $s\\sim N(0,1)$, return $r=0.1(s^2-1)+\\varepsilon$.",
+            "$$\\begin{array}{lc} \\textsf{Quantity} & \\textsf{Value} \\\\ \\hline \\mathrm{Corr}(s,r)\\ (\\textsf{IC}) & \\textsf{-0.0004} \\\\ \\textsf{mean return, top 10\\% of } s & \\textsf{0.228} \\\\ \\textsf{mean return, bottom 10\\% of } s & \\textsf{0.224} \\\\ \\textsf{mean return, middle 80\\%} & \\textsf{-0.054} \\\\ \\mathrm{Corr}(s^2,r) & \\textsf{0.14} \\end{array}$$",
+            "Key point: check quantile returns, $|s|$ or $s^2$, ranks, mutual information before calling a signal empty."
           ],
           "cards": [
             "BAG-A-15"
           ]
         },
         {
-          "t": "Conditional mean under joint normality",
+          "t": "Conditional expectation",
           "d": [
-            "$E[X\\mid S=s]=\\mu_X+\\frac{\\mathrm{Cov}(X,S)}{\\mathrm{Var}(S)}(s-\\mu_S)$; i.i.d. sum: $s/2$ by symmetry."
+            "Answers: given a total, what is one part expected to be?",
+            "Symmetry: $X,Y$ i.i.d., $S=X+Y$: $E(X\\mid S)=E(Y\\mid S)$ and they sum to $S$, so $E(X\\mid S)=S/2$. Only i.i.d. is used.",
+            "Jointly normal, unequal variances: $$E(X\\mid S=s)=\\mu_X+\\frac{\\sigma_X^2}{\\sigma_X^2+\\sigma_Y^2}(s-\\mu_X-\\mu_Y)$$ The surprise is split in proportion to the variances.",
+            "Example (position): after two orders the price is up 2 (both moves up), so the first move's expectation is $+1=s/2$.",
+            "Example (signal extraction): return = alpha (sd 1%) + noise (sd 4%); a 10% return implies expected alpha $10\\%/17=0.59\\%$."
           ],
           "cards": [
             "BAG-A-16"
@@ -172,32 +284,50 @@
       "h": "Returns & LLN",
       "items": [
         {
-          "t": "LLN",
+          "t": "Mean and variance of a sum",
           "d": [
-            "$\\bar X_n\\to\\mu$ for i.i.d. (or stationary ergodic) data. Says nothing about drifting $\\mu$, selection or costs.",
-            "Days needed for $t=2$: $n=(2\\sigma/\\mu)^2$."
+            "Answers: how do Strategy S's mean and risk scale from a day to a year?",
+            "$E(\\sum r_t)=\\sum E(r_t)$ always. $\\mathrm{Var}(\\sum r_t)=\\sum\\mathrm{Var}(r_t)+2\\sum_{s<t}\\mathrm{Cov}(r_s,r_t)$; independence removes the covariances.",
+            "Example (S, independent): annual mean $252\\times0.04\\%=10.08\\%$, vol $1\\%\\sqrt{252}=15.87\\%$.",
+            "With autocorrelation $\\rho_k$: $$\\mathrm{Var}\\Big(\\sum_{t=1}^Tr_t\\Big)=T\\sigma^2+2\\sigma^2\\sum_{k=1}^{T-1}(T-k)\\rho_k$$ S with AR(1), $\\rho=0.1$: annual vol 17.54% instead of 15.87%.",
+            "Key point: $\\sqrt{252}$ annualisation assumes no autocorrelation; momentum-like dependence understates long-horizon risk."
           ],
           "cards": [
-            "BAG-A-17"
+            "BAG-A-19"
           ]
         },
         {
-          "t": "Jensen",
+          "t": "Simple vs log returns",
           "d": [
-            "Convex $g$: $E g(X)\\ge g(EX)$. Log growth $\\approx\\mu-\\sigma^2/2$."
+            "Simple $R_t=P_t/P_{t-1}-1$; log $r_t=\\log(1+R_t)$. Multi-period: $1+R_{0,T}=\\prod(1+R_t)$, while log returns add: $r_{0,T}=\\sum r_t$.",
+            "Example (S): exact compounded mean $(1.0004)^{252}-1=10.60\\%$ vs arithmetic sum 10.08%: summing simple returns is an approximation."
+          ],
+          "cards": [
+            "BAG-A-19"
+          ]
+        },
+        {
+          "t": "Jensen's inequality",
+          "d": [
+            "Convex $g$ ($g''\\ge0$): $E[g(X)]\\ge g(E[X])$; concave reverses; equality iff $g$ is linear on the support of $X$ (or $X$ constant).",
+            "Options: payoff $(S_T-K)^+$ is convex, so uncertainty adds value (time value).",
+            "Compounding: $\\log$ is concave, $E[\\log(1+R)]<\\log(1+E[R])$. Daily log growth $\\approx\\mu-\\sigma^2/2$.",
+            "Example (S): per day $0.0004-0.0001/2=0.00035$, so a typical path compounds at $e^{252\\times0.00035}-1=9.22\\%$, below the 10.60% mean. Annual 10% mean with 30% vol: $10\\%-4.5\\%=5.5\\%$ (volatility drag)."
           ],
           "cards": [
             "BAG-A-18"
           ]
         },
         {
-          "t": "Multi-period moments",
+          "t": "Chebyshev and the LLN",
           "d": [
-            "Sum: mean $T\\mu$, var $T\\sigma^2$ (independent); with autocorrelation add $2\\sigma^2\\sum_{k}(T-k)\\rho_k$.",
-            "Compounded mean $(1+\\mu)^T-1$; log returns add."
+            "Answers: when can a sample mean be trusted?",
+            "Chebyshev: $P(|\\bar X_n-\\mu|\\ge\\varepsilon)\\le\\frac{\\sigma^2}{n\\varepsilon^2}$. LLN: for i.i.d. data with finite variance, $\\bar X_n\\to\\mu$ in probability.",
+            "Example (S): for $t=\\frac{\\mu}{\\sigma}\\sqrt n=2$, $n=(2\\sigma/\\mu)^2=2500$ days ≈ 9.9 years. Even then Chebyshev with $\\varepsilon=\\mu$ only bounds $P(|\\bar X-\\mu|\\ge\\mu)$ by 0.25.",
+            "What the LLN does not say: it needs a fixed $\\mu$ (regimes move it), a large $n$ (the edge is tiny relative to noise), and an unselected sample (the best of many backtests is biased up). It says nothing about costs, capacity or crowding."
           ],
           "cards": [
-            "BAG-A-19"
+            "BAG-A-17"
           ]
         }
       ]
@@ -206,15 +336,55 @@
       "h": "Edge & sizing",
       "items": [
         {
-          "t": "Kelly",
+          "t": "Kelly: discrete bet",
           "d": [
-            "Maximise $g(f)=E\\log(1+fR)$. Binary bet, odds $b$, win prob $p$: $f^*=p-\\frac{1-p}{b}$ = edge / odds.",
-            "$+2/-1$ game, $p=0.4$: $f^*=0.1$, $g\\approx0.0097$; $g(2f^*)\\approx0$; half Kelly keeps ≈ 3/4 of the growth."
+            "Answers: the game pays $+2$ with probability 0.4, $-1$ with 0.6 (EV $+0.2$). What fraction $f$ of capital to bet each round?",
+            "Maximise long-run growth $g(f)=E\\log(1+fX)$. Win $b$ times the stake with probability $p$: $$g(f)=p\\log(1+bf)+q\\log(1-f),\\qquad f^*=\\frac{bp-q}{b}=\\frac{\\text{edge}}{\\text{odds}}$$",
+            "$$\\begin{array}{lccc} \\textsf{f} & \\textsf{0.05} & \\textsf{0.10} & \\textsf{0.20} \\\\ \\hline g(f) \\textsf{ per round} & \\textsf{0.0074} & \\textsf{0.0097} & \\textsf{0.0007} \\end{array}$$ Half Kelly keeps 76% of the growth; double Kelly keeps almost none. Betting everything is ruin with probability 1.",
+            "Normal approximation $f^*=m/s^2=0.2/2.16=0.093$: 7% off, because the payoff is skewed."
           ],
           "cards": [
             "BAG-A-20",
             "BAG-A-21"
           ]
+        },
+        {
+          "t": "Kelly: continuous",
+          "d": [
+            "Returns with mean $m$ and sd $s$: $g(f)\\approx fm-\\tfrac12f^2s^2$, so $$f^*=\\frac{m}{s^2},\\qquad g(f^*)=\\frac{m^2}{2s^2}=\\frac{SR^2}{2}$$ Several strategies: $F^*=C^{-1}M$.",
+            "Example (S): $f^*=0.0004/0.0001=4$× leverage. Annual growth $252(fm-s^2f^2/2)$:",
+            "$$\\begin{array}{lccccc} \\textsf{f} & \\textsf{1} & \\textsf{2} & \\textsf{4} & \\textsf{6} & \\textsf{8} \\\\ \\hline \\textsf{g} & \\textsf{8.8\\%} & \\textsf{15.1\\%} & \\textsf{20.2\\%} & \\textsf{15.1\\%} & \\textsf{0} \\end{array}$$",
+            "Relationship: $g$ is a parabola symmetric about $f^*$; half Kelly keeps 3/4 of the growth at half the vol; double Kelly earns nothing. Full Kelly halves wealth at some point with probability 1/2. Since $m$ is estimated, practitioners bet a fraction."
+          ],
+          "cards": [
+            "BAG-A-21"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "Geom vs FS",
+          "d": [
+            "Geom($p$) counts failures (mean $q/p$); First Success counts trials including the success (mean $1/p$). Differ by 1."
+          ],
+          "cards": []
+        },
+        {
+          "t": "Normal and Gamma parameters",
+          "d": [
+            "$N(\\mu,\\sigma^2)$: second parameter is the variance. $\\mathrm{Gamma}(k,\\lambda)$ here uses rate $\\lambda$ (mean $k/\\lambda$); some books use scale $\\theta=1/\\lambda$."
+          ],
+          "cards": []
+        },
+        {
+          "t": "ρ",
+          "d": [
+            "Correlation coefficient vs AR(1) coefficient vs autocorrelation at lag $k$: say which."
+          ],
+          "cards": []
         }
       ]
     }
