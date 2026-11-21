@@ -12,7 +12,7 @@
             "Stationarity is $\\nabla_x L(x^*, \\lambda, \\mu) = 0$."
           ],
           "cards": [
-            "NLO-07-01"
+            "NLP-07-01"
           ]
         },
         {
@@ -22,7 +22,7 @@
             "$$d^\\top \\nabla^2_{xx} L(x^*, \\lambda, \\mu)\\,d \\ge 0 \\quad \\text{for all } d \\in \\Lambda(x^*)$$"
           ],
           "cards": [
-            "NLO-07-02"
+            "NLP-07-02"
           ]
         },
         {
@@ -32,7 +32,7 @@
             "Directions tangent to all active constraints. A subspace. Smaller than the feasible directions when an inequality is active."
           ],
           "cards": [
-            "NLO-07-03"
+            "NLP-07-03"
           ]
         },
         {
@@ -41,7 +41,7 @@
             "Along a curve on the constraint, $\\varphi''(0) = d^\\top \\nabla^2_{xx} L\\,d + \\nabla_x L^\\top x''(0)$ and the last term vanishes by KKT. With $f$ the term $\\nabla f^\\top x''(0)$ stays: the bending of the constraint."
           ],
           "cards": [
-            "NLO-07-04"
+            "NLP-07-04"
           ]
         },
         {
@@ -50,8 +50,8 @@
             "With the columns of $Z$ a basis of $\\Lambda(x^*)$: the condition is $Z^\\top H Z \\succeq 0$. $H$ itself need not be PSD."
           ],
           "cards": [
-            "NLO-07-08",
-            "NLO-07-12"
+            "NLP-07-08",
+            "NLP-07-12"
           ]
         },
         {
@@ -61,9 +61,9 @@
             "$C = \\Lambda$ when all active multipliers are positive or there are only equalities."
           ],
           "cards": [
-            "NLO-07-09",
-            "NLO-07-13",
-            "NLO-07-14"
+            "NLP-07-09",
+            "NLP-07-13",
+            "NLP-07-14"
           ]
         },
         {
@@ -72,7 +72,7 @@
             "Negative eigenvalue of $Z^\\top H Z$: not a local minimum.  Convex problem: global minimum.  $Z^\\top H Z \\succ 0$ with positive active multipliers: strict local minimum.  Otherwise: no conclusion."
           ],
           "cards": [
-            "NLO-07-15"
+            "NLP-07-15"
           ]
         }
       ]
@@ -87,7 +87,7 @@
             "One dual variable per primal constraint."
           ],
           "cards": [
-            "NLO-07-16"
+            "NLP-07-16"
           ]
         },
         {
@@ -96,8 +96,8 @@
             "Multiply the constraints by $\\pi \\ge 0$ and add: $\\pi^\\top A x \\le \\pi^\\top b$. If $A^\\top \\pi \\ge c$ and $x \\ge 0$ then $c^\\top x \\le b^\\top \\pi$. The dual is the search for the smallest upper bound."
           ],
           "cards": [
-            "NLO-07-17",
-            "NLO-07-18"
+            "NLP-07-17",
+            "NLP-07-18"
           ]
         },
         {
@@ -108,9 +108,9 @@
             "(P) is the max problem, (D) the min problem."
           ],
           "cards": [
-            "NLO-07-20",
-            "NLO-07-21",
-            "NLO-07-25"
+            "NLP-07-20",
+            "NLP-07-21",
+            "NLP-07-25"
           ]
         },
         {
@@ -119,7 +119,7 @@
             "The dual of (D) is (P)."
           ],
           "cards": [
-            "NLO-07-22"
+            "NLP-07-22"
           ]
         },
         {
@@ -128,8 +128,8 @@
             "Feasible $x$ and $\\pi$ satisfy $c^\\top x \\le (A^\\top \\pi)^\\top x = \\pi^\\top (Ax) \\le b^\\top \\pi$. Equal values certify that both are optimal."
           ],
           "cards": [
-            "NLO-07-23",
-            "NLO-07-19"
+            "NLP-07-23",
+            "NLP-07-19"
           ]
         },
         {
@@ -138,7 +138,7 @@
             "If an LP has a finite optimal solution, so does its dual, and the optimal values are equal. An unbounded primal has an infeasible dual."
           ],
           "cards": [
-            "NLO-07-24"
+            "NLP-07-24"
           ]
         }
       ]
@@ -154,8 +154,8 @@
             "The infimum is over all $x$, feasible or not; $q = -\\infty$ if $L$ is unbounded below."
           ],
           "cards": [
-            "NLO-07-26",
-            "NLO-07-27"
+            "NLP-07-26",
+            "NLP-07-27"
           ]
         },
         {
@@ -164,7 +164,7 @@
             "$q$ is concave for every problem: for fixed $x$, $L$ is affine in the multipliers, and a pointwise infimum of affine functions is concave."
           ],
           "cards": [
-            "NLO-07-28"
+            "NLP-07-28"
           ]
         },
         {
@@ -175,8 +175,8 @@
             "$\\mu \\ge 0$ is essential."
           ],
           "cards": [
-            "NLO-07-29",
-            "NLO-07-30"
+            "NLP-07-29",
+            "NLP-07-30"
           ]
         },
         {
@@ -185,7 +185,7 @@
             "$\\min x^\\top x$ s.t. $Ax = b$:  $q(\\lambda) = -\\tfrac14 \\lambda^\\top AA^\\top \\lambda - b^\\top \\lambda$,  $\\lambda^* = -2(AA^\\top)^{-1} b$,  $x^* = A^\\top (AA^\\top)^{-1} b$,  $d^* = f^* = b^\\top (AA^\\top)^{-1} b$."
           ],
           "cards": [
-            "NLO-07-31"
+            "NLP-07-31"
           ]
         },
         {
@@ -194,8 +194,8 @@
             "$\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$:  $q = -\\lambda^\\top b$ if $c + A^\\top \\lambda - \\mu = 0$, else $-\\infty$. So $f^* \\ge -\\lambda^\\top b$ whenever $A^\\top \\lambda + c \\ge 0$."
           ],
           "cards": [
-            "NLO-07-32",
-            "NLO-07-35"
+            "NLP-07-32",
+            "NLP-07-35"
           ]
         },
         {
@@ -204,7 +204,7 @@
             "Strictly convex quadratic in $x$: set the gradient to zero.  Linear in $x$: coefficient must vanish.  Quadratic form $x^\\top M x$: need $M \\succeq 0$."
           ],
           "cards": [
-            "NLO-07-33"
+            "NLP-07-33"
           ]
         }
       ]
@@ -219,7 +219,7 @@
             "Always a convex problem."
           ],
           "cards": [
-            "NLO-07-34"
+            "NLP-07-34"
           ]
         },
         {
@@ -228,8 +228,8 @@
             "$d^* \\le f^*$ for every problem. Duality gap: $f^* - d^* \\ge 0$."
           ],
           "cards": [
-            "NLO-07-34",
-            "NLO-07-39"
+            "NLP-07-34",
+            "NLP-07-39"
           ]
         },
         {
@@ -238,8 +238,8 @@
             "$\\min x^\\top W x$ s.t. $x_i^2 = 1$:  $q(\\lambda) = -\\mathbf{1}^\\top \\lambda$ if $W + \\operatorname{diag}(\\lambda) \\succeq 0$, else $-\\infty$.  Bound: $f^* \\ge n\\,\\lambda_{\\min}(W)$."
           ],
           "cards": [
-            "NLO-07-36",
-            "NLO-07-37"
+            "NLP-07-36",
+            "NLP-07-37"
           ]
         },
         {
@@ -248,8 +248,8 @@
             "$\\min 2x_1x_2$ on $x_i^2 = 1$: $f^* = d^* = -2$ (nonconvex, zero gap).  $\\min (x^2 - 1)^2$ s.t. $x = 0$: $f^* = 1$, $d^* = 0$ (gap $1$)."
           ],
           "cards": [
-            "NLO-07-37",
-            "NLO-07-38"
+            "NLP-07-37",
+            "NLP-07-38"
           ]
         }
       ]
@@ -263,8 +263,8 @@
             "$d^* = f^*$. Not automatic for nonlinear problems."
           ],
           "cards": [
-            "NLO-07-40",
-            "NLO-07-39"
+            "NLP-07-40",
+            "NLP-07-39"
           ]
         },
         {
@@ -273,8 +273,8 @@
             "Convex problem ($f$, $g_j$ convex, equalities linear) with a point where $g_j(x) < 0$ for all $j$ and $Ax = b$ ⇒ strong duality. The same condition guarantees that KKT multipliers exist; they are the dual optimum."
           ],
           "cards": [
-            "NLO-07-40",
-            "NLO-07-41"
+            "NLP-07-40",
+            "NLP-07-41"
           ]
         },
         {
@@ -284,7 +284,7 @@
             "$$q(\\mu) = -\\tfrac14 \\mu^\\top A P^{-1} A^\\top \\mu - b^\\top \\mu, \\qquad \\max q(\\mu)\\ \\text{s.t.}\\ \\mu \\ge 0$$"
           ],
           "cards": [
-            "NLO-07-42"
+            "NLP-07-42"
           ]
         },
         {
@@ -293,7 +293,7 @@
             "$q(\\alpha) = \\sum_i \\alpha_i - \\tfrac14 \\lVert \\sum_i \\alpha_i y_i x_i \\rVert^2$ with $\\sum_i \\alpha_i y_i = 0$, $\\alpha \\ge 0$, and $w = \\tfrac12 \\sum_i \\alpha_i y_i x_i$ (for the objective $\\lVert w \\rVert^2$)."
           ],
           "cards": [
-            "NLO-07-46"
+            "NLP-07-46"
           ]
         },
         {
@@ -302,9 +302,9 @@
             "Standard form → $L$ grouped by $x$ → infimum by shape → $\\max q$ s.t. $\\mu \\ge 0$ → solve, check $\\mu \\ge 0$ → recover $x$; feasible with $f(x) = d^*$ certifies both."
           ],
           "cards": [
-            "NLO-07-47",
-            "NLO-07-43",
-            "NLO-07-44"
+            "NLP-07-47",
+            "NLP-07-43",
+            "NLP-07-44"
           ]
         }
       ]
@@ -318,9 +318,9 @@
             "KKT points $(0,0)$, $\\mu = -2$ (fails: $-2d_2^2$) and $(\\tfrac14, \\pm\\tfrac{1}{\\sqrt2})$, $\\mu = -1$ (pass: $8t^2$); minimum value $\\tfrac34$."
           ],
           "cards": [
-            "NLO-07-05",
-            "NLO-07-06",
-            "NLO-07-07"
+            "NLP-07-05",
+            "NLP-07-06",
+            "NLP-07-07"
           ]
         },
         {
@@ -329,7 +329,7 @@
             "$(\\pm 1, 0)$ pass and are the global minimizers ($f = 1$); $(0, \\pm 1)$ fail."
           ],
           "cards": [
-            "NLO-07-10"
+            "NLP-07-10"
           ]
         },
         {
@@ -338,8 +338,8 @@
             "$x^* = (1, 0, 0)$, $\\lambda_1 = 1$, $\\mu_1 = 0$; $H = \\operatorname{diag}(4, 4, -2)$, $\\Lambda = \\operatorname{span}\\{(0, 2, 1)\\}$, curvature $14t^2$; $f^* = 1$."
           ],
           "cards": [
-            "NLO-07-11",
-            "NLO-07-12"
+            "NLP-07-11",
+            "NLP-07-12"
           ]
         },
         {
@@ -348,7 +348,7 @@
             "$\\min -x_1^2 + x_2^2$ s.t. $-x_1 \\le 0$ at the origin: passes on $\\Lambda$ ($Z^\\top H Z = 2$) but is not a local minimum."
           ],
           "cards": [
-            "NLO-07-13"
+            "NLP-07-13"
           ]
         },
         {
@@ -357,7 +357,7 @@
             "$x = (16, 2, 0)$ and $\\pi = (1.6, 2.2)$, both with value $98$."
           ],
           "cards": [
-            "NLO-07-19"
+            "NLP-07-19"
           ]
         },
         {
@@ -366,7 +366,7 @@
             "$q(\\lambda) = -\\tfrac{\\lambda^2}{2} - 2\\lambda$, $\\lambda^* = -2$, $d^* = f^* = 2$."
           ],
           "cards": [
-            "NLO-07-27"
+            "NLP-07-27"
           ]
         },
         {
@@ -375,8 +375,8 @@
             "$q = -\\lambda_1^2 + \\lambda_1\\mu_1 - \\tfrac12\\mu_1^2 - 2\\lambda_1 + \\tfrac32\\mu_1$; optimum $(\\lambda_1, \\mu_1) = (-\\tfrac12, 1)$, $x = (\\tfrac32, \\tfrac12)$, $f^* = d^* = \\tfrac54$."
           ],
           "cards": [
-            "NLO-07-43",
-            "NLO-07-44"
+            "NLP-07-43",
+            "NLP-07-44"
           ]
         },
         {
@@ -385,7 +385,7 @@
             "$\\min x^2$ s.t. $x \\ge 1$: $q(\\mu) = -\\tfrac{\\mu^2}{4} + \\mu$, $\\mu^* = 2$, $d^* = f^* = 1$."
           ],
           "cards": [
-            "NLO-07-42"
+            "NLP-07-42"
           ]
         },
         {
@@ -394,7 +394,7 @@
             "$\\min x_1 + x_2$ on $x_1^2 + x_2^2 \\le 2$: $q(\\mu) = -\\tfrac{1}{2\\mu} - 2\\mu$, $\\mu^* = \\tfrac12$, $d^* = f^* = -2$."
           ],
           "cards": [
-            "NLO-07-45"
+            "NLP-07-45"
           ]
         }
       ]
@@ -408,8 +408,8 @@
             "Solving the KKT system of the parabola example (case split); the second-order test on it."
           ],
           "cards": [
-            "NLO-07-05",
-            "NLO-07-06"
+            "NLP-07-05",
+            "NLP-07-06"
           ]
         },
         {
@@ -418,9 +418,9 @@
             "Why a max LP with $\\le$ constraints has $\\pi \\ge 0$ and dual constraints $\\ge$; the lower bound proof, with the role of $\\mu \\ge 0$."
           ],
           "cards": [
-            "NLO-07-18",
-            "NLO-07-20",
-            "NLO-07-29"
+            "NLP-07-18",
+            "NLP-07-20",
+            "NLP-07-29"
           ]
         },
         {
@@ -429,9 +429,9 @@
             "Weak duality; concavity of the dual function; Slater's condition for a given problem."
           ],
           "cards": [
-            "NLO-07-34",
-            "NLO-07-28",
-            "NLO-07-40"
+            "NLP-07-34",
+            "NLP-07-28",
+            "NLP-07-40"
           ]
         },
         {
@@ -440,7 +440,7 @@
             "The practical meaning of the $\\pm 1$ problem and the $\\lambda_{\\min}$ bound."
           ],
           "cards": [
-            "NLO-07-36"
+            "NLP-07-36"
           ]
         }
       ]
@@ -454,11 +454,11 @@
             "First-order system by cases, then the reduced Hessian at each point."
           ],
           "cards": [
-            "NLO-07-05",
-            "NLO-07-06",
-            "NLO-07-10",
-            "NLO-07-11",
-            "NLO-07-12"
+            "NLP-07-05",
+            "NLP-07-06",
+            "NLP-07-10",
+            "NLP-07-11",
+            "NLP-07-12"
           ]
         },
         {
@@ -467,9 +467,9 @@
             "An active inequality with zero multiplier needs the larger cone."
           ],
           "cards": [
-            "NLO-07-13",
-            "NLO-07-14",
-            "NLO-07-09"
+            "NLP-07-13",
+            "NLP-07-14",
+            "NLP-07-09"
           ]
         },
         {
@@ -478,9 +478,9 @@
             "Table, or derive it from the bound argument."
           ],
           "cards": [
-            "NLO-07-16",
-            "NLO-07-21",
-            "NLO-07-25"
+            "NLP-07-16",
+            "NLP-07-21",
+            "NLP-07-25"
           ]
         },
         {
@@ -489,11 +489,11 @@
             "Identify the shape of L in x; check the sign of the inequality multipliers; certify with weak duality."
           ],
           "cards": [
-            "NLO-07-27",
-            "NLO-07-43",
-            "NLO-07-44",
-            "NLO-07-42",
-            "NLO-07-45"
+            "NLP-07-27",
+            "NLP-07-43",
+            "NLP-07-44",
+            "NLP-07-42",
+            "NLP-07-45"
           ]
         },
         {
@@ -502,10 +502,10 @@
             "Convex with Slater: zero. Otherwise compute both sides."
           ],
           "cards": [
-            "NLO-07-38",
-            "NLO-07-37",
-            "NLO-07-41",
-            "NLO-07-39"
+            "NLP-07-38",
+            "NLP-07-37",
+            "NLP-07-41",
+            "NLP-07-39"
           ]
         }
       ]
@@ -519,8 +519,8 @@
             "Second-order slides: $\\lambda \\ge 0$ inequalities, $\\mu$ equalities. Duality slides: the reverse. Earlier: $u$, $v$."
           ],
           "cards": [
-            "NLO-07-01",
-            "NLO-07-26"
+            "NLP-07-01",
+            "NLP-07-26"
           ]
         },
         {
@@ -529,8 +529,8 @@
             "LP slides: primal is a max, the dual gives upper bounds. Duality slides: primal is a min, the dual gives lower bounds."
           ],
           "cards": [
-            "NLO-07-25",
-            "NLO-07-35"
+            "NLP-07-25",
+            "NLP-07-35"
           ]
         },
         {
@@ -539,7 +539,7 @@
             "For the standard-form LP the dual value is $-\\lambda^\\top b$ on one page and $b^\\top \\lambda$ on a later one: $\\pi = -\\lambda$."
           ],
           "cards": [
-            "NLO-07-35"
+            "NLP-07-35"
           ]
         },
         {
@@ -548,7 +548,7 @@
             "Use $f^* - d^* \\ge 0$. One slide writes $d^* - f^*$."
           ],
           "cards": [
-            "NLO-07-34"
+            "NLP-07-34"
           ]
         },
         {
@@ -557,7 +557,7 @@
             "An eigenvalue, not a multiplier."
           ],
           "cards": [
-            "NLO-07-36"
+            "NLP-07-36"
           ]
         }
       ]
@@ -571,7 +571,7 @@
             "The second-order theorem needs twice continuously differentiable functions."
           ],
           "cards": [
-            "NLO-07-02"
+            "NLP-07-02"
           ]
         },
         {
@@ -580,7 +580,7 @@
             "Not “all feasible infinitesimal directions” when an inequality is active."
           ],
           "cards": [
-            "NLO-07-03"
+            "NLP-07-03"
           ]
         },
         {
@@ -589,7 +589,7 @@
             "$y$ should be $d$, $\\nabla f_i$ should be the constraint gradient, and the multiplier is $\\mu$."
           ],
           "cards": [
-            "NLO-07-06"
+            "NLP-07-06"
           ]
         },
         {
@@ -598,7 +598,7 @@
             "Written as column · matrix · row; and “$-2d_2^2 \\ge 0$ for any $d_2$” is the inequality to be checked, which is false."
           ],
           "cards": [
-            "NLO-07-06"
+            "NLP-07-06"
           ]
         },
         {
@@ -607,7 +607,7 @@
             "“$\\pi_1 + 2\\pi_1 \\ge 6$” should be $\\pi_1 + 2\\pi_2 \\ge 6$."
           ],
           "cards": [
-            "NLO-07-16"
+            "NLP-07-16"
           ]
         },
         {
@@ -616,7 +616,7 @@
             "“$\\pi_1$ unrestricted” should be $\\pi_2$."
           ],
           "cards": [
-            "NLO-07-21"
+            "NLP-07-21"
           ]
         },
         {
@@ -625,7 +625,7 @@
             "$\\sum \\mu_i h_i(\\bar x)$ should be $\\sum_j \\mu_j g_j(\\bar x)$."
           ],
           "cards": [
-            "NLO-07-29"
+            "NLP-07-29"
           ]
         },
         {
@@ -634,7 +634,7 @@
             "The “least-squares solution of linear equations” is the least-norm problem."
           ],
           "cards": [
-            "NLO-07-31"
+            "NLP-07-31"
           ]
         },
         {
@@ -643,7 +643,7 @@
             "$\\lambda$ becomes $-\\lambda$ between two pages of the LP dual; “$\\max_\\lambda$” should be over $(\\lambda, \\mu)$."
           ],
           "cards": [
-            "NLO-07-35"
+            "NLP-07-35"
           ]
         },
         {
@@ -652,7 +652,7 @@
             "“$\\lambda = -\\lambda_{\\min}(W)$” means every component; “minimize $\\mathbf{1}^\\top \\lambda$” has value $-d^*$."
           ],
           "cards": [
-            "NLO-07-36"
+            "NLP-07-36"
           ]
         },
         {
@@ -661,7 +661,7 @@
             "“$w^\\top x - b = 1$” should be $w^\\top x + b = 1$; the minimization is over $(w, b)$."
           ],
           "cards": [
-            "NLO-07-46"
+            "NLP-07-46"
           ]
         }
       ]
@@ -669,7 +669,7 @@
   ],
   "cards": [
     {
-      "id": "NLO-07-01",
+      "id": "NLP-07-01",
       "g": "Second order",
       "k": "Lagrangian",
       "q": "For $\\min f(x)$ s.t. $g_i(x) \\le 0$ ($i = 1, \\dots, m$), $h_j(x) = 0$ ($j = 1, \\dots, p$), the second-order slides use multipliers $\\lambda_i \\ge 0$ for the inequalities and $\\mu_j$ for the equalities. (1) Write the Lagrangian $L(x, \\lambda, \\mu)$. (2) Give $\\nabla_x L$ and $\\nabla^2_{xx} L$. (3) Rewrite KKT stationarity with $L$.",
@@ -683,7 +683,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-02",
+      "id": "NLP-07-02",
       "g": "Second order",
       "k": "SONC statement",
       "q": "State the second-order necessary conditions for $\\min f(x)$ s.t. $g_i(x) \\le 0$, $h_j(x) = 0$, with multipliers $\\lambda_i$ (inequalities) and $\\mu_j$ (equalities): (1) the hypotheses on $x^*$, (2) the conclusion, (3) the set $\\Lambda(x^*)$.",
@@ -697,7 +697,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-03",
+      "id": "NLP-07-03",
       "g": "Second order",
       "k": "Tangent set",
       "q": "Let $\\Lambda(x^*) = \\{d : \\nabla g_i(x^*)^\\top d = 0 \\text{ for active } i,\\ \\nabla h_j(x^*)^\\top d = 0 \\text{ for all } j\\}$. (1) What do these directions mean geometrically? (2) What kind of set is $\\Lambda(x^*)$? (3) How does it differ from the set of feasible directions?",
@@ -713,7 +713,7 @@
       ]
     },
     {
-      "id": "NLO-07-04",
+      "id": "NLP-07-04",
       "g": "Second order",
       "k": "Why the Hessian of L",
       "q": "The second-order test uses $\\nabla^2_{xx} L$, not $\\nabla^2 f$. Take one equality $h(x) = 0$ with multiplier $\\mu$ and a curve $x(t)$ on the constraint with $x(0) = x^*$, $x'(0) = d$. (1) Compute $\\varphi''(0)$ for $\\varphi(t) = f(x(t))$ using $L$. (2) What goes wrong if you differentiate $f$ directly? (3) Check both at $x^* = (0,0)$ for $f = (2x_1 - 1)^2 + x_2^2$, $h = -2x_1 + x_2^2$, $\\mu = -2$, with $x(t) = (t^2/2,\\ t)$.",
@@ -727,7 +727,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-05",
+      "id": "NLP-07-05",
       "g": "Second order",
       "k": "Three KKT points",
       "q": "Find all KKT points of $\\min f = (2x_1 - 1)^2 + x_2^2$ s.t. $h = -2x_1 + x_2^2 = 0$ (multiplier $\\mu$, any sign). (1) Write $L$ and the KKT system. (2) Solve it by cases. (3) Are the points regular?",
@@ -741,7 +741,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-06",
+      "id": "NLP-07-06",
       "g": "Second order",
       "k": "Second-order test",
       "q": "Continue with $f = (2x_1 - 1)^2 + x_2^2$, $h = -2x_1 + x_2^2 = 0$, whose KKT points are $(0,0)$ with $\\mu = -2$ and $(\\tfrac14, \\pm\\tfrac{1}{\\sqrt2})$ with $\\mu = -1$. (1) Compute $\\nabla^2_{xx} L$. (2) Find $\\Lambda$ at each point. (3) Apply the second-order necessary condition at each point.",
@@ -755,7 +755,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-07",
+      "id": "NLP-07-07",
       "g": "Second order",
       "k": "Elimination check",
       "q": "For $\\min (2x_1 - 1)^2 + x_2^2$ s.t. $-2x_1 + x_2^2 = 0$, confirm the second-order conclusions by eliminating $x_1$. (1) Reduce $f$ to a function of $s = x_2^2$. (2) Find the minimum. (3) What is the point $(0, 0)$?",
@@ -769,7 +769,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-08",
+      "id": "NLP-07-08",
       "g": "Second order",
       "k": "Reduced Hessian",
       "q": "Let $H = \\nabla^2_{xx} L(x^*, \\lambda, \\mu)$ and let the columns of $Z$ form a basis of $\\Lambda(x^*)$. (1) Restate “$d^\\top H d \\ge 0$ for all $d \\in \\Lambda(x^*)$” using $Z$, with the reason. (2) List the steps of the second-order test at a KKT point.",
@@ -784,7 +784,7 @@
       ]
     },
     {
-      "id": "NLO-07-09",
+      "id": "NLP-07-09",
       "g": "Second order",
       "k": "SONC vs SOSC",
       "q": "At a KKT point $x^*$ with multipliers $\\lambda$ (inequalities) and $\\mu$ (equalities), let $H = \\nabla^2_{xx} L$. (1) What does the necessary condition test, and what can it conclude? (2) State the second-order sufficient condition (a standard result, not on the slides), including its set of directions $C(x^*)$. (3) When is $C(x^*) = \\Lambda(x^*)$?",
@@ -802,7 +802,7 @@
       ]
     },
     {
-      "id": "NLO-07-10",
+      "id": "NLP-07-10",
       "g": "Second order",
       "k": "Unit circle",
       "q": "Consider $\\min f = x_1^2 + 2x_2^2$ s.t. $h_1 = x_1^2 + x_2^2 - 1 = 0$ (multiplier $\\mu$). (1) Find all KKT points. (2) Compute $H = \\nabla^2_{xx} L$ and apply the second-order test at each. (3) Find the global minimizers directly. (4) Why can $\\nabla^2 f$ alone not distinguish the points?",
@@ -819,7 +819,7 @@
       ]
     },
     {
-      "id": "NLO-07-11",
+      "id": "NLP-07-11",
       "g": "Second order",
       "k": "Disk and plane: KKT",
       "q": "Consider $\\min f = (x_1 - 2)^2 + x_2^2 - x_3^2$ s.t. $g_1 = x_1^2 + x_2^2 - 1 \\le 0$ (multiplier $\\lambda_1 \\ge 0$) and $h_1 = x_3 - \\tfrac12 x_2 = 0$ (multiplier $\\mu_1$). (1) Write stationarity. (2) Show that $x_2 = x_3 = 0$ and $\\mu_1 = 0$. (3) Finish by cases on $\\lambda_1$. (4) Check regularity.",
@@ -836,7 +836,7 @@
       ]
     },
     {
-      "id": "NLO-07-12",
+      "id": "NLP-07-12",
       "g": "Second order",
       "k": "Curvature on Λ",
       "q": "At the KKT point $x^* = (1, 0, 0)$ of $\\min (x_1 - 2)^2 + x_2^2 - x_3^2$ s.t. $x_1^2 + x_2^2 - 1 \\le 0$, $x_3 - \\tfrac12 x_2 = 0$, the multipliers are $\\lambda_1 = 1$ and $\\mu_1 = 0$, with $\\nabla g_1 = (2, 0, 0)$ and $\\nabla h_1 = (0, -\\tfrac12, 1)$. (1) Find $\\Lambda(x^*)$. (2) Compute $H = \\nabla^2_{xx} L$. Is it PSD on $\\mathbb{R}^3$? (3) Test it on $\\Lambda(x^*)$. (4) Confirm by eliminating $x_3$.",
@@ -853,7 +853,7 @@
       ]
     },
     {
-      "id": "NLO-07-13",
+      "id": "NLP-07-13",
       "g": "Second order",
       "k": "Zero multiplier",
       "q": "Consider $\\min f = -x_1^2 + x_2^2$ s.t. $g_1 = -x_1 \\le 0$ (multiplier $\\lambda_1 \\ge 0$) at $x^* = (0, 0)$. (1) Show $x^*$ is a regular KKT point and find $\\lambda_1$. (2) Apply the test on $\\Lambda(x^*)$. (3) Show that $x^*$ is nevertheless not a local minimum. (4) What did the test miss?",
@@ -870,7 +870,7 @@
       ]
     },
     {
-      "id": "NLO-07-14",
+      "id": "NLP-07-14",
       "g": "Second order",
       "k": "Critical cone",
       "q": "For $\\min x_1^2 - 2x_1x_2 + 3x_2^2$ s.t. $g_1 = x_1 + x_2 - 1 \\le 0$, $g_2 = -x_1 \\le 0$, the only KKT point is $x^* = (0, 0)$ with $\\lambda^* = (0, 0)$; $g_2$ is active and $g_1$ is not. (1) Build the set $C(x^*)$: $\\nabla g_i^\\top d = 0$ for active constraints with $\\lambda_i > 0$, and $\\nabla g_i^\\top d \\le 0$ for active constraints with $\\lambda_i = 0$. (2) Compute $\\nabla^2_{xx} L$ and test it on $C(x^*)$. (3) Conclude.",
@@ -886,7 +886,7 @@
       ]
     },
     {
-      "id": "NLO-07-15",
+      "id": "NLP-07-15",
       "g": "Second order",
       "k": "Second-order verdicts",
       "q": "You have a regular KKT point $x^*$, $H = \\nabla^2_{xx} L$, and a basis $Z$ of $\\Lambda(x^*)$. What do you conclude when (1) $Z^\\top H Z$ has a negative eigenvalue, (2) $Z^\\top H Z \\succeq 0$ and the problem is convex, (3) $Z^\\top H Z \\succ 0$ and every active inequality has a positive multiplier, (4) none of these apply?",
@@ -901,7 +901,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-16",
+      "id": "NLP-07-16",
       "g": "LP duality",
       "k": "Primal and dual",
       "q": "Take an LP in the form (P): $\\max c^\\top x$ s.t. $Ax \\le b$, $x \\ge 0$. (1) Write its dual (D) in matrix form. (2) How many dual variables and dual constraints are there? (3) Write the dual of $\\max 6x_1 + x_2 + 2x_3$ s.t. $x_1 + 2x_2 - x_3 \\le 20$, $2x_1 - x_2 + 2x_3 \\le 30$, $x \\ge 0$.",
@@ -915,7 +915,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-17",
+      "id": "NLP-07-17",
       "g": "LP duality",
       "k": "Bounds without solving",
       "q": "For (P): $\\max z = 6x_1 + x_2 + 2x_3$ s.t. $x_1 + 2x_2 - x_3 \\le 20$, $2x_1 - x_2 + 2x_3 \\le 30$, $x \\ge 0$, with optimal value $z^*$. (1) Use the feasible point $x = (10, 2, 2)$ to bound $z^*$. (2) Multiply both constraints by $2$ and add to bound $z^*$ from the other side. (3) Which bounds do we want large, and which small?",
@@ -929,7 +929,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-18",
+      "id": "NLP-07-18",
       "g": "LP duality",
       "k": "Origin of the dual",
       "q": "Take (P): $\\max c^\\top x$ s.t. $Ax \\le b$, $x \\ge 0$. Multiply constraint $i$ by a number $\\pi_i$ and add them up. (1) Which condition on $\\pi$ keeps the direction “$\\le$”, and what inequality results? (2) Which condition makes the objective no larger than the combined left side, and what does it use? (3) What bound follows, and what is the dual problem?",
@@ -943,7 +943,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-19",
+      "id": "NLP-07-19",
       "g": "LP duality",
       "k": "Closing the gap",
       "q": "For (P): $\\max 6x_1 + x_2 + 2x_3$ s.t. $x_1 + 2x_2 - x_3 \\le 20$, $2x_1 - x_2 + 2x_3 \\le 30$, $x \\ge 0$, and its dual $\\min 20\\pi_1 + 30\\pi_2$ s.t. $\\pi_1 + 2\\pi_2 \\ge 6$, $2\\pi_1 - \\pi_2 \\ge 1$, $-\\pi_1 + 2\\pi_2 \\ge 2$, $\\pi \\ge 0$. (1) Check that $x = (16, 2, 0)$ and $\\pi = (1.6, 2.2)$ are feasible and compute their values. (2) What do you conclude, and by which result? (3) What technique does this give for proving optimality?",
@@ -957,7 +957,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-20",
+      "id": "NLP-07-20",
       "g": "LP duality",
       "k": "Dual table",
       "q": "Take (P) as a max problem and (D) as a min problem, with $A \\leftrightarrow A^\\top$ and $c \\leftrightarrow b$. (1) What sign does $\\pi_i$ get when primal constraint $i$ is $\\le$, $\\ge$ or $=$? (2) What form does dual constraint $j$ take when $x_j \\ge 0$, $x_j \\le 0$ or $x_j$ is free? (3) What single idea explains all six rules?",
@@ -971,7 +971,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-21",
+      "id": "NLP-07-21",
       "g": "LP duality",
       "k": "Using the table",
       "q": "Write the dual of (P): $\\max 5x_1 - 3x_2 + 2x_3$ s.t. $x_1 + 4x_2 - 2x_3 \\ge 1$, $2x_1 - x_2 + x_3 = -5$, $x_1 + x_2 - x_3 \\le 2$, with $x_1 \\le 0$, $x_2 \\ge 0$, $x_3$ free. Give (1) the objective, (2) the signs of the dual variables, (3) the three dual constraints.",
@@ -985,7 +985,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-22",
+      "id": "NLP-07-22",
       "g": "LP duality",
       "k": "Dual of the dual",
       "q": "Show that the dual of (D): $\\min b^\\top \\pi$ s.t. $A^\\top \\pi \\ge c$, $\\pi \\ge 0$ is (P): $\\max c^\\top x$ s.t. $Ax \\le b$, $x \\ge 0$. Give the three steps.",
@@ -999,7 +999,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-23",
+      "id": "NLP-07-23",
       "g": "LP duality",
       "k": "Weak duality (LP)",
       "q": "For (P): $\\max c^\\top x$ s.t. $Ax \\le b$, $x \\ge 0$ and (D): $\\min b^\\top \\pi$ s.t. $A^\\top \\pi \\ge c$, $\\pi \\ge 0$. (1) State weak duality. (2) Prove it, saying what each step uses. (3) State the corollary about equal objective values.",
@@ -1013,7 +1013,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-24",
+      "id": "NLP-07-24",
       "g": "LP duality",
       "k": "Strong duality (LP)",
       "q": "(1) State strong duality for LPs. (2) Contrast it with weak duality: what each says and what each assumes. (3) What happens to the dual when the primal is unbounded? Illustrate with $\\max x$ s.t. $-x \\le 1$, $x \\ge 0$.",
@@ -1027,7 +1027,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-25",
+      "id": "NLP-07-25",
       "g": "LP duality",
       "k": "Min-form LP",
       "q": "Consider $\\min 4x_1 + 3x_2$ s.t. $x_1 + x_2 \\ge 2$, $x \\ge 0$. (1) Write its dual. (2) Find both optimal values.",
@@ -1040,7 +1040,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-26",
+      "id": "NLP-07-26",
       "g": "Dual function",
       "k": "Dual function",
       "q": "The duality slides write the problem as $\\min f(x)$ s.t. $h_i(x) = 0$ ($i = 1, \\dots, m$), $g_j(x) \\le 0$ ($j = 1, \\dots, r$), with $\\lambda_i$ for equalities and $\\mu_j$ for inequalities (the reverse of the second-order slides). (1) Write the Lagrangian. (2) Define the dual function $q(\\lambda, \\mu)$. (3) Over which $x$ is the infimum taken? (4) What is $q$ when $L$ is unbounded below in $x$?",
@@ -1055,7 +1055,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-27",
+      "id": "NLP-07-27",
       "g": "Dual function",
       "k": "Line example",
       "q": "For $\\min x_1^2 + x_2^2$ s.t. $x_1 + x_2 - 2 = 0$ (multiplier $\\lambda$, any sign): (1) compute $q(\\lambda)$, (2) solve the dual problem $\\max_\\lambda q(\\lambda)$, (3) compare with the primal optimum $x^* = (1, 1)$, $f^* = 2$.",
@@ -1069,7 +1069,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-28",
+      "id": "NLP-07-28",
       "g": "Dual function",
       "k": "Concavity of q",
       "q": "Claim: the dual function $q(\\lambda, \\mu) = \\inf_x L(x, \\lambda, \\mu)$ is concave, even when the primal problem is not convex. Prove it in three steps for two multiplier vectors $a, b$ and $\\theta \\in [0, 1]$.",
@@ -1085,7 +1085,7 @@
       ]
     },
     {
-      "id": "NLO-07-29",
+      "id": "NLP-07-29",
       "g": "Dual function",
       "k": "Lower bound property",
       "q": "Lower bound property: for any $\\lambda$ and any $\\mu \\ge 0$, $q(\\lambda, \\mu) \\le f^*$, where $f^*$ is the primal optimal value ($\\lambda$: equalities $h_i = 0$; $\\mu$: inequalities $g_j \\le 0$). Prove it, starting from an arbitrary feasible point $\\bar{x}$: (1) the sign of the constraint terms, (2) $L$ versus $f$ at $\\bar{x}$, (3) bringing in the infimum, (4) the conclusion.",
@@ -1100,7 +1100,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-30",
+      "id": "NLP-07-30",
       "g": "Dual function",
       "k": "Why μ ≥ 0",
       "q": "Consider $\\min x^2$ s.t. $x - 1 \\le 0$ (multiplier $\\mu$). (1) Find $f^*$. (2) Compute $q(\\mu)$. (3) Evaluate $q(-2)$ and explain what it shows.",
@@ -1114,7 +1114,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-31",
+      "id": "NLP-07-31",
       "g": "Dual function",
       "k": "Least-norm dual",
       "q": "Least-norm problem: $\\min x^\\top x$ s.t. $Ax = b$, with $A \\in \\mathbb{R}^{p \\times n}$ and multiplier $\\lambda \\in \\mathbb{R}^p$. (1) Compute $q(\\lambda)$. (2) Solve the dual, assuming $AA^\\top$ is invertible. (3) Recover $x^*$ and check strong duality. (4) What does Slater's condition reduce to here?",
@@ -1129,7 +1129,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-32",
+      "id": "NLP-07-32",
       "g": "Dual function",
       "k": "LP dual function",
       "q": "Standard-form LP: $\\min c^\\top x$ s.t. $Ax = b$ (multiplier $\\lambda$) and $x \\ge 0$, written as $-x \\le 0$ (multiplier $\\mu \\ge 0$). (1) Write $L$ grouped by $x$. (2) Compute $q(\\lambda, \\mu)$. (3) What finite lower bound on $f^*$ results, and under which condition? (4) Apply it to $\\min x_1 + 2x_2$ s.t. $x_1 + x_2 = 1$, $x \\ge 0$.",
@@ -1144,7 +1144,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-33",
+      "id": "NLP-07-33",
       "g": "Dual function",
       "k": "Shapes of L",
       "q": "Computing $q = \\inf_x L$ depends on how $L$ looks as a function of $x$. How do you take the infimum, and what does $q$ look like, when $L$ is (1) a strictly convex quadratic in $x$, (2) linear in $x$, (3) a pure quadratic form $x^\\top M x$ plus a constant?",
@@ -1158,7 +1158,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-34",
+      "id": "NLP-07-34",
       "g": "Dual problem",
       "k": "Dual and weak duality",
       "q": "With $\\lambda$ for equalities and $\\mu \\ge 0$ for inequalities: (1) define the Lagrange dual problem and its optimal value $d^*$. (2) State weak duality and say why it holds. (3) Define the duality gap. (4) Why is the dual useful even when the primal is hard?",
@@ -1173,7 +1173,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-35",
+      "id": "NLP-07-35",
       "g": "Dual problem",
       "k": "LP dual via Lagrangian",
       "q": "Redo the LP $\\max c^\\top x$ s.t. $Ax \\le b$, $x \\ge 0$ with the Lagrangian. (1) Put it in min form with “$\\le 0$” constraints, with multipliers $\\mu \\ge 0$ for $Ax - b \\le 0$ and $\\nu \\ge 0$ for $-x \\le 0$. (2) Compute $L$ and $q$. (3) Write the dual and compare it with $\\min b^\\top \\pi$ s.t. $A^\\top \\pi \\ge c$, $\\pi \\ge 0$.",
@@ -1187,7 +1187,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-36",
+      "id": "NLP-07-36",
       "g": "Dual problem",
       "k": "±1 partitioning",
       "q": "Two-way partitioning: $\\min x^\\top W x$ s.t. $x_i^2 = 1$ for $i = 1, \\dots, n$, with $W$ symmetric and multipliers $\\lambda_i$ of any sign. (1) Why is the problem nonconvex? (2) Write $L$ as a quadratic form. (3) Compute $q(\\lambda)$, stating the fact about $\\inf_x x^\\top M x$. (4) Write the dual problem.",
@@ -1202,7 +1202,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-37",
+      "id": "NLP-07-37",
       "g": "Dual problem",
       "k": "Binary example",
       "q": "Consider $\\min 2x_1x_2$ s.t. $x_1^2 = 1$, $x_2^2 = 1$ (multipliers $\\lambda_1, \\lambda_2$ of any sign). (1) Find $f^*$ by enumeration. (2) Write $L = x^\\top M(\\lambda)\\,x - \\lambda_1 - \\lambda_2$ and say when $q$ is finite. (3) Write the dual with explicit conditions and solve it. (4) What is the duality gap?",
@@ -1219,7 +1219,7 @@
       ]
     },
     {
-      "id": "NLO-07-38",
+      "id": "NLP-07-38",
       "g": "Dual problem",
       "k": "Positive gap",
       "q": "Consider $\\min (x^2 - 1)^2$ s.t. $x = 0$ (multiplier $\\lambda$), with $x \\in \\mathbb{R}$. (1) Find $f^*$ and write $q(\\lambda)$. (2) Bound $q(\\lambda)$ using $x = 1$ and $x = -1$, and compute $q(0)$. (3) Find $d^*$ and the duality gap. (4) Is this consistent with weak duality, and why does strong duality fail?",
@@ -1236,7 +1236,7 @@
       ]
     },
     {
-      "id": "NLO-07-39",
+      "id": "NLP-07-39",
       "g": "Dual problem",
       "k": "Duality by type",
       "q": "What do weak and strong duality guarantee for (1) an LP with a finite optimum, (2) a convex problem with a Slater point, (3) a convex problem without a Slater point, (4) a nonconvex problem?",
@@ -1251,7 +1251,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-40",
+      "id": "NLP-07-40",
       "g": "Strong duality",
       "k": "Slater's condition",
       "q": "(1) Define strong duality. (2) State Slater's condition as it is used for duality. (3) The same condition appeared with the KKT conditions. What did it guarantee there, and how are the two guarantees related?",
@@ -1265,7 +1265,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-41",
+      "id": "NLP-07-41",
       "g": "Strong duality",
       "k": "No Slater point",
       "q": "Consider the convex problem $\\min x_1^2 - x_2$ s.t. $x_2^2 \\le 0$ (multiplier $\\mu \\ge 0$). (1) Find $f^*$ and check for a Slater point. (2) Compute $q(\\mu)$. (3) Find $d^*$. Is it attained? (4) Relate this to the KKT conditions.",
@@ -1280,7 +1280,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-42",
+      "id": "NLP-07-42",
       "g": "Strong duality",
       "k": "QP dual",
       "q": "QP with inequalities: $\\min x^\\top P x$ s.t. $Ax \\le b$, with $P \\succ 0$ and multiplier $\\mu \\ge 0$. (1) Find the minimizer of $L$ in $x$. (2) Give $q(\\mu)$ and the dual problem. (3) Apply it to $\\min x^2$ s.t. $x \\ge 1$: compute $q$, $\\mu^*$, $d^*$, and recover $x^*$.",
@@ -1296,7 +1296,7 @@
       ]
     },
     {
-      "id": "NLO-07-43",
+      "id": "NLP-07-43",
       "g": "Strong duality",
       "k": "Computing q",
       "q": "Consider $\\min \\tfrac12(x_1^2 + x_2^2)$ s.t. $h_1 = x_1 + x_2 - 2 = 0$ (multiplier $\\lambda_1$, any sign) and $g_1 = \\tfrac32 - x_1 \\le 0$ (multiplier $\\mu_1 \\ge 0$). (1) Write $L$ and minimize it over $x$. (2) Give $q(\\lambda_1, \\mu_1)$. (3) State the dual problem.",
@@ -1312,7 +1312,7 @@
       ]
     },
     {
-      "id": "NLO-07-44",
+      "id": "NLP-07-44",
       "g": "Strong duality",
       "k": "Solving the dual",
       "q": "For $\\min \\tfrac12(x_1^2 + x_2^2)$ s.t. $x_1 + x_2 = 2$, $\\tfrac32 - x_1 \\le 0$, the dual function is $q(\\lambda_1, \\mu_1) = -\\lambda_1^2 + \\lambda_1\\mu_1 - \\tfrac12\\mu_1^2 - 2\\lambda_1 + \\tfrac32\\mu_1$ and the minimizer of $L$ is $x = (\\mu_1 - \\lambda_1,\\ -\\lambda_1)$. (1) What does $q(0, 1)$ tell you? (2) Does strong duality hold, and why? (3) Solve the dual. (4) Recover $x$ and certify optimality.",
@@ -1329,7 +1329,7 @@
       ]
     },
     {
-      "id": "NLO-07-45",
+      "id": "NLP-07-45",
       "g": "Strong duality",
       "k": "Disk dual",
       "q": "Consider $\\min x_1 + x_2$ s.t. $x_1^2 + x_2^2 \\le 2$ (multiplier $\\mu \\ge 0$). (1) Compute $q(\\mu)$, treating $\\mu = 0$ separately. (2) Find $d^*$. (3) Compare with $f^*$ and explain.",
@@ -1343,7 +1343,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-46",
+      "id": "NLP-07-46",
       "g": "Strong duality",
       "k": "SVM dual",
       "q": "Hard-margin SVM: $\\min_{w, b} \\lVert w \\rVert^2$ s.t. $1 - y_i(w^\\top x_i + b) \\le 0$, with multipliers $\\alpha_i \\ge 0$ (the usual SVM notation; the derivation is not on the slides). (1) Minimize $L$ over $w$ and over $b$. (2) Give $q(\\alpha)$ and its constraints. (3) Solve it for $x_1 = (0,0)$, $y_1 = -1$ and $x_2 = (2,2)$, $y_2 = +1$, and compare with the primal optimum $w = (\\tfrac12, \\tfrac12)$.",
@@ -1357,7 +1357,7 @@
       "seen": []
     },
     {
-      "id": "NLO-07-47",
+      "id": "NLP-07-47",
       "g": "Strong duality",
       "k": "Dual recipe",
       "q": "(1) List the steps for computing a dual function and solving the dual problem. (2) How do you recover a primal solution and certify it? (3) Without solving anything, when do you know the gap is zero?",

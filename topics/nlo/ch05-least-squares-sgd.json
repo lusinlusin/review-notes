@@ -10,8 +10,8 @@
             "$F(w) = \\lVert y - Xw \\rVert^2$: $\\nabla F = -2X^\\top(y - Xw)$, $\\nabla^2F = 2X^\\top X \\succeq 0$. Minimizers solve $X^\\top Xw = X^\\top y$; unique iff $\\operatorname{rank}X = d$, then $\\hat w = (X^\\top X)^{-1}X^\\top y$."
           ],
           "cards": [
-            "NLO-05-01",
-            "NLO-05-04"
+            "NLP-05-01",
+            "NLP-05-04"
           ]
         },
         {
@@ -20,7 +20,7 @@
             "Minimizers form an affine set; gradient descent from $0$ finds the minimum-norm one. Automatic when $n < d$."
           ],
           "cards": [
-            "NLO-05-02"
+            "NLP-05-02"
           ]
         },
         {
@@ -29,7 +29,7 @@
             "$O(nd^2)$ to form $X^\\top X$ plus $O(d^3)$ to solve."
           ],
           "cards": [
-            "NLO-05-03"
+            "NLP-05-03"
           ]
         }
       ]
@@ -43,7 +43,7 @@
             "$f = \\tfrac1n\\sum_i E_i^2$, $E_i = x_i^\\top w - y_i$: $\\nabla f = \\tfrac2n X^\\top(Xw - y)$. Cost $O(nd)$ per iteration."
           ],
           "cards": [
-            "NLO-05-05"
+            "NLP-05-05"
           ]
         },
         {
@@ -52,9 +52,9 @@
             "$H = \\tfrac2n X^\\top X$; error components are multiplied by $1 - \\alpha\\lambda_j$. Converges iff $0 < \\alpha < \\tfrac2L$; best $\\alpha = \\tfrac{2}{\\lambda_1 + \\lambda_d}$, rate $\\tfrac{\\kappa - 1}{\\kappa + 1}$."
           ],
           "cards": [
-            "NLO-05-06",
-            "NLO-05-07",
-            "NLO-05-08"
+            "NLP-05-06",
+            "NLP-05-07",
+            "NLP-05-08"
           ]
         },
         {
@@ -63,7 +63,7 @@
             "In general only $\\nabla f(w_k) \\to 0$; convergence to a global minimum also needs a minimizer to exist."
           ],
           "cards": [
-            "NLO-05-09"
+            "NLP-05-09"
           ]
         }
       ]
@@ -77,7 +77,7 @@
             "Among unit vectors, $-g/\\lVert g \\rVert$ minimizes $g^\\top d$ (value $-\\lVert g \\rVert$). Comparing $g^\\top d$ across lengths is meaningless."
           ],
           "cards": [
-            "NLO-05-10"
+            "NLP-05-10"
           ]
         },
         {
@@ -86,7 +86,7 @@
             "Consecutive exact steepest-descent directions are orthogonal; the decrease obeys $\\big(\\tfrac{\\kappa - 1}{\\kappa + 1}\\big)^2$."
           ],
           "cards": [
-            "NLO-05-11"
+            "NLP-05-11"
           ]
         },
         {
@@ -95,7 +95,7 @@
             "Coordinate factors $1 - \\alpha\\lambda_i$; the decrease is guaranteed iff $0 < \\alpha < \\tfrac2L$."
           ],
           "cards": [
-            "NLO-05-12"
+            "NLP-05-12"
           ]
         }
       ]
@@ -109,7 +109,7 @@
             "$f = \\tfrac1n\\sum_i f_i$: $w \\leftarrow w - \\alpha\\nabla f_i(w)$, $O(d)$ per update. Epoch = $n$ updates, $O(nd)$."
           ],
           "cards": [
-            "NLO-05-13"
+            "NLP-05-13"
           ]
         },
         {
@@ -118,8 +118,8 @@
             "$i$ uniform ⇒ $E_i\\nabla f_i(w) = \\nabla f(w)$ and $E[w^+] = w - \\alpha\\nabla f(w)$ for one step from a fixed $w$."
           ],
           "cards": [
-            "NLO-05-14",
-            "NLO-05-17"
+            "NLP-05-14",
+            "NLP-05-17"
           ]
         },
         {
@@ -128,9 +128,9 @@
             "$E f(w^+) \\ge f(E w^+)$ with a variance gap; an epoch is a composition, not an average; $w^*$ is a fixed point only if every $\\nabla f_i(w^*) = 0$."
           ],
           "cards": [
-            "NLO-05-15",
-            "NLO-05-16",
-            "NLO-05-18"
+            "NLP-05-15",
+            "NLP-05-16",
+            "NLP-05-18"
           ]
         },
         {
@@ -140,8 +140,8 @@
             "Constant $\\alpha$: floor about $\\tfrac{L\\alpha G^2}{2}$. Diminishing $\\alpha_k$ with $\\sum\\alpha_k = \\infty$, $\\sum\\alpha_k^2 < \\infty$: no floor, sublinear rate."
           ],
           "cards": [
-            "NLO-05-19",
-            "NLO-05-21"
+            "NLP-05-19",
+            "NLP-05-21"
           ]
         },
         {
@@ -150,9 +150,9 @@
             "$f_i = (w - y_i)^2$, $y \\in \\{0, 2\\}$: $w^+ = (1 - 2\\alpha)w + 2\\alpha y_i$; stationary variance $\\tfrac{\\alpha\\sigma^2}{1 - \\alpha}$; with $\\alpha_k = \\tfrac{1}{2(k+1)}$, $w_k$ is the running mean."
           ],
           "cards": [
-            "NLO-05-20",
-            "NLO-05-21",
-            "NLO-05-22"
+            "NLP-05-20",
+            "NLP-05-21",
+            "NLP-05-22"
           ]
         },
         {
@@ -161,7 +161,7 @@
             "A single $f_i$ can be more curved than the average, so the safe step is smaller than for gradient descent."
           ],
           "cards": [
-            "NLO-05-23"
+            "NLP-05-23"
           ]
         },
         {
@@ -170,8 +170,8 @@
             "Huge $n$, moderate accuracy. Otherwise gradient descent or Newton-type methods."
           ],
           "cards": [
-            "NLO-05-24",
-            "NLO-05-25"
+            "NLP-05-24",
+            "NLP-05-25"
           ]
         }
       ]
@@ -185,7 +185,7 @@
             "Normal equations: exact, $O(nd^2 + d^3)$.  Gradient descent: $O(nd)$ per step, linear.  SGD: $O(d)$ per update, floor or sublinear."
           ],
           "cards": [
-            "NLO-05-26"
+            "NLP-05-26"
           ]
         }
       ]
@@ -199,9 +199,9 @@
             "$x_1 = (1,0)$, $y_1 = 1$; $x_2 = (0,2)$, $y_2 = 2$: $f = \\tfrac12(w_1 - 1)^2 + 2(w_2 - 1)^2$, $w^* = (1,1)$; one step with $\\alpha = \\tfrac14$ from $0$: $(\\tfrac14, 1)$."
           ],
           "cards": [
-            "NLO-05-07",
-            "NLO-05-08",
-            "NLO-05-23"
+            "NLP-05-07",
+            "NLP-05-08",
+            "NLP-05-23"
           ]
         },
         {
@@ -210,9 +210,9 @@
             "$f_1 = w^2$, $f_2 = (w - 2)^2$, $\\alpha = \\tfrac14$, from $w^* = 1$: one SGD step gives $\\tfrac12$ or $\\tfrac32$ ($f = \\tfrac54$); epoch $1,2$ gives $\\tfrac54$; epoch $2,1$ gives $\\tfrac34$; fixed-order cycle $\\tfrac23 \\leftrightarrow \\tfrac43$."
           ],
           "cards": [
-            "NLO-05-15",
-            "NLO-05-16",
-            "NLO-05-22"
+            "NLP-05-15",
+            "NLP-05-16",
+            "NLP-05-22"
           ]
         },
         {
@@ -221,7 +221,7 @@
             "Points $(1,1), (2,2), (3,2)$: $w = (\\tfrac23, \\tfrac12)$."
           ],
           "cards": [
-            "NLO-05-04"
+            "NLP-05-04"
           ]
         },
         {
@@ -230,7 +230,7 @@
             "Minimizers $w_1 + w_2 = \\tfrac76$, value $\\tfrac56$; minimum norm $(\\tfrac{7}{12}, \\tfrac{7}{12})$."
           ],
           "cards": [
-            "NLO-05-02"
+            "NLP-05-02"
           ]
         },
         {
@@ -239,7 +239,7 @@
             "$\\tfrac12(x_1^2 + 3x_2^2)$ from $(1,1)$: $\\alpha = \\tfrac{5}{14}$, $x^{(1)} = (\\tfrac{9}{14}, -\\tfrac{1}{14})$."
           ],
           "cards": [
-            "NLO-05-11"
+            "NLP-05-11"
           ]
         }
       ]
@@ -253,7 +253,7 @@
             "Here $x_i$ is data and $w$ the variable; in the gradient-method slides $x$ is the variable. $x_i^j$ is component $j$ of $x_i$, not a power."
           ],
           "cards": [
-            "NLO-05-05"
+            "NLP-05-05"
           ]
         },
         {
@@ -262,8 +262,8 @@
             "$\\sum$, $\\tfrac1n\\sum$ or $\\tfrac{1}{2n}\\sum$: same minimizer, different gradient, $L$ and step range."
           ],
           "cards": [
-            "NLO-05-05",
-            "NLO-05-07"
+            "NLP-05-05",
+            "NLP-05-07"
           ]
         },
         {
@@ -272,7 +272,7 @@
             "$y_i - x_i^\\top w$ in one place, $E_i = x_i^\\top w - y_i$ in another. Gradients use $E_i$: $\\nabla f_i = 2E_ix_i$."
           ],
           "cards": [
-            "NLO-05-05"
+            "NLP-05-05"
           ]
         },
         {
@@ -281,7 +281,7 @@
             "One pass of $n$ updates, not one update."
           ],
           "cards": [
-            "NLO-05-13"
+            "NLP-05-13"
           ]
         },
         {
@@ -290,7 +290,7 @@
             "Random index versus the loop over $i = 1, \\dots, n$; they behave differently."
           ],
           "cards": [
-            "NLO-05-22"
+            "NLP-05-22"
           ]
         }
       ]
@@ -304,7 +304,7 @@
             "Proved: $\\nabla f(w_k) \\to 0$. Convex ⇒ global minimum also needs existence."
           ],
           "cards": [
-            "NLO-05-09"
+            "NLP-05-09"
           ]
         },
         {
@@ -313,8 +313,8 @@
             "They are $X^\\top Xw = X^\\top y$; the displayed formula is their solution and needs full column rank."
           ],
           "cards": [
-            "NLO-05-01",
-            "NLO-05-03"
+            "NLP-05-01",
+            "NLP-05-03"
           ]
         },
         {
@@ -323,8 +323,8 @@
             "A factor $\\tfrac1n$ is missing; and the equality with gradient descent is for one step only."
           ],
           "cards": [
-            "NLO-05-14",
-            "NLO-05-17"
+            "NLP-05-14",
+            "NLP-05-17"
           ]
         },
         {
@@ -333,8 +333,8 @@
             "A fixed order with a constant step converges to a limit cycle; small steps lower the floor but do not remove it."
           ],
           "cards": [
-            "NLO-05-22",
-            "NLO-05-25"
+            "NLP-05-22",
+            "NLP-05-25"
           ]
         },
         {
@@ -343,7 +343,7 @@
             "$E_i(w)x_i$ is scalar times vector; $nd$ is the size of $X$, not the cost."
           ],
           "cards": [
-            "NLO-05-25"
+            "NLP-05-25"
           ]
         }
       ]
@@ -351,7 +351,7 @@
   ],
   "cards": [
     {
-      "id": "NLO-05-01",
+      "id": "NLP-05-01",
       "g": "Least squares",
       "k": "Normal equations",
       "q": "Data matrix $X \\in \\mathbb{R}^{n \\times d}$ (row $i$ is $x_i^\\top$), responses $y \\in \\mathbb{R}^n$, and $F(w) = \\lVert y - Xw \\rVert^2$. (1) Compute $\\nabla F$ and the Hessian. (2) Characterize the global minimizers. (3) When is the minimizer unique, and what is it? (4) Does a minimizer always exist?",
@@ -366,7 +366,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-02",
+      "id": "NLP-05-02",
       "g": "Least squares",
       "k": "Rank deficiency",
       "q": "$X = \\begin{pmatrix}1&1\\\\2&2\\\\1&1\\end{pmatrix}$, $y = (1, 2, 2)^\\top$, $F(w) = \\lVert y - Xw \\rVert^2$. (1) Why does the closed-form solution not exist? (2) Describe all minimizers and the minimal value. (3) Where does gradient descent from $w_0 = 0$ converge, and why? (4) When is rank deficiency automatic?",
@@ -381,7 +381,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-03",
+      "id": "NLP-05-03",
       "g": "Least squares",
       "k": "Cost of solving",
       "q": "Solving least squares through the normal equations with $n$ data points and $d$ features. (1) What does it cost, term by term? (2) Evaluate for $n = 5 \\times 10^6$ and $d = 10^4$. (3) The slides say the matrices are “too large to invert”. What is the accurate statement?",
@@ -395,7 +395,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-04",
+      "id": "NLP-05-04",
       "g": "Least squares",
       "k": "Fitting a line",
       "q": "Fit $y \\approx w_1 + w_2 t$ to the points $(t, y) = (1, 1), (2, 2), (3, 2)$ by the normal equations. (1) Write $X$. (2) Compute $X^\\top X$ and $X^\\top y$. (3) Solve for $w$.",
@@ -409,7 +409,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-05",
+      "id": "NLP-05-05",
       "g": "Full gradient",
       "k": "MSE and its gradient",
       "q": "Mean squared error $f(w) = \\tfrac1n\\sum_{i=1}^n E_i(w)^2$ with $E_i(w) = x_i^\\top w - y_i$. (1) Compute $\\nabla f$ in sum form and in matrix form. (2) What does one gradient-descent iteration cost, and why? (3) How does that compare with the normal equations, and what is the remaining drawback?",
@@ -423,7 +423,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-06",
+      "id": "NLP-05-06",
       "g": "Full gradient",
       "k": "Exact step analysis",
       "q": "Gradient descent with constant step $\\alpha$ on $f(w) = \\tfrac1n\\lVert Xw - y \\rVert^2$, Hessian $H = \\tfrac2n X^\\top X$ with eigenvalues $\\lambda_1 \\le \\dots \\le \\lambda_d$ and eigenvectors $q_j$; assume $\\operatorname{rank} X = d$. (1) Derive how the error $w_k - w^*$ evolves. (2) For which $\\alpha$ does it converge? (3) What is the rate, and the best constant step? (4) What happens to a component with $\\lambda_j = 0$?",
@@ -438,7 +438,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-07",
+      "id": "NLP-05-07",
       "g": "Full gradient",
       "k": "Least squares by hand",
       "q": "Two data points $x_1 = (1, 0)$, $y_1 = 1$ and $x_2 = (0, 2)$, $y_2 = 2$, with $f = \\tfrac1n\\sum E_i^2$ and $E_i = x_i^\\top w - y_i$. (1) Write $E_1$, $E_2$ and $f$. (2) Compute $\\nabla f_1$, $\\nabla f_2$ and $\\nabla f$. (3) Take one gradient step from $w = 0$ with $\\alpha = \\tfrac14$. (4) Is the problem solved after this step?",
@@ -455,7 +455,7 @@
       ]
     },
     {
-      "id": "NLO-05-08",
+      "id": "NLP-05-08",
       "g": "Full gradient",
       "k": "Step range by hand",
       "q": "For $f(w) = \\tfrac12(w_1 - 1)^2 + 2(w_2 - 1)^2$ (the mean squared error of two data points), gradient descent with constant step $\\alpha$. (1) Find $L$ and the admissible range of $\\alpha$. (2) Give the two error factors for $\\alpha = \\tfrac14$. How many iterations until the $w_1$ error falls from $1$ to $10^{-8}$? (3) What happens for $\\alpha = 0.6$?",
@@ -469,7 +469,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-09",
+      "id": "NLP-05-09",
       "g": "Full gradient",
       "k": "What is guaranteed",
       "q": "The slides make two claims about gradient descent. For each, say what is actually proved and what else is needed: (1) “Gradient-descent methods converge to stationary points.” (2) “If the function is convex, gradient descent converges to a global minimum.” (3) Do both hold for least squares? (4) What is the real advantage over Newton-type methods?",
@@ -484,7 +484,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-10",
+      "id": "NLP-05-10",
       "g": "Direction and step",
       "k": "Why unit directions",
       "q": "$f(x) = \\tfrac12(x_1^2 + 4x_2^2)$ at $x^{(0)} = (3, 1)$. (1) Compute $g = \\nabla f(x^{(0)})$ and test $d_a = (-1, 0)$, $d_b = (0, 1)$, $d_c = -g$. (2) Give the unit steepest-descent direction $u$ and $g^\\top u$. (3) Why is $u$ the most negative among unit vectors? (4) $g^\\top d_c = -25$ is below $g^\\top u$. Is $d_c$ steeper?",
@@ -501,7 +501,7 @@
       ]
     },
     {
-      "id": "NLO-05-11",
+      "id": "NLP-05-11",
       "g": "Direction and step",
       "k": "Perpendicular steps",
       "q": "$f(x) = \\tfrac12(x_1^2 + 3x_2^2)$, steepest descent with exact line search from $x^{(0)} = (1, 1)$. (1) Give $d^{(0)}$. (2) Find $\\alpha^{(0)}$ from $\\varphi(\\alpha) = f(x^{(0)} + \\alpha d^{(0)})$ and compute $x^{(1)}$. (3) Compute $d^{(1)}$ and $(d^{(0)})^\\top d^{(1)}$. (4) Does perpendicularity mean the minimizer is reached? Compare the decrease of $f$ with the bound.",
@@ -518,7 +518,7 @@
       ]
     },
     {
-      "id": "NLO-05-12",
+      "id": "NLP-05-12",
       "g": "Direction and step",
       "k": "Step and conditioning",
       "q": "$f(x) = \\tfrac12(x_1^2 + 9x_2^2)$, gradient descent with constant step $\\alpha$. (1) Write the update per coordinate. (2) Describe the behavior for $\\alpha = \\tfrac{1}{10}$, $\\tfrac29$ and $\\tfrac14$. (3) Relate this to the guaranteed-decrease inequality. (4) What does the exact-step bound give for this $\\kappa$?",
@@ -535,7 +535,7 @@
       ]
     },
     {
-      "id": "NLO-05-13",
+      "id": "NLP-05-13",
       "g": "Stochastic gradient",
       "k": "SGD update",
       "q": "(1) To which objectives does stochastic gradient descent apply? (2) Write the update. (3) What does one update cost for linear regression, compared with a full gradient step? (4) What is an epoch, and what does it cost?",
@@ -550,7 +550,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-14",
+      "id": "NLP-05-14",
       "g": "Stochastic gradient",
       "k": "Unbiased gradient",
       "q": "Let $i$ be uniform on $\\{1, \\dots, n\\}$ and $f = \\tfrac1n\\sum_i f_i$. (1) Show that $\\nabla f_i(w)$ is an unbiased estimate of $\\nabla f(w)$. (2) What follows for $E[w^+]$ after one SGD step from a fixed $w$? (3) What is held fixed in this statement? (4) If $i$ is drawn with probabilities $p_i$ instead, which estimate is unbiased?",
@@ -565,7 +565,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-15",
+      "id": "NLP-05-15",
       "g": "Stochastic gradient",
       "k": "One stochastic step",
       "q": "$f_1(w) = w^2$, $f_2(w) = (w - 2)^2$, $f = \\tfrac12(f_1 + f_2)$, step $\\alpha = \\tfrac14$. (1) Find $w^*$ and the three derivatives $f'$, $f_1'$, $f_2'$ at $w^*$. (2) Do one SGD step from $w^*$ for each index and compute $E[w^+]$. (3) Compute $E[f(w^+)]$ and compare with $f(E[w^+])$. (4) What does this show?",
@@ -582,7 +582,7 @@
       ]
     },
     {
-      "id": "NLO-05-16",
+      "id": "NLP-05-16",
       "g": "Stochastic gradient",
       "k": "One epoch, fixed order",
       "q": "$f_1(w) = w^2$, $f_2(w) = (w - 2)^2$, $\\alpha = \\tfrac14$, start at $w = 1$ (the minimizer of $f = \\tfrac12(f_1 + f_2)$). (1) Do one epoch in the order $1, 2$. (2) Do one epoch in the order $2, 1$. (3) Why is neither result equal to the gradient-descent step? (4) Compare the costs of a full-gradient update, one SGD update and one epoch.",
@@ -599,7 +599,7 @@
       ]
     },
     {
-      "id": "NLO-05-17",
+      "id": "NLP-05-17",
       "g": "Stochastic gradient",
       "k": "Mean over many steps",
       "q": "SGD with indices drawn independently and uniformly. (1) Prove that for quadratic $f$ the mean iterate $E[w_k]$ equals the gradient-descent iterate for every $k$. (2) Where does the proof use “quadratic”? (3) Check with $f_1 = w^4$, $f_2 = (w - 2)^2$, $w_0 = 1$, $\\alpha = \\tfrac{1}{10}$: compare $E[w_1]$ and $E[w_2]$ with gradient descent.",
@@ -613,7 +613,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-18",
+      "id": "NLP-05-18",
       "g": "Stochastic gradient",
       "k": "Fixed point of SGD",
       "q": "Constant-step SGD on $f = \\tfrac1n\\sum_i f_i$. (1) When is the minimizer $w^*$ a fixed point of the update for every index? (2) Specialize to linear regression with all $x_i \\ne 0$. (3) For quadratic $f$ with Hessian $H$ and $\\bar w = E[w^+]$, what is $E[f(w^+)] - f(\\bar w)$? (4) What does this mean near $w^*$?",
@@ -628,7 +628,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-19",
+      "id": "NLP-05-19",
       "g": "Stochastic gradient",
       "k": "Noise floor",
       "q": "Let $\\nabla f$ be $L$-Lipschitz, $f \\ge f_{\\inf}$, and $E_i\\lVert \\nabla f_i(w) \\rVert^2 \\le G^2$; indices are i.i.d. uniform. (1) Derive the one-step inequality for $E[f(w_{k+1}) \\mid w_k]$. (2) State the resulting bound for a constant step after $K$ steps. (3) Compare with gradient descent. (4) What do halving $\\alpha$ and a diminishing step do?",
@@ -643,7 +643,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-20",
+      "id": "NLP-05-20",
       "g": "Stochastic gradient",
       "k": "Scalar model: floor",
       "q": "$f_i(w) = (w - y_i)^2$ with $y_i \\in \\{0, 2\\}$ equally likely, so $w^* = 1$, $\\sigma^2 = \\operatorname{Var}(y) = 1$ and $f(w) - f^* = (w - 1)^2$. Constant step $\\alpha$, i.i.d. sampling. (1) Write the SGD update. (2) Find the stationary variance $v$ of $w$. (3) What is the long-run $E f - f^*$ for $\\alpha = \\tfrac14$ and $\\alpha = 0.1$? (4) How does it scale with $\\alpha$?",
@@ -658,7 +658,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-21",
+      "id": "NLP-05-21",
       "g": "Stochastic gradient",
       "k": "Diminishing step",
       "q": "Same scalar model: $w^+ = (1 - 2\\alpha_k)w + 2\\alpha_k y_{i_k}$ with $y \\in \\{0, 2\\}$, $w^* = 1$, $\\sigma^2 = 1$. Take $\\alpha_k = \\dfrac{1}{2(k + 1)}$. (1) Simplify the update and identify $w_k$. (2) What is $E f(w_k) - f^*$, and which kind of convergence is this? (3) Start at $w_0 = 5$ and let the first sample be $y = 2$. What is $w_1$, and why does the start not matter? (4) Which general conditions on $\\alpha_k$ does this schedule satisfy?",
@@ -673,7 +673,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-22",
+      "id": "NLP-05-22",
       "g": "Stochastic gradient",
       "k": "Fixed order cycles",
       "q": "$f_1 = w^2$, $f_2 = (w - 2)^2$, constant step $\\alpha = \\tfrac14$, indices visited in the fixed order $1, 2, 1, 2, \\dots$ as in the slide's loop. (1) Write the map of one epoch. (2) Find its fixed point and the limit cycle. (3) What is $f - f^*$ on the cycle, with $f = (w - 1)^2 + 1$? (4) What is needed for convergence to $w^*$?",
@@ -688,7 +688,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-23",
+      "id": "NLP-05-23",
       "g": "Stochastic gradient",
       "k": "Interpolated data",
       "q": "Data $x_1 = (1, 0)$, $y_1 = 1$ and $x_2 = (0, 2)$, $y_2 = 2$, $f = \\tfrac12\\sum_i E_i^2$ with minimizer $w^* = (1, 1)$ and Hessian $\\operatorname{diag}(1, 4)$. (1) Does constant-step SGD have a noise floor here? (2) What is the largest safe constant step for gradient descent? (3) What does an SGD update on sample 2 with $\\alpha = \\tfrac14$ do to $w_2$? (4) Which lesson follows for choosing the SGD step?",
@@ -703,7 +703,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-24",
+      "id": "NLP-05-24",
       "g": "Stochastic gradient",
       "k": "When SGD wins",
       "q": "Compare the normal equations, full gradient descent and SGD on (1) cost, (2) progress per pass over the data. (3) Evaluate the costs for $n = 10^6$, $d = 100$. (4) In which regime is SGD the right choice, and when not?",
@@ -718,7 +718,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-25",
+      "id": "NLP-05-25",
       "g": "Stochastic gradient",
       "k": "True or false",
       "q": "Decide and justify: (1) “One epoch of SGD has the same expected effect as one gradient-descent step.” (2) “Small step lengths control the variance, so constant-step SGD converges to the minimizer.” (3) “The error $E_i(w)x_i$ is a dot product.” (4) “$nd$ in the tens of billions is the cost of the normal equations.”",
@@ -733,7 +733,7 @@
       "seen": []
     },
     {
-      "id": "NLO-05-26",
+      "id": "NLP-05-26",
       "g": "Overview",
       "k": "Method summary",
       "q": "For each method give the update, the cost, and how it can fail or be weak: (1) normal equations, (2) full gradient descent on the mean squared error, (3) SGD with a constant step, (4) SGD with a diminishing step, (5) single-sample updates in a fixed order.",

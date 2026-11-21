@@ -11,8 +11,8 @@
             "$x \\ge 0$ ($n$), $\\pi$ free ($m$), $z = c - A^\\top\\pi \\ge 0$ ($n$)."
           ],
           "cards": [
-            "NLO-08-01",
-            "NLO-08-02"
+            "NLP-08-01",
+            "NLP-08-02"
           ]
         },
         {
@@ -21,8 +21,8 @@
             "For a feasible pair: $c^\\top x - b^\\top\\pi = x^\\top z \\ge 0$."
           ],
           "cards": [
-            "NLO-08-03",
-            "NLO-08-04"
+            "NLP-08-03",
+            "NLP-08-04"
           ]
         },
         {
@@ -32,7 +32,7 @@
             "They characterize optimality. Only complementarity is nonlinear."
           ],
           "cards": [
-            "NLO-08-05"
+            "NLP-08-05"
           ]
         },
         {
@@ -41,7 +41,7 @@
             "Keep $x, z > 0$ and drive every product $x_i z_i$ toward $0$ with Newton steps."
           ],
           "cards": [
-            "NLO-08-06"
+            "NLP-08-06"
           ]
         }
       ]
@@ -56,8 +56,8 @@
             "Gradient $c - \\mu X^{-1}e$, Hessian $\\mu X^{-2} \\succ 0$: strictly convex on $x > 0$."
           ],
           "cards": [
-            "NLO-08-07",
-            "NLO-08-08"
+            "NLP-08-07",
+            "NLP-08-08"
           ]
         },
         {
@@ -68,8 +68,8 @@
             "Vector form $XZe = \\mu e$ implies the scalar form $x^\\top z = n\\mu$, not conversely."
           ],
           "cards": [
-            "NLO-08-09",
-            "NLO-08-10"
+            "NLP-08-09",
+            "NLP-08-10"
           ]
         },
         {
@@ -78,8 +78,8 @@
             "The solutions for all $\\mu > 0$. One point per $\\mu$ (full row rank, strictly feasible points on both sides); gap $= n\\mu$; tends to optimal solutions as $\\mu \\downarrow 0$."
           ],
           "cards": [
-            "NLO-08-11",
-            "NLO-08-12"
+            "NLP-08-11",
+            "NLP-08-12"
           ]
         },
         {
@@ -88,7 +88,7 @@
             "On the path: $0 \\le c^\\top x - p^* \\le n\\mu$. So $\\mu \\le \\varepsilon/n$ gives accuracy $\\varepsilon$."
           ],
           "cards": [
-            "NLO-08-13"
+            "NLP-08-13"
           ]
         }
       ]
@@ -103,7 +103,7 @@
             "Newton: $J d = -F_\\mu$."
           ],
           "cards": [
-            "NLO-08-14"
+            "NLP-08-14"
           ]
         },
         {
@@ -112,7 +112,7 @@
             "$Z d_x + X d_z = -XZe + \\mu e$. The dropped term is $(d_x)_i(d_z)_i$."
           ],
           "cards": [
-            "NLO-08-15"
+            "NLP-08-15"
           ]
         },
         {
@@ -122,7 +122,7 @@
             "Feasibility is kept for every step length; positivity is not."
           ],
           "cards": [
-            "NLO-08-16"
+            "NLP-08-16"
           ]
         },
         {
@@ -132,7 +132,7 @@
             "$\\tau \\to 1$ centers, $\\tau \\to 0$ makes progress."
           ],
           "cards": [
-            "NLO-08-17"
+            "NLP-08-17"
           ]
         },
         {
@@ -141,7 +141,7 @@
             "$$\\alpha^{\\max} = \\min\\Big\\{1,\\ \\min_{(d_x)_i < 0} \\frac{-x_i}{(d_x)_i},\\ \\min_{(d_z)_i < 0} \\frac{-z_i}{(d_z)_i}\\Big\\},\\qquad \\alpha = \\eta\\,\\alpha^{\\max}$$"
           ],
           "cards": [
-            "NLO-08-18"
+            "NLP-08-18"
           ]
         },
         {
@@ -150,7 +150,7 @@
             "Feasible start → $y$, $\\mu = \\tau y$ → solve → $\\alpha = \\eta\\alpha^{\\max}$ → update → stop when $x^\\top z \\le \\varepsilon$."
           ],
           "cards": [
-            "NLO-08-19"
+            "NLP-08-19"
           ]
         }
       ]
@@ -164,8 +164,8 @@
             "$x = \\tfrac12 e$, $\\pi = (-2,-2)$, $z = (1,1,2,2)$, $\\tau = 0.5$: $d_x = (\\tfrac16,\\tfrac16,-\\tfrac16,-\\tfrac16)$, $d_\\pi = \\tfrac{7}{12}(1,1)$, $d_z = -\\tfrac{7}{12}e$; $\\alpha = 0.95$; gap $3 \\to 1.575$."
           ],
           "cards": [
-            "NLO-08-20",
-            "NLO-08-21"
+            "NLP-08-20",
+            "NLP-08-21"
           ]
         },
         {
@@ -174,8 +174,8 @@
             "$A = (1\\ 1)$, $x = (1,1)$, $z = (1,2)$, $\\tau = \\tfrac13$: $d_x = (\\tfrac13,-\\tfrac13)$, $d_\\pi = \\tfrac56$, $d_z = -\\tfrac56 e$; $\\alpha = 0.95$; $y: 1.5 \\to 0.55$."
           ],
           "cards": [
-            "NLO-08-22",
-            "NLO-08-23"
+            "NLP-08-22",
+            "NLP-08-23"
           ]
         },
         {
@@ -186,8 +186,8 @@
             "$M$ is symmetric positive definite when $A$ has full row rank."
           ],
           "cards": [
-            "NLO-08-24",
-            "NLO-08-25"
+            "NLP-08-24",
+            "NLP-08-25"
           ]
         }
       ]
@@ -201,7 +201,7 @@
             "Feasible start: $d_x^\\top d_z = -(A d_x)^\\top d_\\pi = 0$. A statement about the sum, not about each product."
           ],
           "cards": [
-            "NLO-08-26"
+            "NLP-08-26"
           ]
         },
         {
@@ -210,7 +210,7 @@
             "$z^\\top d_x + x^\\top d_z = -(1 - \\tau)\\,x^\\top z$."
           ],
           "cards": [
-            "NLO-08-27"
+            "NLP-08-27"
           ]
         },
         {
@@ -220,7 +220,7 @@
             "Needs: feasible point, common step, centered Newton right-hand side. $\\alpha = 1$ gives $y^+ = \\tau y$."
           ],
           "cards": [
-            "NLO-08-28"
+            "NLP-08-28"
           ]
         },
         {
@@ -229,7 +229,7 @@
             "$x_i^+ z_i^+ = \\tau y + (d_x)_i(d_z)_i$: the average is $\\mu$, the individual products are not."
           ],
           "cards": [
-            "NLO-08-29"
+            "NLP-08-29"
           ]
         }
       ]
@@ -243,7 +243,7 @@
             "$r_p = Ax - b$,  $r_d = A^\\top\\pi + z - c$. Right-hand side $(-r_d,\\ -r_p,\\ -XZe + \\tau y e)$; same matrix."
           ],
           "cards": [
-            "NLO-08-30"
+            "NLP-08-30"
           ]
         },
         {
@@ -252,7 +252,7 @@
             "$r_p^+ = (1 - \\alpha_x)\\,r_p$,  $r_d^+ = (1 - \\alpha_z)\\,r_d$."
           ],
           "cards": [
-            "NLO-08-31"
+            "NLP-08-31"
           ]
         },
         {
@@ -261,7 +261,7 @@
             "$c^\\top x - b^\\top\\pi = x^\\top z - r_d^\\top x + r_p^\\top\\pi$. Stopping needs both residuals and $x^\\top z$ small."
           ],
           "cards": [
-            "NLO-08-32"
+            "NLP-08-32"
           ]
         },
         {
@@ -270,7 +270,7 @@
             "$x$ uses $\\alpha_x$; $\\pi$ and $z$ use $\\alpha_z$. Each maximum is capped at $1$, then damped by $\\eta$."
           ],
           "cards": [
-            "NLO-08-33"
+            "NLP-08-33"
           ]
         }
       ]
@@ -285,8 +285,8 @@
             "Inside it $(1 - \\theta)y \\le x_i z_i \\le (1 + \\theta)y$."
           ],
           "cards": [
-            "NLO-08-34",
-            "NLO-08-35"
+            "NLP-08-34",
+            "NLP-08-35"
           ]
         },
         {
@@ -295,7 +295,7 @@
             "Start in $N_2(0.4)$; $\\tau = 1 - 0.4/\\sqrt n$; $\\alpha = 1$. Then $y^{(k)} = (1 - 0.4/\\sqrt n)^k y^{(0)}$."
           ],
           "cards": [
-            "NLO-08-36"
+            "NLP-08-36"
           ]
         },
         {
@@ -305,8 +305,8 @@
             "For the total gap replace $\\varepsilon$ by $\\varepsilon/n$. Order $O(\\sqrt n \\ln(1/\\varepsilon))$."
           ],
           "cards": [
-            "NLO-08-37",
-            "NLO-08-38"
+            "NLP-08-37",
+            "NLP-08-38"
           ]
         },
         {
@@ -315,7 +315,7 @@
             "New deviation $= d_x \\circ d_z$; $\\lVert u \\rVert^2 + \\lVert v \\rVert^2 \\le \\tfrac{8}{15}y$ gives $|(d_x)_i|/x_i \\le \\sqrt{8/9}$ and $\\lVert d_x \\circ d_z \\rVert \\le \\tfrac{4}{15}y \\le 0.4\\,\\tau y$."
           ],
           "cards": [
-            "NLO-08-39"
+            "NLP-08-39"
           ]
         }
       ]
@@ -329,7 +329,7 @@
             "Right-hand side $(-r_d, -r_p, -XZe)$; trial steps capped at $1$, no $\\eta$."
           ],
           "cards": [
-            "NLO-08-40"
+            "NLP-08-40"
           ]
         },
         {
@@ -338,7 +338,7 @@
             "$\\tau = (y_{\\text{aff}}/y)^3$."
           ],
           "cards": [
-            "NLO-08-41"
+            "NLP-08-41"
           ]
         },
         {
@@ -348,8 +348,8 @@
             "$D_x = \\operatorname{diag}(d_x^{\\text{aff}})$, $D_z = \\operatorname{diag}(d_z^{\\text{aff}})$. Its solution is the total direction; do not add $d^{\\text{aff}}$."
           ],
           "cards": [
-            "NLO-08-42",
-            "NLO-08-43"
+            "NLP-08-42",
+            "NLP-08-43"
           ]
         },
         {
@@ -358,8 +358,8 @@
             "Residuals and $y$ → affine solve → $\\tau$ → combined solve → $\\alpha_x$, $\\alpha_z$ → update → three tests."
           ],
           "cards": [
-            "NLO-08-44",
-            "NLO-08-45"
+            "NLP-08-44",
+            "NLP-08-45"
           ]
         }
       ]
@@ -374,9 +374,9 @@
             "Shift: $\\delta = \\max\\{-1.5\\min_i(\\cdot),\\ 0\\}$.  Balance: $\\hat\\delta_x = \\tfrac12\\,\\hat x^\\top\\hat z/e^\\top\\hat z$, $\\hat\\delta_z = \\tfrac12\\,\\hat x^\\top\\hat z/e^\\top\\hat x$."
           ],
           "cards": [
-            "NLO-08-46",
-            "NLO-08-47",
-            "NLO-08-48"
+            "NLP-08-46",
+            "NLP-08-47",
+            "NLP-08-48"
           ]
         },
         {
@@ -386,7 +386,7 @@
             "$x^* = (\\tfrac{10}{3}, \\tfrac{25}{3}, 0, 0)$, $\\pi^* = (-\\tfrac13, -\\tfrac43)$, $z^* = (0, 0, \\tfrac13, \\tfrac43)$, value $-\\tfrac{80}{3}$."
           ],
           "cards": [
-            "NLO-08-49"
+            "NLP-08-49"
           ]
         },
         {
@@ -396,8 +396,8 @@
             "$r_p = (5.25, 5.25)$, $r_d = 1.125e$, $y = 5.7422$, $y_{\\text{aff}} = 1.0344$, $\\tau = 0.00584$, $\\alpha_x = \\alpha_z = 0.95$; then $x^\\top z = 2.219$."
           ],
           "cards": [
-            "NLO-08-50",
-            "NLO-08-51"
+            "NLP-08-50",
+            "NLP-08-51"
           ]
         },
         {
@@ -406,7 +406,7 @@
             "Stops at $k = 6$. Residuals shrink by about $0.05$ per step; $\\tau \\to 0$; late factor of $x^\\top z$ about $0.05$."
           ],
           "cards": [
-            "NLO-08-52"
+            "NLP-08-52"
           ]
         }
       ]
@@ -421,7 +421,7 @@
             "$$Qx + c - A^\\top\\pi - z = 0,\\quad Ax = b,\\quad XZe = \\mu e,\\quad x, z > 0$$"
           ],
           "cards": [
-            "NLO-08-53"
+            "NLP-08-53"
           ]
         },
         {
@@ -430,8 +430,8 @@
             "Top-left block $Q$ instead of $0$. With $\\Theta = X^{-1}Z$: $(Q + \\Theta)d_x - A^\\top d_\\pi = -(r_d + X^{-1}r_c)$, $A d_x = -r_p$."
           ],
           "cards": [
-            "NLO-08-54",
-            "NLO-08-55"
+            "NLP-08-54",
+            "NLP-08-55"
           ]
         },
         {
@@ -440,7 +440,7 @@
             "$A(Q + \\Theta)^{-1}A^\\top d_\\pi = A(Q + \\Theta)^{-1}\\tilde r_d - r_p$. $Q = 0$ gives $AXZ^{-1}A^\\top$."
           ],
           "cards": [
-            "NLO-08-56"
+            "NLP-08-56"
           ]
         },
         {
@@ -449,7 +449,7 @@
             "$d_x^\\top d_z = d_x^\\top Q d_x \\ge 0$, so $y^+ = [1 - \\alpha(1 - \\tau)]\\,y + \\tfrac{\\alpha^2}{n}d_x^\\top Q d_x$."
           ],
           "cards": [
-            "NLO-08-57"
+            "NLP-08-57"
           ]
         }
       ]
@@ -465,7 +465,7 @@
             "Mehrotra: any positive start, $\\tau = (y_{\\text{aff}}/y)^3$, two solves, separate steps."
           ],
           "cards": [
-            "NLO-08-58"
+            "NLP-08-58"
           ]
         },
         {
@@ -474,7 +474,7 @@
             "Feasible? Common step? Centered Newton direction? Inside $N_2(0.4)$?"
           ],
           "cards": [
-            "NLO-08-59"
+            "NLP-08-59"
           ]
         }
       ]
@@ -488,8 +488,8 @@
             "$\\min -x_1 - x_2$, $x_1, x_2 \\le 1$: $x^* = (1,1,0,0)$, $\\pi^* = (-1,-1)$, $z^* = (0,0,1,1)$, value $-2$. Path: $x_1(\\mu) = \\tfrac12[(1 - 2\\mu) + \\sqrt{1 + 4\\mu^2}]$."
           ],
           "cards": [
-            "NLO-08-04",
-            "NLO-08-12"
+            "NLP-08-04",
+            "NLP-08-12"
           ]
         },
         {
@@ -498,8 +498,8 @@
             "$x = (1,2,4)$, $d_x = (-2,1,-1)$, $z = (3,1,0.5)$, $d_z = (1,-4,-0.25)$, $\\eta = 0.9$: $\\alpha = 0.225$."
           ],
           "cards": [
-            "NLO-08-18",
-            "NLO-08-33"
+            "NLP-08-18",
+            "NLP-08-33"
           ]
         },
         {
@@ -508,7 +508,7 @@
             "$A = (1\\ 1)$, $x = (1,2)$, $z = (2,1)$, $\\mu = 1$: $M = 2.5$, $d_\\pi = 0.6$, $d_z = (-0.6,-0.6)$, $d_x = (-0.2, 0.2)$."
           ],
           "cards": [
-            "NLO-08-25"
+            "NLP-08-25"
           ]
         },
         {
@@ -517,7 +517,7 @@
             "$\\tau = 0.2$, $\\alpha = 0.5$, $y = 10$: $y^+ = 6$."
           ],
           "cards": [
-            "NLO-08-28"
+            "NLP-08-28"
           ]
         },
         {
@@ -526,7 +526,7 @@
             "Products $(0.8, 1.2)$: norm $0.283$, in $N_2(0.4)$. Products $(0.4, 1.6)$: norm $0.849$, not in."
           ],
           "cards": [
-            "NLO-08-35"
+            "NLP-08-35"
           ]
         },
         {
@@ -535,7 +535,7 @@
             "$n = 100$, $y^{(0)} = 1$: $346$ for $y \\le 10^{-6}$, $461$ for $x^\\top z \\le 10^{-6}$."
           ],
           "cards": [
-            "NLO-08-38"
+            "NLP-08-38"
           ]
         },
         {
@@ -544,7 +544,7 @@
             "$y = 2$, $y_{\\text{aff}} = 0.5$: $\\tau = 0.015625$, $\\mu = 0.03125$."
           ],
           "cards": [
-            "NLO-08-41"
+            "NLP-08-41"
           ]
         }
       ]
@@ -558,11 +558,11 @@
             "Gap identity; perturbed complementarity from the barrier Lagrangian; $d_x^\\top d_z = 0$; the recurrence for $y$; the iteration bound."
           ],
           "cards": [
-            "NLO-08-03",
-            "NLO-08-09",
-            "NLO-08-26",
-            "NLO-08-28",
-            "NLO-08-37"
+            "NLP-08-03",
+            "NLP-08-09",
+            "NLP-08-26",
+            "NLP-08-28",
+            "NLP-08-37"
           ]
         },
         {
@@ -571,12 +571,12 @@
             "$0 \\le c^\\top x - p^* \\le n\\mu$; $M = ADA^\\top \\succ 0$; residual reduction; the two properties behind full steps; the sign of the correction term; $d_x^\\top d_z = d_x^\\top Q d_x$ for a QP."
           ],
           "cards": [
-            "NLO-08-13",
-            "NLO-08-24",
-            "NLO-08-31",
-            "NLO-08-39",
-            "NLO-08-42",
-            "NLO-08-57"
+            "NLP-08-13",
+            "NLP-08-24",
+            "NLP-08-31",
+            "NLP-08-39",
+            "NLP-08-42",
+            "NLP-08-57"
           ]
         }
       ]
@@ -590,7 +590,7 @@
             "Here $y$ is the average and $\\mu = \\tau y$ the target. Many books call the average $\\mu$ and the centering factor $\\sigma$."
           ],
           "cards": [
-            "NLO-08-17"
+            "NLP-08-17"
           ]
         },
         {
@@ -599,7 +599,7 @@
             "The barrier parameter here; earlier it denoted an inequality multiplier. That role is played by $z$."
           ],
           "cards": [
-            "NLO-08-01"
+            "NLP-08-01"
           ]
         },
         {
@@ -608,8 +608,8 @@
             "$XZe$ is the vector of products, $x^\\top z$ their sum. $x^\\top z$ is the gap only at feasible points."
           ],
           "cards": [
-            "NLO-08-10",
-            "NLO-08-32"
+            "NLP-08-10",
+            "NLP-08-32"
           ]
         },
         {
@@ -618,7 +618,7 @@
             "Basic method: one $\\alpha$. Infeasible and predictor–corrector: $\\alpha_x$ for $x$, $\\alpha_z$ for $\\pi$ and $z$."
           ],
           "cards": [
-            "NLO-08-33"
+            "NLP-08-33"
           ]
         },
         {
@@ -627,8 +627,8 @@
             "$d_x$ is a direction (not a derivative); $D_x = \\operatorname{diag}(d_x^{\\text{aff}})$; $D = XZ^{-1}$ in the elimination; $X = \\operatorname{diag}(x)$."
           ],
           "cards": [
-            "NLO-08-24",
-            "NLO-08-42"
+            "NLP-08-24",
+            "NLP-08-42"
           ]
         },
         {
@@ -637,7 +637,7 @@
             "$Qx + c - A^\\top\\pi - z$ in one source, $A^\\top\\pi + z - Qx - c$ in the other."
           ],
           "cards": [
-            "NLO-08-54"
+            "NLP-08-54"
           ]
         }
       ]
@@ -651,7 +651,7 @@
             "The deck is a reduced version: slide numbers skip, and the six complexity pages carry no number."
           ],
           "cards": [
-            "NLO-08-37"
+            "NLP-08-37"
           ]
         },
         {
@@ -660,7 +660,7 @@
             "Written $0 < \\tau < 1$ in one place and $0 \\le \\tau \\le 1$ in another. The endpoints are meaningful: $0$ is the affine direction, $1$ pure centering."
           ],
           "cards": [
-            "NLO-08-17"
+            "NLP-08-17"
           ]
         },
         {
@@ -669,7 +669,7 @@
             "Used in the neighborhood definition without being defined: the set of strictly feasible points."
           ],
           "cards": [
-            "NLO-08-34"
+            "NLP-08-34"
           ]
         },
         {
@@ -678,7 +678,7 @@
             "$\\min\\{1, \\eta\\alpha^{\\max}\\}$ and $\\eta\\alpha^{\\max}$ are the same number, since $\\alpha^{\\max} \\le 1$ and $\\eta < 1$."
           ],
           "cards": [
-            "NLO-08-18"
+            "NLP-08-18"
           ]
         },
         {
@@ -687,7 +687,7 @@
             "Stated as “if both have optimal solutions, the values agree”. Stronger: if either has a finite optimum, so does the other, with equal values."
           ],
           "cards": [
-            "NLO-08-05"
+            "NLP-08-05"
           ]
         },
         {
@@ -696,7 +696,7 @@
             "“$\\mu > 0$” in the definition means for some $\\mu > 0$."
           ],
           "cards": [
-            "NLO-08-11"
+            "NLP-08-11"
           ]
         },
         {
@@ -705,7 +705,7 @@
             "Only mentioned in the deck; the formulas are in the supplementary notes."
           ],
           "cards": [
-            "NLO-08-46"
+            "NLP-08-46"
           ]
         },
         {
@@ -714,7 +714,7 @@
             "With $r_c = XZe - \\mu e$ the reduced QP system has $r_d + X^{-1}r_c$, not $r_d - X^{-1}r_c$."
           ],
           "cards": [
-            "NLO-08-55"
+            "NLP-08-55"
           ]
         }
       ]
@@ -722,7 +722,7 @@
   ],
   "cards": [
     {
-      "id": "NLO-08-01",
+      "id": "NLP-08-01",
       "g": "LP optimality",
       "k": "Standard form & dual",
       "q": "Standard-form LP: $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$, with $A \\in \\mathbb{R}^{m \\times n}$. (1) Write its dual with multipliers $\\pi$. (2) Turn the dual inequality into an equation with slacks $z$. (3) List the three groups of variables with size and sign.",
@@ -736,7 +736,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-02",
+      "id": "NLP-08-02",
       "g": "LP optimality",
       "k": "Dual by infimum",
       "q": "Derive the dual of $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$ from $L(x, \\pi) = c^\\top x + \\pi^\\top(b - Ax)$, keeping $x \\ge 0$ as the domain of $x$. (1) Group $L$ by $x$. (2) Compute $\\inf_{x \\ge 0} L$. (3) State the dual. (4) How does this differ from giving $x \\ge 0$ its own multiplier?",
@@ -751,7 +751,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-03",
+      "id": "NLP-08-03",
       "g": "LP optimality",
       "k": "Gap identity",
       "q": "Let $x$ be primal feasible ($Ax = b$, $x \\ge 0$) and $(\\pi, z)$ dual feasible ($A^\\top\\pi + z = c$, $z \\ge 0$). (1) Prove $c^\\top x - b^\\top\\pi = x^\\top z$. (2) Deduce weak duality. (3) What is $c^\\top x - b^\\top\\pi$ called, and why does the algorithm watch $x^\\top z$?",
@@ -767,7 +767,7 @@
       ]
     },
     {
-      "id": "NLO-08-04",
+      "id": "NLP-08-04",
       "g": "LP optimality",
       "k": "Unit-square example",
       "q": "LP: $\\min -x_1 - x_2$ s.t. $x_1 \\le 1$, $x_2 \\le 1$, $x \\ge 0$. (1) Write it in standard form with slacks $x_3, x_4$ and give $A$, $b$, $c$. (2) Write the dual equations $A^\\top\\pi + z = c$ and solve the dual. (3) At $x = (\\tfrac12,\\tfrac12,\\tfrac12,\\tfrac12)$, $\\pi = (-2,-2)$, find $z$ and compute the gap in two ways.",
@@ -781,7 +781,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-05",
+      "id": "NLP-08-05",
       "g": "LP optimality",
       "k": "KKT for an LP",
       "q": "For the pair $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$ and $\\max b^\\top\\pi$ s.t. $A^\\top\\pi + z = c$, $z \\ge 0$: (1) Why does $x^\\top z = 0$ force every $x_i z_i = 0$? (2) Write the KKT conditions. (3) Why does a point satisfying them solve both problems? (4) Count unknowns and equations. Which equations are nonlinear?",
@@ -796,7 +796,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-06",
+      "id": "NLP-08-06",
       "g": "LP optimality",
       "k": "Simplex vs interior",
       "q": "Compare the simplex method with an interior point method: (1) where the iterates are, (2) what one step does, (3) when the optimum is reached, (4) the worst-case number of steps. (5) What can a strictly positive iterate never satisfy?",
@@ -812,7 +812,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-07",
+      "id": "NLP-08-07",
       "g": "Barrier and path",
       "k": "Barrier problem",
       "q": "(1) Write the log-barrier problem $P_\\mu$ of the LP $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$. (2) How does it keep $x > 0$ without inequality constraints? (3) What does decreasing $\\mu$ do? (4) Solve the one-dimensional case $\\min_{x > 0}\\ x - \\mu\\ln x$.",
@@ -827,7 +827,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-08",
+      "id": "NLP-08-08",
       "g": "Barrier and path",
       "k": "Barrier derivatives",
       "q": "Let $\\phi(x) = c^\\top x - \\mu\\sum_i \\ln x_i$ on $x > 0$, with $X = \\operatorname{diag}(x)$ and $e = (1,\\dots,1)^\\top$. (1) Compute $\\nabla\\phi$. (2) Compute $\\nabla^2\\phi$. (3) What follows for the barrier problem $\\min \\phi(x)$ s.t. $Ax = b$?",
@@ -841,7 +841,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-09",
+      "id": "NLP-08-09",
       "g": "Barrier and path",
       "k": "Perturbed KKT",
       "q": "Barrier problem: $\\min c^\\top x - \\mu\\sum_i \\ln x_i$ s.t. $Ax = b$. (1) Write its Lagrangian with multipliers $\\pi$ and the two stationarity conditions. (2) Define $z = \\mu X^{-1}e$ and rewrite them as three equations. (3) Compare with the KKT conditions of the LP.",
@@ -855,7 +855,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-10",
+      "id": "NLP-08-10",
       "g": "Barrier and path",
       "k": "Vector vs scalar form",
       "q": "Perturbed complementarity has a vector form $XZe = \\mu e$ and a scalar form $x^\\top z = n\\mu$. (1) Which implies which? (2) For a point with $XZe = \\mu e$, express $x^\\top z$ and $y = x^\\top z/n$ through $\\mu$ and $n$. (3) With $n = 4$ and $\\mu = 0.75$, do the products $(0.5, 0.5, 1, 1)$ satisfy either form?",
@@ -871,7 +871,7 @@
       ]
     },
     {
-      "id": "NLO-08-11",
+      "id": "NLP-08-11",
       "g": "Barrier and path",
       "k": "Central path",
       "q": "(1) Define the central path $\\Gamma$. (2) Under which assumptions is it well behaved? (3) State its two properties. (4) What is the duality gap at the point with parameter $\\mu$?",
@@ -886,7 +886,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-12",
+      "id": "NLP-08-12",
       "g": "Barrier and path",
       "k": "Path of the example",
       "q": "Unit-square LP in standard form: $\\min -x_1 - x_2$ s.t. $x_1 + x_3 = 1$, $x_2 + x_4 = 1$, $x \\ge 0$. By symmetry keep one group of the perturbed conditions: $x_1 + x_3 = 1$, $\\pi_1 + z_1 = -1$, $\\pi_1 + z_3 = 0$, $x_1 z_1 = \\mu$, $x_3 z_3 = \\mu$. (1) Reduce them to one equation in $x_1$. (2) Solve it. (3) Evaluate at $\\mu = 1$ and let $\\mu \\to 0$ and $\\mu \\to \\infty$. (4) What is the gap on the path?",
@@ -901,7 +901,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-13",
+      "id": "NLP-08-13",
       "g": "Barrier and path",
       "k": "Distance to optimum",
       "q": "Let $(x, \\pi, z)$ be on the central path with parameter $\\mu$, and let $p^*$ be the optimal primal value. (1) Show $b^\\top\\pi \\le p^* \\le c^\\top x$. (2) Deduce $0 \\le c^\\top x - p^* \\le n\\mu$. (3) Which $\\mu$ guarantees a primal value within $\\varepsilon$ of optimal?",
@@ -917,7 +917,7 @@
       ]
     },
     {
-      "id": "NLO-08-14",
+      "id": "NLP-08-14",
       "g": "Newton step",
       "k": "Residual map, Jacobian",
       "q": "For a fixed $\\mu$ the perturbed KKT system is $A^\\top\\pi + z = c$, $Ax = b$, $XZe = \\mu e$. (1) Write it as $F_\\mu(x, \\pi, z) = 0$. (2) Give the Jacobian in blocks for the columns $(x, \\pi, z)$. (3) State the Newton system. (4) Where does $\\mu$ appear?",
@@ -932,7 +932,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-15",
+      "id": "NLP-08-15",
       "g": "Newton step",
       "k": "Dropped term",
       "q": "We want the product after the step to equal the target: $(x_i + (d_x)_i)(z_i + (d_z)_i) = \\mu$. (1) Expand and name the term that Newton's linearization drops. (2) Write the linearized equation in component and in matrix form. (3) Take $x_1 = 0.5$, $z_1 = 1$, $\\mu = 0.375$ and the Newton direction $(d_x)_1 = \\tfrac16$, $(d_z)_1 = -\\tfrac{7}{12}$. What is the product after a full step, and by how much does it miss $\\mu$?",
@@ -946,7 +946,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-16",
+      "id": "NLP-08-16",
       "g": "Newton step",
       "k": "Feasible-start system",
       "q": "At a point with $Ax = b$ and $A^\\top\\pi + z = c$, the Newton system for the target $\\mu$ has three block rows. (1) Write them. (2) Show that $x + \\alpha d_x$ stays primal feasible for every $\\alpha$. (3) Show the same for dual feasibility. (4) What does the direction not take care of?",
@@ -961,7 +961,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-17",
+      "id": "NLP-08-17",
       "g": "Newton step",
       "k": "y, τ and μ",
       "q": "At the current point the products $x_i z_i$ are usually unequal. (1) Define $y$, $\\tau$ and $\\mu$ and say what each describes. (2) What does a step do when $\\tau$ is close to $1$, and when it is close to $0$? (3) When is $y = \\mu$? (4) For products $(0.5, 0.5, 1, 1)$ and $\\tau = 0.5$, compute $x^\\top z$, $y$ and $\\mu$.",
@@ -976,7 +976,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-18",
+      "id": "NLP-08-18",
       "g": "Newton step",
       "k": "Step length",
       "q": "The new point is $x + \\alpha d_x$, $z + \\alpha d_z$. (1) Give the formulas for $\\alpha^{\\max}$ and $\\alpha$ in the basic method. (2) Why do only negative direction components matter? (3) Compute $\\alpha$ for $x = (1, 2, 4)$, $d_x = (-2, 1, -1)$, $z = (3, 1, 0.5)$, $d_z = (1, -4, -0.25)$, $\\eta = 0.9$.",
@@ -992,7 +992,7 @@
       ]
     },
     {
-      "id": "NLO-08-19",
+      "id": "NLP-08-19",
       "g": "Newton step",
       "k": "Basic algorithm",
       "q": "State the basic primal–dual method with a feasible start: (1) the requirements on the starting point, (2) the direction step, (3) the update, (4) the stopping test and why it is the right one.",
@@ -1007,7 +1007,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-20",
+      "id": "NLP-08-20",
       "g": "Steps by hand",
       "k": "One step: direction",
       "q": "Unit-square LP ($A = \\begin{pmatrix}1&0&1&0\\\\0&1&0&1\\end{pmatrix}$) at the feasible point $x = (\\tfrac12,\\tfrac12,\\tfrac12,\\tfrac12)$, $\\pi = (-2,-2)$, $z = (1,1,2,2)$ with $\\tau = 0.5$, so $y = 0.75$ and $\\mu = 0.375$. By symmetry keep only $d_{x_1}, d_{x_3}, d_{\\pi_1}, d_{z_1}, d_{z_3}$. (1) Write the five equations. (2) Reduce them to two. (3) Solve and give the full direction.",
@@ -1021,7 +1021,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-21",
+      "id": "NLP-08-21",
       "g": "Steps by hand",
       "k": "One step: update",
       "q": "Continue at $x = (\\tfrac12,\\tfrac12,\\tfrac12,\\tfrac12)$, $\\pi = (-2,-2)$, $z = (1,1,2,2)$ with direction $d_x = (\\tfrac16,\\tfrac16,-\\tfrac16,-\\tfrac16)$, $d_\\pi = (\\tfrac{7}{12},\\tfrac{7}{12})$, $d_z = -\\tfrac{7}{12}e$, and $\\tau = 0.5$, $\\eta = 0.95$. (1) Compute the step length. (2) Update $x$, $\\pi$, $z$. (3) Compute the new gap and $y$. (4) Which formula predicts the new $y$?",
@@ -1036,7 +1036,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-22",
+      "id": "NLP-08-22",
       "g": "Steps by hand",
       "k": "Two-variable step",
       "q": "LP data $A = (1\\ \\ 1)$, $b = 2$, $c = (1, 2)^\\top$. Current point $x = (1,1)^\\top$, $\\pi = 0$, $z = (1,2)^\\top$; $\\tau = \\tfrac13$. (1) Verify strict feasibility. (2) Compute $y$ and $\\mu$. (3) Write the component Newton equations. (4) Solve for $d_x$, $d_\\pi$, $d_z$.",
@@ -1053,7 +1053,7 @@
       ]
     },
     {
-      "id": "NLO-08-23",
+      "id": "NLP-08-23",
       "g": "Steps by hand",
       "k": "Step and check",
       "q": "Continue: $A = (1\\ \\ 1)$, $b = 2$, $c = (1,2)^\\top$, $x = (1,1)^\\top$, $\\pi = 0$, $z = (1,2)^\\top$, $y = 1.5$, $\\tau = \\tfrac13$, direction $d_x = (\\tfrac13, -\\tfrac13)^\\top$, $d_\\pi = \\tfrac56$, $d_z = (-\\tfrac56, -\\tfrac56)^\\top$, and $\\eta = 0.95$. (1) Compute $\\alpha$. (2) Update the point. (3) Verify feasibility. (4) Compute $y^+$ and check it against the recurrence.",
@@ -1070,7 +1070,7 @@
       ]
     },
     {
-      "id": "NLO-08-24",
+      "id": "NLP-08-24",
       "g": "Steps by hand",
       "k": "Reduce to m × m",
       "q": "Feasible-start Newton system: $A^\\top d_\\pi + d_z = 0$, $A d_x = 0$, $Z d_x + X d_z = -XZe + \\mu e$. Define $D = XZ^{-1}$, $w = -x + \\mu Z^{-1}e$ and $M = ADA^\\top$. (1) Derive an equation for $d_\\pi$ alone. (2) Give the back-substitution for $d_z$ and $d_x$. (3) Why is $M$ invertible? (4) Why does this matter in practice?",
@@ -1085,7 +1085,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-25",
+      "id": "NLP-08-25",
       "g": "Steps by hand",
       "k": "Elimination by hand",
       "q": "$A = (1\\ \\ 1)$, feasible point with $x = (1, 2)^\\top$, $z = (2, 1)^\\top$, target $\\mu = 1$. Using $D = XZ^{-1}$, $w = -x + \\mu Z^{-1}e$ and $M = ADA^\\top$, find (1) $D$ and $w$, (2) $M$ and $d_\\pi$ from $M d_\\pi = -Aw$, (3) $d_z = -A^\\top d_\\pi$ and $d_x = w + DA^\\top d_\\pi$. (4) Check the result.",
@@ -1100,7 +1100,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-26",
+      "id": "NLP-08-26",
       "g": "Progress per step",
       "k": "Orthogonal directions",
       "q": "For the feasible-start Newton direction ($A d_x = 0$, $A^\\top d_\\pi + d_z = 0$): (1) Prove $d_x^\\top d_z = 0$. (2) Does this mean every product $(d_x)_i(d_z)_i$ is $0$? Use $d_x = (\\tfrac16,\\tfrac16,-\\tfrac16,-\\tfrac16)$, $d_z = -\\tfrac{7}{12}e$. (3) Does the identity hold at an infeasible point?",
@@ -1114,7 +1114,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-27",
+      "id": "NLP-08-27",
       "g": "Progress per step",
       "k": "Summed equation",
       "q": "The third block of the centered Newton system is $Z d_x + X d_z = -XZe + \\tau y e$ with $y = x^\\top z/n$. (1) Add the $n$ equations and simplify. (2) Check the result with $x = (\\tfrac12,\\tfrac12,\\tfrac12,\\tfrac12)$, $z = (1,1,2,2)$, $\\tau = 0.5$, $d_x = (\\tfrac16,\\tfrac16,-\\tfrac16,-\\tfrac16)$, $d_z = -\\tfrac{7}{12}e$.",
@@ -1127,7 +1127,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-28",
+      "id": "NLP-08-28",
       "g": "Progress per step",
       "k": "Recurrence for y",
       "q": "Feasible start, centered Newton direction, common step $\\alpha$. (1) Derive $y^+ = [1 - \\alpha(1 - \\tau)]\\,y$. (2) Read off the cases $\\tau = 1$, $\\tau = 0$ and $\\alpha = 1$. (3) Compute $y^+$ for $\\tau = 0.2$, $\\alpha = 0.5$, $y = 10$. (4) Which three assumptions does the derivation use?",
@@ -1144,7 +1144,7 @@
       ]
     },
     {
-      "id": "NLO-08-29",
+      "id": "NLP-08-29",
       "g": "Progress per step",
       "k": "After a full step",
       "q": "Feasible start, centered Newton direction, full step $\\alpha = 1$. (1) What does each new product $x_i^+ z_i^+$ equal? (2) What is the new average? (3) For $x = (\\tfrac12,\\tfrac12,\\tfrac12,\\tfrac12)$, $z = (1,1,2,2)$, $\\tau y = 0.375$, $d_x = (\\tfrac16,\\tfrac16,-\\tfrac16,-\\tfrac16)$, $d_z = -\\tfrac{7}{12}e$, list the new products.",
@@ -1158,7 +1158,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-30",
+      "id": "NLP-08-30",
       "g": "Infeasible start",
       "k": "Residuals and system",
       "q": "The start only satisfies $x > 0$, $z > 0$. (1) Define the residuals $r_p$ and $r_d$. (2) Write the three block rows of the Newton system. (3) What changes compared with a feasible start, and what stays? (4) What is the stopping test?",
@@ -1173,7 +1173,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-31",
+      "id": "NLP-08-31",
       "g": "Infeasible start",
       "k": "Residual reduction",
       "q": "Infeasible-start direction: $A d_x = -r_p$ and $A^\\top d_\\pi + d_z = -r_d$. $x$ takes the step $\\alpha_x$; $\\pi$ and $z$ take the step $\\alpha_z$. (1) Derive the new residuals. (2) What happens with a full step that keeps positivity? Is the new point optimal? (3) Why must $\\pi$ and $z$ use the same step length?",
@@ -1189,7 +1189,7 @@
       ]
     },
     {
-      "id": "NLO-08-32",
+      "id": "NLP-08-32",
       "g": "Infeasible start",
       "k": "xᵀz is not the gap",
       "q": "At an infeasible point, with $r_p = Ax - b$ and $r_d = A^\\top\\pi + z - c$: (1) Express $c^\\top x - b^\\top\\pi$ through $x^\\top z$ and the residuals. (2) What does this mean for the stopping test? (3) Check it with $x^\\top z = 22.96875$, $r_d = 1.125\\,e$, $x = (5.3125, 7.8125, 4.3125, 1.8125)$, $r_p = (5.25, 5.25)$, $\\pi = (-0.5, -1)$.",
@@ -1203,7 +1203,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-33",
+      "id": "NLP-08-33",
       "g": "Infeasible start",
       "k": "Two step lengths",
       "q": "The infeasible-start and predictor–corrector methods use separate step lengths. (1) Which variables use which step? (2) How are $\\alpha_x$ and $\\alpha_z$ computed? (3) With $\\eta = 0.95$ and no ratio below $1$, what are the steps? (4) Compute the common-step and the separate-step versions for $x = (2,1,3)$, $d_x = (-1,-4,2)$, $z = (1,2,1)$, $d_z = (-0.5, 1, -4)$, $\\eta = 0.9$.",
@@ -1218,7 +1218,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-34",
+      "id": "NLP-08-34",
       "g": "Short-step method",
       "k": "Neighborhood N₂(θ)",
       "q": "(1) Define the neighborhood $N_2(\\theta)$ of the central path, including the set $F_0$. (2) What does the vector $XZe - ye$ measure? (3) Show that inside $N_2(\\theta)$ every product satisfies $(1 - \\theta)y \\le x_i z_i \\le (1 + \\theta)y$. (4) Which points have deviation $0$?",
@@ -1233,7 +1233,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-35",
+      "id": "NLP-08-35",
       "g": "Short-step method",
       "k": "Membership test",
       "q": "$A = (1\\ \\ 1)$, $b = 2$, $c = (1,1)^\\top$. Two triples, both with $\\pi = 0$ and $z = (1,1)^\\top$: $x^{(a)} = (0.8, 1.2)^\\top$ and $x^{(b)} = (0.4, 1.6)^\\top$. (1) Verify that both are strictly feasible and compute $x^\\top z$ and $y$. (2) Decide membership in $N_2(0.4)$. (3) Why does the same $y$ not mean the same centrality? (4) Does membership require every $x_i z_i = y$?",
@@ -1250,7 +1250,7 @@
       ]
     },
     {
-      "id": "NLO-08-36",
+      "id": "NLP-08-36",
       "g": "Short-step method",
       "k": "Short-step choices",
       "q": "The short-step method starts in $N_2(0.4)$. (1) Which $\\tau$ and $\\alpha$ does it use? (2) State the key technical result. (3) What does the recurrence give for $y^{(k)}$? (4) Compare with the basic method: starting point, reduction factor, guarantee.",
@@ -1265,7 +1265,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-37",
+      "id": "NLP-08-37",
       "g": "Short-step method",
       "k": "Iteration bound",
       "q": "Short-step method: $y^{(k)} = (1 - 0.4/\\sqrt n)^k\\,y^{(0)}$. (1) Bound $y^{(k)}$ using $1 - t \\le e^{-t}$. (2) Derive a sufficient number of iterations for $y^{(k)} \\le \\varepsilon$. (3) What changes if the test is on the total gap $x^\\top z \\le \\varepsilon$? (4) State the order of the bound.",
@@ -1282,7 +1282,7 @@
       ]
     },
     {
-      "id": "NLO-08-38",
+      "id": "NLP-08-38",
       "g": "Short-step method",
       "k": "Counting iterations",
       "q": "Short-step method with $n = 100$ and $y^{(0)} = 1$ (use $\\ln 10 \\approx 2.302585$). (1) What is $\\tau$? (2) Find a sufficient number of iterations for $y^{(k)} \\le 10^{-6}$. (3) Find one for the total gap $x^\\top z \\le 10^{-6}$. (4) Why are the two counts different?",
@@ -1299,7 +1299,7 @@
       ]
     },
     {
-      "id": "NLO-08-39",
+      "id": "NLP-08-39",
       "g": "Short-step method",
       "k": "Why full steps work",
       "q": "Short-step method: the current point is in $N_2(0.4)$, $\\tau = 1 - 0.4/\\sqrt n$, full step. (1) Which two properties must be proved so that the argument can be repeated? (2) What is the new deviation vector $X^+Z^+e - y^+e$? (3) With $D = XZ^{-1}$, $u = D^{-1/2}d_x$ and $v = D^{1/2}d_z$ the proof shows $\\lVert u \\rVert^2 + \\lVert v \\rVert^2 \\le \\tfrac{8}{15}y$. How does positivity follow? (4) How does membership in $N_2(0.4)$ follow?",
@@ -1316,7 +1316,7 @@
       ]
     },
     {
-      "id": "NLO-08-40",
+      "id": "NLP-08-40",
       "g": "Predictor–corrector",
       "k": "Affine predictor",
       "q": "Mehrotra's method first computes a predictor. (1) Which system defines the affine direction? (2) How are the trial steps $\\alpha_x^{\\text{aff}}$ and $\\alpha_z^{\\text{aff}}$ computed? (3) Setting the target to $0$ does not give zero complementarity at the next point. Give two reasons.",
@@ -1332,7 +1332,7 @@
       ]
     },
     {
-      "id": "NLO-08-41",
+      "id": "NLP-08-41",
       "g": "Predictor–corrector",
       "k": "Adaptive centering",
       "q": "After the affine direction and its trial steps: (1) Define $y_{\\text{aff}}$. (2) Give Mehrotra's centering factor. (3) Interpret a ratio $y_{\\text{aff}}/y$ of $0.1$ and of $0.9$. (4) Compute $\\tau$ and $\\mu$ for $y = 2$ and $y_{\\text{aff}} = 0.5$.",
@@ -1347,7 +1347,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-42",
+      "id": "NLP-08-42",
       "g": "Predictor–corrector",
       "k": "Corrector equation",
       "q": "We want $(x_i + (d_x)_i)(z_i + (d_z)_i) = \\mu$ exactly. (1) Keep the quadratic term and write the exact equation for the direction. (2) Why can it not be solved directly, and what does Mehrotra do? (3) Write the combined equation in matrix form and define $D_x$, $D_z$. (4) Where does the minus sign come from?",
@@ -1364,7 +1364,7 @@
       ]
     },
     {
-      "id": "NLO-08-43",
+      "id": "NLP-08-43",
       "g": "Predictor–corrector",
       "k": "Combined solve",
       "q": "Second solve of a predictor–corrector step. (1) Give the right-hand side of the combined system. Should the affine direction be added to its solution? (2) Give the right-hand side of the correction-only variant and the direction finally used. (3) Why do both give the same direction? (4) Why can one factorization serve both solves?",
@@ -1381,7 +1381,7 @@
       ]
     },
     {
-      "id": "NLO-08-44",
+      "id": "NLP-08-44",
       "g": "Predictor–corrector",
       "k": "Full algorithm",
       "q": "List one iteration of Mehrotra's predictor–corrector method: (1) the quantities computed first, (2) the predictor, (3) the centering factor, (4) the total direction, (5) the update, (6) the stopping test.",
@@ -1398,7 +1398,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-45",
+      "id": "NLP-08-45",
       "g": "Predictor–corrector",
       "k": "Only approximate",
       "q": "After a predictor–corrector step the new point generally does not satisfy $x_i z_i = \\mu$. (1) Give three reasons. (2) Does that matter? (3) Does the exact recurrence $y^+ = [1 - \\alpha(1 - \\tau)]\\,y$ apply?",
@@ -1412,7 +1412,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-46",
+      "id": "NLP-08-46",
       "g": "Start and example",
       "k": "Starting point recipe",
       "q": "Mehrotra's method needs a start with $x, z > 0$. Give the three steps of the heuristic with formulas: (1) the least-squares estimates $\\bar\\pi$, $\\bar z$, $\\bar x$ and what each one is, (2) the shift to nonnegativity, (3) the balancing step. (4) Is the result feasible?",
@@ -1427,7 +1427,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-47",
+      "id": "NLP-08-47",
       "g": "Start and example",
       "k": "Start: least squares",
       "q": "Data: $A = \\begin{pmatrix}1&2&1&0\\\\2&1&0&1\\end{pmatrix}$, $b = (20, 15)^\\top$, $c = (-3,-2,0,0)^\\top$, so $AA^\\top = \\begin{pmatrix}6&4\\\\4&6\\end{pmatrix}$. Compute (1) $\\bar\\pi = (AA^\\top)^{-1}Ac$, (2) $\\bar z = c - A^\\top\\bar\\pi$, (3) $\\bar x = A^\\top(AA^\\top)^{-1}b$. (4) Which estimate is not positive?",
@@ -1442,7 +1442,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-48",
+      "id": "NLP-08-48",
       "g": "Start and example",
       "k": "Start: shift, balance",
       "q": "Continue with $\\bar x = (4, 6.5, 3, 0.5)$, $\\bar z = (-0.5, 0, 0.5, 1)$, $\\bar\\pi = (-0.5, -1)$. (1) Compute the shifts $\\delta_x$, $\\delta_z$ and the vectors $\\hat x$, $\\hat z$. (2) Compute $\\hat x^\\top\\hat z$, $e^\\top\\hat z$ and $e^\\top\\hat x$. (3) Compute $\\hat\\delta_x$, $\\hat\\delta_z$ and the starting point.",
@@ -1456,7 +1456,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-49",
+      "id": "NLP-08-49",
       "g": "Start and example",
       "k": "Exact solution",
       "q": "LP: $\\min -3x_1 - 2x_2$ s.t. $x_1 + 2x_2 + x_3 = 20$, $2x_1 + x_2 + x_4 = 15$, $x \\ge 0$ (here $x_3, x_4$ are slacks). (1) Find $x^*$, assuming both original constraints are tight. (2) Find $\\pi^*$ and $z^*$ from complementarity and $A^\\top\\pi + z = c$. (3) Verify optimality.",
@@ -1470,7 +1470,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-50",
+      "id": "NLP-08-50",
       "g": "Start and example",
       "k": "Iteration 1: residuals",
       "q": "Same LP ($A = \\begin{pmatrix}1&2&1&0\\\\2&1&0&1\\end{pmatrix}$, $b = (20, 15)^\\top$, $c = (-3,-2,0,0)^\\top$) at the start $x = (5.3125, 7.8125, 4.3125, 1.8125)$, $\\pi = (-0.5, -1)$, $z = (0.625, 1.125, 1.625, 2.125)$, where $x^\\top z = 22.96875$. Compute (1) $r_p = Ax - b$, (2) $r_d = A^\\top\\pi + z - c$, (3) $y$ and the two residual norms. (4) Why are the components of each residual equal?",
@@ -1485,7 +1485,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-51",
+      "id": "NLP-08-51",
       "g": "Start and example",
       "k": "Iteration 1: τ, steps",
       "q": "Same start: $y = 5.7422$ and $x_1 z_1 = 3.3203$. The affine direction has $(d_x^{\\text{aff}})_1 = -1.3382$ and $(d_z^{\\text{aff}})_1 = -0.4676$, both affine trial steps equal $1$, and $y_{\\text{aff}} = 1.0344$. (1) Compute $\\tau$ and $\\tau y$. (2) Compute component 1 of the third right-hand side of the combined system. (3) For the total direction the smallest ratios are $1.165$ for $x$ and $1.005$ for $z$; with $\\eta = 0.95$ give the steps. (4) Give the residual norms after the step, starting from $7.4246$ and $2.25$.",
@@ -1500,7 +1500,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-52",
+      "id": "NLP-08-52",
       "g": "Start and example",
       "k": "Reading the run",
       "q": "The predictor–corrector run on this LP from the infeasible start ($\\eta = 0.95$, $\\varepsilon = 10^{-6}$) stops at $k = 6$. Explain each observation: (1) $c^\\top x^{(0)} = -31.56$ is below the optimal value $-26.67$. (2) $c^\\top x^{(0)} < b^\\top\\pi^{(0)} = -25$. (3) $\\lVert r_p \\rVert_2$ goes $7.42 \\to 0.371 \\to 0.0186 \\to \\dots$ (4) $\\lVert r_d \\rVert_2$ goes $0.1125 \\to 0.00618$ at step 2, a factor $0.055$. (5) Late in the run $x^\\top z$ falls by a factor of about $0.05$ per step and $\\tau$ is tiny.",
@@ -1516,7 +1516,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-53",
+      "id": "NLP-08-53",
       "g": "Convex QP",
       "k": "KKT and barrier",
       "q": "Convex QP: $\\min c^\\top x + \\tfrac12 x^\\top Q x$ s.t. $Ax = b$, $x \\ge 0$, with $Q$ symmetric positive semidefinite; multipliers $\\pi$ for $Ax = b$ and $z \\ge 0$ for $x \\ge 0$; $X = \\operatorname{diag}(x)$, $Z = \\operatorname{diag}(z)$. (1) Write the KKT conditions. (2) Are they necessary and sufficient? (3) Write the perturbed system for $\\mu > 0$. (4) Which barrier problem does it come from?",
@@ -1533,7 +1533,7 @@
       ]
     },
     {
-      "id": "NLO-08-54",
+      "id": "NLP-08-54",
       "g": "Convex QP",
       "k": "Newton system",
       "q": "For the convex QP let $F(x,\\pi,z)$ have the blocks $r_d = Qx + c - A^\\top\\pi - z$, $r_p = Ax - b$, $r_c = XZe - \\mu e$. (1) Derive the Newton system for $(d_x, d_\\pi, d_z)$. (2) The supplementary notes use $r_d = A^\\top\\pi + z - Qx - c$ instead. How does the first block row look there? (3) What is different from the LP system?",
@@ -1549,7 +1549,7 @@
       ]
     },
     {
-      "id": "NLO-08-55",
+      "id": "NLP-08-55",
       "g": "Convex QP",
       "k": "Reduced system",
       "q": "Newton system of the convex QP: $Q d_x - A^\\top d_\\pi - d_z = -r_d$, $A d_x = -r_p$, $Z d_x + X d_z = -r_c$, with $r_c = XZe - \\mu e$ and $\\Theta = X^{-1}Z$. (1) Solve the third row for $d_z$. (2) Substitute into the first row and write the reduced system in $(d_x, d_\\pi)$. (3) Which sign does the $X^{-1}r_c$ term carry?",
@@ -1565,7 +1565,7 @@
       ]
     },
     {
-      "id": "NLO-08-56",
+      "id": "NLP-08-56",
       "g": "Convex QP",
       "k": "Normal equations",
       "q": "Reduced system of the convex QP: $(Q + \\Theta)d_x - A^\\top d_\\pi = -\\tilde r_d$ and $A d_x = -r_p$, where $\\Theta = X^{-1}Z$ and $\\tilde r_d = r_d + X^{-1}r_c$. Assume $Q + \\Theta$ is nonsingular. (1) Derive the system for $d_\\pi$ alone. (2) Recover $d_x$ and $d_z$. (3) Why is its matrix symmetric positive definite? (4) What does $Q = 0$ give?",
@@ -1582,7 +1582,7 @@
       ]
     },
     {
-      "id": "NLO-08-57",
+      "id": "NLP-08-57",
       "g": "Convex QP",
       "k": "What changes for QP",
       "q": "At a feasible point of the convex QP the Newton direction satisfies $d_z = Q d_x - A^\\top d_\\pi$ and $A d_x = 0$. (1) Compute $d_x^\\top d_z$. (2) What becomes of the recurrence for $y$ with a common step $\\alpha$? (3) Check with $d_x = (\\tfrac1{16},\\tfrac1{16},-\\tfrac1{16},-\\tfrac1{16})$, $Q = \\operatorname{diag}(1,1,0,0)$, $n = 4$, $\\tau = 0.5$, $\\alpha = 0.95$, $y = 0.875$.",
@@ -1596,7 +1596,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-58",
+      "id": "NLP-08-58",
       "g": "Overview",
       "k": "Three algorithms",
       "q": "Compare the basic method, the short-step method and Mehrotra's predictor–corrector on: (1) the starting point, (2) the centering factor $\\tau$, (3) the step length, (4) linear solves per iteration, (5) what is guaranteed.",
@@ -1612,7 +1612,7 @@
       "seen": []
     },
     {
-      "id": "NLO-08-59",
+      "id": "NLP-08-59",
       "g": "Overview",
       "k": "Decision flow",
       "q": "Before using a formula from this topic, what do you check, and what follows, for: (1) the meaning of $x^\\top z$, (2) the recurrence $y^+ = [1 - \\alpha(1 - \\tau)]\\,y$, (3) the claim “the products equal $\\mu$ after the step”, (4) a bound on the number of steps, (5) the claim “small residuals, hence optimal”?",

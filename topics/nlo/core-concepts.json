@@ -2,7 +2,7 @@
   "title": "Core concepts",
   "cards": [
     {
-      "id": "NLO-01",
+      "id": "NLP-01",
       "k": "KKT sufficiency",
       "q": "When are the KKT conditions sufficient for global optimality?",
       "pts": [
@@ -14,7 +14,7 @@
       "pit": "Slater / a constraint qualification is what makes KKT necessary; it is not needed for sufficiency."
     },
     {
-      "id": "NLO-02",
+      "id": "NLP-02",
       "k": "Slater's condition",
       "q": "What role does Slater’s condition play in convex optimization?",
       "pts": [
@@ -25,7 +25,7 @@
       "pit": "Slater does not imply that a primal optimum exists or is unique, and it is a statement about convex problems."
     },
     {
-      "id": "NLO-03",
+      "id": "NLP-03",
       "k": "Strong convexity",
       "q": "What distinguishes convexity from strong convexity?",
       "pts": [
@@ -37,7 +37,7 @@
       "pit": "Strictly convex ≠ strongly convex: eˣ is strictly convex on ℝ but not strongly convex (f″ = eˣ → 0)."
     },
     {
-      "id": "NLO-04",
+      "id": "NLP-04",
       "k": "Stationary ⇒ global",
       "q": "When is a stationary point globally optimal?",
       "pts": [
@@ -48,7 +48,7 @@
       "pit": "At a constrained optimum ∇f(x*) is usually not zero — don't set the gradient to zero when constraints are active."
     },
     {
-      "id": "NLO-05",
+      "id": "NLP-05",
       "k": "PSD Hessian",
       "q": "Why is a positive semidefinite Hessian useful?",
       "pts": [
@@ -60,7 +60,7 @@
       "pit": "A PSD Hessian at a single point says nothing about global convexity."
     },
     {
-      "id": "NLO-06",
+      "id": "NLP-06",
       "k": "Local vs strict",
       "q": "What is the difference between a local minimum and a strict local minimum?",
       "pts": [
@@ -71,7 +71,7 @@
       "pit": "∇f(x*) = 0 and ∇²f(x*) ⪰ 0 are only necessary at an interior local minimum, not sufficient."
     },
     {
-      "id": "NLO-07",
+      "id": "NLP-07",
       "k": "Duality gap",
       "q": "What is the duality gap and when is it zero?",
       "pts": [
@@ -82,7 +82,7 @@
       "pit": "Nonconvex problems (e.g. integer programs) typically have a positive gap; the dual still gives a valid lower bound."
     },
     {
-      "id": "NLO-08",
+      "id": "NLP-08",
       "k": "Newton vs GD",
       "q": "Why can Newton’s method converge faster than gradient descent?",
       "pts": [
@@ -94,7 +94,7 @@
       "pit": "Far from the optimum or with an indefinite Hessian Newton can diverge — use line search / damping; each step costs about O(n³)."
     },
     {
-      "id": "NLO-09",
+      "id": "NLP-09",
       "k": "Compl. slackness",
       "q": "What is complementary slackness?",
       "pts": [
@@ -106,7 +106,7 @@
       "pit": "Active does NOT imply λᵢ > 0: an active constraint can have λᵢ = 0 (degenerate case). The reverse direction, λᵢ > 0 ⇒ active, always holds."
     },
     {
-      "id": "NLO-10",
+      "id": "NLP-10",
       "k": "Projected GD",
       "q": "When is projected gradient descent useful?",
       "pts": [

@@ -12,7 +12,7 @@
             "For $f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ with $A$ symmetric: $\\nabla f = Ax + b$ and $H = A$."
           ],
           "cards": [
-            "NLO-02-01"
+            "NLP-02-01"
           ]
         },
         {
@@ -22,7 +22,7 @@
             "Used to prove FONC."
           ],
           "cards": [
-            "NLO-02-05"
+            "NLP-02-05"
           ]
         },
         {
@@ -32,7 +32,7 @@
             "Used for SONC and SOSC."
           ],
           "cards": [
-            "NLO-02-23"
+            "NLP-02-23"
           ]
         },
         {
@@ -42,7 +42,7 @@
             "The second-order expansion is exact for quadratic functions."
           ],
           "cards": [
-            "NLO-02-02"
+            "NLP-02-02"
           ]
         }
       ]
@@ -56,7 +56,7 @@
             "$x^* \\in S$ with $f(x) \\ge f(x^*)$ for all $x \\in S$."
           ],
           "cards": [
-            "NLO-02-03"
+            "NLP-02-03"
           ]
         },
         {
@@ -65,7 +65,7 @@
             "There is $\\varepsilon > 0$ with $f(x) \\ge f(x^*)$ for all $x \\in B(x^*, \\varepsilon) \\cap S$."
           ],
           "cards": [
-            "NLO-02-03"
+            "NLP-02-03"
           ]
         },
         {
@@ -75,7 +75,7 @@
             "Strict global ⇒ global ⇒ local, and strict global ⇒ strict local ⇒ local."
           ],
           "cards": [
-            "NLO-02-03"
+            "NLP-02-03"
           ]
         },
         {
@@ -84,8 +84,8 @@
             "A point $\\bar{x}$ with $\\nabla f(\\bar{x}) = 0$. It can be a local min, a local max or a saddle point."
           ],
           "cards": [
-            "NLO-02-04",
-            "NLO-02-06"
+            "NLP-02-04",
+            "NLP-02-06"
           ]
         },
         {
@@ -94,7 +94,7 @@
             "A stationary point that is neither a local min nor a local max."
           ],
           "cards": [
-            "NLO-02-25"
+            "NLP-02-25"
           ]
         }
       ]
@@ -110,7 +110,7 @@
             "Necessary only: $f(x) = x^3$ has $f'(0) = 0$ but no min at $0$."
           ],
           "cards": [
-            "NLO-02-04"
+            "NLP-02-04"
           ]
         },
         {
@@ -121,7 +121,7 @@
             "3. Take $d = -\\nabla f(x^*)$: $-\\lVert \\nabla f(x^*) \\rVert^2 \\ge 0$, so $\\nabla f(x^*) = 0$."
           ],
           "cards": [
-            "NLO-02-05"
+            "NLP-02-05"
           ]
         },
         {
@@ -130,7 +130,7 @@
             "Tell a min from a max ($f$ and $-f$ share stationary points); rule out saddle points; guarantee that a stationary point or a minimizer exists."
           ],
           "cards": [
-            "NLO-02-06"
+            "NLP-02-06"
           ]
         },
         {
@@ -140,7 +140,7 @@
             "Points where $f$ is not differentiable, e.g. $|x|$ at $0$."
           ],
           "cards": [
-            "NLO-02-07"
+            "NLP-02-07"
           ]
         }
       ]
@@ -154,7 +154,7 @@
             "$x, y \\in C$ and $\\lambda \\in [0, 1]$ imply $\\lambda x + (1 - \\lambda) y \\in C$."
           ],
           "cards": [
-            "NLO-02-08"
+            "NLP-02-08"
           ]
         },
         {
@@ -163,8 +163,8 @@
             "$\\mathbb{R}^n$, $\\emptyset$, half-spaces $\\{a^\\top x \\ge \\beta\\}$, balls, affine sets $\\{Ax = b\\}$, the PSD cone, polyhedra $\\{Ax \\le b\\}$."
           ],
           "cards": [
-            "NLO-02-08",
-            "NLO-02-09"
+            "NLP-02-08",
+            "NLP-02-09"
           ]
         },
         {
@@ -174,7 +174,7 @@
             "Sublevel sets $\\{x : g(x) \\le 0\\}$ of a convex $g$ are convex."
           ],
           "cards": [
-            "NLO-02-09"
+            "NLP-02-09"
           ]
         },
         {
@@ -184,8 +184,8 @@
             "Or write the set as an intersection of known convex sets."
           ],
           "cards": [
-            "NLO-02-10",
-            "NLO-02-12"
+            "NLP-02-10",
+            "NLP-02-12"
           ]
         }
       ]
@@ -201,7 +201,7 @@
             "Strictly convex: strict inequality for $x \\ne y$ and $\\lambda \\in (0, 1)$. Concave: $-f$ is convex."
           ],
           "cards": [
-            "NLO-02-11"
+            "NLP-02-11"
           ]
         },
         {
@@ -210,7 +210,7 @@
             "$\\operatorname{epi}(f) = \\{(x, \\alpha) : f(x) \\le \\alpha\\}$. If $f$ is convex then $\\operatorname{epi}(f)$ is a convex set."
           ],
           "cards": [
-            "NLO-02-12"
+            "NLP-02-12"
           ]
         },
         {
@@ -220,7 +220,7 @@
             "$$\\lambda f(x) + (1 - \\lambda) f(y) - f(\\lambda x + (1 - \\lambda) y) = \\tfrac12 \\lambda (1 - \\lambda)\\,(x - y)^\\top A\\,(x - y)$$"
           ],
           "cards": [
-            "NLO-02-13"
+            "NLP-02-13"
           ]
         },
         {
@@ -229,7 +229,7 @@
             "$f_1 + f_2$;  $\\alpha f$ with $\\alpha > 0$;  $g(f(x))$ with $g$ convex and nondecreasing;  $f(Ax + b)$;  $\\max\\{f_1, f_2\\}$."
           ],
           "cards": [
-            "NLO-02-14"
+            "NLP-02-14"
           ]
         },
         {
@@ -239,7 +239,7 @@
             "$H(x) \\succ 0$ for all $x \\in C$ ⇒ strictly convex. The converse fails ($x^4$)."
           ],
           "cards": [
-            "NLO-02-15"
+            "NLP-02-15"
           ]
         },
         {
@@ -250,7 +250,7 @@
             "$\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$ is PSD ⇔ $a \\ge 0$, $c \\ge 0$ and $ac - b^2 \\ge 0$."
           ],
           "cards": [
-            "NLO-02-16"
+            "NLP-02-16"
           ]
         },
         {
@@ -260,7 +260,7 @@
             "Not convex: $e^{-x^2}$, and $x^3$ on $\\mathbb{R}$."
           ],
           "cards": [
-            "NLO-02-17"
+            "NLP-02-17"
           ]
         }
       ]
@@ -274,7 +274,7 @@
             "$\\min f(x)$ over $x \\in S$, with $S$ a convex set and $f$ convex on $S$."
           ],
           "cards": [
-            "NLO-02-19"
+            "NLP-02-19"
           ]
         },
         {
@@ -285,7 +285,7 @@
             "$$f(x^*) \\le f(z) \\le \\lambda' f(x^*) + (1 - \\lambda') f(y)$$"
           ],
           "cards": [
-            "NLO-02-19"
+            "NLP-02-19"
           ]
         },
         {
@@ -296,7 +296,7 @@
             "The tangent plane lies below the graph everywhere."
           ],
           "cards": [
-            "NLO-02-20"
+            "NLP-02-20"
           ]
         },
         {
@@ -306,7 +306,7 @@
             "On a constrained convex set $S$: $x^*$ is optimal ⇔ $\\nabla f(x^*)^\\top (y - x^*) \\ge 0$ for all $y \\in S$."
           ],
           "cards": [
-            "NLO-02-20"
+            "NLP-02-20"
           ]
         },
         {
@@ -318,7 +318,7 @@
             "The residual $r = Xw^* - y$ satisfies $X^\\top r = 0$."
           ],
           "cards": [
-            "NLO-02-21"
+            "NLP-02-21"
           ]
         },
         {
@@ -329,7 +329,7 @@
             "$$S x^* = 2\\rho A^\\top b - c$$"
           ],
           "cards": [
-            "NLO-02-22"
+            "NLP-02-22"
           ]
         }
       ]
@@ -343,7 +343,7 @@
             "If $x^*$ is a local minimizer, then $\\nabla f(x^*) = 0$ and $H(x^*) \\succeq 0$."
           ],
           "cards": [
-            "NLO-02-23"
+            "NLP-02-23"
           ]
         },
         {
@@ -352,8 +352,8 @@
             "If $\\nabla f(x^*) = 0$ and $H(x^*) \\succ 0$, then $x^*$ is a strict local minimizer. Local only."
           ],
           "cards": [
-            "NLO-02-23",
-            "NLO-02-27"
+            "NLP-02-23",
+            "NLP-02-27"
           ]
         },
         {
@@ -364,7 +364,7 @@
             "3. Taylor with intermediate point $z$ in the ball: $f(x) \\ge f(x^*) + \\tfrac{\\lambda}{4}\\lVert x - x^* \\rVert^2$."
           ],
           "cards": [
-            "NLO-02-24"
+            "NLP-02-24"
           ]
         },
         {
@@ -373,7 +373,7 @@
             "$\\nabla f(x^*) = 0$ and $H(x^*)$ PSD but singular: no conclusion. $x^4$ (min), $x^3$ (neither) and $x_1^2 - x_2^4$ (saddle) all have this at $0$."
           ],
           "cards": [
-            "NLO-02-23"
+            "NLP-02-23"
           ]
         },
         {
@@ -382,7 +382,7 @@
             "$\\nabla f(x^*) = 0$ and $H(x^*)$ indefinite (a positive and a negative eigenvalue) ⇒ saddle point."
           ],
           "cards": [
-            "NLO-02-25"
+            "NLP-02-25"
           ]
         },
         {
@@ -393,7 +393,7 @@
             "which takes both signs near $x^*$."
           ],
           "cards": [
-            "NLO-02-26"
+            "NLP-02-26"
           ]
         }
       ]
@@ -408,7 +408,7 @@
             "Continuous and coercive ⇒ a global minimizer exists, and it is a stationary point. Compare $f$ over all stationary points."
           ],
           "cards": [
-            "NLO-02-28"
+            "NLP-02-28"
           ]
         },
         {
@@ -418,7 +418,7 @@
             "A function bounded above is never coercive."
           ],
           "cards": [
-            "NLO-02-29"
+            "NLP-02-29"
           ]
         },
         {
@@ -429,7 +429,7 @@
             "Or show that $f(x) \\le M$ forces every coordinate to be bounded."
           ],
           "cards": [
-            "NLO-02-30"
+            "NLP-02-30"
           ]
         },
         {
@@ -439,9 +439,9 @@
             "$$\\lambda_{\\min}(A)\\lVert x \\rVert^2 \\le x^\\top A x \\le \\lambda_{\\max}(A)\\lVert x \\rVert^2$$"
           ],
           "cards": [
-            "NLO-02-24",
-            "NLO-02-29",
-            "NLO-02-30"
+            "NLP-02-24",
+            "NLP-02-29",
+            "NLP-02-30"
           ]
         },
         {
@@ -450,9 +450,9 @@
             "If $f$ is a sum of squares then $f \\ge 0$, and any point with $f = 0$ is a global minimizer. It is unique (strict global) iff the squares vanish at only one point."
           ],
           "cards": [
-            "NLO-02-32",
-            "NLO-02-34",
-            "NLO-02-35"
+            "NLP-02-32",
+            "NLP-02-34",
+            "NLP-02-35"
           ]
         },
         {
@@ -463,7 +463,7 @@
             "With $H(z) \\prec 0$ everywhere: strict global maximizer."
           ],
           "cards": [
-            "NLO-02-31"
+            "NLP-02-31"
           ]
         },
         {
@@ -472,8 +472,8 @@
             "Strict local min: SOSC at the point. Global min: $f(x) \\ge f(x^*)$ everywhere. Strict global: additionally unique. Several global minimizers can each be strict local but none strict global."
           ],
           "cards": [
-            "NLO-02-34",
-            "NLO-02-35"
+            "NLP-02-34",
+            "NLP-02-35"
           ]
         }
       ]
@@ -490,7 +490,7 @@
             "4. Decide global: sum of squares, convexity, or coercivity plus comparing stationary values; check whether $f \\to -\\infty$ along some path. Strict global needs uniqueness."
           ],
           "cards": [
-            "NLO-02-33"
+            "NLP-02-33"
           ]
         },
         {
@@ -499,7 +499,7 @@
             "$H \\succ 0$: strict local min.  $H \\prec 0$: strict local max.  $H$ indefinite: saddle.  $H$ singular and semidefinite: look along the null directions."
           ],
           "cards": [
-            "NLO-02-27"
+            "NLP-02-27"
           ]
         },
         {
@@ -508,7 +508,7 @@
             "One path with $f > f(x^*)$ and one with $f < f(x^*)$ proves a saddle. Straight lines may not be enough: for $x_1^2 - 2x_1x_2^2 + \\tfrac12 x_2^4$ the negative values lie on the curve $x_1 = x_2^2$."
           ],
           "cards": [
-            "NLO-02-37"
+            "NLP-02-37"
           ]
         },
         {
@@ -517,7 +517,7 @@
             "A strict local min with the lowest value among the stationary points is not global if $f$ is unbounded below, e.g. any cubic."
           ],
           "cards": [
-            "NLO-02-36"
+            "NLP-02-36"
           ]
         },
         {
@@ -526,10 +526,10 @@
             "Double well; coupled squares; a cubic in two variables; a degenerate point."
           ],
           "cards": [
-            "NLO-02-34",
-            "NLO-02-35",
-            "NLO-02-36",
-            "NLO-02-37"
+            "NLP-02-34",
+            "NLP-02-35",
+            "NLP-02-36",
+            "NLP-02-37"
           ]
         }
       ]
@@ -544,11 +544,11 @@
             "Appears as the first problem on every past paper."
           ],
           "cards": [
-            "NLO-02-33",
-            "NLO-02-34",
-            "NLO-02-35",
-            "NLO-02-36",
-            "NLO-02-37"
+            "NLP-02-33",
+            "NLP-02-34",
+            "NLP-02-35",
+            "NLP-02-36",
+            "NLP-02-37"
           ]
         },
         {
@@ -557,9 +557,9 @@
             "A path to show not coercive; a lower bound or bounded sublevel sets to show coercive."
           ],
           "cards": [
-            "NLO-02-28",
-            "NLO-02-29",
-            "NLO-02-30"
+            "NLP-02-28",
+            "NLP-02-29",
+            "NLP-02-30"
           ]
         },
         {
@@ -568,8 +568,8 @@
             "Two points, one combination, one inequality."
           ],
           "cards": [
-            "NLO-02-10",
-            "NLO-02-12"
+            "NLP-02-10",
+            "NLP-02-12"
           ]
         },
         {
@@ -578,10 +578,10 @@
             "Strict global min or max without assuming convexity; SOSC; indefinite Hessian ⇒ saddle; FONC."
           ],
           "cards": [
-            "NLO-02-05",
-            "NLO-02-24",
-            "NLO-02-26",
-            "NLO-02-31"
+            "NLP-02-05",
+            "NLP-02-24",
+            "NLP-02-26",
+            "NLP-02-31"
           ]
         },
         {
@@ -590,9 +590,9 @@
             "Hessian $S$ constant; unique global minimizer iff $S \\succ 0$; solve $S x^* = \\text{rhs}$."
           ],
           "cards": [
-            "NLO-02-13",
-            "NLO-02-21",
-            "NLO-02-22"
+            "NLP-02-13",
+            "NLP-02-21",
+            "NLP-02-22"
           ]
         }
       ]
@@ -606,7 +606,7 @@
             "$\\nabla(x^\\top B x) = 2Bx$ needs $B$ symmetric."
           ],
           "cards": [
-            "NLO-02-01"
+            "NLP-02-01"
           ]
         },
         {
@@ -615,7 +615,7 @@
             "“$\\nabla f(x^*)^\\top d = 0$ for some $d \\ne 0$” does not give $\\nabla f(x^*) = 0$. It must hold for all $d$."
           ],
           "cards": [
-            "NLO-02-05"
+            "NLP-02-05"
           ]
         },
         {
@@ -624,7 +624,7 @@
             "“Strictly convex iff $H$ is PD” is wrong: only PD ⇒ strictly convex."
           ],
           "cards": [
-            "NLO-02-15"
+            "NLP-02-15"
           ]
         },
         {
@@ -633,7 +633,7 @@
             "“Full row rank” should be full column rank."
           ],
           "cards": [
-            "NLO-02-21"
+            "NLP-02-21"
           ]
         },
         {
@@ -642,7 +642,7 @@
             "The derivative of $x^3 - x^2 - 4x - 6$ is $3x^2 - 2x - 4$, not $3x^2 - 2x - 2$."
           ],
           "cards": [
-            "NLO-02-27"
+            "NLP-02-27"
           ]
         }
       ]
@@ -650,7 +650,7 @@
   ],
   "cards": [
     {
-      "id": "NLO-02-01",
+      "id": "NLP-02-01",
       "g": "Calculus",
       "k": "Gradients",
       "q": "Let $b \\in \\mathbb{R}^n$, and let $B$ be an $n \\times n$ matrix that is not necessarily symmetric. Gradients are column vectors. Give the gradient and Hessian of (1) $b^\\top x$, (2) $x^\\top B x$, (3) $f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ where $A$ is symmetric.",
@@ -663,7 +663,7 @@
       "src": "L2-1 s.2; L2-2 s.17"
     },
     {
-      "id": "NLO-02-02",
+      "id": "NLP-02-02",
       "g": "Calculus",
       "k": "Taylor error order",
       "q": "Let $T_1$ and $T_2$ be the first- and second-order Taylor approximations of a smooth $f$ around a point, evaluated at distance $h$ from it. (1) What is the order of each error as $h \\to 0$? (2) If $h$ is halved, by what factor does each error shrink? (3) For which functions is $T_2$ exact?",
@@ -680,7 +680,7 @@
       ]
     },
     {
-      "id": "NLO-02-03",
+      "id": "NLP-02-03",
       "g": "Definitions",
       "k": "Min definitions",
       "q": "Consider $\\min f(x)$ over a set $S \\subseteq \\mathbb{R}^n$, and let $B(x^*, \\varepsilon)$ be the ball of radius $\\varepsilon$ around $x^*$. Define (1) a global minimizer, (2) a local minimizer, (3) the strict version of each. (4) How do these notions imply one another?",
@@ -697,7 +697,7 @@
       ]
     },
     {
-      "id": "NLO-02-04",
+      "id": "NLP-02-04",
       "g": "FONC",
       "k": "FONC statement",
       "q": "Consider the unconstrained problem $\\min f(x)$ over $x \\in \\mathbb{R}^n$. State the first-order necessary condition (FONC): (1) what is assumed about $f$ and about the point $x^*$, (2) what is concluded, (3) is the converse true?",
@@ -710,7 +710,7 @@
       "src": "L2-1 s.23, 26"
     },
     {
-      "id": "NLO-02-05",
+      "id": "NLP-02-05",
       "g": "FONC",
       "k": "FONC proof",
       "q": "FONC: if $x^*$ is a local minimizer of a differentiable $f$ on $\\mathbb{R}^n$, then $\\nabla f(x^*) = 0$. Outline a rigorous proof. (1) What inequality do you start from? (2) How do you turn it into a statement about $\\nabla f(x^*)^\\top d$? (3) How do you conclude $\\nabla f(x^*) = 0$?",
@@ -727,7 +727,7 @@
       ]
     },
     {
-      "id": "NLO-02-06",
+      "id": "NLP-02-06",
       "g": "FONC",
       "k": "FONC limits",
       "q": "FONC reduces $\\min f(x)$ over $\\mathbb{R}^n$ to finding points with $\\nabla f(x) = 0$. (1) What does this achieve? (2) What three things can it not do? Give an example for each.",
@@ -744,7 +744,7 @@
       ]
     },
     {
-      "id": "NLO-02-07",
+      "id": "NLP-02-07",
       "g": "FONC",
       "k": "FONC failures",
       "q": "FONC assumes $x^*$ is an interior point and $f$ is differentiable there. Explain what goes wrong in (1) minimizing $f(x) = x$ over $x \\in [0, 1]$, whose minimizer is $x^* = 0$, and (2) minimizing $f(x) = |x|$, whose minimizer is $x^* = 0$.",
@@ -759,7 +759,7 @@
       ]
     },
     {
-      "id": "NLO-02-08",
+      "id": "NLP-02-08",
       "g": "Convex sets",
       "k": "Convex sets",
       "q": "(1) Define a convex set $C \\subseteq \\mathbb{R}^n$. (2) Name four standard examples. (3) An affine set $\\{x : Ax = b\\}$ is convex. What stronger property does it have?",
@@ -772,7 +772,7 @@
       "src": "L2-2 s.7–10"
     },
     {
-      "id": "NLO-02-09",
+      "id": "NLP-02-09",
       "g": "Convex sets",
       "k": "Set operations",
       "q": "(1) Which three operations on convex sets give a convex set again? (2) Let $g$ be a convex function. Why is $\\{x : g(x) \\le 0\\}$ convex? (3) Why is the LP feasible set $\\{x : Ax \\le b\\}$ convex?",
@@ -788,7 +788,7 @@
       ]
     },
     {
-      "id": "NLO-02-10",
+      "id": "NLP-02-10",
       "g": "Convex sets",
       "k": "Convex set proofs",
       "q": "Template: take two points of the set and $\\lambda \\in [0, 1]$, and show the combination stays in the set. Prove convexity of (1) $C = \\{x : \\lVert Ax - b \\rVert \\le r\\}$ for $r \\ge 0$, (2) $S = \\{x : Ax = b,\\ \\lVert x \\rVert \\le 1\\}$. (3) If $C$ is convex, $x_1, x_2, x_3 \\in C$ and $\\theta_i \\ge 0$ with $\\theta_1 + \\theta_2 + \\theta_3 = 1$, why is $\\theta_1x_1 + \\theta_2x_2 + \\theta_3x_3 \\in C$?",
@@ -807,7 +807,7 @@
       ]
     },
     {
-      "id": "NLO-02-11",
+      "id": "NLP-02-11",
       "g": "Convex functions",
       "k": "Convex function",
       "q": "Let $f$ be a real-valued function on a set $S \\subseteq \\mathbb{R}^n$. (1) Define “$f$ is convex” and give the geometric picture. (2) Define “strictly convex” and “concave”. (3) Why must $S$ be a convex set?",
@@ -820,7 +820,7 @@
       "src": "L2-2 s.14–15"
     },
     {
-      "id": "NLO-02-12",
+      "id": "NLP-02-12",
       "g": "Convex functions",
       "k": "Epigraph",
       "q": "Let $f: D \\to \\mathbb{R}$ with $D \\subseteq \\mathbb{R}^n$ convex. (1) Define the epigraph of $f$. (2) Prove that if $f$ is convex then its epigraph is a convex set.",
@@ -836,7 +836,7 @@
       ]
     },
     {
-      "id": "NLO-02-13",
+      "id": "NLP-02-13",
       "g": "Convex functions",
       "k": "Quadratics",
       "q": "Let $f(x) = \\tfrac12 x^\\top A x + b^\\top x + c$ with $A$ symmetric. (1) When is $f$ convex, and when strictly convex? (2) Which identity proves this directly from the definition of convexity? (3) Apply the result to portfolio variance $x^\\top Q x$, where $Q$ is the covariance matrix of asset returns $r$ and $x$ the weights.",
@@ -853,7 +853,7 @@
       ]
     },
     {
-      "id": "NLO-02-14",
+      "id": "NLP-02-14",
       "g": "Convex functions",
       "k": "Function operations",
       "q": "Let $f, f_1, f_2$ be convex functions on a convex set. Under what conditions are the following convex: (1) $f_1 + f_2$ and $\\alpha f$, (2) the composition $g(f(x))$ with $g: \\mathbb{R} \\to \\mathbb{R}$, (3) $f(Ax + b)$ and $\\max\\{f_1(x), f_2(x)\\}$?",
@@ -869,7 +869,7 @@
       ]
     },
     {
-      "id": "NLO-02-15",
+      "id": "NLP-02-15",
       "g": "Convex functions",
       "k": "Hessian test",
       "q": "Let $H(x)$ be the Hessian of $f$. State the Hessian test for convexity of $f$ on a set $C$: (1) what is assumed about $C$ and $f$, (2) the test for convexity, (3) the test for strict convexity, and whether it works in both directions.",
@@ -885,7 +885,7 @@
       ]
     },
     {
-      "id": "NLO-02-16",
+      "id": "NLP-02-16",
       "g": "Convex functions",
       "k": "PD / PSD check",
       "q": "Let $A$ be a symmetric matrix. How do you check (1) that $A$ is positive definite (PD), (2) that $A$ is positive semidefinite (PSD)? (3) Write the PSD conditions for the $2 \\times 2$ matrix $\\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$.",
@@ -901,7 +901,7 @@
       ]
     },
     {
-      "id": "NLO-02-17",
+      "id": "NLP-02-17",
       "g": "Convex functions",
       "k": "Convex or not?",
       "q": "For each function, say whether it is convex on the stated domain and give a one-line reason: (1) $e^{ax}$ on $\\mathbb{R}$, (2) $-\\log x$ on $(0, \\infty)$, (3) the hinge loss $\\max(0, 1 - z)$ on $\\mathbb{R}$, (4) $e^{-x^2}$ on $\\mathbb{R}$.",
@@ -915,7 +915,7 @@
       "src": "L2-2 s.16, 20"
     },
     {
-      "id": "NLO-02-18",
+      "id": "NLP-02-18",
       "g": "Convex functions",
       "k": "Exponential of norm",
       "q": "Let $f(x) = e^{\\lVert x \\rVert^2}$ on $\\mathbb{R}^n$. (1) Compute $\\nabla f$ and the Hessian. (2) Prove $f$ is strictly convex using the Hessian. (3) Give a second proof using the composition rule.",
@@ -931,7 +931,7 @@
       ]
     },
     {
-      "id": "NLO-02-19",
+      "id": "NLP-02-19",
       "g": "Convex optimization",
       "k": "Local = global",
       "q": "A convex problem is $\\min f(x)$ over $x \\in S$ where $S$ is a convex set and $f$ is convex on $S$. (1) State the “local = global” theorem, including what strict convexity adds. (2) Outline the proof: $x^*$ is a local minimizer with radius $\\varepsilon$ and $y \\in S$ is any point outside the ball $B(x^*, \\varepsilon)$. Which point $z$ do you construct, and how do you finish?",
@@ -946,7 +946,7 @@
       ]
     },
     {
-      "id": "NLO-02-20",
+      "id": "NLP-02-20",
       "g": "Convex optimization",
       "k": "Gradient inequality",
       "q": "Let $f$ be differentiable on an open convex set $C$. (1) State the gradient inequality that is equivalent to convexity of $f$, and give its geometric meaning. (2) Suppose $f$ is convex and $\\nabla f(x^*) = 0$. What follows, and why? (3) What does this mean for FONC when $f$ is convex on $\\mathbb{R}^n$?",
@@ -962,7 +962,7 @@
       ]
     },
     {
-      "id": "NLO-02-21",
+      "id": "NLP-02-21",
       "g": "Convex optimization",
       "k": "Least squares",
       "q": "Least squares: $X$ is the data matrix ($n$ samples $\\times$ $d$ features), $y \\in \\mathbb{R}^n$ the targets, and we choose weights $w \\in \\mathbb{R}^d$ to minimize $f(w) = \\tfrac12 \\lVert Xw - y \\rVert^2$. (1) Give $\\nabla f$ and the Hessian, and explain why $f$ is always convex. (2) When is the minimizer unique, and what is it? (3) What does the optimality condition say about the residual $r = Xw^* - y$? (4) What happens when the uniqueness condition fails?",
@@ -976,7 +976,7 @@
       "src": "L2-2 s.19, 40"
     },
     {
-      "id": "NLO-02-22",
+      "id": "NLP-02-22",
       "g": "Convex optimization",
       "k": "Penalized quadratic",
       "q": "Let $q(x) = \\tfrac12 x^\\top Q x + \\rho\\lVert Ax - b \\rVert^2 + c^\\top x$ with $Q$ symmetric PSD and $\\rho > 0$. (1) Compute $\\nabla q$ and the Hessian $S$. (2) Why is $q$ convex? (3) When is $S$ positive definite? (4) Give the stationary point and explain why it is then the unique global minimizer.",
@@ -994,7 +994,7 @@
       ]
     },
     {
-      "id": "NLO-02-23",
+      "id": "NLP-02-23",
       "g": "Second order",
       "k": "SONC / SOSC",
       "q": "Let $f$ be twice differentiable on $\\mathbb{R}^n$ with Hessian $H(x)$, and suppose $f$ is not known to be convex. State (1) the second-order necessary condition (SONC), (2) the second-order sufficient condition (SOSC). (3) Which case can neither condition decide? Give examples.",
@@ -1011,7 +1011,7 @@
       ]
     },
     {
-      "id": "NLO-02-24",
+      "id": "NLP-02-24",
       "g": "Second order",
       "k": "SOSC proof",
       "q": "Let $f$ be twice continuously differentiable with $\\nabla f(x^*) = 0$ and $H(x^*) \\succ 0$. Prove there are $\\delta > 0$ and $c > 0$ with $f(x) \\ge f(x^*) + c\\lVert x - x^* \\rVert^2$ whenever $\\lVert x - x^* \\rVert < \\delta$. Give the three steps: (1) a bound at $x^*$, (2) extending it to a neighbourhood, (3) applying Taylor’s theorem.",
@@ -1027,7 +1027,7 @@
       ]
     },
     {
-      "id": "NLO-02-25",
+      "id": "NLP-02-25",
       "g": "Second order",
       "k": "Saddle point",
       "q": "Let $x^*$ be a stationary point of $f$, i.e. $\\nabla f(x^*) = 0$. (1) What does it mean for $x^*$ to be a saddle point? (2) Which condition on the Hessian $H(x^*)$ guarantees a saddle point, and how do you check it?",
@@ -1042,7 +1042,7 @@
       ]
     },
     {
-      "id": "NLO-02-26",
+      "id": "NLP-02-26",
       "g": "Second order",
       "k": "Saddle proof",
       "q": "Let $f$ be twice continuously differentiable, $\\nabla f(x^*) = 0$, and $H(x^*)$ indefinite. Prove that $x^*$ is a saddle point. (1) Which directions do you use? (2) What does Taylor give along them?",
@@ -1057,7 +1057,7 @@
       ]
     },
     {
-      "id": "NLO-02-27",
+      "id": "NLP-02-27",
       "g": "Second order",
       "k": "Cubic example",
       "q": "Let $f(x) = x^3 - x^2 - 4x - 6$ on $\\mathbb{R}$. (1) Find the stationary points. (2) Classify each with the second derivative. (3) Does $f$ have a global minimum?",
@@ -1073,7 +1073,7 @@
       ]
     },
     {
-      "id": "NLO-02-28",
+      "id": "NLP-02-28",
       "g": "Coercivity & global",
       "k": "Coercivity",
       "q": "Let $f: \\mathbb{R}^n \\to \\mathbb{R}$ be continuous. (1) Define “$f$ is coercive”. (2) What does coercivity guarantee? (3) How do you use it to find the global minimum of a differentiable, non-convex $f$?",
@@ -1090,7 +1090,7 @@
       ]
     },
     {
-      "id": "NLO-02-29",
+      "id": "NLP-02-29",
       "g": "Coercivity & global",
       "k": "Not coercive",
       "q": "To show $f$ is not coercive, exhibit a path with $\\lVert x \\rVert \\to \\infty$ along which $f$ does not go to $+\\infty$. Find such a path for (1) $f(x) = 2x_1^2 - 8x_1x_2 + x_2^2$, (2) $f(x) = x_1^4 - 3x_1^2x_2^2 + x_2^4$, (3) $f(x) = x_1^2 - 2x_1x_2^2 + \\tfrac12 x_2^4$, using $f(x) = (x_1 - x_2^2)^2 - \\tfrac12 x_2^4$. (4) Is $f(x) = \\dfrac{x^\\top A x}{\\lVert x \\rVert^2 + 1}$ with $A \\succ 0$ coercive?",
@@ -1110,7 +1110,7 @@
       ]
     },
     {
-      "id": "NLO-02-30",
+      "id": "NLP-02-30",
       "g": "Coercivity & global",
       "k": "Coercive",
       "q": "To show $f$ is coercive, bound it below by something that goes to $\\infty$ with $\\lVert x \\rVert$, or show every sublevel set is bounded. Do this for (1) $f(x) = x^\\top A x + b^\\top x$ with $A \\succ 0$, (2) $f(x) = (x_1^2 - 1)^2 + (x_2 - x_1)^2$.",
@@ -1126,7 +1126,7 @@
       ]
     },
     {
-      "id": "NLO-02-31",
+      "id": "NLP-02-31",
       "g": "Coercivity & global",
       "k": "Strict global min",
       "q": "Let $f: \\mathbb{R}^n \\to \\mathbb{R}$ be twice continuously differentiable, and do not assume $f$ is convex. (1) State a sufficient condition for a point $x^*$ to be a strict global minimizer. (2) Prove it with Taylor’s theorem. (3) What is the version for a strict global maximizer?",
@@ -1144,7 +1144,7 @@
       ]
     },
     {
-      "id": "NLO-02-32",
+      "id": "NLP-02-32",
       "g": "Coercivity & global",
       "k": "Rosenbrock",
       "q": "Let $f(x) = 100(x_2 - x_1^2)^2 + (1 - x_1)^2$. Prove that $x^* = (1, 1)^\\top$ is the unique global minimizer over $\\mathbb{R}^2$, without computing a Hessian.",
@@ -1160,7 +1160,7 @@
       ]
     },
     {
-      "id": "NLO-02-33",
+      "id": "NLP-02-33",
       "g": "Classification",
       "k": "Classification workflow",
       "q": "A standard problem: “find all stationary points of $f$ and classify them as saddle points or strict / non-strict, local / global minima or maxima”. Describe the workflow: (1) finding the points, (2) the second-order test at each point, (3) what to do when the Hessian is singular, (4) how to decide global and strict-global.",
@@ -1182,7 +1182,7 @@
       ]
     },
     {
-      "id": "NLO-02-34",
+      "id": "NLP-02-34",
       "g": "Classification",
       "k": "Double well",
       "q": "Let $f(x, y) = x^4 - 2x^2 + y^4 - 2y^2$. (1) Find all stationary points. (2) Classify each with the Hessian. (3) Which are global minimizers, and are they strict global minimizers?",
@@ -1199,7 +1199,7 @@
       ]
     },
     {
-      "id": "NLO-02-35",
+      "id": "NLP-02-35",
       "g": "Classification",
       "k": "Coupled squares",
       "q": "Let $f(x) = (x_1^2 - 1)^2 + (x_2 - x_1)^2$. (1) Compute $\\nabla f$ and $H$. (2) Find the stationary points. (3) Classify them. (4) Which are global minimizers? Is there a global maximum?",
@@ -1216,7 +1216,7 @@
       ]
     },
     {
-      "id": "NLO-02-36",
+      "id": "NLP-02-36",
       "g": "Classification",
       "k": "Cubic in 2D",
       "q": "Let $f(x) = x_1^3 - 12x_1x_2 + 8x_2^3$. (1) Find the stationary points. (2) Classify them. (3) Is the local minimizer a global minimizer?",
@@ -1232,7 +1232,7 @@
       ]
     },
     {
-      "id": "NLO-02-37",
+      "id": "NLP-02-37",
       "g": "Classification",
       "k": "Degenerate point",
       "q": "Let $f(x) = x_1^2 - 2x_1x_2^2 + \\tfrac12 x_2^4$. (1) Find the stationary points. (2) What does the Hessian say there? (3) Classify the point with a path argument, using $f(x) = (x_1 - x_2^2)^2 - \\tfrac12 x_2^4$.",

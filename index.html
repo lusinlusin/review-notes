@@ -270,10 +270,19 @@ function sanitizeRecord(r) {
 }
 // Keeps records for every card ID, including cards from topic files that are not loaded right now,
 // so one page never deletes another topic's progress when it syncs.
+// Card ID prefixes that were renamed. Records saved under an old prefix (in this browser, in the synced copy
+// or in an imported file) are read as the new ID, so earlier progress follows the rename.
+const ID_RENAMES = [['NLO-', 'NLP-']];
+const currentIdOf = id => { for (const [from, to] of ID_RENAMES) if (id.startsWith(from)) return to + id.slice(from.length); return id; };
 function sanitizeProgress(p) {
   const out = {};
   if (!p || typeof p !== 'object' || Array.isArray(p)) return out;
-  for (const [id, r] of Object.entries(p)) { if (typeof id === 'string' && id.length <= 64) { const s = sanitizeRecord(r); if (s) out[id] = s; } }
+  for (const [key, r] of Object.entries(p)) {
+    if (typeof key !== 'string' || key.length > 64) continue;
+    const s = sanitizeRecord(r); if (!s) continue;
+    const id = currentIdOf(key);
+    out[id] = out[id] ? mergeProgress({ [id]: out[id] }, { [id]: s })[id] : s;
+  }
   return out;
 }
 function mergeProgress(a, b) {
