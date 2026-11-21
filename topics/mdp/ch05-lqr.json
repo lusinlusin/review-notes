@@ -1,0 +1,1198 @@
+{
+  "title": "Linear quadratic control",
+  "notes": [
+    {
+      "h": "Linear system",
+      "items": [
+        {
+          "t": "Scalar model",
+          "d": [
+            "$X_{t+1} = aX_t + U_t + Z_{t+1}$, $E\\,Z = 0$, $\\operatorname{Var}Z = 1$; $g = bx^2 + cu^2$, $G = bx^2$, $b, c > 0$."
+          ],
+          "cards": [
+            "MDP-05-02",
+            "MDP-05-01"
+          ]
+        },
+        {
+          "t": "Without control",
+          "d": [
+            "$E\\,X_t = a^tx_0$; $\\operatorname{Var}X_t = \\sum_{s<t}a^{2s} = \\tfrac{1 - a^{2t}}{1 - a^2}$. Stable iff $|a| < 1$, with limiting variance $\\tfrac{1}{1 - a^2}$."
+          ],
+          "cards": [
+            "MDP-05-03"
+          ]
+        },
+        {
+          "t": "Guess and verify",
+          "d": [
+            "Tables are impossible for continuous spaces. Guess a family preserved by one step of the recursion, verify at T, induct."
+          ],
+          "cards": [
+            "MDP-05-04"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Quadratic value",
+      "items": [
+        {
+          "t": "One step",
+          "d": [
+            "With $V_{t+1}(y) = ky^2 + \\ell$: minimize $bx^2 + cu^2 + k(ax + u)^2 + k + \\ell$; $u^\\star = -\\tfrac{ak}{k + c}x$; $V_t(x) = \\big(b + \\tfrac{a^2ck}{k + c}\\big)x^2 + k + \\ell$."
+          ],
+          "cards": [
+            "MDP-05-05",
+            "MDP-05-06",
+            "MDP-05-07"
+          ]
+        },
+        {
+          "t": "Recursions",
+          "d": [
+            "$k_T = b$, $k_t = b + \\tfrac{a^2ck_{t+1}}{k_{t+1} + c}$; $\\ell_T = 0$, $\\ell_t = k_{t+1} + \\ell_{t+1} = \\sum_{s>t}k_s$; $m_t = -\\tfrac{ak_{t+1}}{k_{t+1} + c}$."
+          ],
+          "cards": [
+            "MDP-05-08",
+            "MDP-05-09"
+          ]
+        },
+        {
+          "t": "Role of the noise",
+          "d": [
+            "Only the constant: $\\ell_t = \\operatorname{Var}Z\\sum_{s>t}k_s$. Gains do not depend on it."
+          ],
+          "cards": [
+            "MDP-05-10"
+          ]
+        },
+        {
+          "t": "Cross term",
+          "d": [
+            "Stage cost $qx^2 + 2sxu + ru^2$, dynamics $ax + bu + Z$: $m_t = -\\tfrac{s + kab}{r + kb^2}$, $k_t = q + ka^2 - \\tfrac{(s + kab)^2}{r + kb^2}$."
+          ],
+          "cards": [
+            "MDP-05-11"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Riccati, stability",
+      "items": [
+        {
+          "t": "Riccati map",
+          "d": [
+            "$F(k) = b + \\dfrac{a^2ck}{k + c}$: $F(0) = b$, increasing, concave, bounded by $b + a^2c$. $k_t$ increases to the positive fixed point."
+          ],
+          "cards": [
+            "MDP-05-12",
+            "MDP-05-13"
+          ]
+        },
+        {
+          "t": "Riccati equation",
+          "d": [
+            "$k^2 + (c - b - a^2c)k - bc = 0$; one positive root $k^\\star$."
+          ],
+          "cards": [
+            "MDP-05-14",
+            "MDP-05-18"
+          ]
+        },
+        {
+          "t": "Stationary policy",
+          "d": [
+            "$m^\\star = -\\tfrac{ak^\\star}{k^\\star + c}$; closed loop $X_{t+1} = \\rho X_t + Z_{t+1}$ with $\\rho = \\tfrac{ac}{k^\\star + c}$."
+          ],
+          "cards": [
+            "MDP-05-15"
+          ]
+        },
+        {
+          "t": "Stability",
+          "d": [
+            "$|\\rho| < 1$ for every $a$: for $|a| \\ge 1$, $|\\rho| = \\tfrac{1}{|a|}\\big(1 - \\tfrac{b}{k^\\star}\\big)$. Limiting variance $\\tfrac{1}{1 - \\rho^2}$. Needs $b > 0$."
+          ],
+          "cards": [
+            "MDP-05-16",
+            "MDP-05-17"
+          ]
+        },
+        {
+          "t": "Takeaways",
+          "d": [
+            "Quadratic value; linear policy; the policy has a limit given by the fixed point of the Riccati equation."
+          ],
+          "cards": [
+            "MDP-05-19"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Certainty equivalence",
+      "items": [
+        {
+          "t": "Principle",
+          "d": [
+            "The optimal policy is unchanged when disturbances are replaced by their means."
+          ],
+          "cards": [
+            "MDP-05-20"
+          ]
+        },
+        {
+          "t": "One-step lemma",
+          "d": [
+            "$\\arg\\min_u E(ax + bu + Z)^2 = -\\tfrac{a}{b}x - \\tfrac1b E\\,Z$; minimal value $\\operatorname{Var}Z$."
+          ],
+          "cards": [
+            "MDP-05-20",
+            "MDP-05-21",
+            "MDP-05-24"
+          ]
+        },
+        {
+          "t": "In the LQ problem",
+          "d": [
+            "The deterministic problem $X_{t+1} = aX_t + U_t$ has the same gains; its value is $k_tx^2$ without $\\ell_t$."
+          ],
+          "cards": [
+            "MDP-05-22"
+          ]
+        },
+        {
+          "t": "Test",
+          "d": [
+            "True objective = mean-replaced objective + extra term. Extra term free of u: holds. Contains u: fails."
+          ],
+          "cards": [
+            "MDP-05-23"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Clock regulation",
+      "items": [
+        {
+          "t": "Solution",
+          "d": [
+            "$u^\\star_t = \\tfrac{x_t}{1 + \\alpha}$, $V_t(x) = \\big(\\tfrac{\\alpha}{1 + \\alpha}\\big)^{T-t}x^2$."
+          ],
+          "cards": [
+            "MDP-05-25",
+            "MDP-05-26"
+          ]
+        },
+        {
+          "t": "Why it differs",
+          "d": [
+            "The noise term $\\alpha u^2$ depends on the action; certainty equivalence would correct fully ($u = x$)."
+          ],
+          "cards": [
+            "MDP-05-27",
+            "MDP-05-42"
+          ]
+        },
+        {
+          "t": "Noise multiplying the control",
+          "d": [
+            "$X_{t+1} = X_t + (1 + Z)U_t$, cost $\\sum U_t^2 + X_T^2$: $\\mu_{T-1} = -\\tfrac{x}{2 + \\sigma^2}$, $V_{T-1} = \\tfrac{1 + \\sigma^2}{2 + \\sigma^2}x^2$."
+          ],
+          "cards": [
+            "MDP-05-28"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Matrix LQR",
+      "items": [
+        {
+          "t": "Model",
+          "d": [
+            "$X_{t+1} = A_tX_t + B_tU_t + C_{t+1}Z_{t+1}$; costs $x^\\top Q_tx + u^\\top R_tu$, $x^\\top Q_Tx$; $Q_t \\succeq 0$, $R_t \\succ 0$."
+          ],
+          "cards": [
+            "MDP-05-29"
+          ]
+        },
+        {
+          "t": "Riccati recursion",
+          "d": [
+            "$V_t = x^\\top P_tx + p_t$, $P_T = Q_T$, $p_T = 0$; $L_t = -(R_t + B_t^\\top P_{t+1}B_t)^{-1}B_t^\\top P_{t+1}A_t$;",
+            "$$P_t = Q_t + A_t^\\top P_{t+1}A_t - A_t^\\top P_{t+1}B_t(R_t + B_t^\\top P_{t+1}B_t)^{-1}B_t^\\top P_{t+1}A_t$$",
+            "$p_t = \\operatorname{trace}(C_{t+1}\\Sigma C_{t+1}^\\top P_{t+1}) + p_{t+1}$."
+          ],
+          "cards": [
+            "MDP-05-30",
+            "MDP-05-31",
+            "MDP-05-35"
+          ]
+        },
+        {
+          "t": "Proof",
+          "d": [
+            "Expectation: $E[Z^\\top MZ] = \\operatorname{trace}(M\\Sigma)$. Minimization: $M = R + B^\\top PB \\succ 0$, $u^\\star = -M^{-1}B^\\top PAx$. Closure: $P_t = Q + (A + BL)^\\top P(A + BL) + L^\\top RL \\succeq 0$."
+          ],
+          "cards": [
+            "MDP-05-32",
+            "MDP-05-33",
+            "MDP-05-34"
+          ]
+        },
+        {
+          "t": "Long horizon",
+          "d": [
+            "$(A, B)$ controllable, $(A, Q)$ observable: $P_t \\to P^\\star$ solving the algebraic Riccati equation; $A + BL^\\star$ has all eigenvalues inside the unit circle."
+          ],
+          "cards": [
+            "MDP-05-37"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Random coefficients",
+      "items": [
+        {
+          "t": "Recursion",
+          "d": [
+            "$X_{t+1} = AX_t + BU_t$, cost $x^2 + u^2$: $m_t = -\\tfrac{a_1b_1k}{1 + b_2k}$, $k_t = 1 + a_2k - \\tfrac{(a_1b_1k)^2}{1 + b_2k}$ with $k = k_{t+1}$."
+          ],
+          "cards": [
+            "MDP-05-38",
+            "MDP-05-39"
+          ]
+        },
+        {
+          "t": "Consequences",
+          "d": [
+            "Certainty equivalence fails ($b_2 = b_1^2 + \\operatorname{Var}B$ enters the gain). $k_t$ converges iff $s = a_2 - \\tfrac{(a_1b_1)^2}{b_2} < 1$."
+          ],
+          "cards": [
+            "MDP-05-40",
+            "MDP-05-41",
+            "MDP-05-42"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Overview",
+      "items": [
+        {
+          "t": "Notation across sources",
+          "d": [
+            "Slides: b, c, k, ℓ (constant), m (gain); Q, R, P, p. KE: q, r, k, c (constant), ℓ (gain); Q, R, K, c, L."
+          ],
+          "cards": [
+            "MDP-05-43"
+          ]
+        },
+        {
+          "t": "Which tool",
+          "d": [
+            "Linear policy: guess quadratic, expectation, strict convexity, minimize, substitute, close. Long run: Riccati fixed point. Stability: closed-loop coefficient. Certainty equivalence: does the extra term contain u."
+          ],
+          "cards": [
+            "MDP-05-44"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "a = b = c = 1, T = 3",
+          "d": [
+            "$k = 1, \\tfrac32, \\tfrac85, \\tfrac{21}{13}$; $m = -\\tfrac12, -\\tfrac35, -\\tfrac{8}{13}$; $\\ell = 0, 1, \\tfrac52, \\tfrac{41}{10}$ (from $t = 3$ down to $0$); $V_0(2) \\approx 10.56$.",
+            "$k^\\star = 1.618$, $m^\\star = -0.618$, $\\rho = 0.382$, limiting variance $1.17$."
+          ],
+          "cards": [
+            "MDP-05-09",
+            "MDP-05-14",
+            "MDP-05-15"
+          ]
+        },
+        {
+          "t": "a = 2, b = c = 1",
+          "d": [
+            "$k^\\star = 2 + \\sqrt5$, $m^\\star = -1.618$, $\\rho = 0.382$; $T = 1$: $V_0 = 3x^2 + 1$, $\\mu_0 = -x$."
+          ],
+          "cards": [
+            "MDP-05-10",
+            "MDP-05-15",
+            "MDP-05-17"
+          ]
+        },
+        {
+          "t": "a = 0.5, b = c = 1",
+          "d": [
+            "$k^\\star \\approx 1.133$, $m^\\star \\approx -0.266$, $\\rho \\approx 0.234$."
+          ],
+          "cards": [
+            "MDP-05-18"
+          ]
+        },
+        {
+          "t": "Clock, α = ½",
+          "d": [
+            "Last period: correcting $\\tfrac23$ of the error costs $\\tfrac13x^2$ in expectation; a full correction costs $\\tfrac12x^2$."
+          ],
+          "cards": [
+            "MDP-05-26"
+          ]
+        },
+        {
+          "t": "Double integrator",
+          "d": [
+            "$L_4 = (0\\ \\ {-\\tfrac12})$, $P_4 = \\begin{pmatrix}2&1\\\\1&\\tfrac52\\end{pmatrix}$, $p_4 = 1$; $L^\\star \\approx (-0.422\\ \\ {-1.244})$."
+          ],
+          "cards": [
+            "MDP-05-36",
+            "MDP-05-37"
+          ]
+        },
+        {
+          "t": "Random B in {0, 2}",
+          "d": [
+            "Last period $u = -\\tfrac x3$, $k = \\tfrac53$; long run gain $-0.414$ against $-0.618$ for certainty equivalence."
+          ],
+          "cards": [
+            "MDP-05-39"
+          ]
+        },
+        {
+          "t": "Cross-term instance",
+          "d": [
+            "$a = b = q = r = 1$, $s = 0.5$, $T = 2$: $m_1 = -0.75$, $k_1 = 0.875$, $m_0 = -\\tfrac{11}{15}$, $k_0 = \\tfrac{13}{15}$, $\\ell_0 = 1.875$."
+          ],
+          "cards": [
+            "MDP-05-11"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "One step of a quadratic problem",
+          "d": [
+            "Minimum over $u$ of $Au^2 + 2Bxu + Cx^2$ is $(C - B^2/A)x^2$ at $u = -\\tfrac{B}{A}x$, provided $A > 0$."
+          ],
+          "cards": [
+            "MDP-05-07",
+            "MDP-05-11",
+            "MDP-05-38",
+            "MDP-05-28"
+          ]
+        },
+        {
+          "t": "What to justify",
+          "d": [
+            "Strict convexity before using the first-order condition; non-negativity of the new coefficient so that the induction continues."
+          ],
+          "cards": [
+            "MDP-05-07",
+            "MDP-05-33",
+            "MDP-05-34",
+            "MDP-05-11"
+          ]
+        },
+        {
+          "t": "Where the noise goes",
+          "d": [
+            "Additive, fixed variance: a constant. Variance depending on the action or multiplying the action: into the gain."
+          ],
+          "cards": [
+            "MDP-05-10",
+            "MDP-05-27",
+            "MDP-05-40",
+            "MDP-05-23"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "Constant and gain",
+          "d": [
+            "Slides: $\\ell_t$ constant, $m_t$ gain. KE: $c_t$ constant, $\\ell_t$ gain."
+          ],
+          "cards": [
+            "MDP-05-08",
+            "MDP-05-43"
+          ]
+        },
+        {
+          "t": "The letter b",
+          "d": [
+            "Cost weight in the scalar model; coefficient of $u$ on the certainty-equivalence slide and in some exercises."
+          ],
+          "cards": [
+            "MDP-05-20",
+            "MDP-05-11"
+          ]
+        },
+        {
+          "t": "Sign of the gain",
+          "d": [
+            "$u = m_tx$ and $u = L_tx$: the minus sign is inside the gain."
+          ],
+          "cards": [
+            "MDP-05-08",
+            "MDP-05-30"
+          ]
+        },
+        {
+          "t": "Relabelled weights",
+          "d": [
+            "One exercise uses P, Q, R for state, control and terminal weights."
+          ],
+          "cards": [
+            "MDP-05-35"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Clock variance",
+          "d": [
+            "$\\alpha U_t^2$, not $\\alpha U_t$."
+          ],
+          "cards": [
+            "MDP-05-01"
+          ]
+        },
+        {
+          "t": "Clock value",
+          "d": [
+            "$\\tfrac{\\alpha}{\\alpha + 1}$, not $\\tfrac{2\\alpha}{\\alpha + 1}$."
+          ],
+          "cards": [
+            "MDP-05-25"
+          ]
+        },
+        {
+          "t": "Uncontrolled variance",
+          "d": [
+            "The closed form needs $\\operatorname{Var}X_0 = 0$ and $a^2 \\ne 1$."
+          ],
+          "cards": [
+            "MDP-05-03"
+          ]
+        },
+        {
+          "t": "Definiteness",
+          "d": [
+            "$Q_t \\succeq 0$ suffices; $R_t \\succ 0$ is the essential one."
+          ],
+          "cards": [
+            "MDP-05-29"
+          ]
+        },
+        {
+          "t": "KE slips",
+          "d": [
+            "Stationary policy missing the factor $x$; closed-loop matrix is $A + BL^\\star$."
+          ],
+          "cards": [
+            "MDP-05-15",
+            "MDP-05-37"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MDP-05-01",
+      "g": "Linear system",
+      "k": "Opening problem",
+      "q": "Clock regulation: $X_{t+1} = X_t - U_t + Z_{t+1}$, where the disturbance $Z_{t+1}$ has mean 0 and variance $\\alpha U_t^2$ (a larger correction brings more fluctuation); the only cost is $X_T^2$. (1) Give the order of events in a period and the objective. (2) What would the answer be if $\\alpha = 0$? (3) What is the trade-off when $\\alpha > 0$? (4) Why can the table method for finite problems not be applied?",
+      "pts": [
+        "(1) Observe the error $X_t$, choose the correction $U_t$, then the fluctuation $Z_{t+1}$ is revealed and the error becomes $X_{t+1}$. Minimize $E[X_T^2 \\mid X_0 = x_0]$ over $U_0, \\dots, U_{T-1}$.",
+        "(2) Remove the whole error at once, $u = x$; the cost is 0.",
+        "(3) A larger correction lowers the mean of the remaining error but adds variance $\\alpha u^2$.",
+        "(4) State, action and disturbance are real numbers: there is no finite table of values, no finite list of actions to enumerate."
+      ],
+      "pit": "The slide prints the variance as $\\alpha U_t$; a variance cannot be negative, and the later solution uses $\\alpha U_t^2$.",
+      "src": "S5 s.2–5",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-02",
+      "g": "Linear system",
+      "k": "Scalar LQ model",
+      "q": "(1) Write the one-dimensional linear system and the assumptions on the disturbance. (2) Write the quadratic costs and say what they express. (3) Write the control problem. (4) Which features of the distribution of $Z_t$ will matter?",
+      "pts": [
+        "(1) $X_{t+1} = aX_t + U_t + Z_{t+1}$, $X_0 = x_0$, with $Z_1, Z_2, \\dots$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; $a$ is a “memory” coefficient.",
+        "(2) $g(x, u) = bx^2 + cu^2$ and $G(x) = bx^2$ with $b, c > 0$: keep the state close to 0 using controls that are close to 0.",
+        "(3) $V_0(x_0) = \\min_\\mu E\\big[\\sum_{t=0}^{T-1}\\big(bX_t^2 + c\\mu_t(X_t)^2\\big) + bX_T^2 \\mid X_0 = x_0\\big]$ over policies $\\mu_t : \\mathbb{R} \\to \\mathbb{R}$.",
+        "(4) Only the mean and the variance; the disturbance may be Gaussian, uniform or discrete."
+      ],
+      "pit": "KE writes the weights as $q, r$ and the disturbance as $W_t$.",
+      "src": "S5 s.8, s.13 · KE p45",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-03",
+      "g": "Linear system",
+      "k": "No control",
+      "q": "$X_{t+1} = aX_t + Z_{t+1}$ with $E\\,Z = 0$, $\\operatorname{Var}Z = 1$ and a known $x_0$ (no control). (1) Compute $E\\,X_t$. (2) Compute $\\operatorname{Var}X_t$. (3) Describe the three regimes. (4) Which property of $Z$ does the variance recursion need that the mean does not?",
+      "pts": [
+        "(1) $E\\,X_t = aE\\,X_{t-1} = \\dots = a^t x_0$.",
+        "(2) $\\operatorname{Var}X_t = a^2\\operatorname{Var}X_{t-1} + 1 = \\sum_{s=0}^{t-1} a^{2s} = \\dfrac{1 - a^{2t}}{1 - a^2}$ for $a^2 \\ne 1$, and $t$ for $|a| = 1$.",
+        "(3) $|a| < 1$: mean to 0, variance to $\\tfrac{1}{1 - a^2}$ (stable). $|a| = 1$: mean $\\pm x_0$, variance $t \\to \\infty$ (random walk). $|a| > 1$: both blow up.",
+        "(4) $Z_t$ independent of (or uncorrelated with) $X_{t-1}$, so that variances add. The mean only needs $E\\,Z = 0$."
+      ],
+      "pit": "The closed form on the slide assumes $\\operatorname{Var}X_0 = 0$ and $a^2 \\ne 1$. Example $a = 0.9$: limit $\\tfrac{1}{0.19} \\approx 5.26$.",
+      "src": "S5 s.9–12 · KE p45–46",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-04",
+      "g": "Linear system",
+      "k": "Why not a table",
+      "q": "For the scalar linear-quadratic problem the recursion is $V_t(x) = \\min_u\\{bx^2 + cu^2 + E[V_{t+1}(aX_t + u + Z_{t+1})]\\}$. (1) What is the first naive approach and its cost? (2) The second? (3) What works instead? (4) State the recipe as three steps.",
+      "pts": [
+        "(1) Discretize the state space: $N$ grid points per dimension give $N^d$ states, plus actions and the expectation to discretize; the result is only approximate.",
+        "(2) Approximate the value function by a generic parameterized function; every step adds approximation error.",
+        "(3) A parametric family that one step of the recursion maps into itself; then the value function is computed exactly through a few numbers.",
+        "(4) Guess the shape; verify it at $T$; assume it at $t + 1$ and show it at $t$ (induction), obtaining a recursion for the parameters."
+      ],
+      "pit": "There is no general recipe for the guess: use the terminal cost or work out one or two steps by hand.",
+      "src": "S5 s.14–17 · KE p48",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-05",
+      "g": "Quadratic value",
+      "k": "First step",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. Carry out the step $t = T - 1$. (1) Write what is minimized after taking the expectation. (2) Give the optimality condition and $u^\\star_{T-1}$. (3) Give $V_{T-1}$. (4) State the two observations.",
+      "pts": [
+        "(1) $bx^2 + cu^2 + E\\,b(ax + u + Z_T)^2 = bx^2 + cu^2 + b(ax + u)^2 + b$: the cross term vanishes because $E\\,Z = 0$, and $E\\,Z^2 = 1$.",
+        "(2) $2cu + 2b(ax + u) = 0$, i.e. $(b + c)u + abx = 0$, so $u^\\star_{T-1} = -\\dfrac{ab}{b + c}\\,x$.",
+        "(3) $V_{T-1}(x) = \\Big(b + \\dfrac{a^2bc}{b + c}\\Big)x^2 + b$.",
+        "(4) The optimal policy is linear in the state; the optimal cost-to-go is quadratic in the state, like $V_T$."
+      ],
+      "pit": "Substituting back: $ax + u^\\star = \\tfrac{ac}{b+c}x$, and $c(u^\\star)^2 + b(ax + u^\\star)^2 = \\tfrac{a^2bc(b + c)}{(b + c)^2}x^2$.",
+      "src": "S5 s.21–24 · KE p46–47",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-06",
+      "g": "Quadratic value",
+      "k": "First step, numbers",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. Take $a = b = c = 1$. (1) Write the function of $u$ minimized at $t = T - 1$. (2) Find $u^\\star$ and $V_{T-1}$. (3) Check at $x = 2$ by evaluating $u = -2, -1, 0$.",
+      "pts": [
+        "(1) $x^2 + u^2 + (x + u)^2 + 1$.",
+        "(2) $2u + 2(x + u) = 0$ gives $u^\\star = -\\tfrac{x}{2}$ and $V_{T-1}(x) = \\tfrac32x^2 + 1$.",
+        "(3) $4 + u^2 + (2 + u)^2 + 1$ equals $9$, $7$, $9$: the minimum $7 = \\tfrac32 \\cdot 4 + 1$ is at $u = -1 = -\\tfrac x2$."
+      ],
+      "pit": "",
+      "src": "S5 s.21–24",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-07",
+      "g": "Quadratic value",
+      "k": "General step",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. Assume $V_{t+1}(y) = k_{t+1}y^2 + \\ell_{t+1}$ with $k_{t+1} > 0$. (1) Compute $E\\,V_{t+1}(ax + u + Z_{t+1})$. (2) Why does the minimization over $u$ have a unique solution, and what is it? (3) Give $V_t$. (4) What has the functional equation been reduced to?",
+      "pts": [
+        "(1) $k_{t+1}(ax + u)^2 + k_{t+1} + \\ell_{t+1}$.",
+        "(2) $\\varphi(u) = cu^2 + k_{t+1}(ax + u)^2$ is strictly convex since $k_{t+1} + c > 0$; $\\varphi'(u) = 0$ gives $u^\\star = -\\dfrac{ak_{t+1}}{k_{t+1} + c}\\,x$.",
+        "(3) $V_t(x) = \\Big(b + \\dfrac{a^2ck_{t+1}}{k_{t+1} + c}\\Big)x^2 + k_{t+1} + \\ell_{t+1}$, again quadratic with a positive leading coefficient.",
+        "(4) The infinite-dimensional equation $V_t = \\mathcal{T}[V_{t+1}]$ becomes a one-dimensional recursion $k_t = F(k_{t+1})$ for the parameter of the value function."
+      ],
+      "pit": "The general step is the first step with $b$ (the coefficient of $V_T$) replaced by $k_{t+1}$ and one more constant.",
+      "src": "S5 s.26 · KE p47–48",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-08",
+      "g": "Quadratic value",
+      "k": "The three recursions",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. (1) Write the form of $V_t$ and of the optimal policy. (2) Give the recursion for $k_t$. (3) Give the recursion and the closed form for $\\ell_t$. (4) Give $m_t$.",
+      "pts": [
+        "(1) $V_t(x) = k_tx^2 + \\ell_t$ and $u^\\star_t = \\mu^\\star_t(x) = m_tx$.",
+        "(2) $k_T = b$, $k_t = b + \\dfrac{a^2ck_{t+1}}{k_{t+1} + c}$.",
+        "(3) $\\ell_T = 0$, $\\ell_t = k_{t+1} + \\ell_{t+1} = k_{t+1} + k_{t+2} + \\dots + k_T$.",
+        "(4) $m_t = -\\dfrac{ak_{t+1}}{k_{t+1} + c}$ for $t = T - 1, \\dots, 0$ (there is no $m_T$)."
+      ],
+      "pit": "KE names the constant $c_t$ and the gain $\\ell_t$; on the slides $\\ell_t$ is the constant and $m_t$ the gain. The gain already contains the minus sign: $u = m_tx$.",
+      "src": "S5 s.28 · KE p48",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-09",
+      "g": "Quadratic value",
+      "k": "Worked recursion",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. Take $a = b = c = 1$ and $T = 3$. (1) Write the specialized recursions. (2) Compute $k_2, k_1, k_0$. (3) Compute $m_2, m_1, m_0$ and $\\ell_2, \\ell_1, \\ell_0$. (4) Compute $V_0(2)$.",
+      "pts": [
+        "(1) $k_t = 1 + \\dfrac{k_{t+1}}{k_{t+1} + 1}$, $m_t = -\\dfrac{k_{t+1}}{k_{t+1} + 1}$, $\\ell_t = k_{t+1} + \\ell_{t+1}$.",
+        "(2) $k_3 = 1$, $k_2 = \\tfrac32$, $k_1 = 1 + \\tfrac{3/2}{5/2} = \\tfrac85$, $k_0 = 1 + \\tfrac{8/5}{13/5} = \\tfrac{21}{13}$.",
+        "(3) $m_2 = -\\tfrac12$, $m_1 = -\\tfrac35$, $m_0 = -\\tfrac{8}{13}$; $\\ell_2 = 1$, $\\ell_1 = \\tfrac52$, $\\ell_0 = \\tfrac{41}{10}$.",
+        "(4) $V_0(2) = 4 \\cdot \\tfrac{21}{13} + 4.1 \\approx 10.56$."
+      ],
+      "pit": "The $k_t$ are ratios of consecutive Fibonacci numbers and approach $1.618$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-10",
+      "g": "Quadratic value",
+      "k": "What the noise does",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. (1) Through which term does the disturbance enter $V_t$? (2) How do the recursions change if $\\operatorname{Var}Z_t = \\sigma^2$? (3) For $a = 2$, $b = c = 1$, $T = 1$ compute $V_0$ and $\\mu_0$. (4) Redo it with $\\operatorname{Var}Z = 4$.",
+      "pts": [
+        "(1) Only through the constant $\\ell_t$: each remaining stage adds $k_s \\operatorname{Var}Z$.",
+        "(2) $\\ell_t = \\sigma^2 k_{t+1} + \\ell_{t+1}$; $k_t$ and $m_t$ are unchanged.",
+        "(3) $k_1 = 1$, $k_0 = 1 + \\tfrac{4 \\cdot 1}{2} = 3$, $m_0 = -\\tfrac{2}{2} = -1$, $\\ell_0 = 1$: $V_0(x) = 3x^2 + 1$, $\\mu_0(x) = -x$.",
+        "(4) $V_0(x) = 3x^2 + 4$; the policy is the same."
+      ],
+      "pit": "",
+      "src": "S5 s.26–28",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-11",
+      "g": "Quadratic value",
+      "k": "Cross term",
+      "q": "$X_{t+1} = aX_t + bU_t + Z_{t+1}$ with $E\\,Z = 0$, $\\operatorname{Var}Z = \\sigma^2$; stage cost $qx^2 + 2sxu + ru^2$ with $q, r > 0$ and $qr > s^2$; terminal cost $qx^2$. Assume $V_{t+1}(y) = k_{t+1}y^2 + \\ell_{t+1}$ with $k_{t+1} \\ge 0$. (1) Write $Q_t(x, u)$ as a quadratic in $u$ and find $m_t$. (2) Give the recursions for $k_t$ and $\\ell_t$. (3) Which assumptions give uniqueness of the minimizer and $k_t \\ge 0$? (4) For $a = b = q = r = 1$, $s = 0.5$, $\\sigma^2 = 1$, $T = 2$ compute $m_1, k_1, m_0, k_0, \\ell_0$.",
+      "pts": [
+        "(1) $Q_t = (r + k_{t+1}b^2)u^2 + 2(s + k_{t+1}ab)xu + (q + k_{t+1}a^2)x^2 + k_{t+1}\\sigma^2 + \\ell_{t+1}$, so $m_t = -\\dfrac{s + k_{t+1}ab}{r + k_{t+1}b^2}$.",
+        "(2) $k_t = q + k_{t+1}a^2 - \\dfrac{(s + k_{t+1}ab)^2}{r + k_{t+1}b^2}$, $\\ell_t = \\ell_{t+1} + k_{t+1}\\sigma^2$, with $k_T = q$, $\\ell_T = 0$.",
+        "(3) Uniqueness: strict convexity, $r + k_{t+1}b^2 > 0$, from $r > 0$ and $k_{t+1} \\ge 0$. $k_t \\ge 0$: $qr > s^2$ makes the stage cost non-negative, so the minimum of a sum of non-negative terms is non-negative.",
+        "(4) $m_1 = -\\tfrac{1.5}{2} = -0.75$, $k_1 = 2 - \\tfrac{2.25}{2} = 0.875$; $m_0 = -\\tfrac{1.375}{1.875} = -\\tfrac{11}{15}$, $k_0 = 1.875 - \\tfrac{1.375^2}{1.875} = \\tfrac{13}{15}$; $\\ell_0 = 1 + 0.875 = 1.875$."
+      ],
+      "pit": "The minimum of $Au^2 + 2Bxu + Cx^2$ over $u$ is $(C - B^2/A)x^2$.",
+      "src": "",
+      "seen": [
+        "MkA P5"
+      ]
+    },
+    {
+      "id": "MDP-05-12",
+      "g": "Riccati, stability",
+      "k": "Riccati map",
+      "q": "The recursion for the quadratic coefficient is $k_T = b$, $k_t = F(k_{t+1})$ with $F(k) = b + \\dfrac{a^2ck}{k + c}$, $b, c > 0$. (1) Give $F(0)$ and the limit of $F$ at infinity. (2) Show that $F$ is increasing. (3) Show that $F$ is concave. (4) What do these properties imply for the sequence $k_T, k_{T-1}, \\dots$?",
+      "pts": [
+        "(1) $F(0) = b > 0$ and $F(k) \\to b + a^2c$ as $k \\to \\infty$.",
+        "(2) $F'(k) = \\dfrac{a^2c^2}{(k + c)^2} > 0$ for $k > -c$ (and $a \\ne 0$).",
+        "(3) $F''(k) = -\\dfrac{2a^2c^2}{(k + c)^3} < 0$.",
+        "(4) It converges to the unique positive fixed point $k^\\star = F(k^\\star)$."
+      ],
+      "pit": "",
+      "src": "S5 s.30–31 · KE p48–49",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-13",
+      "g": "Riccati, stability",
+      "k": "Why k converges",
+      "q": "$k_T = b$ and $k_t = F(k_{t+1})$ with $F(k) = b + \\dfrac{a^2ck}{k + c}$. Prove that the sequence converges as $t \\to -\\infty$. (1) Show it is monotone. (2) Show it is bounded and give the intuition for the bound. (3) Conclude. (4) Why is letting $t \\to -\\infty$ the right way to study a long horizon?",
+      "pts": [
+        "(1) $k_{T-1} - k_T = F(b) - b = \\dfrac{a^2cb}{b + c} \\ge 0$; if $k_t \\ge k_{t+1}$ then $k_{t-1} = F(k_t) \\ge F(k_{t+1}) = k_t$ because $F$ is increasing.",
+        "(2) $F(k) < b + a^2c$. Intuition: the crude rule $u = -ax$ brings the state back to 0 in every period and costs at most $(b + a^2c)x^2$ plus a constant; the optimum cannot be worse.",
+        "(3) A non-decreasing bounded sequence converges, and by continuity its limit satisfies $k^\\star = F(k^\\star)$.",
+        "(4) Fixing $t$ and letting $T \\to \\infty$ is the same as fixing $T$ and letting $t \\to -\\infty$: more and more stages remain."
+      ],
+      "pit": "More remaining stages can only cost more: that is the monotonicity.",
+      "src": "S5 s.31 · KE p48–49",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-14",
+      "g": "Riccati, stability",
+      "k": "Riccati equation",
+      "q": "(1) Write the fixed-point equation $k = F(k)$ for $F(k) = b + \\dfrac{a^2ck}{k + c}$ as a quadratic equation and name it. (2) How many positive roots does it have, and why? (3) Give the closed form of $k^\\star$. (4) Solve it for $a = b = c = 1$.",
+      "pts": [
+        "(1) Multiply by $k + c$: $k^2 + (c - b - a^2c)k - bc = 0$, the (algebraic) Riccati equation.",
+        "(2) Exactly one: the product of the roots is $-bc < 0$. The negative root is discarded since $k_t \\ge b > 0$.",
+        "(3) $k^\\star = \\tfrac12\\Big[(b + a^2c - c) + \\sqrt{(c - b - a^2c)^2 + 4bc}\\Big]$.",
+        "(4) $k^2 - k - 1 = 0$, $k^\\star = \\tfrac{1 + \\sqrt5}{2} \\approx 1.618$."
+      ],
+      "pit": "For $a = 2$, $b = c = 1$: $k^2 - 4k - 1 = 0$ and $k^\\star = 2 + \\sqrt5 \\approx 4.236$.",
+      "src": "S5 s.32 · KE p48",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-15",
+      "g": "Riccati, stability",
+      "k": "Stationary policy",
+      "q": "In the scalar linear-quadratic problem $k_t \\to k^\\star$ as the horizon grows. (1) What does the optimal policy tend to? (2) Why is it called stationary, and how good is it for finite $t$? (3) Write the closed-loop recursion under it. (4) Evaluate $m^\\star$ and the closed-loop coefficient for $a = b = c = 1$ and for $a = 2$, $b = c = 1$.",
+      "pts": [
+        "(1) $u^\\star_t = -\\dfrac{ak_{t+1}}{k_{t+1} + c}x_t \\to -\\dfrac{ak^\\star}{k^\\star + c}x_t = m^\\star x_t$.",
+        "(2) It depends on $t$ only through the state. It approximates the optimal policy well even for finite $t$, because $k_t$ converges fast.",
+        "(3) $X_{t+1} = \\Big(a - \\dfrac{ak^\\star}{k^\\star + c}\\Big)X_t + Z_{t+1} = \\dfrac{ac}{k^\\star + c}X_t + Z_{t+1}$.",
+        "(4) $a = 1$: $m^\\star = -\\tfrac{1.618}{2.618} = -0.618$, coefficient $0.382$. $a = 2$: $m^\\star = -\\tfrac{2 \\times 4.236}{5.236} = -1.618$, coefficient $2 - 1.618 = 0.382$."
+      ],
+      "pit": "KE's formula for the stationary policy omits the factor $x$.",
+      "src": "S5 s.36 · KE p49",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-16",
+      "g": "Riccati, stability",
+      "k": "Stable for every a",
+      "q": "Under the stationary policy the state follows $X_{t+1} = \\rho X_t + Z_{t+1}$ with $\\rho = \\dfrac{ac}{k^\\star + c}$, where $k^\\star = F(k^\\star)$ and $b, c > 0$. (1) Give $E\\,X_t$ and $\\operatorname{Var}X_t$. (2) Show $|\\rho| < 1$ when $|a| < 1$. (3) Show $|\\rho| < 1$ when $|a| \\ge 1$. (4) State the conclusion.",
+      "pts": [
+        "(1) $E\\,X_t = \\rho^t x_0$ and $\\operatorname{Var}X_t = \\dfrac{1 - \\rho^{2t}}{1 - \\rho^2}$.",
+        "(2) $|\\rho| = |a| \\cdot \\dfrac{c}{k^\\star + c} < |a| < 1$ since $k^\\star > 0$.",
+        "(3) From $k^\\star = b + \\dfrac{a^2ck^\\star}{k^\\star + c}$: $\\dfrac{ac}{k^\\star + c} = \\dfrac{k^\\star - b}{ak^\\star}$, so $|\\rho| = \\dfrac{1}{|a|}\\Big(1 - \\dfrac{b}{k^\\star}\\Big) < 1$, using $k^\\star > b > 0$.",
+        "(4) Asymptotically the state has mean 0 and variance $\\dfrac{1}{1 - \\rho^2}$ irrespective of $a$: the policy stabilizes even systems with $|a| \\ge 1$."
+      ],
+      "pit": "",
+      "src": "S5 s.38–40 · KE p49–50",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-17",
+      "g": "Riccati, stability",
+      "k": "With and without",
+      "q": "Compare the uncontrolled system $X_{t+1} = aX_t + Z_{t+1}$ with the system under the stationary policy for $a = 2$, $b = c = 1$ ($k^\\star = 2 + \\sqrt5$). (1) What happens to the uncontrolled variance? (2) Compute the closed-loop coefficient and the limiting variance. (3) What happens if $b = 0$? (4) What does that example show about “optimal” and “stable”?",
+      "pts": [
+        "(1) $\\operatorname{Var}X_t = \\tfrac{4^t - 1}{3} \\to \\infty$ (already 341 at $t = 5$).",
+        "(2) $\\rho = \\tfrac{2}{5.236} = 0.382$, $\\rho^2 = 0.146$, limiting variance $\\tfrac{1}{1 - 0.146} \\approx 1.17$.",
+        "(3) $k_T = 0$ and $F(0) = 0$, so $k_t \\equiv 0$ and $m_t \\equiv 0$: the optimal policy never acts, and the state explodes.",
+        "(4) Stability is a consequence of $b > 0$ (the state is penalized) together with $c > 0$, not of optimality as such."
+      ],
+      "pit": "If $c \\le 0$ the function minimized over $u$ need not be convex; the minimum may not exist.",
+      "src": "S5 s.12, s.40",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-18",
+      "g": "Riccati, stability",
+      "k": "Practice: a = 0.5",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. Take $a = 0.5$, $b = c = 1$. (1) Write the Riccati equation. (2) Compute $k^\\star$. (3) Compute $m^\\star$. (4) Compute the closed-loop coefficient and compare with the uncontrolled one.",
+      "pts": [
+        "(1) $k^2 + (1 - 1 - 0.25)k - 1 = k^2 - 0.25k - 1 = 0$.",
+        "(2) $k^\\star = \\tfrac{0.25 + \\sqrt{4.0625}}{2} \\approx 1.133$.",
+        "(3) $m^\\star = -\\tfrac{0.5 \\times 1.133}{2.133} \\approx -0.266$.",
+        "(4) $\\rho = \\tfrac{0.5}{2.133} \\approx 0.234$, against $a = 0.5$ without control."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-19",
+      "g": "Riccati, stability",
+      "k": "Three takeaways",
+      "q": "(1) State the three key facts about the linear-quadratic problem. (2) Which positivity assumption is behind each of: a unique minimizer, convergence of $k_t$ to a positive limit, stability? (3) In which sense is the stationary gain an infinite-horizon object?",
+      "pts": [
+        "(1) The value function is quadratic; the optimal policy is linear; the limit of the policy exists, through the fixed point $F(k^\\star) = k^\\star$ of the Riccati equation.",
+        "(2) Unique minimizer: $k_{t+1} + c > 0$, from $c > 0$. Positive limit and stability: $b > 0$ (with $c > 0$).",
+        "(3) $k^\\star$ is the coefficient of the infinite-horizon value function: the Riccati equation is the fixed-point equation of the dynamic programming operator restricted to quadratics."
+      ],
+      "pit": "",
+      "src": "S5 s.40 · KE p48",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-20",
+      "g": "Certainty equivalence",
+      "k": "Definition, one step",
+      "q": "(1) Define the certainty equivalence principle. (2) Solve $\\min_u E[(ax + bu + Z)^2]$ for given scalars $a$ and $b \\ne 0$. (3) Prove it by completing the square, and give the minimal value. (4) What is the observation?",
+      "pts": [
+        "(1) It holds if the optimal policy is unaffected when the disturbances are replaced by their means.",
+        "(2) $u^\\star = -\\dfrac{a}{b}\\,x - \\dfrac{1}{b}\\,E[Z]$.",
+        "(3) With $y = ax + bu$: $E(y + Z)^2 = (y + E\\,Z)^2 + \\operatorname{Var}Z$. The first term vanishes at $y = -E\\,Z$; the minimal value is $\\operatorname{Var}Z$.",
+        "(4) $u^\\star$ depends on the distribution of $Z$ only through its mean, so $Z$ can be replaced by $E[Z]$ and a deterministic problem solved."
+      ],
+      "pit": "On this slide $a, b$ are just two coefficients; $b$ multiplies $u$ and is not the cost weight.",
+      "src": "S5 s.44",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-21",
+      "g": "Certainty equivalence",
+      "k": "Skewed noise",
+      "q": "$Z$ takes the values $-1, 0, 4$ with probabilities $0.5, 0.3, 0.2$, and $u$ minimizes $E[(1.5x + 2u + Z)^2]$ at $x = 1$. (1) Compute $E\\,Z$ and $\\operatorname{Var}Z$. (2) Compute $u^\\star$ and its expected cost. (3) Compare with aiming at zero, $1.5 + 2u = 0$. (4) Which features of $Z$ did not matter?",
+      "pts": [
+        "(1) $E\\,Z = -0.5 + 0.8 = 0.3$; $E\\,Z^2 = 0.5 + 3.2 = 3.7$; $\\operatorname{Var}Z = 3.7 - 0.09 = 3.61$.",
+        "(2) $u^\\star = -\\tfrac{1.5 + 0.3}{2} = -0.9$, with expected cost $3.61$.",
+        "(3) $u = -0.75$ costs $0.3^2 + 3.61 = 3.7$: worse.",
+        "(4) The variance and the skewness: they change the cost, not the action."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-22",
+      "g": "Certainty equivalence",
+      "k": "CE in the LQ problem",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$. Replace $Z_{t+1}$ by its mean. (1) Write the resulting deterministic problem. (2) What is its optimal policy? (3) How do the two value functions differ? (4) Why does the one-step argument extend to many periods?",
+      "pts": [
+        "(1) $X_{t+1} = aX_t + U_t$ and $\\min_\\mu \\sum_{t=0}^{T-1}\\big(bX_t^2 + c\\mu_t(X_t)^2\\big) + bX_T^2$, without an expectation.",
+        "(2) $\\mu_t(x) = m_tx$ with the same gains $m_t = -\\dfrac{ak_{t+1}}{k_{t+1} + c}$.",
+        "(3) Deterministic: $V_t(x) = k_tx^2$. Stochastic: $k_tx^2 + \\ell_t$. The noise raises the cost by the constant $\\ell_t$ only.",
+        "(4) In every step the function minimized over $u$ is $cu^2 + k_{t+1}(ax + u)^2 + k_{t+1}\\operatorname{Var}Z$: the noise leaves a term without $u$."
+      ],
+      "pit": "",
+      "src": "S5 s.47 · KE p51",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-23",
+      "g": "Certainty equivalence",
+      "k": "Testing for CE",
+      "q": "(1) Give a practical test for whether certainty equivalence holds in one step of the recursion. (2) Apply it to additive noise with fixed variance. (3) To noise whose variance is $\\alpha u^2$. (4) To a random coefficient $B$ multiplying $u$.",
+      "pts": [
+        "(1) Write the true expected cost as the version with the noise replaced by its mean plus an extra term. If the extra term does not contain $u$, the minimizer is unchanged; if it does, certainty equivalence generally fails.",
+        "(2) Extra term $k\\operatorname{Var}Z$: no $u$. It holds.",
+        "(3) Extra term $\\alpha u^2$: contains $u$. It fails.",
+        "(4) Extra term $k\\operatorname{Var}B \\cdot u^2$: contains $u$. It fails."
+      ],
+      "pit": "In a multi-period problem check every period: randomness multiplying only $x$ adds $k\\operatorname{Var}A \\cdot x^2$, which leaves the current action unchanged but changes $k_t$ and hence earlier gains.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-24",
+      "g": "Certainty equivalence",
+      "k": "Non-zero mean",
+      "q": "Scalar linear-quadratic problem: $X_{t+1} = aX_t + U_t + Z_{t+1}$ with $Z_t$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = 1$; stage cost $bx^2 + cu^2$ and terminal cost $bx^2$ with $b, c > 0$, except that $E\\,Z = \\mu \\ne 0$; take $T = 1$. (1) Write what is minimized. (2) Find the optimal $U_0$. (3) Is the policy still linear in $x$? (4) Does certainty equivalence still hold?",
+      "pts": [
+        "(1) $bx^2 + cu^2 + b(ax + u + \\mu)^2 + b\\operatorname{Var}Z$.",
+        "(2) $u^\\star = -\\dfrac{b(ax + \\mu)}{b + c}$.",
+        "(3) No, it is affine: linear in the shifted quantity $ax + \\mu$.",
+        "(4) Yes: the action depends on $Z$ only through its mean, and replacing $Z$ by $\\mu$ gives the same $u^\\star$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-25",
+      "g": "Clock regulation",
+      "k": "Solution",
+      "q": "Clock regulation: $X_{t+1} = X_t - U_t + Z_{t+1}$, where the disturbance $Z_{t+1}$ has mean 0 and variance $\\alpha U_t^2$ (a larger correction brings more fluctuation); the only cost is $X_T^2$. (1) Compute the function minimized at $t = T - 1$. (2) Find $u^\\star_{T-1}$ and $V_{T-1}$. (3) Give $V_t$ and $u^\\star_t$ for all $t$. (4) Which printed formula has to be corrected?",
+      "pts": [
+        "(1) $E(x - u + Z_T)^2 = (x - u)^2 + \\alpha u^2$.",
+        "(2) $-2(x - u) + 2\\alpha u = 0$ gives $u^\\star = \\dfrac{x}{1 + \\alpha}$; $V_{T-1}(x) = \\Big(\\dfrac{\\alpha x}{1 + \\alpha}\\Big)^2 + \\dfrac{\\alpha x^2}{(1 + \\alpha)^2} = \\dfrac{\\alpha}{1 + \\alpha}\\,x^2$.",
+        "(3) The value is again a multiple of $x^2$, so by induction $V_t(x) = \\Big(\\dfrac{\\alpha}{1 + \\alpha}\\Big)^{T-t}x^2$ and $u^\\star_t = \\dfrac{x_t}{1 + \\alpha}$.",
+        "(4) The slides print $\\dfrac{2\\alpha}{\\alpha + 1}$ in place of $\\dfrac{\\alpha}{\\alpha + 1}$; the policy on the same slides is right."
+      ],
+      "pit": "Check with $\\alpha = \\tfrac12$, $T = 3$, $x_0 = 1$: $(\\tfrac13)^3 = \\tfrac{1}{27}$, not $(\\tfrac23)^3$.",
+      "src": "S5 s.50–52",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-26",
+      "g": "Clock regulation",
+      "k": "Partial correction",
+      "q": "Clock regulation: $X_{t+1} = X_t - U_t + Z_{t+1}$, where the disturbance $Z_{t+1}$ has mean 0 and variance $\\alpha U_t^2$ (a larger correction brings more fluctuation); the only cost is $X_T^2$. Take $\\alpha = \\tfrac12$, the last period and error $x = 1$. (1) Write the expected cost as a function of $u$. (2) Evaluate it at $u = 0, \\tfrac13, \\tfrac23, 1$. (3) Which $u$ does certainty equivalence prescribe and what does it really cost? (4) How does the optimal correction change with $\\alpha$?",
+      "pts": [
+        "(1) $(1 - u)^2 + \\tfrac12u^2$: squared mean of the remaining error plus the variance added by the correction.",
+        "(2) $1$, $\\tfrac49 + \\tfrac{1}{18} = \\tfrac12$, $\\tfrac19 + \\tfrac29 = \\tfrac13$, $0 + \\tfrac12 = \\tfrac12$. Best: $u = \\tfrac23 = \\tfrac{1}{1 + \\alpha}$.",
+        "(3) $u = 1$ (correct everything; it expects cost 0); the true cost is $\\tfrac12$ against the optimal $\\tfrac13$.",
+        "(4) $u^\\star = \\tfrac{1}{1 + \\alpha}$: $1, \\tfrac23, \\tfrac12, \\tfrac14$ for $\\alpha = 0, \\tfrac12, 1, 3$. The larger the noise, the smaller the correction."
+      ],
+      "pit": "",
+      "src": "S5 s.50",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-27",
+      "g": "Clock regulation",
+      "k": "Why CE fails here",
+      "q": "Compare the clock problem (disturbance variance $\\alpha u^2$) with the standard linear-quadratic problem (variance 1). (1) Which term does the disturbance contribute to the function minimized over $u$ in each? (2) What follows for the optimal action? (3) How does the disturbance enter the value function in each? (4) Give the intuition.",
+      "pts": [
+        "(1) Clock: $\\alpha u^2$, which depends on $u$. Standard problem: $k_{t+1}\\operatorname{Var}Z$, which does not.",
+        "(2) Clock: the action depends on the size of the noise, $u = \\tfrac{x}{1 + \\alpha}$, while replacing the noise by its mean gives $u = x$. Standard problem: the same gain $m_t$ with or without noise.",
+        "(3) Clock: in the coefficient $\\big(\\tfrac{\\alpha}{1+\\alpha}\\big)^{T-t}$ (zero value when $\\alpha = 0$). Standard problem: only in the constant $\\ell_t$.",
+        "(4) In the standard problem the size of the noise is set from outside; in the clock problem it is caused by the action, so the action must account for it."
+      ],
+      "pit": "The action depends on the variance of the noise, not on its realized value: $Z$ is not yet known when $u$ is chosen.",
+      "src": "S5 s.48–52",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-28",
+      "g": "Clock regulation",
+      "k": "Noise times control",
+      "q": "$X_{t+1} = X_t + (1 + Z_{t+1})U_t$ with $E\\,Z = 0$, $\\operatorname{Var}Z = \\sigma^2$; cost $E\\big[\\sum_{t<T}U_t^2 + X_T^2\\big]$. (1) Compute $\\mu^\\star_{T-1}$ and $V_{T-1}$. (2) Does certainty equivalence hold? Point at the term responsible. (3) What happens as $\\sigma^2 \\to \\infty$? (4) Assuming $V_{t+1}(y) = k_{t+1}y^2$, give $\\mu^\\star_t$ and the recursion for $k_t$.",
+      "pts": [
+        "(1) $\\min_u\\{u^2 + (x + u)^2 + \\sigma^2u^2\\}$: $\\mu^\\star_{T-1}(x) = -\\dfrac{x}{2 + \\sigma^2}$ and $V_{T-1}(x) = \\dfrac{1 + \\sigma^2}{2 + \\sigma^2}\\,x^2$.",
+        "(2) No. With $Z$ replaced by 0 the answer is $u = -\\tfrac x2$. The term $\\sigma^2u^2$ contains $u$ because the noise multiplies the control.",
+        "(3) $\\mu^\\star \\to 0$ and $V_{T-1} \\to x^2$: an unreliable control is not used.",
+        "(4) $\\mu^\\star_t(x) = -\\dfrac{k_{t+1}}{1 + k_{t+1}(1 + \\sigma^2)}\\,x$ and $k_t = \\dfrac{k_{t+1}(1 + k_{t+1}\\sigma^2)}{1 + k_{t+1}(1 + \\sigma^2)}$, $k_T = 1$."
+      ],
+      "pit": "There is no constant term in the value: with $u = 0$ there is no noise at all.",
+      "src": "",
+      "seen": [
+        "MkB P5"
+      ]
+    },
+    {
+      "id": "MDP-05-29",
+      "g": "Matrix LQR",
+      "k": "Matrix model",
+      "q": "(1) Write the multidimensional linear system with its dimensions and the assumptions on the noise. (2) Write the quadratic costs. (3) Which definiteness assumptions are needed, and for what? (4) Write the control problem.",
+      "pts": [
+        "(1) $X_{t+1} = A_tX_t + B_tU_t + C_{t+1}Z_{t+1}$ with $X_t \\in \\mathbb{R}^d$, $U_t \\in \\mathbb{R}^n$ and $Z_t \\in \\mathbb{R}^m$ i.i.d., $E\\,Z_t = 0$, $\\operatorname{Var}Z_t = \\Sigma$.",
+        "(2) $g(x, u) = x^\\top Q_tx + u^\\top R_tu$ and $G(x) = x^\\top Q_Tx$.",
+        "(3) $R_t \\succ 0$ (symmetric): makes the minimization over $u$ strictly convex and the matrix to be inverted invertible. $Q_t \\succeq 0$ is enough for the recursion.",
+        "(4) $V_0(x_0) = \\min_\\mu E\\big[\\sum_{t<T}\\big(X_t^\\top Q_tX_t + \\mu_t(X_t)^\\top R_t\\mu_t(X_t)\\big) + X_T^\\top Q_TX_T\\big]$ over $\\mu_t : \\mathbb{R}^d \\to \\mathbb{R}^n$."
+      ],
+      "pit": "The slide asks for $Q_t, R_t \\succ 0$; KE asks for $Q_t \\succeq 0$, $R_t \\succ 0$ and writes the noise as $W_{t+1}$ with dimensions $n$ (state) and $m$ (control).",
+      "src": "S5 s.54 · KE p50",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-30",
+      "g": "Matrix LQR",
+      "k": "Riccati recursion",
+      "q": "For the multidimensional linear-quadratic problem $X_{t+1} = A_tX_t + B_tU_t + C_{t+1}Z_{t+1}$ with costs $x^\\top Q_tx + u^\\top R_tu$ and $x^\\top Q_Tx$, give (1) the form of $V_t$ and the terminal values; (2) the optimal policy; (3) the recursion for $P_t$; (4) the recursion for $p_t$.",
+      "pts": [
+        "(1) $V_t(x) = x^\\top P_tx + p_t$ with $P_T = Q_T$, $p_T = 0$.",
+        "(2) $\\mu^\\star_t(x) = -(R_t + B_t^\\top P_{t+1}B_t)^{-1}B_t^\\top P_{t+1}A_t\\,x$.",
+        "(3) $$\\begin{aligned}P_t = {}& Q_t + A_t^\\top P_{t+1}A_t\\\\ &- A_t^\\top P_{t+1}B_t(R_t + B_t^\\top P_{t+1}B_t)^{-1}B_t^\\top P_{t+1}A_t\\end{aligned}$$",
+        "(4) $p_t = \\operatorname{trace}(C_{t+1}\\Sigma C_{t+1}^\\top P_{t+1}) + p_{t+1}$."
+      ],
+      "pit": "This is the discrete-time Riccati equation; like dynamic programming it starts at the terminal time and proceeds backwards. KE writes $K_t$, $c_t$ and $L_t$ for $P_t$, $p_t$ and the gain.",
+      "src": "S5 s.58 · KE p51",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-31",
+      "g": "Matrix LQR",
+      "k": "Scalar to matrix",
+      "q": "(1) Match the scalar quantities $a$, $b$, $c$, $k_t$, $\\ell_t$, $m_t$ with their matrix counterparts. (2) What replaces $k_{t+1} + c$ and why does its position in the formulas matter? (3) Recover the scalar recursion $k_t = b + \\tfrac{a^2ck_{t+1}}{k_{t+1} + c}$ from the matrix one. (4) What replaces the noise term $k_{t+1}\\operatorname{Var}Z$?",
+      "pts": [
+        "(1) $a \\leftrightarrow A$ (and coefficient 1 of $u$ $\\leftrightarrow B$); $b \\leftrightarrow Q$; $c \\leftrightarrow R$; $k_t \\leftrightarrow P_t$; $\\ell_t \\leftrightarrow p_t$; $m_t \\leftrightarrow$ the gain matrix $L_t$.",
+        "(2) $M = R + B^\\top P_{t+1}B$. Matrices do not commute: $M^{-1}$ sits between $A^\\top P_{t+1}B$ and $B^\\top P_{t+1}A$ and cannot be moved.",
+        "(3) With $A = a$, $B = 1$, $Q = b$, $R = c$, $P = k$: $b + a^2k - \\dfrac{a^2k^2}{c + k} = b + \\dfrac{a^2ck}{k + c}$.",
+        "(4) $\\operatorname{trace}(C\\Sigma C^\\top P_{t+1})$."
+      ],
+      "pit": "",
+      "src": "S5 s.58",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-32",
+      "g": "Matrix LQR",
+      "k": "Proof: expectation",
+      "q": "Matrix problem, induction hypothesis $V_{t+1}(y) = y^\\top Py + p$ with $P$ symmetric positive semidefinite; write $y = Ax + Bu$. (1) Expand $E[(y + CZ)^\\top P(y + CZ)]$. (2) Which facts are used? (3) What does this show about the role of the noise?",
+      "pts": [
+        "(1) $y^\\top Py + 2y^\\top PC\\,E\\,Z + E[Z^\\top C^\\top PCZ] = y^\\top Py + \\operatorname{trace}(C\\Sigma C^\\top P)$.",
+        "(2) $E\\,Z = 0$ kills the cross term; $E[Z^\\top MZ] = \\operatorname{trace}(M\\Sigma)$ for a zero-mean vector with covariance $\\Sigma$; the trace is cyclic, $\\operatorname{trace}(C^\\top PC\\Sigma) = \\operatorname{trace}(C\\Sigma C^\\top P)$.",
+        "(3) It contributes a constant that does not involve $u$: certainty equivalence holds, and the covariance affects only $p_t$."
+      ],
+      "pit": "",
+      "src": "KE p51, p78",
+      "seen": [
+        "Ex 4.1"
+      ]
+    },
+    {
+      "id": "MDP-05-33",
+      "g": "Matrix LQR",
+      "k": "Proof: minimization",
+      "q": "Matrix problem with $V_{t+1}(y) = y^\\top Py + p$, $P$ symmetric positive semidefinite, $R \\succ 0$. (1) Write the part of the objective that depends on $u$ in the form $u^\\top Mu + 2u^\\top Nx + \\dots$. (2) Why is $M$ invertible and the problem strictly convex? (3) Find the minimizer. (4) Give the minimal value of the $u$-dependent part.",
+      "pts": [
+        "(1) $u^\\top Ru + (Ax + Bu)^\\top P(Ax + Bu) = u^\\top Mu + 2u^\\top B^\\top PAx + x^\\top A^\\top PAx$ with $M = R + B^\\top PB$. The two cross terms are equal scalars because $P$ is symmetric.",
+        "(2) For $v \\ne 0$: $v^\\top Mv = v^\\top Rv + (Bv)^\\top P(Bv) \\ge v^\\top Rv > 0$, so $M \\succ 0$.",
+        "(3) Gradient $2Mu + 2B^\\top PAx = 0$, so $u^\\star = -M^{-1}B^\\top PAx = Lx$.",
+        "(4) $-x^\\top A^\\top PBM^{-1}B^\\top PAx$; together with $x^\\top A^\\top PAx$ and $x^\\top Qx$ it gives the Riccati recursion."
+      ],
+      "pit": "The gradient of $u^\\top Mu$ is $2Mu$ only because $M$ is symmetric.",
+      "src": "KE p51",
+      "seen": [
+        "HW2 P4",
+        "Ex 4.1"
+      ]
+    },
+    {
+      "id": "MDP-05-34",
+      "g": "Matrix LQR",
+      "k": "Closing the induction",
+      "q": "In the matrix proof the step at $t$ needs $P_{t+1}$ symmetric positive semidefinite. (1) Why must this be part of the induction hypothesis? (2) Which form of the recursion shows that $P_t$ inherits it? (3) List the pitfalls of the matrix computation.",
+      "pts": [
+        "(1) It is what makes $M = R + B^\\top P_{t+1}B \\succ 0$; “$V_{t+1}$ is quadratic” alone would not justify the inverse.",
+        "(2) $P_t = Q + (A + BL_t)^\\top P_{t+1}(A + BL_t) + L_t^\\top RL_t$: a sum of positive semidefinite, symmetric terms.",
+        "(3) Keep the order of the products ($B^\\top PA \\ne A^\\top PB$); justify the inverse; use symmetry before combining cross terms or differentiating."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "HW2 P4"
+      ]
+    },
+    {
+      "id": "MDP-05-35",
+      "g": "Matrix LQR",
+      "k": "Other notation",
+      "q": "$X_{t+1} = AX_t + BU_t + FZ_{t+1}$ with $X_t \\in \\mathbb{R}^n$, $U_t \\in \\mathbb{R}^m$ and a scalar noise, $E\\,Z = 0$, $E\\,Z^2 = 1$; stage cost $x^\\top Px + u^\\top Qu$ and terminal cost $x^\\top Rx$, all three weights symmetric positive definite. (1) Translate $P$, $Q$, $R$, $F$ into the slide notation. (2) Write the value function and the gain, calling the value matrix $K_t$. (3) Write the recursion for $K_t$. (4) Write the recursion for the constant.",
+      "pts": [
+        "(1) State weight $P \\leftrightarrow Q$; control weight $Q \\leftrightarrow R$; terminal weight $R \\leftrightarrow Q_T$; noise loading $F \\leftrightarrow C$ with $\\Sigma = 1$.",
+        "(2) $V_t(x) = x^\\top K_tx + c_t$, $K_T = R$, $c_T = 0$; $U_t = L_tX_t$ with $L_t = -(Q + B^\\top K_{t+1}B)^{-1}B^\\top K_{t+1}A$.",
+        "(3) $$\\begin{aligned}K_t = {}& P + A^\\top K_{t+1}A\\\\ &- A^\\top K_{t+1}B(Q + B^\\top K_{t+1}B)^{-1}B^\\top K_{t+1}A\\end{aligned}$$",
+        "(4) $c_t = c_{t+1} + F^\\top K_{t+1}F$."
+      ],
+      "pit": "Copying the slide formula with unchanged letters gives a wrong answer here: every weight has moved one letter.",
+      "src": "",
+      "seen": [
+        "HW2 P4"
+      ]
+    },
+    {
+      "id": "MDP-05-36",
+      "g": "Matrix LQR",
+      "k": "Double integrator",
+      "q": "Double integrator: state $x = (\\text{position}, \\text{velocity})^\\top$, $A = \\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$, $B = C = \\begin{pmatrix}0\\\\1\\end{pmatrix}$, scalar noise with variance $\\Sigma = 1$, $Q = Q_T = I$, $R = 1$, $T = 5$. Carry out the step $t = 4$ from $P_5 = I$, $p_5 = 0$. (1) Compute $M = R + B^\\top P_5B$ and the gain $L_4$. (2) Interpret the gain. (3) Compute $P_4$. (4) Compute $p_4$ and check $V_4$ at $x = (1, 0)^\\top$ directly.",
+      "pts": [
+        "(1) $M = 1 + 1 = 2$; $B^\\top A = (0\\ \\ 1)$, so $L_4 = -\\tfrac12(0\\ \\ 1) = (0\\ \\ {-\\tfrac12})$.",
+        "(2) $u = -\\tfrac12 \\times$ velocity: in the last period the control halves the velocity and ignores the position, which it can no longer influence.",
+        "(3) $A^\\top A = \\begin{pmatrix}1&1\\\\1&2\\end{pmatrix}$ and $A^\\top B\\,\\tfrac12\\,B^\\top A = \\begin{pmatrix}0&0\\\\0&\\tfrac12\\end{pmatrix}$, so $P_4 = I + \\begin{pmatrix}1&1\\\\1&2\\end{pmatrix} - \\begin{pmatrix}0&0\\\\0&\\tfrac12\\end{pmatrix} = \\begin{pmatrix}2&1\\\\1&\\tfrac52\\end{pmatrix}$.",
+        "(4) $p_4 = \\operatorname{trace}(CC^\\top I) = 1$. Directly: cost $1 + u^2$ now, next position 1 and velocity $u + Z$, terminal cost $1 + u^2 + 1$; total $3 + 2u^2$, minimal at $u = 0$ with value $3 = x^\\top P_4x + p_4$."
+      ],
+      "pit": "With $R = 2$ instead: $M = 3$, $L_4 = (0\\ \\ {-\\tfrac13})$, $P_4 = \\begin{pmatrix}2&1\\\\1&\\tfrac83\\end{pmatrix}$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-37",
+      "g": "Matrix LQR",
+      "k": "Long horizon",
+      "q": "Time-invariant matrix problem with $A, B, Q, R$ constant. (1) Under which assumptions does the Riccati recursion converge? (2) What does it converge to? (3) What is the stationary policy and in which sense is it stabilizing? (4) Illustrate with the double integrator ($A = \\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}$, $B = (0, 1)^\\top$, $Q = I$, $R = 1$).",
+      "pts": [
+        "(1) $(A, B)$ controllable and $(A, Q)$ observable.",
+        "(2) $P_t \\to P^\\star$, the unique positive semidefinite solution of the algebraic Riccati equation $P = Q + A^\\top PA - A^\\top PB(R + B^\\top PB)^{-1}B^\\top PA$.",
+        "(3) $\\mu^\\star(x) = L^\\star x$ with $L^\\star = -(R + B^\\top P^\\star B)^{-1}B^\\top P^\\star A$; all eigenvalues of the closed-loop matrix $A + BL^\\star$ lie strictly inside the unit circle, so the state has mean 0 and finite covariance asymptotically.",
+        "(4) $L^\\star \\approx (-0.422\\ \\ {-1.244})$; the eigenvalues of $A + BL^\\star$ are $0.378 \\pm 0.188i$ (modulus $0.42$), while $A$ has the double eigenvalue 1."
+      ],
+      "pit": "KE writes the closed-loop matrix as $A + L^\\star B$, which does not have matching dimensions; it is $A + BL^\\star$. $(A, B)$ is controllable iff $(B, AB, \\dots, A^{n-1}B)$ has full row rank.",
+      "src": "KE p51 · B s.40",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-38",
+      "g": "Random coefficients",
+      "k": "One step",
+      "q": "$X_{t+1} = A_{t+1}X_t + B_{t+1}U_t$ with scalar random coefficients, i.i.d. over time, independent of each other and revealed after $U_t$ is chosen; $a_1 = E\\,A$, $a_2 = E\\,A^2$, $b_1 = E\\,B$, $b_2 = E\\,B^2$; stage cost $x^2 + u^2$, terminal cost $x^2$. Assume $V_{t+1}(y) = ky^2$. (1) Expand the function minimized over $u$. (2) Find the optimal action. (3) Give the recursion for $k_t$. (4) Why is there no constant term, and why is $k_t \\ge 1$?",
+      "pts": [
+        "(1) $x^2 + u^2 + k\\,E(Ax + Bu)^2 = x^2 + u^2 + k(a_2x^2 + 2a_1b_1xu + b_2u^2)$, using independence for $E[AB] = a_1b_1$.",
+        "(2) $2u + 2k(a_1b_1x + b_2u) = 0$, so $u^\\star = -\\dfrac{a_1b_1k}{1 + b_2k}\\,x$.",
+        "(3) $k_T = 1$, $k_t = 1 + a_2k_{t+1} - \\dfrac{(a_1b_1k_{t+1})^2}{1 + b_2k_{t+1}}$.",
+        "(4) There is no additive noise. $k_t \\ge 1$ because the stage cost $x^2$ is always paid."
+      ],
+      "pit": "With $A \\equiv a$, $B \\equiv 1$ this reduces to the standard recursion: second moments take the place of squared means.",
+      "src": "KE p78 · B s.42",
+      "seen": [
+        "Ex 4.2"
+      ]
+    },
+    {
+      "id": "MDP-05-39",
+      "g": "Random coefficients",
+      "k": "Unreliable control",
+      "q": "$X_{t+1} = A_{t+1}X_t + B_{t+1}U_t$ with scalar random coefficients, i.i.d. over time, independent of each other and revealed after $U_t$ is chosen; $a_1 = E\\,A$, $a_2 = E\\,A^2$, $b_1 = E\\,B$, $b_2 = E\\,B^2$; stage cost $x^2 + u^2$, terminal cost $x^2$. Take $A \\equiv 1$ and $B = 0$ or $2$ with probability $\\tfrac12$ each, so $a_1 = a_2 = b_1 = 1$, $b_2 = 2$. (1) Compute the last-period action and $k_{T-1}$. (2) Compute the action one period earlier and $k_{T-2}$. (3) What would certainty equivalence do in the last period, and at what true cost? (4) Give the long-run gains of both.",
+      "pts": [
+        "(1) Minimize $x^2 + u^2 + x^2 + 2xu + 2u^2$: $u^\\star = -\\tfrac{x}{3}$, $k_{T-1} = \\tfrac53$.",
+        "(2) With $k = \\tfrac53$: gain $-\\tfrac{k}{1 + 2k} = -\\tfrac{5}{13}$ and $k_{T-2} = 1 + k - \\tfrac{k^2}{1 + 2k} = \\tfrac{79}{39} \\approx 2.03$.",
+        "(3) It replaces $B$ by 1 and chooses $u = -\\tfrac x2$; the true expected cost $2x^2 + 2xu + 3u^2$ is then $\\tfrac74x^2$ instead of $\\tfrac53x^2$.",
+        "(4) Optimal: $k^2 - 2k - 1 = 0$, $k^\\star = 1 + \\sqrt2$, gain $-\\tfrac{k^\\star}{1 + 2k^\\star} = -0.414$. Certainty equivalence: the standard problem with $a = b = c = 1$, gain $-0.618$."
+      ],
+      "pit": "The less certain the effect of an action, the smaller the optimal action.",
+      "src": "",
+      "seen": [
+        "Ex 4.2"
+      ]
+    },
+    {
+      "id": "MDP-05-40",
+      "g": "Random coefficients",
+      "k": "CE with random B",
+      "q": "$X_{t+1} = A_{t+1}X_t + B_{t+1}U_t$ with scalar random coefficients, i.i.d. over time, independent of each other and revealed after $U_t$ is chosen; $a_1 = E\\,A$, $a_2 = E\\,A^2$, $b_1 = E\\,B$, $b_2 = E\\,B^2$; stage cost $x^2 + u^2$, terminal cost $x^2$. (1) Express $b_2$ and $a_2$ through means and variances. (2) Subtract the certainty-equivalent version from the true next-period term $k\\,E(Ax + Bu)^2$. (3) Compare the two gains. (4) When exactly does certainty equivalence hold?",
+      "pts": [
+        "(1) $b_2 = b_1^2 + \\operatorname{Var}B$ and $a_2 = a_1^2 + \\operatorname{Var}A$.",
+        "(2) $k(a_2x^2 + 2a_1b_1xu + b_2u^2) - k(a_1x + b_1u)^2 = k(\\operatorname{Var}A \\cdot x^2 + \\operatorname{Var}B \\cdot u^2)$.",
+        "(3) True: $-\\dfrac{a_1b_1k}{1 + (b_1^2 + \\operatorname{Var}B)k}$. Certainty-equivalent: $-\\dfrac{a_1b_1k}{1 + b_1^2k}$. The true gain is smaller in size.",
+        "(4) Only if $\\operatorname{Var}A = \\operatorname{Var}B = 0$. If only $A$ is random, the last-stage gain coincides, but earlier gains differ because $k_{t+1}$ involves $a_2 > a_1^2$."
+      ],
+      "pit": "",
+      "src": "B s.43",
+      "seen": [
+        "Ex 4.2"
+      ]
+    },
+    {
+      "id": "MDP-05-41",
+      "g": "Random coefficients",
+      "k": "May not converge",
+      "q": "$X_{t+1} = A_{t+1}X_t + B_{t+1}U_t$ with scalar random coefficients, i.i.d. over time, independent of each other and revealed after $U_t$ is chosen; $a_1 = E\\,A$, $a_2 = E\\,A^2$, $b_1 = E\\,B$, $b_2 = E\\,B^2$; stage cost $x^2 + u^2$, terminal cost $x^2$. (1) Under a linear rule $u = mx$, by which factor does $E\\,X_t^2$ change per period, and what is its smallest value $s$? (2) State the convergence criterion for $k_t$. (3) Evaluate $s$ for $A \\equiv 1$, $B \\in \\{0, 2\\}$ and for $A \\in \\{0, 3\\}$, $B \\equiv 1$ (equal probabilities). (4) Why does the bound used in the standard problem fail?",
+      "pts": [
+        "(1) $E(A + Bm)^2 = a_2 + 2a_1b_1m + b_2m^2 \\ge a_2 - \\dfrac{(a_1b_1)^2}{b_2} = s$, attained at $m = -\\dfrac{a_1b_1}{b_2}$.",
+        "(2) $k_t$ converges (and a stationary policy exists) if and only if $s < 1$; otherwise $k_t \\to \\infty$.",
+        "(3) First: $s = 1 - \\tfrac12 = 0.5$, and $k_t$: $1, 1.667, 2.026, \\dots \\to 2.414$. Second: $a_1 = 1.5$, $a_2 = 4.5$, $s = 4.5 - 2.25 = 2.25$, and $k_t$: $1, 4.375, 12.68, \\dots \\to \\infty$.",
+        "(4) There the rule $u = -ax$ brings the state to 0 at bounded cost. With a random $A$, revealed after the action, no action cancels $Ax$ for every outcome."
+      ],
+      "pit": "",
+      "src": "B s.43",
+      "seen": [
+        "Ex 4.2"
+      ]
+    },
+    {
+      "id": "MDP-05-42",
+      "g": "Random coefficients",
+      "k": "Clock as special case",
+      "q": "The clock disturbance with variance $\\alpha u^2$ can be written $Z_{t+1} = W_{t+1}U_t$ with $E\\,W = 0$, $\\operatorname{Var}W = \\alpha$. (1) Rewrite the dynamics $X_{t+1} = X_t - U_t + Z_{t+1}$ with a random coefficient. (2) Give $b_1$ and $b_2$. (3) Recover the optimal correction in the last period. (4) What is the common reason certainty equivalence fails in both models?",
+      "pts": [
+        "(1) $X_{t+1} = X_t + BU_t$ with $B = -1 + W$ (and $A \\equiv 1$).",
+        "(2) $b_1 = -1$ and $b_2 = 1 + \\alpha$.",
+        "(3) Minimize $E(x + Bu)^2 = x^2 - 2xu + (1 + \\alpha)u^2$: $u^\\star = \\dfrac{x}{1 + \\alpha}$.",
+        "(4) The coefficient that multiplies the action has a variance, so a second moment enters the minimization over $u$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-43",
+      "g": "Overview",
+      "k": "Notation map",
+      "q": "The same linear-quadratic objects carry different letters in the slides, in KE and in the exercises. (1) Scalar weights and coefficients of the value function. (2) Matrix weights and value matrices. (3) Dimensions. (4) Noise normalization and the resulting constant.",
+      "pts": [
+        "(1) Slides: state weight $b$, control weight $c$, value $k_tx^2 + \\ell_t$, gain $m_t$. KE: weights $q, r$, value $k_tx^2 + c_t$, gain $\\ell_t$.",
+        "(2) Slides: $Q$ state, $R$ control, value matrix $P_t$, constant $p_t$. KE: $Q$, $R$, $K_t$, $c_t$, gain $L_t$. One exercise: $P$ state, $Q$ control, $R$ terminal, $F$ noise loading.",
+        "(3) Slides: $X \\in \\mathbb{R}^d$, $U \\in \\mathbb{R}^n$, $Z \\in \\mathbb{R}^m$. KE: $X \\in \\mathbb{R}^n$, $U \\in \\mathbb{R}^m$.",
+        "(4) Scalar: $\\operatorname{Var}Z = 1$, constant $k_{t+1}$ per stage. Matrix: covariance $\\Sigma$, constant $\\operatorname{trace}(C\\Sigma C^\\top P_{t+1})$. Scalar noise with loading $F$: $F^\\top K_{t+1}F$."
+      ],
+      "pit": "Fix the notation of the problem at hand before writing any formula.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-05-44",
+      "g": "Overview",
+      "k": "Which tool",
+      "q": "Which step answers each request? (1) “Show that the optimal policy is linear and find the recursion.” (2) “Long horizon, stationary policy.” (3) “Is the controlled system stable?” (4) “Does certainty equivalence hold?” (5) The noise has a non-zero mean, a variance depending on $u$, or the coefficients are random.",
+      "pts": [
+        "(1) Guess $V_{t+1}$ quadratic with a non-negative coefficient; take the expectation (cross term vanishes, noise gives a constant); collect the quadratic in $u$; justify strict convexity; minimize; substitute back; check the new coefficient keeps the hypothesis.",
+        "(2) Fixed point of the Riccati map; argue convergence (monotone and bounded) and take the positive root.",
+        "(3) Closed-loop coefficient under the stationary gain; show its modulus is below 1 (matrix case: eigenvalues of $A + BL^\\star$).",
+        "(4) Compare the true one-step objective with the mean-replaced one: does the extra term contain $u$?",
+        "(5) Redo the expectation by hand: non-zero mean gives an affine policy; the other two put second moments into the gain."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}

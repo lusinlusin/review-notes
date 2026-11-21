@@ -53,6 +53,10 @@
           "file": "mdp/ch03-dynamic-programming.json"
         },
         {
+          "title": "Linear quadratic control",
+          "file": "mdp/ch05-lqr.json"
+        },
+        {
           "title": "Core concepts",
           "file": "mdp/core-concepts.json"
         }
