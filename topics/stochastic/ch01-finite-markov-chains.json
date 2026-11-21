@@ -1,0 +1,1571 @@
+{
+  "title": "Finite Markov chains",
+  "notes": [
+    {
+      "h": "Big picture",
+      "items": [
+        {
+          "t": "Where it sits",
+          "d": [
+            "Before: the chapter on preliminaries supplies the two tools used here, the matrix point of view (eigenvalues, powers of a matrix) and linear difference equations (the random-walk equation, particular plus homogeneous solution).",
+            "This chapter: Markov chains in discrete time on a finite state space. One matrix $P$ describes everything, and the chapter is about what $P^n$ does for large $n$.",
+            "After: the same questions for countably many states (where a chain can escape to infinity), then continuous time."
+          ],
+          "cards": [
+            "STO-01-01"
+          ]
+        },
+        {
+          "t": "The three questions",
+          "d": [
+            "An invariant probability vector is a row vector $\\bar\\pi \\ge 0$ with $\\sum_j\\pi(j) = 1$ and $\\bar\\pi P = \\bar\\pi$. The chapter asks:",
+            "1. Existence: is there such a $\\bar\\pi$? 2. Uniqueness: only one? 3. Convergence: does $\\phi P^n \\to \\bar\\pi$ for every initial distribution $\\phi$, i.e. do the rows of $P^n$ all approach $\\bar\\pi$?",
+            "Answer: yes to all three when the chain is irreducible and aperiodic. Reducibility breaks uniqueness, periodicity breaks convergence, and these are the only two obstacles."
+          ],
+          "cards": [
+            "STO-01-07",
+            "STO-01-20"
+          ]
+        },
+        {
+          "t": "Two running examples",
+          "d": [
+            "Example A, the phone chain: state 0 = free, 1 = busy, $P = \\begin{pmatrix}3/4&1/4\\\\1/6&5/6\\end{pmatrix}$ ($p = \\tfrac14$, $q = \\tfrac16$). Everything can be computed by hand: $\\bar\\pi = (\\tfrac25, \\tfrac35)$, second eigenvalue $\\tfrac{7}{12}$, mean return time to 0 equal to $\\tfrac52$.",
+            "Example B, the random walk on $\\{0, 1, 2, 3, 4\\}$ in two versions. Reflecting ($p(0, 1) = p(4, 3) = 1$): irreducible with period 2, $\\bar\\pi = (\\tfrac18, \\tfrac14, \\tfrac14, \\tfrac14, \\tfrac18)$. Absorbing ($p(0, 0) = p(4, 4) = 1$): reducible, states 1, 2, 3 transient.",
+            "A third chain, the queue with one hold slot, is used whenever a 3 by 3 example is needed."
+          ],
+          "cards": [
+            "STO-01-02",
+            "STO-01-03"
+          ]
+        },
+        {
+          "t": "Key symbols",
+          "d": [
+            "$p(i, j)$: one-step transition probability; $P$: the matrix of the $p(i, j)$; $p_n(i, j) = (P^n)_{ij}$: $n$-step probability.",
+            "$\\phi$: initial distribution (row vector); $\\bar\\pi$: invariant distribution (row vector); $\\bar 1$: the all-ones column.",
+            "$d$: period; $T$: return time ($n \\ge 1$); $T_i$: hitting time of $i$ ($n \\ge 0$).",
+            "$Q$: transient-to-transient block; $S$: transient-to-recurrent block; $M = (I - Q)^{-1}$: fundamental matrix; $\\alpha$: absorption probability."
+          ],
+          "cards": [
+            "STO-01-04",
+            "STO-01-05",
+            "STO-01-28"
+          ]
+        },
+        {
+          "t": "One shape to remember",
+          "d": [
+            "$P^n$ = limit + (second eigenvalue)$^n$ $\\times$ fixed matrix. For the two-state chain exactly; in general up to faster-decaying terms.",
+            "Second eigenvalue of absolute value below 1: convergence at speed $|\\lambda|^n$. Equal to $-1$ (or another root of unity): periodic, no convergence. Equal to 1 again: reducible, limit depends on the start."
+          ],
+          "cards": [
+            "STO-01-09",
+            "STO-01-10",
+            "STO-01-22"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "1.1 Definitions and examples",
+      "items": [
+        {
+          "t": "Markov property",
+          "d": [
+            "$\\mathbb{P}\\{X_n = i_n \\mid X_0 = i_0, \\dots, X_{n-1} = i_{n-1}\\} = \\mathbb{P}\\{X_n = i_n \\mid X_{n-1} = i_{n-1}\\}$: to predict the next state only the present state matters.",
+            "Time homogeneity: this probability is the same for every $n$; call it $p(i_{n-1}, i_n)$. The transition matrix $P = (p(i, j))$ is a stochastic matrix: entries in $[0, 1]$, every row sums to 1.",
+            "With the initial distribution $\\phi$, the probability of a whole path is $\\phi(i_0)p(i_0, i_1)\\cdots p(i_{n-1}, i_n)$. So $\\phi$ and $P$ determine the chain."
+          ],
+          "cards": [
+            "STO-01-01"
+          ]
+        },
+        {
+          "t": "Five examples",
+          "d": [
+            "1. Two-state phone chain: $P = \\begin{pmatrix}1-p&p\\\\q&1-q\\end{pmatrix}$, where $p$ = a call arrives while free, $q$ = the call ends while busy.",
+            "2. Queue with one hold slot, states 0, 1, 2 callers: $p(1, 0) = q(1-p)$, $p(1, 2) = p(1-q)$, $p(1, 1) = pq + (1-p)(1-q)$; with $p = \\tfrac14$, $q = \\tfrac16$: $$P = \\begin{pmatrix}3/4&1/4&0\\\\1/8&2/3&5/24\\\\0&1/6&5/6\\end{pmatrix}$$",
+            "3. Random walk with reflecting boundary on $\\{0, \\dots, N\\}$: interior steps $\\pm1$ with probability $\\tfrac12$, $p(0, 1) = p(N, N-1) = 1$.",
+            "4. Random walk with absorbing boundary: the same interior, $p(0, 0) = p(N, N) = 1$.",
+            "5. Simple random walk on a graph: $p(v, w) = 1/d(v)$ for each neighbour $w$ of $v$. Example 3 is the walk on the path $0 - 1 - \\dots - N$."
+          ],
+          "cards": [
+            "STO-01-02",
+            "STO-01-03"
+          ]
+        },
+        {
+          "t": "n-step probabilities",
+          "d": [
+            "$p_n(i, j) = \\mathbb{P}\\{X_n = j \\mid X_0 = i\\}$. Splitting on the state at time $m$ gives Chapman–Kolmogorov, $p_{m+n}(i, j) = \\sum_k p_m(i, k)p_n(k, j)$, which is matrix multiplication. Hence $p_n(i, j) = (P^n)_{ij}$.",
+            "Example A: $p_2(0, 0) = \\tfrac34\\cdot\\tfrac34 + \\tfrac14\\cdot\\tfrac16 = \\tfrac{29}{48}$ and $p_2(0, 1) = \\tfrac{19}{48}$."
+          ],
+          "cards": [
+            "STO-01-04"
+          ]
+        },
+        {
+          "t": "Distributions and functions",
+          "d": [
+            "Row vector = distribution: if $X_0$ has distribution $\\phi$, then $X_n$ has distribution $\\phi P^n$. Example A: $\\mathbb{P}\\{X_6 = 1 \\mid X_0 = 0\\} \\approx .576$.",
+            "Column vector = function on the states: $(Pf)(i) = \\mathbb{E}[f(X_1) \\mid X_0 = i]$. In particular $P\\bar 1 = \\bar 1$: 1 is always an eigenvalue."
+          ],
+          "cards": [
+            "STO-01-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "1.2 Large-time behaviour and invariant probability",
+      "items": [
+        {
+          "t": "Numbers first",
+          "d": [
+            "Raise $P$ to a high power and the rows become identical: for the phone chain every row tends to $(\\tfrac25, \\tfrac35)$, for the queue to $(\\tfrac{2}{11}, \\tfrac{4}{11}, \\tfrac{5}{11}) \\approx (.182, .364, .455)$.",
+            "Identical rows mean that the chain forgets its starting point."
+          ],
+          "cards": [
+            "STO-01-06"
+          ]
+        },
+        {
+          "t": "A limit must be invariant",
+          "d": [
+            "If $\\phi P^n \\to \\bar\\pi$, then $\\bar\\pi = \\lim\\phi P^{n+1} = (\\lim\\phi P^n)P = \\bar\\pi P$. So the candidates for the limit are the left eigenvectors of $P$ with eigenvalue 1, normalised to be probability vectors.",
+            "Solving for the queue: column 0 gives $\\pi(1) = 2\\pi(0)$, column 2 gives $\\pi(2) = \\tfrac54\\pi(1)$, and $\\sum\\pi = 1$ gives $(\\tfrac{2}{11}, \\tfrac{4}{11}, \\tfrac{5}{11})$. One of the equations $\\bar\\pi P = \\bar\\pi$ is always redundant; the normalisation replaces it."
+          ],
+          "cards": [
+            "STO-01-06",
+            "STO-01-08"
+          ]
+        },
+        {
+          "t": "Two-state chain, worked out",
+          "d": [
+            "Eigenvalues: 1 (rows sum to 1) and $\\lambda = 1 - p - q$ (the trace is $2 - p - q$). Example A: $\\lambda = \\tfrac{7}{12}$.",
+            "Left eigenvector for 1: $\\bar\\pi = (\\tfrac{q}{p+q}, \\tfrac{p}{p+q})$; Example A: $(\\tfrac25, \\tfrac35)$.",
+            "$$P^n = \\frac{1}{p+q}\\begin{pmatrix}q&p\\\\q&p\\end{pmatrix} + \\frac{\\lambda^n}{p+q}\\begin{pmatrix}p&-p\\\\-q&q\\end{pmatrix}$$",
+            "Entry $(0, 1)$: $\\pi(1)(1 - \\lambda^n)$; Example A at $n = 6$: $\\tfrac35(1 - 0.0394) = 0.576$.",
+            "Convergence rests on $|\\lambda| < 1$ and its speed is $|\\lambda|^n$; in Example A four more steps multiply the deviation by $(\\tfrac{7}{12})^4 \\approx 0.116$.",
+            "Why $0 < p, q < 1$ is assumed: $p = q = 1$ gives $\\lambda = -1$, the chain flips every step and $P^n$ alternates between $I$ and $P$ (periodicity); $p = q = 0$ gives $P = I$, where every probability vector is invariant (reducibility)."
+          ],
+          "cards": [
+            "STO-01-09",
+            "STO-01-10"
+          ]
+        },
+        {
+          "t": "The general case",
+          "d": [
+            "Two facts were used: (1.9) the left eigenvector for 1 can be chosen with nonnegative entries; (1.10) the eigenvalue 1 is simple and all other eigenvalues have absolute value below 1.",
+            "Under them, with the Jordan form $P = QDQ^{-1}$, $D = \\begin{pmatrix}1&0\\\\0&B\\end{pmatrix}$ and $B^n \\to 0$: $P^n \\to Q\\begin{pmatrix}1&0\\\\0&0\\end{pmatrix}Q^{-1}$ = (first column of $Q$)(first row of $Q^{-1}$) $= \\bar 1\\bar\\pi$, the matrix with every row $\\bar\\pi$.",
+            "The book calls the block $M$ here; these notes write $B$ because $M$ and $Q$ get a different meaning in 1.5."
+          ],
+          "cards": [
+            "STO-01-11"
+          ]
+        },
+        {
+          "t": "Perron–Frobenius and the Fact",
+          "d": [
+            "Theorem: if all entries of a stochastic matrix are positive, then 1 is a simple eigenvalue, its left eigenvector can be chosen positive, and all other eigenvalues have absolute value below 1.",
+            "All positive is too strict (the queue has zeros), but the queue's $P^2$ is all positive, e.g. entry $(0, 0) = \\tfrac{19}{32}$ and entry $(0, 2) = \\tfrac{5}{96}$. Apply the theorem to $P^2$ and pass back to $P$: an eigenvalue $\\mu$ of $P$ gives $\\mu^2$ for $P^2$ with the same eigenvector, so a second eigenvalue of modulus 1 for $P$ would give one for $P^2$.",
+            "Fact: if some $P^n$ has all entries positive, then $P$ satisfies (1.9) and (1.10), and every row of $P^m$ converges to the unique $\\bar\\pi$.",
+            "Open question for the next section: which chains have a power with all entries positive?"
+          ],
+          "cards": [
+            "STO-01-12"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "1.3 Classification of states",
+      "items": [
+        {
+          "t": "Three examples that fail",
+          "d": [
+            "Reflecting walk on $\\{0, \\dots, 4\\}$: $P^n$ alternates; row 0 is about $(.25, 0, .5, 0, .25)$ for even $n$ and $(0, .5, 0, .5, 0)$ for odd $n$. Reason: every step changes the parity (period 2).",
+            "Absorbing walk: $P^n$ converges but the rows differ, row 1 to $(.75, 0, 0, 0, .25)$, row 2 to $(.5, 0, 0, 0, .5)$, row 3 to $(.25, 0, 0, 0, .75)$. Reason: 1, 2, 3 are transient.",
+            "Two blocks side by side ($\\{1, 2\\}$ with $\\begin{pmatrix}1/2&1/2\\\\1/6&5/6\\end{pmatrix}$, $\\{3, 4, 5\\}$ with the queue): rows 1, 2 tend to $(.25, .75, 0, 0, 0)$, rows 3 to 5 to $(0, 0, .182, .364, .455)$. Reason: reducible."
+          ],
+          "cards": [
+            "STO-01-13"
+          ]
+        },
+        {
+          "t": "Communication classes",
+          "d": [
+            "$i \\leftrightarrow j$ when $p_m(i, j) > 0$ and $p_n(j, i) > 0$ for some $m, n \\ge 0$. It is an equivalence relation; transitivity because $p_{m_1+m_2}(i, k) \\ge p_{m_1}(i, j)p_{m_2}(j, k)$.",
+            "The classes partition the state space; one class only = irreducible. Reflecting walk: one class. Absorbing walk: $\\{0\\}$, $\\{1, 2, 3\\}$, $\\{4\\}$. Two blocks: $\\{1, 2\\}$, $\\{3, 4, 5\\}$."
+          ],
+          "cards": [
+            "STO-01-14"
+          ]
+        },
+        {
+          "t": "Recurrent and transient",
+          "d": [
+            "A transient class is left for good with probability 1; a recurrent class is never left. For a finite chain: recurrent = closed (nothing outside can be reached). There is at least one recurrent class.",
+            "Canonical form, recurrent classes first and transient states last: $$P = \\begin{pmatrix}\\tilde P&0\\\\S&Q\\end{pmatrix},\\qquad P^n = \\begin{pmatrix}\\tilde P^n&0\\\\S_n&Q^n\\end{pmatrix}$$",
+            "$\\tilde P$ is block diagonal with one stochastic block $P_k$ per recurrent class; $S$ = transient to recurrent, $Q$ = transient to transient. The long-run behaviour on $R_k$ only involves $P_k$; $Q^n$ is the subject of 1.5."
+          ],
+          "cards": [
+            "STO-01-15"
+          ]
+        },
+        {
+          "t": "A wrong sentence in the book",
+          "d": [
+            "“Any matrix satisfying (1.9) and (1.10) is irreducible” is false: $\\begin{pmatrix}1&0\\\\1/2&1/2\\end{pmatrix}$ has eigenvalues $1, \\tfrac12$ and left eigenvector $(1, 0)$, yet state 1 is transient.",
+            "Correct: if some $P^n$ is all positive the chain is irreducible; or (1.9), (1.10) plus $\\pi(i) > 0$ for all $i$."
+          ],
+          "cards": [
+            "STO-01-16"
+          ]
+        },
+        {
+          "t": "Periodicity",
+          "d": [
+            "For an irreducible chain, $d(i) = \\gcd\\{n \\ge 0 : p_n(i, i) > 0\\}$. Reflecting walk: returns to 0 only at even times, $d = 2$. Queue: $p(0, 0) > 0$, $d = 1$. Rule of thumb: a self-loop makes the chain aperiodic.",
+            "The set $J_i$ of possible return times is closed under addition, so (number-theory lemma) it contains all large multiples of $d$: $p_{md}(i, i) > 0$ for all large $m$.",
+            "All states of an irreducible chain have the same period: with $p_m(i, j) > 0$, $p_n(j, i) > 0$ and $l \\in J_j$, both $m + n$ and $m + l + n$ lie in $J_i$, so $d(i)$ divides $l$; hence $d(i)$ divides $d(j)$, and by symmetry they are equal.",
+            "Graph walks: the period is 1 or 2 (there and back is a loop of length 2), and it is 2 exactly for bipartite graphs. Path and 4-cycle: 2. 5-cycle: 1."
+          ],
+          "cards": [
+            "STO-01-17",
+            "STO-01-18",
+            "STO-01-19"
+          ]
+        },
+        {
+          "t": "Main theorem",
+          "d": [
+            "Irreducible + aperiodic implies some $P^n$ is all positive: $p_n(i, i) > 0$ for $n \\ge M(i)$ (aperiodic), $p_{m(i,j)}(i, j) > 0$ (irreducible), so $p_{n+m(i,j)}(i, j) > 0$ for $n \\ge M(i)$; take the maximum of $M(i) + m(i, j)$ over the finitely many pairs.",
+            "Theorem: for an irreducible aperiodic chain there is a unique invariant $\\bar\\pi$, $\\lim_n\\phi P^n = \\bar\\pi$ for every $\\phi$, and every $\\pi(i) > 0$.",
+            "Dropping a hypothesis: $P = I$ (reducible) loses uniqueness; $P = \\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$ (periodic) loses convergence."
+          ],
+          "cards": [
+            "STO-01-20",
+            "STO-01-07"
+          ]
+        },
+        {
+          "t": "Reducible chains",
+          "d": [
+            "Each recurrent class $R_k$ is a chain of its own with invariant distribution $\\bar\\pi^k$; the eigenvalue 1 has multiplicity $r$ = number of recurrent classes, and every mixture of the $\\bar\\pi^k$ is invariant.",
+            "Limits (each $P_k$ aperiodic): from $i \\in R_k$, $p_n(i, j) \\to \\pi^k(j)$; to a transient $j$, the limit is 0; from a transient $i$ to $j \\in R_k$, $p_n(i, j) \\to \\alpha_k(i)\\pi^k(j)$, where $\\alpha_k(i)$ is the probability of falling into $R_k$.",
+            "Absorbing walk: $\\lim p_n(1, 0) = \\tfrac34 \\cdot 1$. How to compute $\\alpha_k(i)$ is in 1.5."
+          ],
+          "cards": [
+            "STO-01-21"
+          ]
+        },
+        {
+          "t": "Periodic chains",
+          "d": [
+            "The states split into $d$ groups visited cyclically. There are $d$ eigenvalues of modulus 1 (the roots of $z^d = 1$). $\\bar\\pi$ exists and is unique, but $\\phi P^n$ cycles through $d$ distributions; their average is $\\bar\\pi$.",
+            "Reflecting walk: eigenvalues $1, -1, 0, \\pm\\tfrac{1}{\\sqrt2}$, $\\bar\\pi = (\\tfrac18, \\tfrac14, \\tfrac14, \\tfrac14, \\tfrac18)$. $p_n(0, 0)$ is close to $\\tfrac18 + \\tfrac18 = \\tfrac14$ for even $n$ and $\\tfrac18 - \\tfrac18 = 0$ for odd $n$; $\\pi(0) = \\tfrac18$ is the average of two consecutive steps.",
+            "Compare with Example A: $P^n = \\bar 1\\bar\\pi + (\\tfrac{7}{12})^n(\\dots)$ there, $P^n \\approx \\bar 1\\bar\\pi + (-1)^n(\\dots)$ here; the deviation term flips sign and never decays."
+          ],
+          "cards": [
+            "STO-01-22"
+          ]
+        },
+        {
+          "t": "The cases at a glance",
+          "d": [
+            "Irreducible, aperiodic: $\\bar\\pi$ unique; $P^n \\to \\bar 1\\bar\\pi$; $\\pi(j)$ = limiting probability = fraction of time. Examples: phone, queue.",
+            "Irreducible, period $d$: $\\bar\\pi$ unique; $P^n$ cycles; $\\pi(j)$ = fraction of time only. Example: reflecting walk.",
+            "Reducible (recurrent classes aperiodic): one $\\bar\\pi^k$ per recurrent class; $P^n$ converges but rows differ; $\\lim p_n(i, j) = \\alpha_k(i)\\pi^k(j)$. Examples: absorbing walk, two blocks."
+          ],
+          "cards": [
+            "STO-01-23"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "1.4 Return times",
+      "items": [
+        {
+          "t": "π(j) = fraction of time",
+          "d": [
+            "$Y(j, n)$ = number of visits to $j$ up to time $n$. $\\mathbb{E}[Y(j, n) \\mid X_0 = i]/(n+1) = \\tfrac{1}{n+1}\\sum_{m=0}^n p_m(i, j) \\to \\pi(j)$, for periodic chains as well (averages over $d$ steps converge)."
+          ],
+          "cards": [
+            "STO-01-24"
+          ]
+        },
+        {
+          "t": "Kac's formula",
+          "d": [
+            "Start at $i$, $T = \\min\\{n \\ge 1 : X_n = i\\}$. Then $\\mathbb{E}(T) = 1/\\pi(i)$ (book (1.11)).",
+            "Heuristic: the gaps between successive returns are independent copies of $T$, so $k$ returns take about $k\\,\\mathbb{E}(T)$ steps; in $n$ steps there are about $n\\pi(i)$ visits; put $n = k\\,\\mathbb{E}(T)$.",
+            "It uses $\\mathbb{E}(T) < \\infty$ and the restart at a random time; the rigorous proof is one of the exercises (expected visits during one return cycle form an invariant vector).",
+            "Use: the mean return time needs no new equations. Conversely an obvious return time gives $\\pi(i)$ for free."
+          ],
+          "cards": [
+            "STO-01-25",
+            "STO-01-52",
+            "STO-01-51"
+          ]
+        },
+        {
+          "t": "Check on Example A",
+          "d": [
+            "From 0: $\\mathbb{P}\\{T = 1\\} = 1 - p$ and $\\mathbb{P}\\{T \\ge n\\} = p(1-q)^{n-2}$ for $n \\ge 2$.",
+            "Tail-sum formula (1.13): $\\mathbb{E}(Y) = \\sum_{k \\ge 1}\\mathbb{P}\\{Y \\ge k\\}$ for a nonnegative integer $Y$.",
+            "$\\mathbb{E}(T) = 1 + \\sum_{n \\ge 2}p(1-q)^{n-2} = 1 + \\tfrac pq = \\tfrac{p+q}{q} = 1/\\pi(0)$. Example A: $\\tfrac52$; from state 1: $\\tfrac53$."
+          ],
+          "cards": [
+            "STO-01-26"
+          ]
+        },
+        {
+          "t": "Mean only",
+          "d": [
+            "Two-state chain with $p = q$: $\\bar\\pi = (\\tfrac12, \\tfrac12)$ and $\\mathbb{E}(T) = 2$ for every $p$, yet $\\operatorname{Var}(T) = 2(1-p)/p$ is $0.22$ for $p = 0.9$ and $18$ for $p = 0.1$.",
+            "Reflecting walk: $\\pi(0) = \\tfrac18$, so the mean return time to 0 is 8. Section 1.5 finds the same number another way ($1 + 7$)."
+          ],
+          "cards": [
+            "STO-01-27",
+            "STO-01-30"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "1.5 Transient states",
+      "items": [
+        {
+          "t": "Q and M",
+          "d": [
+            "For transient $i, j$: $p_n(j, i) = (Q^n)_{ji}$, because a path between transient states never passes through a recurrent class. $Q$ has row sums at most 1 (the missing mass flows into recurrent classes) and $Q^n \\to 0$, so $I - Q$ is invertible.",
+            "Fundamental matrix $M = (I - Q)^{-1} = I + Q + Q^2 + \\dots$; $M_{ji}$ = expected number of visits to $i$ starting from $j$ (time 0 included).",
+            "Row sums of $M$ = expected number of steps before leaving the transient states: $M\\bar 1$."
+          ],
+          "cards": [
+            "STO-01-28"
+          ]
+        },
+        {
+          "t": "Numbers: absorbing walk",
+          "d": [
+            "Transient states 1, 2, 3: $$Q = \\begin{pmatrix}0&1/2&0\\\\1/2&0&1/2\\\\0&1/2&0\\end{pmatrix},\\quad M = \\begin{pmatrix}3/2&1&1/2\\\\1&2&1\\\\1/2&1&3/2\\end{pmatrix}$$",
+            "$M_{13} = \\tfrac12$: from 1, half a visit to 3 on average. $M_{11} = \\tfrac32$. Row sums $3, 4, 3$: expected steps until absorption."
+          ],
+          "cards": [
+            "STO-01-29"
+          ]
+        },
+        {
+          "t": "Steps from j to i",
+          "d": [
+            "In an irreducible chain, make the target $i$ absorbing; then all other states are transient and $\\mathbb{E}(T_i \\mid X_0 = j)$ is the component $j$ of $M\\bar 1$.",
+            "Reflecting walk, target 0: $M\\bar 1 = (7, 12, 15, 16)$, so from 4 to 0 takes 16 steps. Check with Kac: from 0 one step to 1, then 7 steps: $1 + 7 = 8 = 1/\\pi(0)$.",
+            "Return time $T$ starts counting at $n = 1$ and uses $1/\\pi(i)$; hitting time $T_i$ starts at $n = 0$ and uses $M\\bar 1$. Link: $\\mathbb{E}_i(T) = 1 + \\sum_j p(i, j)\\mathbb{E}_j(T_i)$."
+          ],
+          "cards": [
+            "STO-01-30",
+            "STO-01-31"
+          ]
+        },
+        {
+          "t": "Absorption probabilities",
+          "d": [
+            "Treat each recurrent class as one absorbing point. $\\alpha(t, r)$ = probability of being absorbed at $r$ from the transient state $t$. First step: $\\alpha(t, r) = p(t, r) + \\sum_{z\\ \\text{transient}}p(t, z)\\alpha(z, r)$, i.e. $A = S + QA$, so $A = MS$.",
+            "Absorbing walk: $MS = \\begin{pmatrix}3/4&1/4\\\\1/2&1/2\\\\1/4&3/4\\end{pmatrix}$ (columns 0 and 4). This is where the limit $(.75, 0, 0, 0, .25)$ of row 1 of $P^n$ comes from."
+          ],
+          "cards": [
+            "STO-01-32"
+          ]
+        },
+        {
+          "t": "Gambler's ruin",
+          "d": [
+            "Capital $j$, win 1 with probability $p$, lose 1 with probability $1 - p$, stop at 0 or $N$. $\\alpha(j)$ = probability of reaching $N$ first: $\\alpha(j) = (1-p)\\alpha(j-1) + p\\alpha(j+1)$, $\\alpha(0) = 0$, $\\alpha(N) = 1$ (book (1.15)).",
+            "With $\\rho = \\tfrac{1-p}{p}$: $\\alpha(j) = \\dfrac{1 - \\rho^j}{1 - \\rho^N}$ for $p \\ne \\tfrac12$ and $\\alpha(j) = \\tfrac jN$ for $p = \\tfrac12$.",
+            "$N = 4$: fair game $\\tfrac14, \\tfrac12, \\tfrac34$; $p = \\tfrac23$: $\\tfrac{8}{15}, \\tfrac45, \\tfrac{14}{15}$.",
+            "$N \\to \\infty$: for $p \\le \\tfrac12$ the limit is 0 (ruin is certain); for $p > \\tfrac12$ it is $1 - \\rho^j > 0$."
+          ],
+          "cards": [
+            "STO-01-33",
+            "STO-01-34"
+          ]
+        },
+        {
+          "t": "Expected duration",
+          "d": [
+            "Fair game: $G(j) = 1 + \\tfrac12G(j-1) + \\tfrac12G(j+1)$, $G(0) = G(N) = 0$ (book (1.17)). Particular solution $-j^2$, homogeneous solutions $c_1 + c_2j$, constants $c_1 = 0$, $c_2 = N$.",
+            "$G(j) = j(N - j)$ (book (1.18)). $N = 4$: $3, 4, 3$, the row sums of $M$. From the middle: $N^2/4$ rounds, the square scale typical of a random walk."
+          ],
+          "cards": [
+            "STO-01-35"
+          ]
+        },
+        {
+          "t": "Three quantities, one template",
+          "d": [
+            "Absorption probability $f$: $f = 1$ at the target, 0 at other absorbing states, $f(x) = \\sum_y p(x, y)f(y)$; matrix form $MS$.",
+            "Expected steps $g$: $g = 0$ at absorbing states, $g(x) = 1 + \\sum_y p(x, y)g(y)$; matrix form $M\\bar 1$.",
+            "Expected visits to $i$, $h$: $h = 0$ at absorbing states, $h(x) = I\\{x = i\\} + \\sum_y p(x, y)h(y)$; column $i$ of $M$.",
+            "Absorbing walk from 1: $\\tfrac34$ (to 0), 3 steps, $\\tfrac12$ visit to 3."
+          ],
+          "cards": [
+            "STO-01-36"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "1.6 Examples",
+      "items": [
+        {
+          "t": "Walk on a graph",
+          "d": [
+            "Connected graph with $e$ edges: $\\pi(v) = d(v)/2e$. Check: $\\sum_{v \\sim w}\\tfrac{d(v)}{2e}\\cdot\\tfrac{1}{d(v)} = \\tfrac{d(w)}{2e}$. Path $0 - \\dots - 4$: $(\\tfrac18, \\tfrac14, \\tfrac14, \\tfrac14, \\tfrac18)$."
+          ],
+          "cards": [
+            "STO-01-37"
+          ]
+        },
+        {
+          "t": "Walk on a circle",
+          "d": [
+            "$N$ points, steps $\\pm1$ with probability $\\tfrac12$. $T_k$ = first time $k$ points have been visited. At $T_{k-1}$ the walker is at an end of the visited arc; $r(k) = 1 + \\tfrac12[(k - 3) + r(k)]$, so $r(k) = k - 1$ and $\\mathbb{E}[T_N] = \\tfrac{N(N-1)}{2}$ ($N = 5$: 10).",
+            "The last point visited is uniform on $\\{1, \\dots, N-1\\}$."
+          ],
+          "cards": [
+            "STO-01-38",
+            "STO-01-53"
+          ]
+        },
+        {
+          "t": "Urn model",
+          "d": [
+            "$N$ balls, a random ball changes colour with probability $\\tfrac12$: $p(j, j \\pm 1) = \\tfrac{N-j}{2N}, \\tfrac{j}{2N}$, $p(j, j) = \\tfrac12$. Invariant distribution binomial, $\\pi(j) = \\binom Nj2^{-N}$; return to all green takes $2^N$ steps on average."
+          ],
+          "cards": [
+            "STO-01-39"
+          ]
+        },
+        {
+          "t": "Cell genetics",
+          "d": [
+            "$p(j, k) = \\binom{2j}{k}\\binom{2N-2j}{N-k}/\\binom{2N}{N}$; 0 and $N$ absorbing; $\\alpha(j) = \\tfrac jN$ because the expected fraction of type I is preserved, and a function satisfying the one-step equation and the boundary values is the absorption probability."
+          ],
+          "cards": [
+            "STO-01-40"
+          ]
+        },
+        {
+          "t": "Card shuffling",
+          "d": [
+            "Random card to the top: irreducible, aperiodic (self-loop), doubly stochastic, so $\\bar\\pi$ is uniform on the $n!$ orderings. By Kac the original order of 52 cards returns after $52!$ steps on average."
+          ],
+          "cards": [
+            "STO-01-41"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Exercise map",
+      "items": [
+        {
+          "t": "After 1.1",
+          "d": [
+            "1.1 newspaper pile: states $0, \\dots, 4$, $p(i, 0) = \\tfrac13$, $p(i, i+1) = \\tfrac23$, $p(4, 0) = 1$. 1.2: $\\mathbb{P}\\{X_3 = 1\\} = \\tfrac{109}{216}$."
+          ],
+          "cards": [
+            "STO-01-42",
+            "STO-01-43"
+          ]
+        },
+        {
+          "t": "After 1.2",
+          "d": [
+            "1.3: $\\bar\\pi = \\tfrac{1}{66}(25, 17, 24)$. 1.4 (same task, another matrix): $\\bar\\pi = \\tfrac{1}{39}(11, 16, 12)$."
+          ],
+          "cards": [
+            "STO-01-44"
+          ]
+        },
+        {
+          "t": "After 1.3 and 1.4",
+          "d": [
+            "1.6: return to state 2 in the chain of 1.3: $\\tfrac{66}{17}$. 1.13: newspaper pile, $\\bar\\pi = \\tfrac{1}{211}(81, 54, 36, 24, 16)$, mean $\\tfrac{262}{211}$, return to 0 in $\\tfrac{211}{81}$.",
+            "1.9: period 3, $\\bar\\pi = (\\tfrac13, \\tfrac19, \\tfrac29, \\tfrac{5}{36}, \\tfrac{7}{36})$, return time to 1 always 3, $p_{1000}(2, 4) \\approx \\tfrac{5}{12}$."
+          ],
+          "cards": [
+            "STO-01-44",
+            "STO-01-42",
+            "STO-01-48"
+          ]
+        },
+        {
+          "t": "After 1.5",
+          "d": [
+            "1.5: recurrent $\\{0, 1\\}$, $\\{2, 4\\}$, transient $\\{3, 5\\}$; $\\lim p_n(0, 0) = \\tfrac38$, $\\lim p_n(5, 0) = \\tfrac{6}{11}\\cdot\\tfrac38 = \\tfrac{9}{44}$.",
+            "1.8 (five-vertex graph): $\\pi(A) = \\tfrac14$; return to $A$: 4; visits to $B$ from $C$ before $A$: $\\tfrac{9}{11}$; reach $A$ before $C$ from $B$: $\\tfrac47$; steps from $C$ to $A$: $\\tfrac{29}{11}$.",
+            "1.19 (four heads in a row): 30 flips.",
+            "Without cards here: 1.10 $\\bar\\pi = \\tfrac{1}{377}(233, 89, 34, 13, 5, 2, 1)$; 1.11 $8$ and $\\tfrac{205886}{30025} \\approx 6.857$; 1.12 $\\tfrac{118}{35}$, $\\tfrac{15}{28}$, $\\tfrac{45}{121}$; 1.14 $\\bar\\pi = \\tfrac{1}{37}(10, 5, 5, 3, 14)$, $3.7$, $\\tfrac{34}{3}$, $\\tfrac49$."
+          ],
+          "cards": [
+            "STO-01-45",
+            "STO-01-46",
+            "STO-01-47",
+            "STO-01-50"
+          ]
+        },
+        {
+          "t": "After 1.6",
+          "d": [
+            "1.17 complete graph: return $N$, hit $N - 1$, cover $(N-1)\\sum_{m=1}^{N-1}\\tfrac1m$. 1.18: $52!$ seconds $\\approx 2.56 \\times 10^{60}$ years."
+          ],
+          "cards": [
+            "STO-01-49",
+            "STO-01-41"
+          ]
+        },
+        {
+          "t": "Proofs",
+          "d": [
+            "1.7: the probability of not reaching $j$ in $n$ steps is at most $C\\rho^n$, so return times have finite mean. 1.15: rigorous Kac. 1.16: last point on the circle is uniform.",
+            "1.20: Perron–Frobenius (largest $\\lambda$ with $A\\bar v \\ge \\lambda\\bar v$; apply to the transpose for $\\bar\\pi$). 1.21: a set closed under addition with gcd $d$ contains almost all multiples of $d$.",
+            "1.7 and 1.15 are the two foundations that later calculations rely on silently."
+          ],
+          "cards": [
+            "STO-01-51",
+            "STO-01-52",
+            "STO-01-53",
+            "STO-01-12",
+            "STO-01-17"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Solving skeleton",
+      "items": [
+        {
+          "t": "Steps",
+          "d": [
+            "1. Model: write the states and $P$; check that every row sums to 1.",
+            "2. Draw the graph and classify: communication classes; closed classes are recurrent, the rest transient.",
+            "3. Period of each recurrent class: a self-loop gives 1; otherwise the gcd of loop lengths, or check for a bipartite graph.",
+            "4. Pick the tool for the question (next item).",
+            "5. Cross-check: rows sum to 1; $\\sum\\pi = 1$; Kac agrees with one-step equations ($8 = 1 + 7$); rows of $MS$ sum to 1."
+          ],
+          "cards": [
+            "STO-01-54"
+          ]
+        },
+        {
+          "t": "Decision table",
+          "d": [
+            "Probability at step $n$: $\\phi P^n$. Example: $.576$.",
+            "Long-run fraction of time at $j$ (irreducible, periodic is fine): solve $\\bar\\pi P = \\bar\\pi$, $\\sum\\pi = 1$; graph walk: $d(v)/2e$. Example: queue $(\\tfrac{2}{11}, \\tfrac{4}{11}, \\tfrac{5}{11})$.",
+            "$p_n(i, j)$ for large $n$: aperiodic $\\pi(j)$; periodic by cyclic group; reducible $\\alpha_k(i)\\pi^k(j)$. Example: absorbing walk $\\tfrac34$.",
+            "Mean return time (irreducible): Kac, $1/\\pi(i)$. Examples: phone $\\tfrac52$, reflecting walk 8.",
+            "Mean steps from $j$ to $i \\ne j$: make $i$ absorbing, $M\\bar 1$, or one-step equations. Example: 16.",
+            "Reach $A$ before $B$: make both absorbing, $MS$, or one-step equations. Example: gambler's ruin.",
+            "Visits to a state before absorption: the entry of $M$. Example: $M_{13} = \\tfrac12$."
+          ],
+          "cards": [
+            "STO-01-54",
+            "STO-01-55",
+            "STO-01-56"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "Row or column",
+          "d": [
+            "The book uses the same $\\bar v$ for both. $\\bar\\pi P$: a distribution (row). $P\\bar 1$: a function (column)."
+          ],
+          "cards": [
+            "STO-01-05"
+          ]
+        },
+        {
+          "t": "Q and M",
+          "d": [
+            "In 1.2 and 1.3.4, $Q$ diagonalises $P$ and $M$ is the Jordan block. From 1.3.1 and 1.5 on, $Q$ is the transient block and $M = (I - Q)^{-1}$."
+          ],
+          "cards": [
+            "STO-01-11",
+            "STO-01-28"
+          ]
+        },
+        {
+          "t": "p",
+          "d": [
+            "The transition function $p(i, j)$, and also a parameter of the examples (probability of a call, of a step to the right). Look for the parentheses."
+          ],
+          "cards": [
+            "STO-01-02",
+            "STO-01-33"
+          ]
+        },
+        {
+          "t": "T",
+          "d": [
+            "Return time $\\min\\{n \\ge 1\\}$; hitting time $T_i = \\min\\{n \\ge 0\\}$; cover times $T_k$ on the circle; the book also names transient classes $T_1, \\dots, T_s$."
+          ],
+          "cards": [
+            "STO-01-31",
+            "STO-01-38"
+          ]
+        },
+        {
+          "t": "d",
+          "d": [
+            "Period $d(i)$ and degree of a vertex $d(v)$."
+          ],
+          "cards": [
+            "STO-01-17",
+            "STO-01-37"
+          ]
+        },
+        {
+          "t": "α",
+          "d": [
+            "$\\alpha_k(i)$: falling into the recurrent class $R_k$; $\\alpha(t, r)$: absorbed at the point $r$; $\\alpha(j)$: the gambler reaches $N$ first. Three notations for one idea."
+          ],
+          "cards": [
+            "STO-01-21",
+            "STO-01-32",
+            "STO-01-33"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Errata",
+      "items": [
+        {
+          "t": "LW p20",
+          "d": [
+            "“Any matrix satisfying (1.9) and (1.10) is irreducible” is false; counterexample $\\begin{pmatrix}1&0\\\\1/2&1/2\\end{pmatrix}$. It needs all entries of $\\bar\\pi$ positive, or some $P^n$ all positive."
+          ],
+          "cards": [
+            "STO-01-16"
+          ]
+        },
+        {
+          "t": "LW p31",
+          "d": [
+            "The particular solution is printed as $G_0(j) = j^2$ with general solution $j^2 + c_1 + c_2j$; it should be $-j^2$ and $-j^2 + c_1 + c_2j$. With the printed version the boundary values would give $-j(N - j) < 0$. The result (1.18), $j(N - j)$, is correct.",
+            "In (1.17) and its homogeneous equation the range is printed $j = 1, \\dots, n-1$; it should be $N - 1$."
+          ],
+          "cards": [
+            "STO-01-35"
+          ]
+        },
+        {
+          "t": "LW p21",
+          "d": [
+            "$p_{m+n+l}(i, j) \\ge p_m(i, j)p_l(j, j)p_n(j, i)$ should have $p_{m+n+l}(i, i)$ on the left (the right side is a loop from $i$ to $i$). The conclusion is unaffected."
+          ],
+          "cards": [
+            "STO-01-18"
+          ]
+        },
+        {
+          "t": "LW p33",
+          "d": [
+            "In the urn-model check a doubled plus sign is printed before $2^{-N}$."
+          ],
+          "cards": [
+            "STO-01-39"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "STO-01-01",
+      "g": "1.1 Definitions",
+      "k": "Markov property",
+      "q": "$X_0, X_1, X_2, \\dots$ is a process with values in a finite state space $S$. (1) State the Markov property. (2) State time homogeneity and define the transition matrix $P$. (3) Which two properties make $P$ a stochastic matrix? (4) Which data determine the whole chain, and what is the probability of the path $i_0, i_1, \\dots, i_n$?",
+      "pts": [
+        "(1) $\\mathbb{P}\\{X_n = i_n \\mid X_0 = i_0, \\dots, X_{n-1} = i_{n-1}\\} = \\mathbb{P}\\{X_n = i_n \\mid X_{n-1} = i_{n-1}\\}$: given the present state, the earlier history adds nothing.",
+        "(2) That probability does not depend on $n$: $p(i, j) = \\mathbb{P}\\{X_n = j \\mid X_{n-1} = i\\}$. $P$ is the matrix with entries $p(i, j)$, row = current state, column = next state.",
+        "(3) $0 \\le p(i, j) \\le 1$, and every row sums to 1: $\\sum_j p(i, j) = 1$.",
+        "(4) The initial distribution $\\phi(i) = \\mathbb{P}\\{X_0 = i\\}$ and $P$: $$\\mathbb{P}\\{X_0 = i_0, \\dots, X_n = i_n\\} = \\phi(i_0)p(i_0, i_1)\\cdots p(i_{n-1}, i_n)$$"
+      ],
+      "pit": "The whole history has been reduced to one matrix.",
+      "src": "LW p9–10",
+      "seen": []
+    },
+    {
+      "id": "STO-01-02",
+      "g": "1.1 Definitions",
+      "k": "Phone and queue",
+      "q": "A phone is free (state 0) or busy (state 1) in each time interval. If it is free, a call arrives during the interval with probability $p$; if it is busy, the call ends with probability $q$. (1) Write $P$, and its numbers for $p = \\tfrac14$, $q = \\tfrac16$. (2) Queue version: one caller may wait on hold, and the state is the number of callers 0, 1, 2. In each interval a new call arrives with probability $p$ (refused when the state is 2) and the current call ends with probability $q$, independently. Find $p(1, 0)$, $p(1, 2)$, $p(1, 1)$. (3) Write the queue matrix for $p = \\tfrac14$, $q = \\tfrac16$.",
+      "pts": [
+        "(1) $P = \\begin{pmatrix}1-p&p\\\\q&1-q\\end{pmatrix} = \\begin{pmatrix}3/4&1/4\\\\1/6&5/6\\end{pmatrix}$.",
+        "(2) $p(1, 0) = q(1-p) = \\tfrac18$ (the call ends, none arrives); $p(1, 2) = p(1-q) = \\tfrac{5}{24}$; $p(1, 1) = pq + (1-p)(1-q) = \\tfrac{1}{24} + \\tfrac{15}{24} = \\tfrac23$.",
+        "(3) $P = \\begin{pmatrix}3/4&1/4&0\\\\1/8&2/3&5/24\\\\0&1/6&5/6\\end{pmatrix}$; every row sums to 1."
+      ],
+      "pit": "These two chains are the running examples for convergence: both are irreducible and aperiodic.",
+      "src": "LW p10–11",
+      "seen": []
+    },
+    {
+      "id": "STO-01-03",
+      "g": "1.1 Definitions",
+      "k": "Walks",
+      "q": "(1) Define the random walk with reflecting boundary on $\\{0, \\dots, N\\}$. (2) Define the walk with absorbing boundary. (3) Define the simple random walk on a graph. (4) How is the first a special case of the third?",
+      "pts": [
+        "(1) $p(i, i+1) = p(i, i-1) = \\tfrac12$ for $0 < i < N$, and $p(0, 1) = p(N, N-1) = 1$.",
+        "(2) The same in the interior, but $p(0, 0) = p(N, N) = 1$: once at 0 or $N$ the walker stays.",
+        "(3) From vertex $v$ move to one of its $d(v)$ neighbours, each with probability $\\tfrac{1}{d(v)}$: $p(v, w) = \\tfrac{1}{d(v)}$ if $v, w$ are adjacent, 0 otherwise.",
+        "(4) It is the simple random walk on the path $0 - 1 - \\dots - N$: the end vertices have degree 1, the others degree 2."
+      ],
+      "pit": "",
+      "src": "LW p11–12",
+      "seen": []
+    },
+    {
+      "id": "STO-01-04",
+      "g": "1.1 Definitions",
+      "k": "n-step probabilities",
+      "q": "Markov chain with transition matrix $P$; let $p_n(i, j) = \\mathbb{P}\\{X_n = j \\mid X_0 = i\\}$. (1) State the Chapman–Kolmogorov identity and say why it holds. (2) Conclude what $p_n(i, j)$ is. (3) For the phone chain $P = \\begin{pmatrix}3/4&1/4\\\\1/6&5/6\\end{pmatrix}$ on $\\{0, 1\\}$ compute $p_2(0, 0)$ and $p_2(0, 1)$.",
+      "pts": [
+        "(1) $p_{m+n}(i, j) = \\sum_k p_m(i, k)p_n(k, j)$: split on the state $k$ at time $m$; by the Markov property the continuation from $k$ does not depend on how the chain got there.",
+        "(2) The right side is matrix multiplication, so by induction $p_n(i, j) = (P^n)_{ij}$.",
+        "(3) $p_2(0, 0) = \\tfrac34 \\cdot \\tfrac34 + \\tfrac14 \\cdot \\tfrac16 = \\tfrac{29}{48}$; $p_2(0, 1) = \\tfrac34 \\cdot \\tfrac14 + \\tfrac14 \\cdot \\tfrac56 = \\tfrac{19}{48}$; they add up to 1."
+      ],
+      "pit": "",
+      "src": "LW p12–13",
+      "seen": []
+    },
+    {
+      "id": "STO-01-05",
+      "g": "1.1 Definitions",
+      "k": "Row and column",
+      "q": "A chain has transition matrix $P$ and initial distribution $\\phi$, written as a row vector with $\\phi(i) = \\mathbb{P}\\{X_0 = i\\}$. (1) Give the distribution at time $n$. (2) What do a row vector times $P$ and $P$ times a column vector mean? (3) Why is $P\\bar 1 = \\bar 1$ for the all-ones column $\\bar 1$? (4) For the phone chain $P = \\begin{pmatrix}3/4&1/4\\\\1/6&5/6\\end{pmatrix}$ on $\\{0, 1\\}$ find $\\mathbb{P}\\{X_6 = 1 \\mid X_0 = 0\\}$.",
+      "pts": [
+        "(1) $\\phi P^n$: $\\mathbb{P}\\{X_n = j\\} = \\sum_i \\phi(i)p_n(i, j)$.",
+        "(2) A row vector is a distribution, and $\\phi P$ is the distribution one step later. A column vector $f$ is a function on the states, and $(Pf)(i) = \\sum_j p(i, j)f(j) = \\mathbb{E}[f(X_1) \\mid X_0 = i]$.",
+        "(3) Each row of $P$ sums to 1. So 1 is an eigenvalue of every stochastic matrix, with right eigenvector $\\bar 1$.",
+        "(4) The entry $(0, 1)$ of $P^6$: $\\approx 0.576$ (closed form $\\tfrac35\\big(1 - (\\tfrac{7}{12})^6\\big)$)."
+      ],
+      "pit": "The book uses the same symbol $\\bar v$ for rows and columns; read $\\bar vP$ as a distribution and $P\\bar v$ as a function.",
+      "src": "LW p13",
+      "seen": []
+    },
+    {
+      "id": "STO-01-06",
+      "g": "1.2 Invariant dist.",
+      "k": "Rows become equal",
+      "q": "For the phone chain $\\begin{pmatrix}3/4&1/4\\\\1/6&5/6\\end{pmatrix}$ and the queue chain $\\begin{pmatrix}3/4&1/4&0\\\\1/8&2/3&5/24\\\\0&1/6&5/6\\end{pmatrix}$ the rows of $P^n$ become identical as $n$ grows. (1) Give the two limits. (2) What does “identical rows” say about the chain? (3) Show that a limit $\\bar\\pi = \\lim_n \\phi P^n$ must satisfy $\\bar\\pi = \\bar\\pi P$. (4) Define an invariant probability vector in the language of eigenvectors.",
+      "pts": [
+        "(1) Phone: every row tends to $(\\tfrac25, \\tfrac35)$. Queue: to $(\\tfrac{2}{11}, \\tfrac{4}{11}, \\tfrac{5}{11}) \\approx (.182, .364, .455)$.",
+        "(2) $p_n(i, j) \\to \\pi(j)$ whatever the start $i$: the chain forgets where it started, and $\\phi P^n \\to \\bar\\pi$ for every initial distribution $\\phi$.",
+        "(3) $\\bar\\pi = \\lim_n \\phi P^{n+1} = \\big(\\lim_n \\phi P^n\\big)P = \\bar\\pi P$.",
+        "(4) A left eigenvector of $P$ with eigenvalue 1 whose entries are nonnegative and sum to 1. Starting from $\\bar\\pi$, the distribution is $\\bar\\pi$ at every time."
+      ],
+      "pit": "",
+      "src": "LW p14–15",
+      "seen": []
+    },
+    {
+      "id": "STO-01-07",
+      "g": "1.2 Invariant dist.",
+      "k": "Three questions",
+      "q": "(1) State the three questions about invariant probability vectors that the chapter sets out to answer. (2) Give the answers for an irreducible, aperiodic chain. (3) Which answer fails for $P = \\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$? (4) Which fails for $P = I$?",
+      "pts": [
+        "(1) Existence: is there a $\\bar\\pi$ with $\\bar\\pi P = \\bar\\pi$? Uniqueness: is there only one? Convergence: does $\\phi P^n \\to \\bar\\pi$ for every initial distribution $\\phi$?",
+        "(2) Yes to all three.",
+        "(3) Convergence: $\\bar\\pi = (\\tfrac12, \\tfrac12)$ exists and is unique, but $P^n$ alternates between $I$ and $P$ (periodicity).",
+        "(4) Uniqueness: every probability vector is invariant; $P^n = I$ converges but its rows differ (reducibility)."
+      ],
+      "pit": "Reducibility and periodicity turn out to be the only two obstacles.",
+      "src": "LW p15",
+      "seen": []
+    },
+    {
+      "id": "STO-01-08",
+      "g": "1.2 Invariant dist.",
+      "k": "Solving π = πP",
+      "q": "Queue chain on $\\{0, 1, 2\\}$ with $P = \\begin{pmatrix}3/4&1/4&0\\\\1/8&2/3&5/24\\\\0&1/6&5/6\\end{pmatrix}$. Solve $\\bar\\pi P = \\bar\\pi$. (1) Write the equations for column 0 and column 2. (2) Express $\\pi(1)$ and $\\pi(2)$ through $\\pi(0)$. (3) Normalise. (4) Check column 1.",
+      "pts": [
+        "(1) $\\pi(0) = \\tfrac34\\pi(0) + \\tfrac18\\pi(1)$ and $\\pi(2) = \\tfrac{5}{24}\\pi(1) + \\tfrac56\\pi(2)$.",
+        "(2) $\\pi(1) = 2\\pi(0)$; $\\pi(2) = \\tfrac54\\pi(1) = \\tfrac52\\pi(0)$.",
+        "(3) $\\pi(0)\\big(1 + 2 + \\tfrac52\\big) = 1$: $\\bar\\pi = (\\tfrac{2}{11}, \\tfrac{4}{11}, \\tfrac{5}{11})$.",
+        "(4) $\\tfrac14 \\cdot \\tfrac{2}{11} + \\tfrac23 \\cdot \\tfrac{4}{11} + \\tfrac16 \\cdot \\tfrac{5}{11} = \\tfrac{1}{11}\\big(\\tfrac12 + \\tfrac83 + \\tfrac56\\big) = \\tfrac{4}{11}$."
+      ],
+      "pit": "The equations of $\\bar\\pi P = \\bar\\pi$ are dependent (one is redundant); the missing equation is $\\sum_j \\pi(j) = 1$. Each equation reads: flow into a state = flow out of it.",
+      "src": "LW p14–15",
+      "seen": []
+    },
+    {
+      "id": "STO-01-09",
+      "g": "1.2 Invariant dist.",
+      "k": "Two-state chain",
+      "q": "Two-state chain on $\\{0, 1\\}$ with $P = \\begin{pmatrix}1-p&p\\\\q&1-q\\end{pmatrix}$, $0 < p, q < 1$. (1) Find the eigenvalues and say why. (2) Find $\\bar\\pi$. (3) Give $P^n$ as “limit plus decaying part”. (4) Give the limit, the speed, and the numbers for $p = \\tfrac14$, $q = \\tfrac16$.",
+      "pts": [
+        "(1) 1, because every row sums to 1; and $\\lambda = 1 - p - q$, because the eigenvalues add up to the trace $(1-p) + (1-q)$.",
+        "(2) $\\bar\\pi = \\Big(\\dfrac{q}{p+q}, \\dfrac{p}{p+q}\\Big)$, from the balance $\\pi(0)p = \\pi(1)q$.",
+        "(3) $$\\begin{aligned}P^n &= \\frac{1}{p+q}\\begin{pmatrix}q&p\\\\q&p\\end{pmatrix}\\\\ &\\quad + \\frac{\\lambda^n}{p+q}\\begin{pmatrix}p&-p\\\\-q&q\\end{pmatrix}\\end{aligned}$$",
+        "(4) $|\\lambda| < 1$, so the second term dies like $|\\lambda|^n$ and every row tends to $\\bar\\pi$. Numbers: $\\lambda = \\tfrac{7}{12}$, $\\bar\\pi = (\\tfrac25, \\tfrac35)$, $p_n(0, 1) = \\tfrac35\\big(1 - (\\tfrac{7}{12})^n\\big)$; four more steps multiply the deviation by $(\\tfrac{7}{12})^4 \\approx 0.116$."
+      ],
+      "pit": "Convergence rests on the second eigenvalue having absolute value below 1.",
+      "src": "LW p15–16",
+      "seen": []
+    },
+    {
+      "id": "STO-01-10",
+      "g": "1.2 Invariant dist.",
+      "k": "Two failures",
+      "q": "Two-state chain on $\\{0, 1\\}$ with $P = \\begin{pmatrix}1-p&p\\\\q&1-q\\end{pmatrix}$, now allowing $p, q \\in [0, 1]$, with second eigenvalue $\\lambda = 1 - p - q$. (1) What happens for $p = q = 1$? (2) For $p = q = 0$? (3) Name the two phenomena. (4) Express both through $\\lambda$.",
+      "pts": [
+        "(1) $P = \\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$: the chain switches every step, $P^n$ alternates between $I$ and $P$ and does not converge; $\\bar\\pi = (\\tfrac12, \\tfrac12)$ still exists and is unique.",
+        "(2) $P = I$: the two states never interact; every probability vector is invariant, so $\\bar\\pi$ is not unique.",
+        "(3) Periodicity and reducibility.",
+        "(4) $\\lambda = -1$ in the first case ($\\lambda^n$ does not decay), $\\lambda = 1$ in the second (eigenvalue 1 is double). Convergence to a unique $\\bar\\pi$ needs $|\\lambda| < 1$."
+      ],
+      "pit": "Both failures already show up with two states; this is why the book assumes 0 < p, q < 1.",
+      "src": "LW p16",
+      "seen": []
+    },
+    {
+      "id": "STO-01-11",
+      "g": "1.2 Invariant dist.",
+      "k": "(1.9) and (1.10)",
+      "q": "$P$ is a stochastic matrix. (1) State the two conditions, (1.9) and (1.10), under which $P^n$ converges to a matrix with identical rows. (2) Outline the argument using the Jordan form $P = QDQ^{-1}$. (3) Why is the limit the matrix with every row equal to $\\bar\\pi$? (4) What sets the speed?",
+      "pts": [
+        "(1) (1.9): the left eigenvector for eigenvalue 1 can be chosen with all entries nonnegative, so it can be normalised to a probability vector $\\bar\\pi$. (1.10): the eigenvalue 1 is simple and every other eigenvalue has absolute value less than 1.",
+        "(2) $D = \\begin{pmatrix}1&0\\\\0&B\\end{pmatrix}$ with $B$ the block of the other eigenvalues, so $B^n \\to 0$ and $P^n = QD^nQ^{-1} \\to Q\\begin{pmatrix}1&0\\\\0&0\\end{pmatrix}Q^{-1}$.",
+        "(3) That limit is (first column of $Q$) times (first row of $Q^{-1}$). The first column is the right eigenvector $\\bar 1$, the first row the left eigenvector $\\bar\\pi$: the product $\\bar 1\\bar\\pi$ has every row equal to $\\bar\\pi$.",
+        "(4) The largest absolute value among the other eigenvalues: the deviation shrinks essentially like $|\\lambda_2|^n$."
+      ],
+      "pit": "The book calls the block $M$ and the diagonalising matrix $Q$ here; later $Q$ is the transient block and $M = (I - Q)^{-1}$. Different objects.",
+      "src": "LW p16",
+      "seen": []
+    },
+    {
+      "id": "STO-01-12",
+      "g": "1.2 Invariant dist.",
+      "k": "Perron–Frobenius",
+      "q": "(1) State the Perron–Frobenius theorem for a stochastic matrix all of whose entries are positive. (2) The queue matrix $\\begin{pmatrix}3/4&1/4&0\\\\1/8&2/3&5/24\\\\0&1/6&5/6\\end{pmatrix}$ has zero entries. How does the book get around that? (3) Why do the conclusions pass from $P^2$ to $P$? (4) State the resulting Fact.",
+      "pts": [
+        "(1) 1 is a simple eigenvalue; its left eigenvector can be chosen with all entries positive; every other eigenvalue has absolute value less than 1.",
+        "(2) $P^2$ has all entries positive (e.g. entry $(0, 2)$ is $\\tfrac14 \\cdot \\tfrac{5}{24} = \\tfrac{5}{96}$), so the theorem applies to $P^2$.",
+        "(3) An eigenvalue $\\mu$ of $P$ gives the eigenvalue $\\mu^2$ of $P^2$ with the same eigenvector. If 1 were not simple for $P$, or $P$ had another eigenvalue with $|\\mu| = 1$ (for $\\mu = -1$, $\\mu^2 = 1$), then $P^2$ would violate the theorem. And the left eigenvector of $P$ for 1 is the unique one of $P^2$, hence can be taken nonnegative.",
+        "(4) If for some $n$ all entries of $P^n$ are positive, then $P$ satisfies (1.9) and (1.10), so every row of $P^m$ converges to the unique invariant $\\bar\\pi$."
+      ],
+      "pit": "What remains is to say which chains have some power with all entries positive: the irreducible aperiodic ones.",
+      "src": "LW p16–17",
+      "seen": [
+        "Ex 1.20"
+      ]
+    },
+    {
+      "id": "STO-01-13",
+      "g": "1.3 Classification",
+      "k": "Three bad examples",
+      "q": "Three chains for which no power $P^n$ has all entries positive: (a) the reflecting walk on $\\{0, \\dots, 4\\}$; (b) the absorbing walk on $\\{0, \\dots, 4\\}$; (c) two blocks side by side, $\\{1, 2\\}$ with $\\begin{pmatrix}1/2&1/2\\\\1/6&5/6\\end{pmatrix}$ and $\\{3, 4, 5\\}$ with the queue matrix, and no transitions between the blocks. (1) What does $P^n$ do for large $n$ in (a)? (2) In (b)? (3) In (c)? (4) Name the reason in each case.",
+      "pts": [
+        "(1) It alternates: for even $n$ row 0 is about $(.25, 0, .5, 0, .25)$, for odd $n$ about $(0, .5, 0, .5, 0)$. Every step changes the parity of the position.",
+        "(2) It converges but the rows differ: row 1 tends to $(.75, 0, 0, 0, .25)$, row 2 to $(.5, 0, 0, 0, .5)$, row 3 to $(.25, 0, 0, 0, .75)$; columns 1, 2, 3 vanish.",
+        "(3) It converges but the rows differ: rows 1, 2 tend to $(.25, .75, 0, 0, 0)$, rows 3, 4, 5 to $(0, 0, .182, .364, .455)$.",
+        "(4) (a) period 2; (b) the states 1, 2, 3 are transient and there are two absorbing states; (c) the chain is reducible."
+      ],
+      "pit": "",
+      "src": "LW p18–19",
+      "seen": []
+    },
+    {
+      "id": "STO-01-14",
+      "g": "1.3 Classification",
+      "k": "Classes of states",
+      "q": "Markov chain on a finite state space. (1) Define “$i$ and $j$ communicate”, written $i \\leftrightarrow j$. (2) Show that the relation is transitive. (3) Define communication classes and irreducibility. (4) Give the classes of the reflecting and of the absorbing walk on $\\{0, \\dots, 4\\}$.",
+      "pts": [
+        "(1) There are $m, n \\ge 0$ with $p_m(i, j) > 0$ and $p_n(j, i) > 0$: $j$ can be reached from $i$ and $i$ from $j$.",
+        "(2) If $p_{m_1}(i, j) > 0$ and $p_{m_2}(j, k) > 0$ then $p_{m_1 + m_2}(i, k) \\ge p_{m_1}(i, j)p_{m_2}(j, k) > 0$, because passing through $j$ is one way of getting from $i$ to $k$; the same for the way back. (Reflexive since $p_0(i, i) = 1$; symmetric by definition.)",
+        "(3) The equivalence classes of $\\leftrightarrow$; they partition the state space. The chain is irreducible when there is only one class.",
+        "(4) Reflecting: $\\{0, 1, 2, 3, 4\\}$, irreducible. Absorbing: $\\{0\\}$, $\\{1, 2, 3\\}$, $\\{4\\}$."
+      ],
+      "pit": "",
+      "src": "LW p19",
+      "seen": []
+    },
+    {
+      "id": "STO-01-15",
+      "g": "1.3 Classification",
+      "k": "Recurrent, transient",
+      "q": "Markov chain on a finite state space with several communication classes. (1) Define transient and recurrent classes. (2) Give a test for a finite chain. (3) Write the canonical form of $P$ and of $P^n$. (4) Say what the blocks mean and why the upper right block is 0.",
+      "pts": [
+        "(1) Transient class: the chain leaves it with probability 1 and never returns. Recurrent class: the chain never leaves it.",
+        "(2) A class is recurrent exactly when it is closed (no state outside can be reached from it). There is always at least one recurrent class.",
+        "(3) Recurrent classes first, transient states last: $$P = \\begin{pmatrix}\\tilde P&0\\\\S&Q\\end{pmatrix},\\quad P^n = \\begin{pmatrix}\\tilde P^n&0\\\\S_n&Q^n\\end{pmatrix}$$ with $\\tilde P$ block diagonal with blocks $P_1, \\dots, P_r$.",
+        "(4) $P_k$: transitions inside the recurrent class $R_k$ (itself a stochastic matrix). $S$: transient to recurrent. $Q$: transient to transient. Zero block: nothing leaves a recurrent class."
+      ],
+      "pit": "The test in part 2 is not spelled out in the book. Example: the absorbing walk has recurrent classes $\\{0\\}$, $\\{4\\}$ and the transient class $\\{1, 2, 3\\}$.",
+      "src": "LW p19–20",
+      "seen": []
+    },
+    {
+      "id": "STO-01-16",
+      "g": "1.3 Classification",
+      "k": "A false sentence",
+      "q": "The book says: “Any matrix satisfying (1.9) and (1.10) is irreducible”, where (1.9) = the left eigenvector for eigenvalue 1 can be chosen nonnegative and (1.10) = eigenvalue 1 is simple and all other eigenvalues have absolute value below 1. (1) Give a counterexample with its eigenvalues and left eigenvector. (2) Why is it reducible? (3) Give two correct statements. (4) Is “all entries of $\\bar\\pi$ positive” alone enough for irreducibility?",
+      "pts": [
+        "(1) $P = \\begin{pmatrix}1&0\\\\1/2&1/2\\end{pmatrix}$: eigenvalues $1$ and $\\tfrac12$, left eigenvector $(1, 0) \\ge 0$. Both conditions hold.",
+        "(2) State 0 is absorbing and state 1 is transient: 1 cannot be reached from 0.",
+        "(3) If some $P^n$ has all entries positive, the chain is irreducible. Or: (1.9), (1.10) and all entries of $\\bar\\pi$ positive imply irreducibility (then $P^n \\to \\bar 1\\bar\\pi$ is eventually all positive).",
+        "(4) No: $P = I$ has the invariant vector $(\\tfrac12, \\tfrac12)$ and is reducible."
+      ],
+      "pit": "",
+      "src": "LW p20",
+      "seen": []
+    },
+    {
+      "id": "STO-01-17",
+      "g": "1.3 Classification",
+      "k": "Period",
+      "q": "Irreducible Markov chain. (1) Define the period $d(i)$ of a state. (2) Find the set of possible return times to 0 and $d(0)$ for the reflecting walk on $\\{0, \\dots, 4\\}$ and for the queue chain with $p(0, 0) = \\tfrac34$. (3) Give a quick sufficient test for period 1. (4) Which two facts give $p_{md}(i, i) > 0$ for all large $m$?",
+      "pts": [
+        "(1) $d(i) = \\gcd J_i$ with $J_i = \\{n \\ge 0 : p_n(i, i) > 0\\}$.",
+        "(2) Reflecting walk: $J_0 = \\{0, 2, 4, \\dots\\}$, $d(0) = 2$. Queue: $J_0 = \\{0, 1, 2, \\dots\\}$, $d(0) = 1$.",
+        "(3) A self-loop: $p(i, i) > 0$ puts 1 in $J_i$, so $d(i) = 1$ (aperiodic).",
+        "(4) $J_i$ is closed under addition, since $p_{m+n}(i, i) \\ge p_m(i, i)p_n(i, i) > 0$; and a set of nonnegative integers that is closed under addition with gcd $d$ contains all but finitely many multiples of $d$."
+      ],
+      "pit": "",
+      "src": "LW p21",
+      "seen": [
+        "Ex 1.21"
+      ]
+    },
+    {
+      "id": "STO-01-18",
+      "g": "1.3 Classification",
+      "k": "Same period: proof",
+      "q": "Irreducible Markov chain, $J_i = \\{n \\ge 0 : p_n(i, i) > 0\\}$, $d(i) = \\gcd J_i$. Prove $d(i) = d(j)$ for two states $i, j$. (1) Choose $m, n$ and show $d(i)$ divides $m + n$. (2) For any $l \\in J_j$ show $d(i)$ divides $m + l + n$. (3) Conclude.",
+      "pts": [
+        "(1) Irreducible: there are $m, n$ with $p_m(i, j) > 0$, $p_n(j, i) > 0$. The loop $i \\to j \\to i$ gives $p_{m+n}(i, i) \\ge p_m(i, j)p_n(j, i) > 0$, so $m + n \\in J_i$.",
+        "(2) The loop $i \\to j \\to j \\to i$: $p_{m+l+n}(i, i) \\ge p_m(i, j)p_l(j, j)p_n(j, i) > 0$, so $m + l + n \\in J_i$.",
+        "(3) Subtracting, $d(i)$ divides every $l \\in J_j$, hence $d(i)$ divides $d(j)$. By symmetry $d(j)$ divides $d(i)$, so they are equal."
+      ],
+      "pit": "The book prints the left side of the inequality in part 2 as $p_{m+n+l}(i, j)$; it should be $p_{m+n+l}(i, i)$.",
+      "src": "LW p21",
+      "seen": []
+    },
+    {
+      "id": "STO-01-19",
+      "g": "1.3 Classification",
+      "k": "Period of a graph walk",
+      "q": "Simple random walk on a connected graph. (1) Is it irreducible? (2) Which periods are possible, and why? (3) When is the period 2? (4) Give the period for the path $0 - 1 - 2 - 3 - 4$, for a cycle of 5 vertices and for a cycle of 4 vertices.",
+      "pts": [
+        "(1) Yes: connected means every vertex can be reached from every other.",
+        "(2) 1 or 2: going to a neighbour and back is a loop of 2 steps, so $2 \\in J_v$.",
+        "(3) Exactly when the graph is bipartite: the vertices split into two groups and every edge joins the two groups (equivalently, there is no loop of odd length).",
+        "(4) Path: bipartite by parity, period 2 (this is the reflecting walk). 5-cycle: loops of length 2 and 5, $\\gcd = 1$, aperiodic. 4-cycle: bipartite, period 2."
+      ],
+      "pit": "",
+      "src": "LW p21–22",
+      "seen": []
+    },
+    {
+      "id": "STO-01-20",
+      "g": "1.3 Classification",
+      "k": "Main theorem",
+      "q": "(1) State the convergence theorem for an irreducible, aperiodic chain with transition matrix $P$. (2) Which property of the powers $P^n$ is behind it? (3) Prove that property. (4) Which earlier result finishes the proof?",
+      "pts": [
+        "(1) There is a unique invariant probability vector $\\bar\\pi$; for every initial distribution $\\phi$, $\\lim_{n \\to \\infty}\\phi P^n = \\bar\\pi$; and $\\pi(i) > 0$ for every $i$.",
+        "(2) There is an $M$ such that all entries of $P^n$ are positive for every $n \\ge M$.",
+        "(3) Aperiodic: there is $M(i)$ with $p_n(i, i) > 0$ for all $n \\ge M(i)$. Irreducible: there is $m(i, j)$ with $p_{m(i,j)}(i, j) > 0$. Loop at $i$, then go to $j$: $p_{n + m(i,j)}(i, j) \\ge p_n(i, i)p_{m(i,j)}(i, j) > 0$ for $n \\ge M(i)$. Take $M = \\max_{i,j}\\big(M(i) + m(i, j)\\big)$, a maximum over finitely many pairs.",
+        "(4) The Fact: some power with all entries positive gives (1.9) and (1.10), hence $P^n \\to \\bar 1\\bar\\pi$."
+      ],
+      "pit": "",
+      "src": "LW p22",
+      "seen": []
+    },
+    {
+      "id": "STO-01-21",
+      "g": "1.3 Classification",
+      "k": "Reducible chains",
+      "q": "Reducible chain with recurrent classes $R_1, \\dots, R_r$, each aperiodic; $\\bar\\pi^k$ is the invariant distribution of $R_k$ and $\\alpha_k(i)$ the probability that the chain started at the transient state $i$ ends up in $R_k$. Give $\\lim_n p_n(i, j)$ (1) for $i \\in R_k$; (2) for $j$ transient; (3) for $i$ transient and $j \\in R_k$. (4) Describe all invariant distributions and the multiplicity of the eigenvalue 1. (5) Evaluate $\\lim_n p_n(1, 0)$ for the absorbing walk on $\\{0, \\dots, 4\\}$.",
+      "pts": [
+        "(1) $\\pi^k(j)$ if $j \\in R_k$, and 0 otherwise.",
+        "(2) 0.",
+        "(3) $\\alpha_k(i)\\pi^k(j)$: first fall into $R_k$, then settle into equilibrium there.",
+        "(4) Every mixture $c_1\\bar\\pi^1 + \\dots + c_r\\bar\\pi^r$ with $c_k \\ge 0$, $\\sum c_k = 1$; not unique when $r \\ge 2$. The eigenvalue 1 has multiplicity $r$.",
+        "(5) $R_1 = \\{0\\}$ with all mass at 0, and from 1 the walk ends at 0 with probability $\\tfrac34$: the limit is $\\tfrac34$."
+      ],
+      "pit": "$\\lim\\phi P^n$ exists but depends on $\\phi$.",
+      "src": "LW p22–23",
+      "seen": [
+        "Ex 1.5"
+      ]
+    },
+    {
+      "id": "STO-01-22",
+      "g": "1.3 Classification",
+      "k": "Periodic chains",
+      "q": "Irreducible chain with period $d > 1$. (1) Describe the structure of the state space. (2) Which eigenvalues have absolute value 1? (3) What stays true and what fails? (4) For the reflecting walk on $\\{0, \\dots, 4\\}$ give the eigenvalues, $\\bar\\pi$, the behaviour of $p_n(0, 0)$ and the meaning of $\\pi(0)$.",
+      "pts": [
+        "(1) The states split into $d$ groups $A_1, \\dots, A_d$ and the chain cycles $A_1 \\to A_2 \\to \\dots \\to A_d \\to A_1$.",
+        "(2) The $d$ complex roots of $z^d = 1$, each a simple eigenvalue.",
+        "(3) True: a unique invariant $\\bar\\pi$ with all entries positive. Fails: $\\phi P^n$ does not converge; it cycles through $d$ distributions whose average is $\\bar\\pi$: $$\\lim_{n\\to\\infty}\\frac1d\\big[\\phi P^{n+1} + \\dots + \\phi P^{n+d}\\big] = \\bar\\pi$$",
+        "(4) Eigenvalues $1, -1, 0, \\pm\\tfrac{1}{\\sqrt2}$; $\\bar\\pi = (\\tfrac18, \\tfrac14, \\tfrac14, \\tfrac14, \\tfrac18)$; $p_n(0, 0) \\to \\tfrac14$ along even $n$ and is 0 for odd $n$; $\\pi(0) = \\tfrac18$ is the average of the two, the long-run fraction of time at 0."
+      ],
+      "pit": "Same shape as the two-state chain, limit plus (second eigenvalue)$^n$ times a deviation, but the second eigenvalue is $-1$ and its term never decays.",
+      "src": "LW p23–24",
+      "seen": []
+    },
+    {
+      "id": "STO-01-23",
+      "g": "1.3 Classification",
+      "k": "Cases at a glance",
+      "q": "Compare three kinds of finite chains: (a) irreducible and aperiodic; (b) irreducible with period $d > 1$; (c) reducible with aperiodic recurrent classes. (1) Does $\\bar\\pi$ exist, and is it unique? (2) Does $P^n$ converge? (3) What does $\\pi(j)$ mean? (4) Give one example of each.",
+      "pts": [
+        "(1) It exists in all three. Unique in (a) and (b); in (c) there is one per recurrent class and every mixture of them is invariant.",
+        "(2) (a) yes, every row tends to $\\bar\\pi$; (b) no, it cycles with period $d$; (c) yes, but the rows differ.",
+        "(3) (a) limiting probability and long-run fraction of time; (b) long-run fraction of time only; (c) $\\lim p_n(i, j) = \\alpha_k(i)\\pi^k(j)$ depends on the start.",
+        "(4) (a) phone chain, queue; (b) reflecting walk; (c) absorbing walk."
+      ],
+      "pit": "",
+      "src": "LW p22–24",
+      "seen": []
+    },
+    {
+      "id": "STO-01-24",
+      "g": "1.4 Return times",
+      "k": "Fraction of time",
+      "q": "Irreducible chain with invariant distribution $\\bar\\pi$; $Y(j, n) = \\sum_{m=0}^n I\\{X_m = j\\}$ counts the visits to $j$ up to time $n$. (1) Express $\\mathbb{E}[Y(j, n) \\mid X_0 = i]$ through the $p_m(i, j)$. (2) Give the limit of $\\mathbb{E}[Y(j, n) \\mid X_0 = i]/(n+1)$ and the reason for an aperiodic chain. (3) Why does it also hold for a periodic chain? (4) State the interpretation.",
+      "pts": [
+        "(1) $\\sum_{m=0}^n p_m(i, j)$: the expectation of an indicator is a probability.",
+        "(2) $\\pi(j)$: every term $p_m(i, j)$ tends to $\\pi(j)$, so the average does too.",
+        "(3) The terms do not converge, but their averages over $d$ consecutive steps tend to $\\pi(j)$, so the long-run average does as well.",
+        "(4) $\\pi(j)$ is the long-run fraction of time spent at $j$, for every irreducible chain."
+      ],
+      "pit": "",
+      "src": "LW p24–25",
+      "seen": []
+    },
+    {
+      "id": "STO-01-25",
+      "g": "1.4 Return times",
+      "k": "Kac's formula",
+      "q": "Irreducible chain with invariant distribution $\\bar\\pi$, started at $X_0 = i$; the return time is $T = \\min\\{n \\ge 1 : X_n = i\\}$. (1) State the formula for $\\mathbb{E}(T)$. (2) Give the book's heuristic argument. (3) What is missing for a rigorous proof? (4) Apply it to the state 0 of the reflecting walk on $\\{0, \\dots, 4\\}$, where $\\bar\\pi = (\\tfrac18, \\tfrac14, \\tfrac14, \\tfrac14, \\tfrac18)$.",
+      "pts": [
+        "(1) $\\mathbb{E}(T) = \\dfrac{1}{\\pi(i)}$.",
+        "(2) The successive return times $T_1, T_2, \\dots$ are independent copies of $T$ (the chain starts afresh at each return), so $k$ returns take about $k\\,\\mathbb{E}(T)$ steps. In $n$ steps there are about $n\\pi(i)$ visits to $i$. With $n = k\\,\\mathbb{E}(T)$: $k \\approx k\\,\\mathbb{E}(T)\\pi(i)$.",
+        "(3) That $\\mathbb{E}(T) < \\infty$ (a geometric tail bound) and the restart at a random time. A rigorous proof counts the expected visits to each state during one return cycle.",
+        "(4) $1/\\pi(0) = 8$ steps."
+      ],
+      "pit": "The starting moment does not count: $n \\ge 1$ in the definition of $T$.",
+      "src": "LW p25",
+      "seen": [
+        "Ex 1.15",
+        "Ex 1.7"
+      ]
+    },
+    {
+      "id": "STO-01-26",
+      "g": "1.4 Return times",
+      "k": "Kac: direct check",
+      "q": "Two-state chain on $\\{0, 1\\}$ with $P = \\begin{pmatrix}1-p&p\\\\q&1-q\\end{pmatrix}$, $0 < p, q < 1$, started at 0; $T$ is the return time to 0. (1) Find $\\mathbb{P}\\{T = 1\\}$ and $\\mathbb{P}\\{T \\ge n\\}$ for $n \\ge 2$. (2) State the tail-sum formula for the mean and say where it comes from. (3) Compute $\\mathbb{E}(T)$. (4) Compare with Kac's formula and give the numbers for $p = \\tfrac14$, $q = \\tfrac16$.",
+      "pts": [
+        "(1) $\\mathbb{P}\\{T = 1\\} = 1 - p$. For $n \\ge 2$: go to 1, then stay there for $n - 2$ steps, $\\mathbb{P}\\{T \\ge n\\} = p(1-q)^{n-2}$.",
+        "(2) For $Y$ with values in $\\{0, 1, 2, \\dots\\}$: $\\mathbb{E}(Y) = \\sum_{k \\ge 1}\\mathbb{P}\\{Y \\ge k\\}$. Write $n\\,\\mathbb{P}\\{Y = n\\}$ as $n$ copies of $\\mathbb{P}\\{Y = n\\}$ and swap the order of summation.",
+        "(3) $\\mathbb{E}(T) = 1 + \\sum_{n \\ge 2}p(1-q)^{n-2} = 1 + \\dfrac pq = \\dfrac{p+q}{q}$.",
+        "(4) $\\pi(0) = \\tfrac{q}{p+q}$, so $\\mathbb{E}(T) = 1/\\pi(0)$. Numbers: $1 + \\tfrac{1/4}{1/6} = \\tfrac52$; from state 1 the mean return time is $1/\\pi(1) = \\tfrac53$."
+      ],
+      "pit": "",
+      "src": "LW p25–26",
+      "seen": []
+    },
+    {
+      "id": "STO-01-27",
+      "g": "1.4 Return times",
+      "k": "Mean, not distribution",
+      "q": "Two-state chain on $\\{0, 1\\}$ that switches state with probability $p$ at each step (the same $p$ from both states); $T$ is the return time to 0. (1) Give $\\bar\\pi$ and $\\mathbb{E}(T)$. (2) Describe $T$ for $p = 0.9$ and for $p = 0.1$. (3) Derive $\\operatorname{Var}(T)$ and evaluate it in both cases. (4) State the lesson.",
+      "pts": [
+        "(1) $\\bar\\pi = (\\tfrac12, \\tfrac12)$ and $\\mathbb{E}(T) = 2$ for every $p$.",
+        "(2) $p = 0.9$: the chain switches almost every step, $T$ is usually 2. $p = 0.1$: $T$ is usually 1, occasionally very large.",
+        "(3) $T = 1$ with probability $1 - p$; otherwise $T = 1 + G$ with $G$ geometric on $\\{1, 2, \\dots\\}$ with parameter $p$. $\\mathbb{E}(T^2) = (1-p) + p\\big(1 + \\tfrac2p + \\tfrac{2-p}{p^2}\\big) = 2 + \\tfrac2p$, so $\\operatorname{Var}(T) = \\dfrac{2(1-p)}{p}$: $\\tfrac29 \\approx 0.22$ against $18$.",
+        "(4) $\\bar\\pi$ determines the mean return time only, not the distribution of $T$."
+      ],
+      "pit": "",
+      "src": "LW p26",
+      "seen": []
+    },
+    {
+      "id": "STO-01-28",
+      "g": "1.5 Transient states",
+      "k": "Fundamental matrix",
+      "q": "A chain has transient states; $Q$ is the part of $P$ that goes from transient states to transient states. (1) Why does $Q^n \\to 0$, and what follows for $I - Q$? (2) Define $M$ and state what $M_{ji}$ means. (3) Prove it. (4) What do the row sums of $M$ mean?",
+      "pts": [
+        "(1) For transient $i, j$: $p_n(j, i) = (Q^n)_{ji}$, and transient states are eventually left for good. So all eigenvalues of $Q$ have absolute value below 1 and $I - Q$ is invertible.",
+        "(2) $M = (I - Q)^{-1}$; $M_{ji}$ is the expected number of visits to $i$ for the chain started at $j$ (the visit at time 0 counts).",
+        "(3) With $Y_i = \\sum_{n \\ge 0}I\\{X_n = i\\}$: $\\mathbb{E}(Y_i \\mid X_0 = j) = \\sum_{n \\ge 0}(Q^n)_{ji} = (I + Q + Q^2 + \\dots)_{ji}$, and $(I + Q + \\dots + Q^n)(I - Q) = I - Q^{n+1} \\to I$.",
+        "(4) $\\sum_i M_{ji}$ is the expected number of steps spent among the transient states starting from $j$, because each such step is spent at exactly one transient state. In vector form: $M\\bar 1$."
+      ],
+      "pit": "It is the matrix version of $1 + x + x^2 + \\dots = \\tfrac{1}{1-x}$ for $|x| < 1$.",
+      "src": "LW p27–28",
+      "seen": []
+    },
+    {
+      "id": "STO-01-29",
+      "g": "1.5 Transient states",
+      "k": "M: absorbing walk",
+      "q": "Consider the absorbing random walk on $\\{0, 1, 2, 3, 4\\}$ (from 1, 2, 3 one step left or right with probability $\\tfrac12$ each; $p(0, 0) = p(4, 4) = 1$); the transient states are 1, 2, 3. (1) Write $Q$. (2) Give $M = (I - Q)^{-1}$. (3) Read off the expected number of visits to 3 and to 1 for the walk started at 1. (4) Give the expected number of steps before absorption from 1, 2 and 3.",
+      "pts": [
+        "(1) $Q = \\begin{pmatrix}0&1/2&0\\\\1/2&0&1/2\\\\0&1/2&0\\end{pmatrix}$.",
+        "(2) $M = \\begin{pmatrix}3/2&1&1/2\\\\1&2&1\\\\1/2&1&3/2\\end{pmatrix}$.",
+        "(3) $M_{13} = \\tfrac12$; $M_{11} = \\tfrac32$ (the start counts, so it is at least 1).",
+        "(4) The row sums: $3, 4, 3$."
+      ],
+      "pit": "Check one row of $M(I - Q) = I$: $(\\tfrac32, 1, \\tfrac12)$ against the columns of $I - Q$ gives $\\tfrac32 - \\tfrac12 = 1$, $-\\tfrac34 + 1 - \\tfrac14 = 0$, $-\\tfrac12 + \\tfrac12 = 0$.",
+      "src": "LW p28",
+      "seen": []
+    },
+    {
+      "id": "STO-01-30",
+      "g": "1.5 Transient states",
+      "k": "Steps from j to i",
+      "q": "An irreducible chain has no transient states, but the mean number of steps from $j$ to $i \\ne j$ is wanted. (1) Describe the trick. (2) Give the formula. (3) For the reflecting random walk on $\\{0, 1, 2, 3, 4\\}$ (from 1, 2, 3 one step left or right with probability $\\tfrac12$ each; $p(0, 1) = p(4, 3) = 1$) and target 0, write $Q$ and give $M$ and $M\\bar 1$. (4) Check against Kac's formula, using $\\pi(0) = \\tfrac18$.",
+      "pts": [
+        "(1) Make $i$ absorbing ($p(i, i) = 1$). All other states become transient, and the steps from $j$ to $i$ are the time the modified chain spends among its transient states.",
+        "(2) With $T_i = \\min\\{n \\ge 0 : X_n = i\\}$: $\\mathbb{E}(T_i \\mid X_0 = j) = \\sum_{k \\ne i}M_{jk}$, the component $j$ of $M\\bar 1$.",
+        "(3) States $1, 2, 3, 4$: $$Q = \\begin{pmatrix}0&\\frac12&0&0\\\\\\frac12&0&\\frac12&0\\\\0&\\frac12&0&\\frac12\\\\0&0&1&0\\end{pmatrix},\\quad M = \\begin{pmatrix}2&2&2&1\\\\2&4&4&2\\\\2&4&6&3\\\\2&4&6&4\\end{pmatrix}$$ $M\\bar 1 = (7, 12, 15, 16)$: from 4 to 0 takes 16 steps on average.",
+        "(4) From 0 the first step goes to 1, and from 1 to 0 takes 7 steps: $1 + 7 = 8 = 1/\\pi(0)$."
+      ],
+      "pit": "The last row of $Q$ is $(0, 0, 1, 0)$: at 4 the walker must bounce back to 3.",
+      "src": "LW p28–29",
+      "seen": []
+    },
+    {
+      "id": "STO-01-31",
+      "g": "1.5 Transient states",
+      "k": "Return vs hitting",
+      "q": "For a state $i$ of an irreducible chain: (1) define the return time $T$ and the hitting time $T_i$; (2) give their values for a chain started at $i$; (3) say how each mean is computed; (4) give the relation between them.",
+      "pts": [
+        "(1) $T = \\min\\{n \\ge 1 : X_n = i\\}$ for the chain started at $i$; $T_i = \\min\\{n \\ge 0 : X_n = i\\}$ from any start.",
+        "(2) $T \\ge 1$; $T_i = 0$.",
+        "(3) $\\mathbb{E}_i(T) = 1/\\pi(i)$ (Kac). $\\mathbb{E}_j(T_i)$ is the component $j$ of $M\\bar 1$ after making $i$ absorbing.",
+        "(4) $\\mathbb{E}_i(T) = 1 + \\sum_j p(i, j)\\,\\mathbb{E}_j(T_i)$: take one step, then the hitting time from where it lands."
+      ],
+      "pit": "",
+      "src": "LW p25, p28",
+      "seen": []
+    },
+    {
+      "id": "STO-01-32",
+      "g": "1.5 Transient states",
+      "k": "Absorption: A = MS",
+      "q": "The recurrent classes of a chain are absorbing states $r_1, \\dots, r_k$; $\\alpha(t, r)$ is the probability that the chain started at the transient state $t$ is absorbed at $r$. (1) Give the boundary values. (2) Write the first-step equation. (3) Put it in matrix form and solve. (4) For the absorbing random walk on $\\{0, 1, 2, 3, 4\\}$ (from 1, 2, 3 one step left or right with probability $\\tfrac12$ each; $p(0, 0) = p(4, 4) = 1$) give $S$ and the absorption probabilities.",
+      "pts": [
+        "(1) $\\alpha(r, r) = 1$ and $\\alpha(r', r) = 0$ for another absorbing state $r'$.",
+        "(2) $\\alpha(t, r) = \\sum_z p(t, z)\\alpha(z, r) = p(t, r) + \\sum_{z\\ \\text{transient}}p(t, z)\\alpha(z, r)$: landing on $r$ counts 1, landing on another absorbing state counts 0.",
+        "(3) $A = S + QA$, so $A = (I - Q)^{-1}S = MS$, where $S$ holds the transition probabilities from transient to absorbing states.",
+        "(4) Columns 0 and 4, rows 1, 2, 3: $$S = \\begin{pmatrix}1/2&0\\\\0&0\\\\0&1/2\\end{pmatrix},\\quad MS = \\begin{pmatrix}3/4&1/4\\\\1/2&1/2\\\\1/4&3/4\\end{pmatrix}$$ Each row sums to 1."
+      ],
+      "pit": "A recurrent class with several states is first collapsed into one absorbing point.",
+      "src": "LW p29–30",
+      "seen": []
+    },
+    {
+      "id": "STO-01-33",
+      "g": "1.5 Transient states",
+      "k": "Gambler's ruin",
+      "q": "A gambler has $j$ dollars, $0 \\le j \\le N$. Each round she wins 1 with probability $p$ and loses 1 with probability $1 - p$; the game stops at 0 or $N$. Let $\\alpha(j)$ be the probability of reaching $N$ before 0. (1) Write the equation and the boundary values. (2) Solve for $p \\ne \\tfrac12$. (3) Solve for $p = \\tfrac12$. (4) Give $\\alpha(1), \\alpha(2), \\alpha(3)$ for $N = 4$ with $p = \\tfrac12$ and with $p = \\tfrac23$.",
+      "pts": [
+        "(1) $\\alpha(j) = (1-p)\\alpha(j-1) + p\\alpha(j+1)$ for $0 < j < N$; $\\alpha(0) = 0$, $\\alpha(N) = 1$.",
+        "(2) Trying $x^j$: $px^2 - x + (1-p) = 0$, roots $1$ and $\\rho = \\tfrac{1-p}{p}$. $\\alpha(j) = c_1 + c_2\\rho^j$ with $c_1 + c_2 = 0$ and $c_1 + c_2\\rho^N = 1$: $$\\alpha(j) = \\frac{1 - \\rho^j}{1 - \\rho^N}$$",
+        "(3) Double root 1: $\\alpha(j) = c_1 + c_2j$ with $c_1 = 0$, $c_2N = 1$: $\\alpha(j) = \\dfrac jN$.",
+        "(4) $p = \\tfrac12$: $\\tfrac14, \\tfrac12, \\tfrac34$ (the second column of $MS$ for the absorbing walk). $p = \\tfrac23$, $\\rho = \\tfrac12$: $\\tfrac{8}{15}, \\tfrac45, \\tfrac{14}{15}$."
+      ],
+      "pit": "",
+      "src": "LW p30–31",
+      "seen": []
+    },
+    {
+      "id": "STO-01-34",
+      "g": "1.5 Transient states",
+      "k": "Unlimited house",
+      "q": "Gambler's ruin with win probability $p$ per round, starting capital $j$ and target $N$; $\\rho = \\tfrac{1-p}{p}$ and the probability of reaching $N$ before 0 is $\\tfrac{1 - \\rho^j}{1 - \\rho^N}$ for $p \\ne \\tfrac12$ and $\\tfrac jN$ for $p = \\tfrac12$. Let $N \\to \\infty$ with $j$ fixed. (1) What happens for $p = \\tfrac12$? (2) For $p < \\tfrac12$? (3) For $p > \\tfrac12$? (4) Evaluate the case $j = 1$, $p = \\tfrac23$.",
+      "pts": [
+        "(1) $\\tfrac jN \\to 0$: against a house with unlimited capital, ruin is certain even in a fair game.",
+        "(2) $\\rho > 1$, the denominator $1 - \\rho^N \\to -\\infty$ and the probability tends to 0.",
+        "(3) $\\rho < 1$, $\\rho^N \\to 0$ and the probability tends to $1 - \\rho^j > 0$: a positive chance of never being ruined.",
+        "(4) $1 - \\tfrac12 = \\tfrac12$."
+      ],
+      "pit": "",
+      "src": "LW p31",
+      "seen": []
+    },
+    {
+      "id": "STO-01-35",
+      "g": "1.5 Transient states",
+      "k": "Fair game: duration",
+      "q": "Fair gambler's ruin on $\\{0, \\dots, N\\}$ ($p = \\tfrac12$, the game stops at 0 or $N$); $G(j)$ is the expected number of rounds starting from $j$. (1) Write the equation and the boundary values. (2) Find a particular solution and check it. (3) Write the general solution and fix the constants. (4) Give the result, check it for $N = 4$ and say what it shows.",
+      "pts": [
+        "(1) $G(j) = 1 + \\tfrac12G(j-1) + \\tfrac12G(j+1)$ for $j = 1, \\dots, N-1$; $G(0) = G(N) = 0$. The 1 is the round just played.",
+        "(2) $G_0(j) = -j^2$: $1 - \\tfrac12(j-1)^2 - \\tfrac12(j+1)^2 = 1 - (j^2 + 1) = -j^2$.",
+        "(3) $G(j) = -j^2 + c_1 + c_2j$ (particular solution plus the homogeneous $c_1 + c_2j$); $G(0) = 0$ gives $c_1 = 0$, $G(N) = 0$ gives $c_2 = N$.",
+        "(4) $G(j) = j(N - j)$. For $N = 4$: $3, 4, 3$, the row sums of $M$ for the absorbing walk. From the middle it takes $N^2/4$ rounds: the time grows like the square of the distance."
+      ],
+      "pit": "The book prints the particular solution as $j^2$ (wrong sign: substituting gives $j^2 + 2$) and the range as $n - 1$ instead of $N - 1$. The final formula $j(N - j)$ is correct.",
+      "src": "LW p31",
+      "seen": []
+    },
+    {
+      "id": "STO-01-36",
+      "g": "1.5 Transient states",
+      "k": "One template",
+      "q": "For a chain with absorbing states, three quantities are computed by “take one step”: $f$ = probability of being absorbed at a chosen target, $g$ = expected number of steps until absorption, $h$ = expected number of visits to a transient state $i$. Compare them: (1) boundary values; (2) one-step equations at a transient state $x$; (3) matrix forms; (4) values for the absorbing walk on $\\{0, \\dots, 4\\}$ started at 1 (target 0; visits to 3).",
+      "pts": [
+        "(1) $f = 1$ at the target and 0 at the other absorbing states; $g = 0$ and $h = 0$ at all absorbing states.",
+        "(2) $f(x) = \\sum_y p(x, y)f(y)$; $g(x) = 1 + \\sum_y p(x, y)g(y)$; $h(x) = I\\{x = i\\} + \\sum_y p(x, y)h(y)$.",
+        "(3) $MS$; $M\\bar 1$; column $i$ of $M$. The same $M = (I - Q)^{-1}$, only the right-hand factor differs.",
+        "(4) $\\tfrac34$; 3 steps; $\\tfrac12$ visit."
+      ],
+      "pit": "What is added in the equation: nothing, 1 for every step, 1 for every visit to i.",
+      "src": "LW p27–31",
+      "seen": []
+    },
+    {
+      "id": "STO-01-37",
+      "g": "1.6 Examples",
+      "k": "Graph walk: π",
+      "q": "Simple random walk on a connected graph with $e$ edges; $d(v)$ is the degree of the vertex $v$. (1) Give the invariant distribution. (2) Why is it a probability vector? (3) Verify invariance. (4) Apply it to the path $0 - 1 - 2 - 3 - 4$.",
+      "pts": [
+        "(1) $\\pi(v) = \\dfrac{d(v)}{2e}$.",
+        "(2) Every edge has two endpoints, so $\\sum_v d(v) = 2e$.",
+        "(3) Probability flows into $w$ only from its neighbours, each neighbour $v$ sending $\\tfrac{1}{d(v)}$ of its mass: $\\sum_{v \\sim w}\\dfrac{d(v)}{2e}\\cdot\\dfrac{1}{d(v)} = \\dfrac{d(w)}{2e}$.",
+        "(4) Degrees $(1, 2, 2, 2, 1)$, $e = 4$: $\\bar\\pi = (\\tfrac18, \\tfrac14, \\tfrac14, \\tfrac14, \\tfrac18)$, the invariant distribution of the reflecting walk in one line."
+      ],
+      "pit": "The higher the degree, the more ways in, and the larger the share of time.",
+      "src": "LW p31–32",
+      "seen": []
+    },
+    {
+      "id": "STO-01-38",
+      "g": "1.6 Examples",
+      "k": "Circle: cover time",
+      "q": "Random walk on a circle of $N$ points: each step goes to one of the two neighbours with probability $\\tfrac12$; start at 0. $T_k$ is the first time $k$ different points have been visited ($T_1 = 0$, $T_2 = 1$) and $r(k) = \\mathbb{E}[T_k - T_{k-1}]$. (1) Where is the walker at time $T_{k-1}$? (2) Write an equation for $r(k)$. (3) Solve it. (4) Give $\\mathbb{E}[T_N]$ and its value for $N = 5$.",
+      "pts": [
+        "(1) The visited points form an arc of $k - 1$ points and the walker stands at one end of it (it has just stepped onto a new point).",
+        "(2) With probability $\\tfrac12$ the next step goes outward to a new point. Otherwise it goes inward, needs on average $1 \\cdot (k - 2 - 1) = k - 3$ more steps to get back to an end of the arc (duration of a fair game on $\\{0, \\dots, k-2\\}$ from 1), and then starts over: $r(k) = 1 + \\tfrac12\\big[(k - 3) + r(k)\\big]$.",
+        "(3) $r(k) = k - 1$.",
+        "(4) $\\mathbb{E}[T_N] = 1 + \\sum_{k=3}^N(k - 1) = \\dfrac{N(N-1)}{2}$; for $N = 5$: 10."
+      ],
+      "pit": "The last point to be visited is uniformly distributed on $\\{1, \\dots, N-1\\}$.",
+      "src": "LW p32",
+      "seen": [
+        "Ex 1.16"
+      ]
+    },
+    {
+      "id": "STO-01-39",
+      "g": "1.6 Examples",
+      "k": "Urn model",
+      "q": "An urn holds $N$ balls, each red or green. Each period one ball is drawn at random; with probability $\\tfrac12$ it is replaced by a ball of the other colour, otherwise it is put back. $X_n$ is the number of red balls. (1) Give the transition probabilities. (2) Is the chain irreducible and aperiodic? (3) Give the invariant distribution and the reason. (4) For $N = 4$ give $\\bar\\pi$ and the mean time to return to “no red balls”.",
+      "pts": [
+        "(1) $p(j, j+1) = \\dfrac{N-j}{2N}$ (draw a green ball and switch it), $p(j, j-1) = \\dfrac{j}{2N}$, $p(j, j) = \\tfrac12$.",
+        "(2) Yes: neighbouring states communicate, and the self-loops $p(j, j) = \\tfrac12$ make it aperiodic.",
+        "(3) Binomial: $\\pi(j) = \\dbinom Nj2^{-N}$. In the long run the colour of each ball is like an independent fair coin flip.",
+        "(4) $\\bar\\pi = \\tfrac{1}{16}(1, 4, 6, 4, 1)$; by Kac's formula $1/\\pi(0) = 2^N = 16$ steps."
+      ],
+      "pit": "Check of one component for $N = 4$: $\\tfrac{4}{16}\\cdot\\tfrac38 + \\tfrac{6}{16}\\cdot\\tfrac12 + \\tfrac{4}{16}\\cdot\\tfrac38 = \\tfrac{6}{16} = \\pi(2)$.",
+      "src": "LW p33",
+      "seen": []
+    },
+    {
+      "id": "STO-01-40",
+      "g": "1.6 Examples",
+      "k": "Cell genetics",
+      "q": "A cell contains $N$ particles, $j$ of type I and $N - j$ of type II. It duplicates into $2j$ and $2(N - j)$ particles, and the next cell receives $N$ of these $2N$ chosen at random. (1) Give the probability $p(j, k)$ that the next cell has $k$ particles of type I. (2) Which states are absorbing? (3) Guess and verify the probability $\\alpha(j)$ of ending with all particles of type I. (4) Why does verifying settle it?",
+      "pts": [
+        "(1) Hypergeometric: $p(j, k) = \\dbinom{2j}{k}\\dbinom{2N - 2j}{N - k}\\Big/\\dbinom{2N}{N}$.",
+        "(2) 0 and $N$: once all particles are of one type nothing changes.",
+        "(3) $\\alpha(j) = \\tfrac jN$, because the expected fraction of type I does not change from one generation to the next: $\\sum_k p(j, k)\\tfrac kN = \\tfrac1N \\cdot N \\cdot \\tfrac{2j}{2N} = \\tfrac jN$ (mean of the hypergeometric distribution), and $\\alpha(0) = 0$, $\\alpha(N) = 1$.",
+        "(4) The equation $A = S + QA$ has exactly one solution because $I - Q$ is invertible."
+      ],
+      "pit": "Example for $N = 4$: $p(2, 2) = \\tbinom42\\tbinom42/\\tbinom84 = \\tfrac{36}{70} = \\tfrac{18}{35}$.",
+      "src": "LW p34",
+      "seen": []
+    },
+    {
+      "id": "STO-01-41",
+      "g": "1.6 Examples",
+      "k": "Card shuffling",
+      "q": "A deck of $n$ cards is shuffled by choosing one card at random (probability $\\tfrac1n$ each) and putting it on top. The states are the $n!$ orderings. (1) Why is the chain irreducible? (2) Why aperiodic? (3) Give the invariant distribution and the reason. (4) A deck of 52 cards is shuffled this way once a second. How long, on average, until the original order returns?",
+      "pts": [
+        "(1) Any ordering can be built by moving cards to the top one at a time, starting with the card that should end up at the bottom.",
+        "(2) Choosing the top card leaves the order unchanged: a self-loop.",
+        "(3) Uniform, $\\tfrac{1}{n!}$: each ordering is reached from exactly $n$ orderings (put its top card back into position $1, \\dots, n$), each with probability $\\tfrac1n$, so every column of $P$ also sums to 1 and the uniform vector satisfies $\\bar\\pi P = \\bar\\pi$.",
+        "(4) Kac: $1/\\pi = 52!$ seconds $\\approx 8.07 \\times 10^{67}$ seconds $\\approx 2.56 \\times 10^{60}$ years."
+      ],
+      "pit": "How many shuffles are enough to mix the deck is a different question that the book does not treat.",
+      "src": "LW p34–35",
+      "seen": [
+        "Ex 1.18"
+      ]
+    },
+    {
+      "id": "STO-01-42",
+      "g": "Exercises",
+      "k": "Ex 1.1/1.13: papers",
+      "q": "A newspaper is added to a pile every morning. Each afternoon, with probability $\\tfrac13$, the whole pile is thrown out; and whenever the pile reaches 5 papers it is thrown out for certain. $X_n$ is the number of papers in the pile in the evening. (1) Give the states and the transition probabilities. (2) Find $\\bar\\pi$. (3) Find the long-run mean number of papers. (4) Find the mean time to return from 0 to 0.",
+      "pts": [
+        "(1) States $0, \\dots, 4$; $p(i, 0) = \\tfrac13$ and $p(i, i+1) = \\tfrac23$ for $i \\le 3$; $p(4, 0) = 1$.",
+        "(2) Column $j \\ge 1$: $\\pi(j) = \\tfrac23\\pi(j-1)$, so $\\bar\\pi \\propto (1, \\tfrac23, \\tfrac49, \\tfrac{8}{27}, \\tfrac{16}{81})$: $\\bar\\pi = \\tfrac{1}{211}(81, 54, 36, 24, 16)$.",
+        "(3) $\\tfrac{54 + 72 + 72 + 64}{211} = \\tfrac{262}{211} \\approx 1.24$.",
+        "(4) Kac: $\\tfrac{211}{81} \\approx 2.60$ days."
+      ],
+      "pit": "",
+      "src": "LW p35, p38",
+      "seen": [
+        "Ex 1.1",
+        "Ex 1.13"
+      ]
+    },
+    {
+      "id": "STO-01-43",
+      "g": "Exercises",
+      "k": "Ex 1.2: three steps",
+      "q": "Chain on $\\{0, 1\\}$ with $P = \\begin{pmatrix}1/3&2/3\\\\3/4&1/4\\end{pmatrix}$ and $X_0 = 0$. (1) Find the distributions of $X_1$ and $X_2$. (2) Find $\\mathbb{P}\\{X_3 = 1\\}$. (3) Find $\\bar\\pi$ and the second eigenvalue, and compare with part 2.",
+      "pts": [
+        "(1) $(\\tfrac13, \\tfrac23)$; then $(\\tfrac19 + \\tfrac12, \\tfrac29 + \\tfrac16) = (\\tfrac{11}{18}, \\tfrac{7}{18})$.",
+        "(2) $\\tfrac{11}{18}\\cdot\\tfrac23 + \\tfrac{7}{18}\\cdot\\tfrac14 = \\tfrac{88 + 21}{216} = \\tfrac{109}{216} \\approx 0.505$.",
+        "(3) $\\bar\\pi = (\\tfrac{9}{17}, \\tfrac{8}{17})$ and $\\lambda = 1 - \\tfrac23 - \\tfrac34 = -\\tfrac{5}{12}$. Since $\\lambda < 0$ the probabilities oscillate around the limit: $p_n(0, 1) = \\tfrac{8}{17}\\big(1 - \\lambda^n\\big)$, which is $\\tfrac{109}{216}$ at $n = 3$, above $\\tfrac{8}{17} \\approx 0.471$."
+      ],
+      "pit": "",
+      "src": "LW p35",
+      "seen": [
+        "Ex 1.2"
+      ]
+    },
+    {
+      "id": "STO-01-44",
+      "g": "Exercises",
+      "k": "Ex 1.3/1.6: 3 states",
+      "q": "Chain on $\\{1, 2, 3\\}$ with $P = \\begin{pmatrix}.4&.2&.4\\\\.6&0&.4\\\\.2&.5&.3\\end{pmatrix}$. (1) Why does $P^n$ converge to a matrix with identical rows? (2) Solve $\\bar\\pi P = \\bar\\pi$. (3) Give the long-run probability of state 1. (4) Starting at 2, how many steps on average until the chain is back at 2?",
+      "pts": [
+        "(1) The chain is irreducible (all states communicate, e.g. $1 \\to 2 \\to 1$ and $1 \\to 3 \\to 2$) and aperiodic ($p(1, 1) = .4 > 0$).",
+        "(2) Column 2: $\\pi(2) = .2\\pi(1) + .5\\pi(3)$; column 1: $.6\\pi(1) = .6\\pi(2) + .2\\pi(3)$. These give $\\pi(1) : \\pi(2) : \\pi(3) = 25 : 17 : 24$, so $\\bar\\pi = \\tfrac{1}{66}(25, 17, 24)$.",
+        "(3) $\\tfrac{25}{66} \\approx 0.379$.",
+        "(4) Kac: $1/\\pi(2) = \\tfrac{66}{17} \\approx 3.88$."
+      ],
+      "pit": "Check of column 1: $.4 \\cdot 25 + .6 \\cdot 17 + .2 \\cdot 24 = 25$.",
+      "src": "LW p35–36",
+      "seen": [
+        "Ex 1.3",
+        "Ex 1.6"
+      ]
+    },
+    {
+      "id": "STO-01-45",
+      "g": "Exercises",
+      "k": "Ex 1.5: classify",
+      "q": "Chain on $\\{0, \\dots, 5\\}$ with $$P = \\begin{pmatrix}.5&.5&0&0&0&0\\\\.3&.7&0&0&0&0\\\\0&0&.1&0&.9&0\\\\.25&.25&0&0&.25&.25\\\\0&0&.7&0&.3&0\\\\0&.2&0&.2&.2&.4\\end{pmatrix}$$ (1) Find the communication classes and say which are recurrent. (2) Find $\\lim_n p_n(0, 0)$. (3) Find the probability that the chain started at 5 ends up in $\\{0, 1\\}$. (4) Find $\\lim_n p_n(5, 0)$.",
+      "pts": [
+        "(1) $\\{0, 1\\}$ and $\\{2, 4\\}$ are closed, hence recurrent. $\\{3, 5\\}$ communicate ($3 \\to 5$, $5 \\to 3$) but leak out ($3 \\to 0$): transient.",
+        "(2) Inside $\\{0, 1\\}$ the chain is $\\begin{pmatrix}.5&.5\\\\.3&.7\\end{pmatrix}$ with $.5\\pi(0) = .3\\pi(1)$: $\\bar\\pi = (\\tfrac38, \\tfrac58)$, so the limit is $\\tfrac38$.",
+        "(3) In the order $3, 5$: $Q = \\begin{pmatrix}0&.25\\\\.2&.4\\end{pmatrix}$, one-step probabilities into $\\{0, 1\\}$: $(.5, .2)$. $(I - Q)^{-1} = \\tfrac{1}{.55}\\begin{pmatrix}.6&.25\\\\.2&1\\end{pmatrix}$, which gives $(\\tfrac{7}{11}, \\tfrac{6}{11})$: from 5 it is $\\tfrac{6}{11}$.",
+        "(4) $\\tfrac{6}{11}\\cdot\\tfrac38 = \\tfrac{9}{44} \\approx 0.205$."
+      ],
+      "pit": "A reducible chain is always handled in two stages: which recurrent class absorbs the chain, then the long-run share inside that class; multiply.",
+      "src": "LW p36",
+      "seen": [
+        "Ex 1.5"
+      ]
+    },
+    {
+      "id": "STO-01-46",
+      "g": "Exercises",
+      "k": "Ex 1.8: graph, part 1",
+      "q": "Simple random walk on the graph with vertices $A, B, C, D, E$ and edges $AB, AC, AD, BC, BE, DE$ (each step goes to a uniformly chosen neighbour). (1) Find the degrees and $\\bar\\pi$. (2) Starting at $A$, find the expected number of steps until the walk is back at $A$. (3) Starting at $B$, find the probability of reaching $A$ before $C$.",
+      "pts": [
+        "(1) Degrees $(3, 3, 2, 2, 2)$ for $A, B, C, D, E$ and $e = 6$: $\\bar\\pi = (\\tfrac14, \\tfrac14, \\tfrac16, \\tfrac16, \\tfrac16)$.",
+        "(2) Kac: $1/\\pi(A) = 4$.",
+        "(3) $f(A) = 1$, $f(C) = 0$; $f(B) = \\tfrac13\\big(1 + 0 + f(E)\\big)$, $f(E) = \\tfrac12\\big(f(B) + f(D)\\big)$, $f(D) = \\tfrac12\\big(1 + f(E)\\big)$. Then $f(E) = \\tfrac23f(B) + \\tfrac13$ and $f(B) = \\tfrac49 + \\tfrac29f(B)$: $f(B) = \\tfrac47$."
+      ],
+      "pit": "",
+      "src": "LW p36",
+      "seen": [
+        "Ex 1.8"
+      ]
+    },
+    {
+      "id": "STO-01-47",
+      "g": "Exercises",
+      "k": "Ex 1.8: graph, part 2",
+      "q": "Simple random walk on the graph with vertices $A, B, C, D, E$ and edges $AB, AC, AD, BC, BE, DE$ (each step goes to a uniformly chosen neighbour). Make $A$ absorbing. (1) Write the one-step equations for $g(x)$ = expected number of steps from $x$ to $A$. (2) Solve for $g(C)$. (3) Starting at $C$, find the expected number of visits to $B$ before the walk reaches $A$.",
+      "pts": [
+        "(1) $g(B) = 1 + \\tfrac13\\big(g(C) + g(E)\\big)$, $g(C) = 1 + \\tfrac12g(B)$, $g(D) = 1 + \\tfrac12g(E)$, $g(E) = 1 + \\tfrac12\\big(g(B) + g(D)\\big)$.",
+        "(2) $g(E) = 2 + \\tfrac23g(B)$, then $g(B) = 2 + \\tfrac{7}{18}g(B)$: $g(B) = \\tfrac{36}{11}$ and $g(C) = 1 + \\tfrac{18}{11} = \\tfrac{29}{11}$.",
+        "(3) $h(B) = 1 + \\tfrac13\\big(h(C) + h(E)\\big)$, $h(C) = \\tfrac12h(B)$, $h(D) = \\tfrac12h(E)$, $h(E) = \\tfrac12\\big(h(B) + h(D)\\big)$. Then $h(E) = \\tfrac23h(B)$, $h(B) = 1 + \\tfrac{7}{18}h(B) = \\tfrac{18}{11}$ and $h(C) = \\tfrac{9}{11}$."
+      ],
+      "pit": "The two systems differ only in where the 1 is added: at every state for steps, at B only for visits to B.",
+      "src": "LW p36",
+      "seen": [
+        "Ex 1.8"
+      ]
+    },
+    {
+      "id": "STO-01-48",
+      "g": "Exercises",
+      "k": "Ex 1.9: period 3",
+      "q": "Chain on $\\{1, \\dots, 5\\}$: from 1 go to 2 with probability $\\tfrac13$ or to 3 with probability $\\tfrac23$; from 2 go to 4 with probability $\\tfrac14$ or to 5 with probability $\\tfrac34$; from 3 go to 4 or 5 with probability $\\tfrac12$ each; from 4 and from 5 go to 1. (1) Is the chain irreducible, and what is its period? (2) Give the distribution of the return time to 1 and deduce $\\pi(1)$ without solving equations. (3) Find $\\bar\\pi$ and the mean return time to 2. (4) Give $p_{1000}(2, 1)$, $p_{1000}(2, 2)$ and approximately $p_{1000}(2, 4)$.",
+      "pts": [
+        "(1) $1 \\to \\{2, 3\\} \\to \\{4, 5\\} \\to 1$: irreducible, and every loop has a length divisible by 3, so $d = 3$.",
+        "(2) The return time is always exactly 3, so by Kac's formula $\\pi(1) = \\tfrac13$.",
+        "(3) $\\pi(2) = \\tfrac13\\pi(1) = \\tfrac19$, $\\pi(3) = \\tfrac29$, $\\pi(4) = \\tfrac14\\cdot\\tfrac19 + \\tfrac12\\cdot\\tfrac29 = \\tfrac{5}{36}$, $\\pi(5) = \\tfrac{7}{36}$. Mean return time to 2: $9$.",
+        "(4) $1000 \\equiv 1 \\pmod 3$, so at time 1000 the chain started in $\\{2, 3\\}$ is in $\\{4, 5\\}$: the first two are 0, and $p_{1000}(2, 4) \\approx 3\\pi(4) = \\tfrac{5}{12}$."
+      ],
+      "pit": "Periodicity only breaks the convergence of p_n(i, j); the invariant distribution and Kac's formula are unaffected.",
+      "src": "LW p37",
+      "seen": [
+        "Ex 1.9"
+      ]
+    },
+    {
+      "id": "STO-01-49",
+      "g": "Exercises",
+      "k": "Ex 1.17: full graph",
+      "q": "Simple random walk on the complete graph with $N$ vertices: each step moves to one of the other $N - 1$ vertices, chosen uniformly. (1) Give the distribution and the mean of the return time $T$ to the starting vertex. (2) Give the mean number of steps from vertex 2 to vertex 1. (3) Give the expected time until every vertex has been visited. (4) Evaluate all three for $N = 4$.",
+      "pts": [
+        "(1) The first step leaves; afterwards each step returns with probability $\\tfrac{1}{N-1}$. So $T - 1$ is geometric with parameter $\\tfrac{1}{N-1}$ and $\\mathbb{E}(T) = 1 + (N - 1) = N$, in agreement with the uniform $\\bar\\pi$.",
+        "(2) Geometric with parameter $\\tfrac{1}{N-1}$: mean $N - 1$.",
+        "(3) While $m$ vertices are unvisited each step finds a new one with probability $\\tfrac{m}{N-1}$: $\\sum_{m=1}^{N-1}\\dfrac{N-1}{m} = (N-1)\\Big(1 + \\tfrac12 + \\dots + \\tfrac{1}{N-1}\\Big)$.",
+        "(4) $4$; $3$; $3\\big(1 + \\tfrac12 + \\tfrac13\\big) = \\tfrac{11}{2}$."
+      ],
+      "pit": "",
+      "src": "LW p39",
+      "seen": [
+        "Ex 1.17"
+      ]
+    },
+    {
+      "id": "STO-01-50",
+      "g": "Exercises",
+      "k": "Ex 1.19: four heads",
+      "q": "A fair coin is flipped until four heads in a row have appeared. (1) Set up a Markov chain. (2) Write the equations for the expected number of flips. (3) Solve them. (4) Give the answer for $k$ heads in a row.",
+      "pts": [
+        "(1) State = current run of heads, $0, \\dots, 4$; from $i < 4$ go to $i + 1$ or back to 0 with probability $\\tfrac12$ each; 4 is absorbing.",
+        "(2) $e(i) = 1 + \\tfrac12e(i+1) + \\tfrac12e(0)$ for $i = 0, \\dots, 3$, and $e(4) = 0$.",
+        "(3) Working down: $e(3) = 1 + \\tfrac12e(0)$, $e(2) = \\tfrac32 + \\tfrac34e(0)$, $e(1) = \\tfrac74 + \\tfrac78e(0)$, and then $e(0) = \\tfrac{15}{8} + \\tfrac{15}{16}e(0)$: $e(0) = 30$ (and $e = (30, 28, 24, 16, 0)$).",
+        "(4) $2^{k+1} - 2$."
+      ],
+      "pit": "",
+      "src": "LW p40",
+      "seen": [
+        "Ex 1.19"
+      ]
+    },
+    {
+      "id": "STO-01-51",
+      "g": "Proofs",
+      "k": "Ex 1.7: finite mean",
+      "q": "Irreducible chain with $N$ states and a target state $j$. Show that there are $C < \\infty$ and $\\rho < 1$ with $\\mathbb{P}\\{X_m \\ne j,\\ m = 0, \\dots, n \\mid X_0 = i\\} \\le C\\rho^n$ for all $i$ and $n$, and that return times have finite mean. (1) Find a uniform chance of hitting $j$. (2) Use blocks of steps. (3) Identify $C$ and $\\rho$. (4) Conclude.",
+      "pts": [
+        "(1) By irreducibility, from every state $i$ there is a path to $j$ of at most $N$ steps, so the chain started at $i$ visits $j$ within $N$ steps with some probability $\\delta_i > 0$. Put $\\delta = \\min_i\\delta_i > 0$, a minimum of finitely many positive numbers.",
+        "(2) By the Markov property at the times $N, 2N, \\dots$, whatever the state then: $\\mathbb{P}\\{\\text{no visit to } j \\text{ in the first } kN \\text{ steps}\\} \\le (1 - \\delta)^k$.",
+        "(3) For $kN \\le n < (k+1)N$ the probability is at most $(1 - \\delta)^k \\le (1 - \\delta)^{n/N - 1}$: take $\\rho = (1 - \\delta)^{1/N}$ and $C = \\tfrac{1}{1 - \\delta}$.",
+        "(4) $\\mathbb{E}(T) = \\sum_{n \\ge 1}\\mathbb{P}\\{T \\ge n\\}$ is bounded by a geometric series, hence finite."
+      ],
+      "pit": "This is the silent assumption behind Kac's formula and behind every expected hitting time.",
+      "src": "LW p36",
+      "seen": [
+        "Ex 1.7"
+      ]
+    },
+    {
+      "id": "STO-01-52",
+      "g": "Proofs",
+      "k": "Ex 1.15: Kac, proof",
+      "q": "Irreducible finite chain started at $i$, with $T = \\min\\{n \\ge 1 : X_n = i\\}$ and $\\mathbb{E}(T) < \\infty$. Let $r(j)$ be the expected number of visits to $j$ at the times $0, 1, \\dots, T - 1$. (1) Give a formula for $r(j)$, the value $r(i)$ and the sum $\\sum_j r(j)$. (2) Show $(\\bar rP)(k) = r(k)$ for $k \\ne i$. (3) Show it for $k = i$. (4) Conclude $\\mathbb{E}(T) = 1/\\pi(i)$.",
+      "pts": [
+        "(1) $r(j) = \\sum_{n \\ge 0}\\mathbb{P}\\{X_n = j, T > n\\}$; $r(i) = 1$ (only the visit at time 0); $\\sum_j r(j) = \\sum_{n \\ge 0}\\mathbb{P}\\{T > n\\} = \\mathbb{E}(T)$.",
+        "(2) $\\sum_j r(j)p(j, k) = \\sum_{n \\ge 0}\\mathbb{P}\\{X_{n+1} = k, T > n\\}$ by the Markov property at time $n$. That is the expected number of visits to $k$ at the times $1, \\dots, T$, which for $k \\ne i$ equals $r(k)$: there is no visit to $k$ at time 0 or at time $T$.",
+        "(3) $\\sum_{n \\ge 0}\\mathbb{P}\\{X_{n+1} = i, T > n\\} = \\sum_{n \\ge 0}\\mathbb{P}\\{T = n + 1\\} = 1 = r(i)$.",
+        "(4) $\\bar r$ is a nonnegative invariant vector with finite sum $\\mathbb{E}(T)$, so by uniqueness $\\bar r = \\mathbb{E}(T)\\bar\\pi$. At $i$: $1 = \\mathbb{E}(T)\\pi(i)$."
+      ],
+      "pit": "",
+      "src": "LW p39",
+      "seen": [
+        "Ex 1.15"
+      ]
+    },
+    {
+      "id": "STO-01-53",
+      "g": "Proofs",
+      "k": "Ex 1.16: last point",
+      "q": "Random walk on a circle of $N$ points $\\{0, \\dots, N-1\\}$, started at 0, each step to one of the two neighbours with probability $\\tfrac12$. Show that the last point to be visited is uniformly distributed on $\\{1, \\dots, N-1\\}$. (1) Characterise “$k$ is visited last”. (2) Reduce to a gambler's-ruin problem. (3) Compute the probability. (4) Conclude.",
+      "pts": [
+        "(1) $k$ is last exactly when both neighbours of $k$ are visited before $k$.",
+        "(2) Stop at the first time the walk is at a neighbour of $k$ (possibly time 0). From there it must reach the other neighbour before $k$. Going the long way round, the other neighbour is $N - 2$ steps away, while $k$ is 1 step away in the other direction.",
+        "(3) Fair gambler's ruin on $\\{0, \\dots, N-1\\}$ started at 1, with 0 = the point $k$ and $N - 1$ = the other neighbour: the probability of reaching $N - 1$ first is $\\tfrac{1}{N-1}$.",
+        "(4) The value does not depend on which neighbour came first nor on $k$: each of the $N - 1$ points is last with probability $\\tfrac{1}{N-1}$."
+      ],
+      "pit": "Surprising: the point next to the start is as likely to be last as the point opposite.",
+      "src": "LW p39",
+      "seen": [
+        "Ex 1.16"
+      ]
+    },
+    {
+      "id": "STO-01-54",
+      "g": "Recipe",
+      "k": "Which tool",
+      "q": "A transition matrix $P$ is given. (1) What is done before any computing? (2) Which tool gives: the probability of a state at step $n$; the long-run fraction of time at $j$; $p_n(i, j)$ for large $n$? (3) Which tool gives: a mean return time; the mean number of steps from $j$ to $i \\ne j$; the probability of reaching $A$ before $B$; the number of visits to a state before absorption? (4) Name four cross-checks.",
+      "pts": [
+        "(1) Write the states and $P$ and check the row sums; draw the graph and find the communication classes (closed = recurrent, the rest transient); find the period of each recurrent class (self-loop gives 1; otherwise gcd of loop lengths, or bipartite).",
+        "(2) $\\phi P^n$. Solve $\\bar\\pi P = \\bar\\pi$, $\\sum\\pi = 1$ (irreducible is enough; for a graph walk $d(v)/2e$). Aperiodic: $\\pi(j)$; periodic: by cyclic group; reducible: $\\alpha_k(i)\\pi^k(j)$.",
+        "(3) Kac, $1/\\pi(i)$. Make $i$ absorbing and take $M\\bar 1$. Make $A$ and $B$ absorbing and take $MS$. The entry of $M$. Each can also be done with one-step equations.",
+        "(4) Rows of $P$ sum to 1; $\\sum\\pi = 1$; Kac agrees with one-step equations (e.g. $8 = 1 + 7$); each row of $MS$ sums to 1."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-01-55",
+      "g": "Recipe",
+      "k": "π versus lim Pⁿ",
+      "q": "(1) What is the difference between the invariant distribution $\\bar\\pi$ and the rows of $\\lim_n P^n$, and when do they coincide? (2) Give a chain where $\\bar\\pi$ exists but $P^n$ does not converge. (3) Give one where $P^n$ converges but the rows differ. (4) Compare the two-state chains with $(p, q) = (\\tfrac12, \\tfrac13)$ and $(\\tfrac14, \\tfrac16)$, where $p = p(0, 1)$ and $q = p(1, 0)$.",
+      "pts": [
+        "(1) $\\bar\\pi$ solves $\\bar\\pi P = \\bar\\pi$; the rows of $\\lim P^n$ are the distribution after a long time, for each start. They coincide for irreducible aperiodic chains.",
+        "(2) The reflecting walk on $\\{0, \\dots, 4\\}$: $\\bar\\pi = (\\tfrac18, \\tfrac14, \\tfrac14, \\tfrac14, \\tfrac18)$ but $P^n$ alternates between even and odd $n$.",
+        "(3) The absorbing walk: row 1 tends to $(.75, 0, 0, 0, .25)$ and row 3 to $(.25, 0, 0, 0, .75)$.",
+        "(4) Both have $\\bar\\pi = (\\tfrac25, \\tfrac35)$ and mean return time $\\tfrac52$ to state 0. The second eigenvalues are $\\tfrac16$ and $\\tfrac{7}{12}$: the first chain converges much faster. $\\bar\\pi$ fixes long-run fractions and mean return times, not the speed."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-01-56",
+      "g": "Recipe",
+      "k": "Practice",
+      "q": "(1) Classify the states of the chain on $\\{0, 1, 2\\}$ with $P = \\begin{pmatrix}1/2&1/2&0\\\\0&1&0\\\\1/3&1/3&1/3\\end{pmatrix}$. (2) Find $Q$ and $M$ in the order $0, 2$. (3) Find the expected number of steps to absorption from 0 and from 2. (4) Find $\\lim_n P^n$. (5) Fair gambler's ruin with $N = 10$, starting from 3: the probability of reaching 10 and the expected number of rounds.",
+      "pts": [
+        "(1) 1 is absorbing (recurrent class $\\{1\\}$); 0 and 2 are transient (0 reaches 1 and never comes back; 2 reaches 0 and 1).",
+        "(2) $Q = \\begin{pmatrix}1/2&0\\\\1/3&1/3\\end{pmatrix}$, $I - Q = \\begin{pmatrix}1/2&0\\\\-1/3&2/3\\end{pmatrix}$, $M = \\begin{pmatrix}2&0\\\\1&3/2\\end{pmatrix}$.",
+        "(3) Row sums: 2 from state 0, $\\tfrac52$ from state 2.",
+        "(4) There is only one absorbing state, so every row tends to $(0, 1, 0)$.",
+        "(5) $\\tfrac{3}{10}$; $3 \\cdot 7 = 21$ rounds."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}

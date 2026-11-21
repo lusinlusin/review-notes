@@ -1,0 +1,775 @@
+{
+  "title": "Preliminaries",
+  "notes": [
+    {
+      "h": "Big picture",
+      "items": [
+        {
+          "t": "Where it sits",
+          "d": [
+            "Before: the book assumes linear algebra (eigenvalues, eigenvectors, diagonalisation) and basic calculus. Nothing from probability is used yet.",
+            "This chapter: what a stochastic process is and why “the change depends only on the present” links it to equations (0.1); linear differential equations, one equation of order $n$ and a first-order system $\\bar y' = A\\bar y$ with $e^{tA}$ (0.2); linear difference equations (0.3).",
+            "After: the probability that a random walk reaches $N$ before 0 (gambler's ruin) satisfies exactly the random-walk equation of this chapter, and $P^n$ for a Markov chain behaves like $e^{tA}$ here."
+          ],
+          "cards": [
+            "STO-00-01",
+            "STO-00-02"
+          ]
+        },
+        {
+          "t": "The question",
+          "d": [
+            "How do we solve a linear equation with constant coefficients, in continuous time (a differential equation, unknown $y(t)$) and in discrete time (a difference equation, unknown $f(n)$)?",
+            "Why a probability book starts here: the quantities wanted later (absorption probabilities, expected hitting times) satisfy exactly such equations."
+          ],
+          "cards": [
+            "STO-00-02"
+          ]
+        },
+        {
+          "t": "One recipe, four uses",
+          "d": [
+            "1. Guess an exponential: $y(t) = e^{\\lambda t}$ for a differential equation, $f(n) = \\alpha^n$ for a difference equation.",
+            "2. Substitute and cancel the common factor; what is left is the characteristic polynomial in $\\lambda$ or $\\alpha$.",
+            "3. Each root gives one solution (a root of multiplicity $j$ gives $j$ of them); every solution is a linear combination.",
+            "4. Fix the constants from initial values (values at the start) or boundary values (values at both ends, or a limit at infinity).",
+            "The four uses: the order-$n$ differential equation, the first-order system, the second-order difference equation, the order-$k$ difference equation."
+          ],
+          "cards": [
+            "STO-00-22",
+            "STO-00-16"
+          ]
+        },
+        {
+          "t": "Two running examples",
+          "d": [
+            "Example A (continuous): $x' = y - x$, $y' = 3x - 3y$; roots $\\lambda = 0, -4$. It shows $e^{tA}$ as “limit plus decaying part” and a conserved quantity.",
+            "Example B (discrete): the random-walk equation $f(n) = (1-p)f(n-1) + pf(n+1)$; roots $\\alpha = 1, \\tfrac{1-p}{p}$. It shows distinct against repeated roots ($p \\ne \\tfrac12$ against $p = \\tfrac12$), boundary values, and the bridge to the next chapter."
+          ],
+          "cards": [
+            "STO-00-07",
+            "STO-00-08",
+            "STO-00-14"
+          ]
+        },
+        {
+          "t": "Insights",
+          "d": [
+            "The roots decide the long-run behaviour: for a differential equation a root with negative real part gives a decaying term; for a difference equation a root with $|\\alpha| < 1$ does. A root on the boundary ($\\lambda = 0$, or $|\\alpha| = 1$) gives a term that neither grows nor decays.",
+            "Initial values and boundary values are two ways of fixing the same two constants; the next chapter almost always uses boundary values (“the walk stops at 0 and at N”).",
+            "A third way is a condition at infinity, which removes every root with $|\\alpha| > 1$."
+          ],
+          "cards": [
+            "STO-00-05",
+            "STO-00-19"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "0.1 Introduction",
+      "items": [
+        {
+          "t": "Stochastic process",
+          "d": [
+            "A collection of random variables $X_t$ indexed by time. The set of values $X_t$ can take is the state space.",
+            "Time: discrete (a subset of $\\{0, 1, 2, \\dots\\}$) or continuous (a subset of $[0, \\infty)$). State space: discrete (finite or countably infinite) or continuous ($\\mathbb{R}$, $\\mathbb{R}^d$)."
+          ],
+          "cards": [
+            "STO-00-01"
+          ]
+        },
+        {
+          "t": "The link to equations",
+          "d": [
+            "For a deterministic system the typical example is $y'(t) = F(t, y(t))$: the change of $y$ at time $t$ depends only on $t$ and the current value, not on the values before $t$.",
+            "A Markov process has the same property with randomness added: the next change is determined by the present state $X_t$, the past adds nothing, and the change is random with a distribution that depends on $X_t$.",
+            "So the book reviews linear differential equations and, in more detail, linear difference equations, because the latter come up for discrete-time Markov chains and are usually left out of a first treatment of differential equations."
+          ],
+          "cards": [
+            "STO-00-02"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "0.2 Linear differential equations",
+      "items": [
+        {
+          "t": "One equation of order n",
+          "d": [
+            "$y^{(n)}(t) + a_{n-1}y^{(n-1)}(t) + \\dots + a_1y'(t) + a_0y(t) = 0$. Given $y(0), y'(0), \\dots, y^{(n-1)}(0)$ there is exactly one solution.",
+            "Plan: find $n$ linearly independent solutions; every solution is $c_1y_1 + \\dots + c_ny_n$ and the $n$ initial conditions fix the $n$ constants.",
+            "Guess $y(t) = e^{\\lambda t}$; each derivative brings down one factor $\\lambda$. Dividing by $e^{\\lambda t}$ (never 0) leaves the characteristic polynomial $p(\\lambda) = \\lambda^n + a_{n-1}\\lambda^{n-1} + \\dots + a_0$. Distinct roots give $e^{\\lambda_1t}, \\dots, e^{\\lambda_nt}$."
+          ],
+          "cards": [
+            "STO-00-03"
+          ]
+        },
+        {
+          "t": "Repeated roots",
+          "d": [
+            "A root of multiplicity $j$ gives $e^{\\lambda t}, te^{\\lambda t}, \\dots, t^{j-1}e^{\\lambda t}$.",
+            "For order 2: with $y = te^{\\lambda t}$, $y'' + a_1y' + a_0y = e^{\\lambda t}[t\\,p(\\lambda) + p'(\\lambda)]$. A double root has $p(\\lambda) = 0$ and $p'(\\lambda) = 0$, so the bracket vanishes; a simple root has $p'(\\lambda) \\ne 0$, which is why $te^{\\lambda t}$ only works for repeated roots.",
+            "Example: $y'' - 2y' + y = 0$ has $p(\\lambda) = (\\lambda - 1)^2$ and solutions $e^t$, $te^t$."
+          ],
+          "cards": [
+            "STO-00-04"
+          ]
+        },
+        {
+          "t": "Complex roots",
+          "d": [
+            "Real coefficients make complex roots come in pairs $\\mu \\pm i\\omega$. By Euler's formula the two complex solutions combine into $e^{\\mu t}\\cos\\omega t$ and $e^{\\mu t}\\sin\\omega t$.",
+            "The real part $\\mu$ sets the growth ($\\mu < 0$: decay), the imaginary part $\\omega$ the frequency."
+          ],
+          "cards": [
+            "STO-00-05"
+          ]
+        },
+        {
+          "t": "System and matrix exponential",
+          "d": [
+            "$y_i'(t) = a_{i1}y_1(t) + \\dots + a_{in}y_n(t)$ for $i = 1, \\dots, n$, written $\\bar y'(t) = A\\bar y(t)$. For any initial vector $\\bar v$ the unique solution is $\\bar y(t) = e^{tA}\\bar v$ with $e^{tA} = \\sum_{j \\ge 0}(tA)^j/j!$.",
+            "Why: differentiating the series term by term gives $Ae^{tA}$, and at $t = 0$ the series is $I$.",
+            "Computing: if $A = Q^{-1}DQ$ with $D = \\operatorname{diag}(d_1, \\dots, d_n)$ then $e^{tA} = Q^{-1}e^{tD}Q$. Not every $A$ can be diagonalised; every $A$ is $Q^{-1}JQ$ with $J$ in Jordan form."
+          ],
+          "cards": [
+            "STO-00-06"
+          ]
+        },
+        {
+          "t": "Example A step by step",
+          "d": [
+            "$A = \\begin{pmatrix}-1&1\\\\3&-3\\end{pmatrix}$. Characteristic equation $\\lambda(\\lambda + 4) = 0$; eigenvectors $(1, 1)$ for $\\lambda = 0$ and $(1, -3)$ for $\\lambda = -4$.",
+            "General solution $x = c_1 + c_2e^{-4t}$, $y = c_1 - 3c_2e^{-4t}$. With $x(0) = y(0) = \\tfrac12$: $c_2 = 0$, so $x \\equiv y \\equiv \\tfrac12$.",
+            "$$e^{tA} = \\begin{pmatrix}3/4&1/4\\\\3/4&1/4\\end{pmatrix} + e^{-4t}\\begin{pmatrix}1/4&-1/4\\\\-3/4&3/4\\end{pmatrix}$$",
+            "From $x(0) = 1$, $y(0) = 0$: $x = \\tfrac34 + \\tfrac14e^{-4t}$, $y = \\tfrac34 - \\tfrac34e^{-4t}$; both tend to $\\tfrac34$.",
+            "Meaning of the roots: $3x + y$ is conserved ($\\lambda = 0$) and the gap $x - y$ shrinks like $e^{-4t}$ ($\\lambda = -4$). Every start slides to the line $x = y$ at the level $\\tfrac34x(0) + \\tfrac14y(0)$; the slower quantity $x$ gets the larger weight.",
+            "A reading (not from the book): two quotes for the same asset on two venues, pulled towards each other; $x$ moves towards $y$ at speed 1 times the gap, $y$ towards $x$ at speed 3 times the gap."
+          ],
+          "cards": [
+            "STO-00-07",
+            "STO-00-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "0.3 Linear difference equations",
+      "items": [
+        {
+          "t": "Equation and recursion",
+          "d": [
+            "$f(n) = af(n-1) + bf(n+1)$ for $K < n < N$, with $a, b \\ne 0$ ($N$ may be $\\infty$). Since $b \\ne 0$: $f(n+1) = \\tfrac1b[f(n) - af(n-1)]$.",
+            "So $f(K)$ and $f(K+1)$ determine the whole solution, and any two numbers can be used. The solutions form a vector space of dimension 2; any two linearly independent solutions $g_1, g_2$ give every solution as $c_1g_1 + c_2g_2$."
+          ],
+          "cards": [
+            "STO-00-09"
+          ]
+        },
+        {
+          "t": "Guess and two cases",
+          "d": [
+            "$f(n) = \\alpha^n$ gives $b\\alpha^2 - \\alpha + a = 0$, $\\alpha = \\dfrac{1 \\pm \\sqrt{1 - 4ab}}{2b}$. The roots add up to $\\tfrac1b$ and multiply to $\\tfrac ab$.",
+            "Case I, $1 - 4ab \\ne 0$: two roots, $f(n) = c_1\\alpha_1^n + c_2\\alpha_2^n$. Case II, $1 - 4ab = 0$: double root $\\tfrac{1}{2b}$, $f(n) = c_1(\\tfrac{1}{2b})^n + c_2n(\\tfrac{1}{2b})^n$.",
+            "Why $n(\\tfrac{1}{2b})^n$ works: substituting gives $(\\tfrac{1}{2b})^n[a(n-1)2b + \\tfrac{b(n+1)}{2b}]$, and $2ab = \\tfrac12$ turns the bracket into $\\tfrac{n-1}{2} + \\tfrac{n+1}{2} = n$.",
+            "Complex roots ($1 - 4ab < 0$): $re^{\\pm i\\theta}$, real solutions $r^n\\cos n\\theta$, $r^n\\sin n\\theta$; $r < 1$ a decaying oscillation, $r = 1$ a pure oscillation."
+          ],
+          "cards": [
+            "STO-00-10",
+            "STO-00-11"
+          ]
+        },
+        {
+          "t": "Example with initial values",
+          "d": [
+            "$f(n) = \\tfrac16f(n-1) + \\tfrac23f(n+1)$, $f(0) = 4$, $f(1) = 3$. $1 - 4ab = \\tfrac59$; roots $\\tfrac{3 \\pm \\sqrt5}{4}$; $c_1 = c_2 = 2$.",
+            "$f(n) = 2(\\tfrac{3 + \\sqrt5}{4})^n + 2(\\tfrac{3 - \\sqrt5}{4})^n$; $f(2) = \\tfrac72$, $f(3) = \\tfrac92$; $f$ grows without bound because one root exceeds 1."
+          ],
+          "cards": [
+            "STO-00-12"
+          ]
+        },
+        {
+          "t": "Example with boundary values",
+          "d": [
+            "$f(n) = 2f(n-1) - f(n+1)$ for $0 < n < 10$, $f(0) = 0$, $f(10) = 1$. Roots $1$ and $-2$; $c_1 + c_2 = 0$ and $c_1 + c_2(-2)^{10} = 1$.",
+            "$f(n) = \\dfrac{(-2)^n - 1}{1023}$: $f(1) = -\\tfrac{1}{341}$, $f(2) = \\tfrac{1}{341}$. The recursion cannot be used directly because $f(1)$ is unknown."
+          ],
+          "cards": [
+            "STO-00-13"
+          ]
+        },
+        {
+          "t": "Random-walk equation",
+          "d": [
+            "$f(n) = (1-p)f(n-1) + pf(n+1)$, $a = 1 - p$, $b = p$. For $p \\ne \\tfrac12$: $1 - 4ab = (1 - 2p)^2$, roots $1$ and $\\tfrac{1-p}{p}$, $f(n) = c_1 + c_2(\\tfrac{1-p}{p})^n$. For $p = \\tfrac12$: double root 1, $f(n) = c_1 + c_2n$.",
+            "The root 1 is always there because $(1-p) + p = 1$: constants solve the equation.",
+            "With $f(0) = 0$, $f(4) = 1$: for $p = \\tfrac23$, $\\rho = \\tfrac12$ and $f(n) = \\tfrac{1 - \\rho^n}{1 - \\rho^4}$ gives $\\tfrac{8}{15}, \\tfrac45, \\tfrac{14}{15}$; for $p = \\tfrac12$, $f(n) = \\tfrac n4$. These are the probabilities that a gambler starting with $n$ dollars reaches 4 before 0."
+          ],
+          "cards": [
+            "STO-00-14"
+          ]
+        },
+        {
+          "t": "Order k",
+          "d": [
+            "$f(n+k) = a_0f(n) + \\dots + a_{k-1}f(n+k-1)$: the values $f(0), \\dots, f(k-1)$ determine everything, so the solution space has dimension $k$.",
+            "Characteristic equation $\\alpha^k = a_0 + a_1\\alpha + \\dots + a_{k-1}\\alpha^{k-1}$; a root of multiplicity $j$ gives $\\alpha^n, n\\alpha^n, \\dots, n^{j-1}\\alpha^n$. Example: $(\\alpha - 1)^3 = 0$ gives $c_1 + c_2n + c_3n^2$."
+          ],
+          "cards": [
+            "STO-00-15"
+          ]
+        },
+        {
+          "t": "Continuous vs discrete",
+          "d": [
+            "Trial solution: $e^{\\lambda t}$ against $\\alpha^n$. Repeated root: $t^me^{\\lambda t}$ against $n^m\\alpha^n$. Complex pair: $e^{\\mu t}\\cos\\omega t, e^{\\mu t}\\sin\\omega t$ against $r^n\\cos n\\theta, r^n\\sin n\\theta$.",
+            "A term decays when $\\operatorname{Re}\\lambda < 0$ against $|\\alpha| < 1$; it stays bounded without decaying when $\\operatorname{Re}\\lambda = 0$ against $|\\alpha| = 1$.",
+            "System version: $\\bar y(t) = e^{tA}\\bar v$ against $\\bar f(n) = A^n\\bar f(0)$. Bridge: $\\alpha = e^{\\lambda}$."
+          ],
+          "cards": [
+            "STO-00-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Exercises 0.1–0.6",
+      "items": [
+        {
+          "t": "0.1 (a system)",
+          "d": [
+            "$x' = y - x$, $y' = 3x - 3y$: $x = c_1 + c_2e^{-4t}$, $y = c_1 - 3c_2e^{-4t}$; with $x(0) = y(0) = \\tfrac12$, $x \\equiv y \\equiv \\tfrac12$."
+          ],
+          "cards": [
+            "STO-00-07"
+          ]
+        },
+        {
+          "t": "0.2 (random walk, p = 3/4)",
+          "d": [
+            "Roots $1, \\tfrac13$; $f(n) = \\tfrac32(1 - 3^{-n})$."
+          ],
+          "cards": [
+            "STO-00-17"
+          ]
+        },
+        {
+          "t": "0.3 (Fibonacci)",
+          "d": [
+            "Roots $\\tfrac{1 \\pm \\sqrt5}{2}$; $F_n = \\tfrac{1}{\\sqrt5}(\\varphi^n - \\psi^n)$."
+          ],
+          "cards": [
+            "STO-00-18"
+          ]
+        },
+        {
+          "t": "0.4 (order 3, limit at infinity)",
+          "d": [
+            "Roots $1, \\sqrt2 - 1, -1 - \\sqrt2$; the root of modulus above 1 is excluded; $f(n) = 1 - (\\sqrt2 - 1)^n$."
+          ],
+          "cards": [
+            "STO-00-19"
+          ]
+        },
+        {
+          "t": "0.5 (inhomogeneous)",
+          "d": [
+            "Particular solution $n^2$ plus homogeneous $c_1 + c_2n$: $f(n) = n^2 + c_1 + c_2n$."
+          ],
+          "cards": [
+            "STO-00-20"
+          ]
+        },
+        {
+          "t": "0.6 (complex roots)",
+          "d": [
+            "Both parts have $z^2 + z + 1$, roots $e^{\\pm 2\\pi i/3}$: a decaying oscillation $e^{-x/2}(c_1\\cos\\tfrac{\\sqrt3}{2}x + c_2\\sin\\tfrac{\\sqrt3}{2}x)$ in continuous time, a pure period-3 oscillation $c_1\\cos\\tfrac{2\\pi n}{3} + c_2\\sin\\tfrac{2\\pi n}{3}$ in discrete time."
+          ],
+          "cards": [
+            "STO-00-21"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Solving skeleton",
+      "items": [
+        {
+          "t": "Steps",
+          "d": [
+            "1. Normalise: constant coefficients; for a difference equation identify the order (largest shift minus smallest shift).",
+            "2. Characteristic polynomial: substitute $e^{\\lambda t}$ or $\\alpha^n$ and divide by the common factor.",
+            "3. Roots to basis: one solution per root; for multiplicity $j$ add factors $t, \\dots, t^{j-1}$ (or $n, \\dots, n^{j-1}$); complex pairs give cosine and sine.",
+            "4. Inhomogeneous term? One particular solution plus the homogeneous general solution.",
+            "5. Constants from the data given. 6. Check: substitute back at two or three points; for a recursion compare with a few steps."
+          ],
+          "cards": [
+            "STO-00-22"
+          ]
+        },
+        {
+          "t": "How the constants are fixed",
+          "d": [
+            "Initial values ($f(K), f(K+1)$ or $y(0), y'(0)$): two equations at the start; the recursion also works step by step. Example: $c_1 = c_2 = 2$.",
+            "Boundary values ($f(K), f(N)$): one equation at each end; the recursion cannot start. Example: $c_1 = -\\tfrac{1}{1023}$; random walk $f(n) = \\tfrac{1 - \\rho^n}{1 - \\rho^N}$.",
+            "A condition at infinity (bounded, or a limit): roots with $|\\alpha| > 1$ get coefficient 0.",
+            "None (“find all solutions”): leave the constants free."
+          ],
+          "cards": [
+            "STO-00-22",
+            "STO-00-23",
+            "STO-00-24"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "Q in a diagonalisation",
+          "d": [
+            "Here $A = Q^{-1}DQ$ (rows of $Q$ are left eigenvectors). In the chapter on finite chains $D = Q^{-1}PQ$, i.e. $P = QDQ^{-1}$ (columns of $Q$ are right eigenvectors)."
+          ],
+          "cards": [
+            "STO-00-06"
+          ]
+        },
+        {
+          "t": "λ and α",
+          "d": [
+            "$\\lambda$ for roots of the differential equation's characteristic polynomial, $\\alpha$ for those of the difference equation."
+          ],
+          "cards": [
+            "STO-00-16"
+          ]
+        },
+        {
+          "t": "a, b and a_i",
+          "d": [
+            "$a, b$ are the two coefficients of the second-order difference equation; $a_0, \\dots, a_{n-1}$ the coefficients of the differential equation and $a_0, \\dots, a_{k-1}$ those of the order-$k$ difference equation; $a_{ij}$ entries of $A$."
+          ],
+          "cards": [
+            "STO-00-10",
+            "STO-00-15"
+          ]
+        },
+        {
+          "t": "n",
+          "d": [
+            "The order of the differential equation and the size of the system, but also the integer variable of $f(n)$."
+          ],
+          "cards": [
+            "STO-00-03",
+            "STO-00-09"
+          ]
+        },
+        {
+          "t": "p",
+          "d": [
+            "In the random-walk equation the probability of a step to the right; later $p(i, j)$ is also the transition probability."
+          ],
+          "cards": [
+            "STO-00-14"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Errata",
+      "items": [
+        {
+          "t": "LW p5",
+          "d": [
+            "The book prints the boundary condition as $f(10) = 1 = c_1 + c_2(-2)^n$; it should be $c_1 + c_2(-2)^{10}$. The stated constants $c_1 = -c_2 = 1/(1 - 2^{10})$ are correct."
+          ],
+          "cards": [
+            "STO-00-13"
+          ]
+        },
+        {
+          "t": "LW p4",
+          "d": [
+            "Not an error, but a skipped step: the double-root check goes from $(\\tfrac{1}{2b})^n[a(n-1)2b + b(n+1)/(2b)]$ straight to $(\\tfrac{1}{2b})^nn$; it uses $4ab = 1$."
+          ],
+          "cards": [
+            "STO-00-11"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "STO-00-01",
+      "g": "0.1 Introduction",
+      "k": "Stochastic process",
+      "q": "(1) Define a stochastic process and its state space. (2) What do “discrete time” and “continuous time” mean? (3) What kinds of state space occur? (4) Give one example of each combination that the book treats first.",
+      "pts": [
+        "(1) A collection of random variables $X_t$ indexed by time; the state space is the set of values $X_t$ can take.",
+        "(2) Discrete time: $t$ runs over a subset of $\\{0, 1, 2, \\dots\\}$. Continuous time: over a subset of $[0, \\infty)$.",
+        "(3) Discrete: finite or countably infinite, e.g. $\\{0, 1, \\dots, N\\}$. Continuous: e.g. $\\mathbb{R}$ or $\\mathbb{R}^d$.",
+        "(4) Discrete time with a finite state space: finite Markov chains (the next chapter). Continuous time: continuous-time Markov chains and Brownian motion later in the book."
+      ],
+      "pit": "",
+      "src": "LW p1",
+      "seen": []
+    },
+    {
+      "id": "STO-00-02",
+      "g": "0.1 Introduction",
+      "k": "Why equations first",
+      "q": "The book compares a Markov process with the deterministic equation $y'(t) = F(t, y(t))$. (1) What does that equation say about the past? (2) What is the corresponding property of a Markov process? (3) What is different? (4) Why does a probability book review difference equations in particular?",
+      "pts": [
+        "(1) The change of $y$ at time $t$ depends only on $t$ and on the current value $y(t)$, not on earlier values.",
+        "(2) The change depends only on the present state $X_t$; the past adds nothing.",
+        "(3) The change itself is random, with a distribution that depends on $X_t$, instead of a fixed number.",
+        "(4) They arise naturally for discrete-time Markov chains (absorption probabilities, expected hitting times) and are usually left out of a first treatment of differential equations."
+      ],
+      "pit": "",
+      "src": "LW p1",
+      "seen": []
+    },
+    {
+      "id": "STO-00-03",
+      "g": "0.2 Differential eqs",
+      "k": "Order-n equation",
+      "q": "Homogeneous linear equation with constant coefficients: $y^{(n)}(t) + a_{n-1}y^{(n-1)}(t) + \\dots + a_1y'(t) + a_0y(t) = 0$. (1) How many initial conditions fix a solution, and what is the plan for finding all solutions? (2) Which trial solution is used and what does substitution give? (3) What do $n$ distinct roots give? (4) Why may one divide by the exponential?",
+      "pts": [
+        "(1) The $n$ values $y(0), y'(0), \\dots, y^{(n-1)}(0)$ fix exactly one solution. Plan: find $n$ linearly independent solutions $y_1, \\dots, y_n$; every solution is $c_1y_1 + \\dots + c_ny_n$.",
+        "(2) $y(t) = e^{\\lambda t}$, with $y^{(m)}(t) = \\lambda^me^{\\lambda t}$: the characteristic polynomial $\\lambda^n + a_{n-1}\\lambda^{n-1} + \\dots + a_1\\lambda + a_0 = 0$.",
+        "(3) The $n$ independent solutions $e^{\\lambda_1t}, \\dots, e^{\\lambda_nt}$.",
+        "(4) $e^{\\lambda t}$ is never 0."
+      ],
+      "pit": "",
+      "src": "LW p1–2",
+      "seen": []
+    },
+    {
+      "id": "STO-00-04",
+      "g": "0.2 Differential eqs",
+      "k": "Repeated roots",
+      "q": "For $y'' + a_1y' + a_0y = 0$ let $p(\\lambda) = \\lambda^2 + a_1\\lambda + a_0$. (1) Which solutions belong to a root of multiplicity $j$ in general? (2) Substitute $y = te^{\\lambda t}$ and express the result through $p$ and $p'$. (3) Conclude when $te^{\\lambda t}$ is a solution. (4) Solve $y'' - 2y' + y = 0$.",
+      "pts": [
+        "(1) $e^{\\lambda t}, te^{\\lambda t}, \\dots, t^{j-1}e^{\\lambda t}$.",
+        "(2) $y' = (1 + \\lambda t)e^{\\lambda t}$, $y'' = (2\\lambda + \\lambda^2t)e^{\\lambda t}$, so $y'' + a_1y' + a_0y = e^{\\lambda t}\\big[t\\,p(\\lambda) + p'(\\lambda)\\big]$.",
+        "(3) Exactly when $p(\\lambda) = 0$ and $p'(\\lambda) = 0$, i.e. for a double root. At a simple root $p'(\\lambda) \\ne 0$.",
+        "(4) $p(\\lambda) = (\\lambda - 1)^2$: $y = c_1e^t + c_2te^t$."
+      ],
+      "pit": "The book only says “a little calculation”; this is that calculation.",
+      "src": "LW p2",
+      "seen": []
+    },
+    {
+      "id": "STO-00-05",
+      "g": "0.2 Differential eqs",
+      "k": "Complex roots",
+      "q": "A linear equation with real constant coefficients has the complex roots $\\lambda = \\mu \\pm i\\omega$. (1) Which two real solutions do they give, and by which formula? (2) What do $\\mu$ and $\\omega$ control? (3) When does a term of a solution decay, stay bounded without decaying, or grow?",
+      "pts": [
+        "(1) $e^{\\mu t}\\cos\\omega t$ and $e^{\\mu t}\\sin\\omega t$, from Euler's formula $e^{i\\omega t} = \\cos\\omega t + i\\sin\\omega t$.",
+        "(2) The real part $\\mu$ sets growth or decay; the imaginary part $\\omega$ is the frequency of oscillation.",
+        "(3) Decay: $\\operatorname{Re}\\lambda < 0$. Bounded without decay: $\\operatorname{Re}\\lambda = 0$ (e.g. $\\lambda = 0$, a constant). Growth: $\\operatorname{Re}\\lambda > 0$."
+      ],
+      "pit": "Not on the book's pages; needed for one of the exercises.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-00-06",
+      "g": "0.2 Differential eqs",
+      "k": "Matrix exponential",
+      "q": "System of $n$ first-order equations $\\bar y'(t) = A\\bar y(t)$ with a constant matrix $A$. (1) Give the solution with $\\bar y(0) = \\bar v$ and define the matrix exponential. (2) Why does it solve the system? (3) How is $e^{tA}$ computed when $A = Q^{-1}DQ$ with $D$ diagonal? (4) What if $A$ cannot be diagonalised?",
+      "pts": [
+        "(1) $\\bar y(t) = e^{tA}\\bar v$ with $e^{tA} = \\sum_{j=0}^\\infty \\dfrac{(tA)^j}{j!}$; it is the only solution.",
+        "(2) Differentiating the series term by term: $\\tfrac{d}{dt}e^{tA} = \\sum_{j \\ge 1}\\tfrac{t^{j-1}A^j}{(j-1)!} = Ae^{tA}$, and at $t = 0$ the series is $I$. It is the matrix version of “$y' = ay$ has the solution $e^{ta}y(0)$”.",
+        "(3) $(tA)^j = Q^{-1}(tD)^jQ$ because the inner $QQ^{-1}$ cancel, so $e^{tA} = Q^{-1}e^{tD}Q$ with $e^{tD} = \\operatorname{diag}(e^{td_1}, \\dots, e^{td_n})$.",
+        "(4) Every $A$ can be written $Q^{-1}JQ$ with $J$ in Jordan form; $e^{tJ}$ is only slightly harder, and this is where $te^{\\lambda t}$ reappears."
+      ],
+      "pit": "Here the book writes $A = Q^{-1}DQ$ (rows of $Q$ are left eigenvectors). In the chapter on finite chains it writes $D = Q^{-1}PQ$, i.e. $P = QDQ^{-1}$.",
+      "src": "LW p2–3",
+      "seen": []
+    },
+    {
+      "id": "STO-00-07",
+      "g": "0.2 Differential eqs",
+      "k": "Example A: solve",
+      "q": "System $x' = y - x$, $y' = 3x - 3y$, i.e. $\\bar v' = A\\bar v$ with $A = \\begin{pmatrix}-1&1\\\\3&-3\\end{pmatrix}$. (1) Find the characteristic equation and the roots. (2) Find the eigenvectors. (3) Write all solutions. (4) Find the solution with $x(0) = y(0) = \\tfrac12$.",
+      "pts": [
+        "(1) $\\det(A - \\lambda I) = (-1 - \\lambda)(-3 - \\lambda) - 3 = \\lambda^2 + 4\\lambda = 0$: $\\lambda = 0$ and $\\lambda = -4$ (sum = trace $= -4$, product $= \\det A = 0$).",
+        "(2) $\\lambda = 0$: $-v_1 + v_2 = 0$, so $(1, 1)$. $\\lambda = -4$: $3v_1 + v_2 = 0$, so $(1, -3)$.",
+        "(3) $x(t) = c_1 + c_2e^{-4t}$, $y(t) = c_1 - 3c_2e^{-4t}$.",
+        "(4) $c_1 + c_2 = \\tfrac12$ and $c_1 - 3c_2 = \\tfrac12$ give $c_2 = 0$, $c_1 = \\tfrac12$: $x \\equiv y \\equiv \\tfrac12$."
+      ],
+      "pit": "The start is already on the line x = y, so nothing moves.",
+      "src": "LW p6",
+      "seen": [
+        "Ex 0.1"
+      ]
+    },
+    {
+      "id": "STO-00-08",
+      "g": "0.2 Differential eqs",
+      "k": "Example A: exp(tA)",
+      "q": "System $x' = y - x$, $y' = 3x - 3y$, i.e. $\\bar v' = A\\bar v$ with $A = \\begin{pmatrix}-1&1\\\\3&-3\\end{pmatrix}$. (1) Write $e^{tA}$ as “limit plus decaying part”. (2) Check it at $t = 0$. (3) Solve from $x(0) = 1$, $y(0) = 0$ and give the limit. (4) What do the two roots mean?",
+      "pts": [
+        "(1) $e^{tA} = \\begin{pmatrix}3/4&1/4\\\\3/4&1/4\\end{pmatrix} + e^{-4t}\\begin{pmatrix}1/4&-1/4\\\\-3/4&3/4\\end{pmatrix}$: the first matrix belongs to $\\lambda = 0$, the second to $\\lambda = -4$.",
+        "(2) The two matrices add up to $I$.",
+        "(3) $x(t) = \\tfrac34 + \\tfrac14e^{-4t}$, $y(t) = \\tfrac34 - \\tfrac34e^{-4t}$; both tend to $\\tfrac34$. At $t = 0.5$: $x \\approx 0.75 + 0.034 = 0.784$.",
+        "(4) $\\lambda = 0$: a conserved quantity, $\\tfrac{d}{dt}(3x + y) = 3(y - x) + (3x - 3y) = 0$. $\\lambda = -4$: the gap decays, $(x - y)' = -4(x - y)$. Every start slides to the line $x = y$ at the level $\\tfrac34x(0) + \\tfrac14y(0)$."
+      ],
+      "pit": "The rows of $A$ sum to 0, so constants are fixed points: the continuous-time analogue of “each row of a transition matrix sums to 1”. The same shape, limit plus $\\lambda^n$ times a fixed matrix, appears for $P^n$ of a two-state chain.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-00-09",
+      "g": "0.3 Difference eqs",
+      "k": "Equation, recursion",
+      "q": "Consider the second-order difference equation $f(n) = af(n-1) + bf(n+1)$ for $K < n < N$, with $a, b$ nonzero real numbers. (1) Solve it for the right-most value. (2) Why do two numbers determine the whole solution? (3) What structure does the set of solutions have, and what is a basis? (4) What follows for finding all solutions?",
+      "pts": [
+        "(1) $f(n+1) = \\dfrac1b\\big[f(n) - af(n-1)\\big]$, possible because $b \\ne 0$.",
+        "(2) Once $f(K)$ and $f(K+1)$ are known, the recursion gives $f(K+2)$, then $f(K+3)$, and so on; any two starting numbers can be used.",
+        "(3) A vector space (the equation is linear) of dimension 2. Basis: $f_1$ with $(f_1(K), f_1(K+1)) = (1, 0)$ and $f_2$ with $(0, 1)$; the solution with starting values $(u_0, u_1)$ is $u_0f_1 + u_1f_2$.",
+        "(4) Any two linearly independent solutions $g_1, g_2$ give every solution as $c_1g_1 + c_2g_2$."
+      ],
+      "pit": "",
+      "src": "LW p3–4",
+      "seen": []
+    },
+    {
+      "id": "STO-00-10",
+      "g": "0.3 Difference eqs",
+      "k": "Guess αⁿ",
+      "q": "Consider the second-order difference equation $f(n) = af(n-1) + bf(n+1)$ for $K < n < N$, with $a, b$ nonzero real numbers. (1) Substitute $f(n) = \\alpha^n$ and find the characteristic equation and its roots. (2) Give the sum and the product of the roots. (3) Give the general solution when $1 - 4ab \\ne 0$. (4) Give it when $1 - 4ab = 0$.",
+      "pts": [
+        "(1) Dividing by $\\alpha^{n-1}$: $\\alpha = a + b\\alpha^2$, i.e. $b\\alpha^2 - \\alpha + a = 0$, so $\\alpha = \\dfrac{1 \\pm \\sqrt{1 - 4ab}}{2b}$.",
+        "(2) Sum $\\tfrac1b$, product $\\tfrac ab$.",
+        "(3) Two different roots: $f(n) = c_1\\alpha_1^n + c_2\\alpha_2^n$.",
+        "(4) One double root $\\alpha = \\tfrac{1}{2b}$: $f(n) = c_1\\big(\\tfrac{1}{2b}\\big)^n + c_2\\,n\\big(\\tfrac{1}{2b}\\big)^n$."
+      ],
+      "pit": "When $1 - 4ab < 0$ the roots are complex conjugates $re^{\\pm i\\theta}$ and the real solutions are $r^n\\cos n\\theta$, $r^n\\sin n\\theta$.",
+      "src": "LW p4",
+      "seen": []
+    },
+    {
+      "id": "STO-00-11",
+      "g": "0.3 Difference eqs",
+      "k": "Double root: proof",
+      "q": "Difference equation $f(n) = af(n-1) + bf(n+1)$ with $1 - 4ab = 0$. Show that $g(n) = n\\big(\\tfrac{1}{2b}\\big)^n$ is a solution. (1) Substitute into the right side and factor out $\\big(\\tfrac{1}{2b}\\big)^n$. (2) Which identity simplifies the bracket? (3) Finish.",
+      "pts": [
+        "(1) $a(n-1)\\big(\\tfrac{1}{2b}\\big)^{n-1} + b(n+1)\\big(\\tfrac{1}{2b}\\big)^{n+1} = \\big(\\tfrac{1}{2b}\\big)^n\\Big[a(n-1)2b + \\dfrac{b(n+1)}{2b}\\Big]$.",
+        "(2) $4ab = 1$, so $2ab = \\tfrac12$: the bracket is $\\tfrac{n-1}{2} + \\tfrac{n+1}{2}$.",
+        "(3) The bracket equals $n$, so the right side is $n\\big(\\tfrac{1}{2b}\\big)^n = g(n)$."
+      ],
+      "pit": "The book goes from the bracket straight to $n$; the step it does not write is $2ab = \\tfrac12$.",
+      "src": "LW p4",
+      "seen": []
+    },
+    {
+      "id": "STO-00-12",
+      "g": "0.3 Difference eqs",
+      "k": "Initial values",
+      "q": "Find $f$ with $f(n) = \\tfrac16f(n-1) + \\tfrac23f(n+1)$ for $0 < n < \\infty$, $f(0) = 4$, $f(1) = 3$. (1) Decide the case. (2) Find the roots. (3) Determine the constants. (4) Check $f(2)$ against the recursion and say how $f$ behaves for large $n$.",
+      "pts": [
+        "(1) $1 - 4 \\cdot \\tfrac16 \\cdot \\tfrac23 = \\tfrac59 \\ne 0$: two different roots.",
+        "(2) $\\alpha = \\dfrac{1 \\pm \\sqrt5/3}{4/3} = \\dfrac{3 \\pm \\sqrt5}{4} \\approx 1.309,\\ 0.191$.",
+        "(3) $c_1 + c_2 = 4$ and $c_1\\tfrac{3 + \\sqrt5}{4} + c_2\\tfrac{3 - \\sqrt5}{4} = 3$ give $c_1 = c_2 = 2$: $f(n) = 2\\big(\\tfrac{3 + \\sqrt5}{4}\\big)^n + 2\\big(\\tfrac{3 - \\sqrt5}{4}\\big)^n$.",
+        "(4) Recursion: $f(2) = \\tfrac32\\big[3 - \\tfrac16 \\cdot 4\\big] = \\tfrac72$; formula: $2 \\cdot \\tfrac{(3 + \\sqrt5)^2 + (3 - \\sqrt5)^2}{16} = 2 \\cdot \\tfrac{28}{16} = \\tfrac72$. Since $\\alpha_1 > 1$, $f(n)$ grows without bound."
+      ],
+      "pit": "Next value: $f(3) = \\tfrac32\\big[\\tfrac72 - \\tfrac12\\big] = \\tfrac92$.",
+      "src": "LW p4–5",
+      "seen": []
+    },
+    {
+      "id": "STO-00-13",
+      "g": "0.3 Difference eqs",
+      "k": "Boundary values",
+      "q": "Find $f$ with $f(n) = 2f(n-1) - f(n+1)$ for $0 < n < 10$, $f(0) = 0$, $f(10) = 1$. (1) Find the roots. (2) Write the two equations for the constants and solve them. (3) Give $f(1)$, $f(2)$ and describe the solution. (4) Why can the recursion not be used directly?",
+      "pts": [
+        "(1) $a = 2$, $b = -1$: $\\alpha = \\dfrac{1 \\pm \\sqrt{1 + 8}}{-2}$, i.e. $1$ and $-2$.",
+        "(2) $n = 0$: $c_1 + c_2 = 0$. $n = 10$: $c_1 + c_2(-2)^{10} = 1$. So $c_1 = -c_2 = \\dfrac{1}{1 - 2^{10}} = -\\dfrac{1}{1023}$ and $f(n) = \\dfrac{(-2)^n - 1}{1023}$.",
+        "(3) $f(1) = -\\tfrac{3}{1023} = -\\tfrac{1}{341}$, $f(2) = \\tfrac{1}{341}$, $f(10) = 1$: the root $-2$ makes the values alternate in sign and grow; the condition at $n = 10$ scales them.",
+        "(4) Only one value is known at the start ($f(1)$ is unknown), so the recursion has nothing to start from; use the general solution."
+      ],
+      "pit": "The book prints the second condition as $1 = c_1 + c_2(-2)^n$; it should be $(-2)^{10}$. The stated constants are correct.",
+      "src": "LW p5",
+      "seen": []
+    },
+    {
+      "id": "STO-00-14",
+      "g": "0.3 Difference eqs",
+      "k": "Random-walk equation",
+      "q": "Random-walk equation $f(n) = (1-p)f(n-1) + pf(n+1)$ with $p \\in (0, 1)$. (1) Give the general solution for $p \\ne \\tfrac12$. (2) Give it for $p = \\tfrac12$. (3) Why is 1 always a root? (4) With $f(0) = 0$, $f(4) = 1$ compute $f(1), f(2), f(3)$ for $p = \\tfrac23$ and for $p = \\tfrac12$.",
+      "pts": [
+        "(1) $1 - 4p(1-p) = (1 - 2p)^2 > 0$; roots $\\dfrac{1 \\pm |1 - 2p|}{2p}$, i.e. $1$ and $\\dfrac{1-p}{p}$: $f(n) = c_1 + c_2\\Big(\\dfrac{1-p}{p}\\Big)^n$.",
+        "(2) $1 - 4 \\cdot \\tfrac12 \\cdot \\tfrac12 = 0$: double root $\\tfrac{1}{2b} = 1$, so $f(n) = c_1 + c_2n$.",
+        "(3) Constants solve the equation because $(1 - p) + p = 1$.",
+        "(4) $p = \\tfrac23$: $\\rho = \\tfrac{1-p}{p} = \\tfrac12$ and $f(n) = \\dfrac{1 - \\rho^n}{1 - \\rho^4}$: $\\tfrac{8}{15}, \\tfrac45, \\tfrac{14}{15}$. $p = \\tfrac12$: $f(n) = \\tfrac n4$."
+      ],
+      "pit": "Reading: a walker at $n$ steps right with probability $p$; if $f(n)$ is the probability of eventually reaching a target from $n$, conditioning on the first step gives this equation. These are the gambler's-ruin probabilities of the next chapter.",
+      "src": "LW p5–6",
+      "seen": []
+    },
+    {
+      "id": "STO-00-15",
+      "g": "0.3 Difference eqs",
+      "k": "Order k",
+      "q": "Equation of order $k$: $f(n+k) = a_0f(n) + a_1f(n+1) + \\dots + a_{k-1}f(n+k-1)$. (1) How many values determine a solution, and what is the dimension of the solution space? (2) Give the characteristic equation. (3) What does a root of multiplicity $j$ contribute? (4) Solve $f(n+3) = 3f(n+2) - 3f(n+1) + f(n)$.",
+      "pts": [
+        "(1) The $k$ values $f(0), \\dots, f(k-1)$ determine all $f(n)$ recursively: dimension $k$.",
+        "(2) With $f(n) = \\alpha^n$: $\\alpha^k = a_0 + a_1\\alpha + \\dots + a_{k-1}\\alpha^{k-1}$.",
+        "(3) $\\alpha^n, n\\alpha^n, \\dots, n^{j-1}\\alpha^n$.",
+        "(4) $(\\alpha - 1)^3 = 0$, a triple root 1: $f(n) = c_1 + c_2n + c_3n^2$."
+      ],
+      "pit": "",
+      "src": "LW p6",
+      "seen": []
+    },
+    {
+      "id": "STO-00-16",
+      "g": "0.3 Difference eqs",
+      "k": "Continuous vs discrete",
+      "q": "Compare a linear differential equation with a linear difference equation, both with constant coefficients: (1) trial solution and what substitution does; (2) solutions for a root of multiplicity $j$ and for a complex pair; (3) when a term decays and when it stays bounded without decaying; (4) the system version; (5) the bridge between the two.",
+      "pts": [
+        "(1) $e^{\\lambda t}$: each derivative brings down a factor $\\lambda$. $\\alpha^n$: each shift by one multiplies by $\\alpha$.",
+        "(2) $t^me^{\\lambda t}$ against $n^m\\alpha^n$ for $m < j$; $e^{\\mu t}\\cos\\omega t$, $e^{\\mu t}\\sin\\omega t$ against $r^n\\cos n\\theta$, $r^n\\sin n\\theta$.",
+        "(3) Decay: $\\operatorname{Re}\\lambda < 0$ against $|\\alpha| < 1$. Bounded without decay: $\\operatorname{Re}\\lambda = 0$ against $|\\alpha| = 1$.",
+        "(4) $\\bar y(t) = e^{tA}\\bar v$ against $\\bar f(n) = A^n\\bar f(0)$.",
+        "(5) Put $\\alpha = e^{\\lambda}$: then $\\alpha^n = e^{\\lambda n}$ and $|\\alpha| = e^{\\operatorname{Re}\\lambda}$, so the two decay conditions are the same."
+      ],
+      "pit": "",
+      "src": "LW p2–6",
+      "seen": []
+    },
+    {
+      "id": "STO-00-17",
+      "g": "Exercises",
+      "k": "Ex 0.2: p = 3/4",
+      "q": "Find $f$ with $f(n) = \\tfrac14f(n-1) + \\tfrac34f(n+1)$, $f(0) = 0$, $f(1) = 1$, for $0 \\le n \\le 10$. (1) Find the roots. (2) Determine the constants. (3) Give $f(2)$ and the value $f$ approaches.",
+      "pts": [
+        "(1) $\\alpha = \\tfrac14 + \\tfrac34\\alpha^2$, i.e. $3\\alpha^2 - 4\\alpha + 1 = (3\\alpha - 1)(\\alpha - 1) = 0$: $\\alpha = 1, \\tfrac13$.",
+        "(2) $f(n) = c_1 + c_23^{-n}$ with $c_1 + c_2 = 0$ and $c_1 + \\tfrac{c_2}{3} = 1$: $c_1 = \\tfrac32$, $c_2 = -\\tfrac32$, so $f(n) = \\tfrac32(1 - 3^{-n})$.",
+        "(3) $f(2) = \\tfrac32 \\cdot \\tfrac89 = \\tfrac43$; the values increase towards $\\tfrac32$."
+      ],
+      "pit": "It is the random-walk equation with $p = \\tfrac34$, where $\\tfrac{1-p}{p} = \\tfrac13$.",
+      "src": "LW p6",
+      "seen": [
+        "Ex 0.2"
+      ]
+    },
+    {
+      "id": "STO-00-18",
+      "g": "Exercises",
+      "k": "Ex 0.3: Fibonacci",
+      "q": "The Fibonacci numbers satisfy $F_n = F_{n-1} + F_{n-2}$ with $F_1 = F_2 = 1$. (1) Find the characteristic roots. (2) Which relations between the roots help? (3) Determine the constants and give the formula.",
+      "pts": [
+        "(1) $\\alpha^2 = \\alpha + 1$: $\\varphi = \\tfrac{1 + \\sqrt5}{2}$ and $\\psi = \\tfrac{1 - \\sqrt5}{2}$.",
+        "(2) $\\varphi + \\psi = 1$, $\\varphi\\psi = -1$, $\\varphi - \\psi = \\sqrt5$.",
+        "(3) $F_n = c_1\\varphi^n + c_2\\psi^n$ with $F_1 = F_2 = 1$ gives $c_1 = \\tfrac{1}{\\sqrt5}$, $c_2 = -\\tfrac{1}{\\sqrt5}$: $$F_n = \\frac{1}{\\sqrt5}\\Big[\\Big(\\frac{1 + \\sqrt5}{2}\\Big)^n - \\Big(\\frac{1 - \\sqrt5}{2}\\Big)^n\\Big]$$"
+      ],
+      "pit": "",
+      "src": "LW p7",
+      "seen": [
+        "Ex 0.3"
+      ]
+    },
+    {
+      "id": "STO-00-19",
+      "g": "Exercises",
+      "k": "Ex 0.4: condition at ∞",
+      "q": "Find $f$ with $f(n) = \\tfrac13\\big[f(n-1) + f(n+1) + f(n+2)\\big]$ for $n \\ge 1$, $f(0) = 0$ and $\\lim_{n \\to \\infty}f(n) = 1$. (1) Find the characteristic equation and its roots. (2) Write the general solution. (3) Use the condition at infinity. (4) Finish.",
+      "pts": [
+        "(1) With $f(n) = \\alpha^n$, dividing by $\\alpha^{n-1}$: $3\\alpha = 1 + \\alpha^2 + \\alpha^3$, i.e. $\\alpha^3 + \\alpha^2 - 3\\alpha + 1 = (\\alpha - 1)(\\alpha^2 + 2\\alpha - 1) = 0$: $\\alpha = 1,\\ -1 \\pm \\sqrt2$.",
+        "(2) $f(n) = c_1 + c_2(\\sqrt2 - 1)^n + c_3(-1 - \\sqrt2)^n$.",
+        "(3) $|-1 - \\sqrt2| > 1$ and $f$ has a finite limit, so $c_3 = 0$; $(\\sqrt2 - 1)^n \\to 0$, so the limit is $c_1 = 1$.",
+        "(4) $f(0) = c_1 + c_2 = 0$ gives $c_2 = -1$: $f(n) = 1 - (\\sqrt2 - 1)^n$."
+      ],
+      "pit": "A third way of fixing constants: a condition at infinity removes every root with $|\\alpha| > 1$.",
+      "src": "LW p7",
+      "seen": [
+        "Ex 0.4"
+      ]
+    },
+    {
+      "id": "STO-00-20",
+      "g": "Exercises",
+      "k": "Ex 0.5: inhomogeneous",
+      "q": "Find all $f : \\mathbb{Z} \\to \\mathbb{R}$ with $f(n) = \\tfrac12f(n+1) + \\tfrac12f(n-1) - 1$. (1) Verify that $n^2$ is a solution. (2) What equation does the difference of two solutions satisfy? (3) Solve that equation. (4) Give all solutions.",
+      "pts": [
+        "(1) $\\tfrac12(n+1)^2 + \\tfrac12(n-1)^2 - 1 = n^2 + 1 - 1 = n^2$.",
+        "(2) $g = f_2 - f_1$ satisfies the homogeneous equation $g(n) = \\tfrac12g(n+1) + \\tfrac12g(n-1)$.",
+        "(3) $(\\alpha - 1)^2 = 0$: double root 1, so $g(n) = c_1 + c_2n$.",
+        "(4) $f(n) = n^2 + c_1 + c_2n$ with $c_1, c_2$ real."
+      ],
+      "pit": "General rule: all solutions = one particular solution + the general solution of the homogeneous equation. The expected duration of a fair game satisfies an equation of this kind.",
+      "src": "LW p7",
+      "seen": [
+        "Ex 0.5"
+      ]
+    },
+    {
+      "id": "STO-00-21",
+      "g": "Exercises",
+      "k": "Ex 0.6: complex roots",
+      "q": "(1) Find the characteristic polynomial and the roots shared by $f'' + f' + f = 0$ and $f(n+2) = -f(n) - f(n+1)$. (2) Give all real solutions of the differential equation. (3) Give all real solutions of the difference equation. (4) Describe the difference in behaviour.",
+      "pts": [
+        "(1) $z^2 + z + 1$, with roots $z = \\dfrac{-1 \\pm i\\sqrt3}{2} = e^{\\pm 2\\pi i/3}$.",
+        "(2) $f(x) = e^{-x/2}\\Big(c_1\\cos\\tfrac{\\sqrt3}{2}x + c_2\\sin\\tfrac{\\sqrt3}{2}x\\Big)$.",
+        "(3) $|z| = 1$ and $\\arg z = \\pm\\tfrac{2\\pi}{3}$: $f(n) = c_1\\cos\\tfrac{2\\pi n}{3} + c_2\\sin\\tfrac{2\\pi n}{3}$.",
+        "(4) Continuous time: $\\operatorname{Re}z = -\\tfrac12 < 0$, a decaying oscillation. Discrete time: $|z| = 1$, a pure oscillation of period 3 that never decays; indeed $f(n+3) = -f(n+1) - f(n+2) = f(n)$ and any three consecutive values sum to 0."
+      ],
+      "pit": "",
+      "src": "LW p7",
+      "seen": [
+        "Ex 0.6"
+      ]
+    },
+    {
+      "id": "STO-00-22",
+      "g": "Recipe",
+      "k": "Solving skeleton",
+      "q": "A linear equation with constant coefficients is given. (1) List the steps of the solution. (2) How are the constants fixed by initial values? (3) By boundary values? (4) By a condition at infinity? (5) What if the equation has an inhomogeneous term?",
+      "pts": [
+        "(1) Normalise and identify the order (for a difference equation: largest shift minus smallest shift); substitute $e^{\\lambda t}$ or $\\alpha^n$ and divide by the common factor; one solution per root, with factors $t, \\dots, t^{j-1}$ or $n, \\dots, n^{j-1}$ for multiplicity $j$ and cosine, sine for complex pairs; fix the constants; check by substituting back.",
+        "(2) Two equations at the start; for a difference equation the recursion also works step by step.",
+        "(3) One equation at each end; the recursion cannot start.",
+        "(4) Every root with $|\\alpha| > 1$ must have coefficient 0.",
+        "(5) Find one particular solution and add the general solution of the homogeneous equation."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-00-23",
+      "g": "Recipe",
+      "k": "Practice: discrete",
+      "q": "(1) Solve $f(n) = \\tfrac12f(n-1) + \\tfrac12f(n+1)$ with $f(0) = 0$, $f(5) = 1$. (2) Solve $f(n+1) = 5f(n) - 6f(n-1)$ with $f(0) = 0$, $f(1) = 1$ and give $f(4)$. (3) Random-walk equation with $p = \\tfrac13$, $f(0) = 0$, $f(3) = 1$: find $f(1)$ and $f(2)$.",
+      "pts": [
+        "(1) $1 - 4 \\cdot \\tfrac12 \\cdot \\tfrac12 = 0$: double root 1, $f(n) = c_1 + c_2n$ with $c_1 = 0$, $c_2 = \\tfrac15$: $f(n) = \\tfrac n5$.",
+        "(2) $\\alpha^2 = 5\\alpha - 6$: $\\alpha = 2, 3$; $c_1 + c_2 = 0$ and $2c_1 + 3c_2 = 1$ give $f(n) = 3^n - 2^n$, so $f(4) = 81 - 16 = 65$.",
+        "(3) $\\rho = \\tfrac{1-p}{p} = 2$ and $f(n) = \\dfrac{1 - 2^n}{1 - 2^3}$: $f(1) = \\tfrac17$, $f(2) = \\tfrac37$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-00-24",
+      "g": "Recipe",
+      "k": "Practice: continuous",
+      "q": "(1) Solve $y'' - 4y' + 4y = 0$ with $y(0) = 1$, $y'(0) = 0$. (2) Compute $e^{tA}$ for $A = \\begin{pmatrix}-1&1\\\\1&-1\\end{pmatrix}$ and its limit as $t \\to \\infty$. (3) How are the decay conditions for $e^{\\lambda t}$ and $\\alpha^n$ related?",
+      "pts": [
+        "(1) $(\\lambda - 2)^2 = 0$: $y = (c_1 + c_2t)e^{2t}$; $y(0) = c_1 = 1$ and $y'(0) = 2c_1 + c_2 = 0$ give $y = (1 - 2t)e^{2t}$.",
+        "(2) Eigenvalues $0$ and $-2$ with eigenvectors $(1, 1)$ and $(1, -1)$: $e^{tA} = \\tfrac12\\begin{pmatrix}1 + e^{-2t}&1 - e^{-2t}\\\\1 - e^{-2t}&1 + e^{-2t}\\end{pmatrix} \\to \\tfrac12\\begin{pmatrix}1&1\\\\1&1\\end{pmatrix}$.",
+        "(3) $e^{\\lambda t}$ decays when $\\operatorname{Re}\\lambda < 0$, $\\alpha^n$ when $|\\alpha| < 1$; with $\\alpha = e^{\\lambda}$, $|\\alpha| = e^{\\operatorname{Re}\\lambda}$, so they are the same condition."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}
