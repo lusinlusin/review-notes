@@ -1,121 +1,750 @@
 {
   "title": "Core concepts",
+  "notes": [
+    {
+      "h": "How to use",
+      "items": [
+        {
+          "t": "Half an hour",
+          "d": [
+            "First pass: fourteen cards, two per topic."
+          ],
+          "cards": [
+            "NLP-00-01",
+            "NLP-00-14"
+          ]
+        },
+        {
+          "t": "One hour",
+          "d": [
+            "Add Second pass: fourteen more, mostly worked examples and proofs."
+          ],
+          "cards": [
+            "NLP-00-15",
+            "NLP-00-28"
+          ]
+        },
+        {
+          "t": "Two hours",
+          "d": [
+            "Then the Worked examples and Recurring patterns sections in the Notes of each topic."
+          ],
+          "cards": [
+            "NLP-00-28"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Optimality & convexity",
+      "items": [
+        {
+          "t": "Conditions",
+          "d": [
+            "FONC $\\nabla f = 0$; SONC $H \\succeq 0$; SOSC $H \\succ 0$ gives a strict local min; indefinite gives a saddle."
+          ],
+          "cards": [
+            "NLP-00-01",
+            "NLP-00-16"
+          ]
+        },
+        {
+          "t": "Convexity",
+          "d": [
+            "$C^2$ on an open convex set: convex iff $H \\succeq 0$ everywhere. Convex: local = global, stationary = global."
+          ],
+          "cards": [
+            "NLP-00-02"
+          ]
+        },
+        {
+          "t": "Existence",
+          "d": [
+            "Continuous and coercive: a global minimizer exists among the stationary points."
+          ],
+          "cards": [
+            "NLP-00-15"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Newton, line search, BFGS",
+      "items": [
+        {
+          "t": "Newton",
+          "d": [
+            "$Hd = -\\nabla f$; descent if $H \\succ 0$; one step on quadratics; quadratic rate if the Hessian is nonsingular at the solution."
+          ],
+          "cards": [
+            "NLP-00-03",
+            "NLP-00-18",
+            "NLP-00-17"
+          ]
+        },
+        {
+          "t": "Armijo",
+          "d": [
+            "$f(x + \\alpha d) \\le f(x) + \\gamma\\alpha\\nabla f^\\top d$; backtrack by $\\beta$."
+          ],
+          "cards": [
+            "NLP-00-04"
+          ]
+        },
+        {
+          "t": "BFGS",
+          "d": [
+            "$H_{k+1}^{-1} = (I - \\rho sy^\\top)H_k^{-1}(I - \\rho ys^\\top) + \\rho ss^\\top$, $\\rho = 1/(y^\\top s)$; positive definite iff $y^\\top s > 0$."
+          ],
+          "cards": [
+            "NLP-00-04",
+            "NLP-00-19"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Convergence, gradient methods",
+      "items": [
+        {
+          "t": "Newton theorems",
+          "d": [
+            "1-D: $e_{k+1} \\le \\tfrac{\\gamma}{2\\rho}e_k^2$. $\\mathbb{R}^n$: $\\lVert e_{k+1} \\rVert \\le \\beta\\gamma\\lVert e_k \\rVert^2$ within $\\min\\{r, \\tfrac{1}{2\\beta\\gamma}\\}$."
+          ],
+          "cards": [
+            "NLP-00-05"
+          ]
+        },
+        {
+          "t": "Gradient method",
+          "d": [
+            "$f(x^+) \\le f(x) - \\alpha(1 - \\tfrac{L\\alpha}{2})\\lVert \\nabla f \\rVert^2$; $0 < \\alpha < \\tfrac2L$; exact steps on a quadratic: factor $\\big(\\tfrac{\\kappa - 1}{\\kappa + 1}\\big)^2$."
+          ],
+          "cards": [
+            "NLP-00-06",
+            "NLP-00-20"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Least squares, SGD",
+      "items": [
+        {
+          "t": "Least squares",
+          "d": [
+            "$X^\\top Xw = X^\\top y$; unique iff $\\operatorname{rank}X = d$; gradient step $O(nd)$; best constant step $\\tfrac{2}{\\lambda_1 + \\lambda_d}$."
+          ],
+          "cards": [
+            "NLP-00-07",
+            "NLP-00-21"
+          ]
+        },
+        {
+          "t": "Stochastic gradient",
+          "d": [
+            "$w \\leftarrow w - \\alpha\\nabla f_i(w)$, $O(d)$; unbiased; constant step: noise floor; $\\sum\\alpha_k = \\infty$, $\\sum\\alpha_k^2 < \\infty$: sublinear convergence."
+          ],
+          "cards": [
+            "NLP-00-08"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "KKT conditions",
+      "items": [
+        {
+          "t": "Statement",
+          "d": [
+            "$\\nabla f + \\sum u_i\\nabla g_i + \\sum v_j\\nabla h_j = 0$, $u \\ge 0$, $u_ig_i = 0$, feasibility. Necessary under LICQ or Slater; sufficient for convex problems."
+          ],
+          "cards": [
+            "NLP-00-09",
+            "NLP-00-10"
+          ]
+        },
+        {
+          "t": "Examples and proof",
+          "d": [
+            "Guess the active set, check signs and feasibility. Proof: no feasible descent direction, Gordan, Fritz John, LICQ."
+          ],
+          "cards": [
+            "NLP-00-22",
+            "NLP-00-23",
+            "NLP-00-24"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Second order & duality",
+      "items": [
+        {
+          "t": "Second order",
+          "d": [
+            "Necessary: $d^\\top\\nabla^2_{xx}L\\,d \\ge 0$ on $\\Lambda(x^*)$. Sufficient: $> 0$ on the cone $C(x^*)$."
+          ],
+          "cards": [
+            "NLP-00-11"
+          ]
+        },
+        {
+          "t": "Duality",
+          "d": [
+            "$q(\\lambda, \\mu) = \\inf_xL$ is concave; $q \\le f^*$ for $\\mu \\ge 0$; $d^* \\le f^*$; equality for convex problems with a Slater point and for LPs."
+          ],
+          "cards": [
+            "NLP-00-12",
+            "NLP-00-26",
+            "NLP-00-25"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Interior point methods",
+      "items": [
+        {
+          "t": "Central path",
+          "d": [
+            "$Ax = b$, $A^\\top\\pi + z = c$, $XZe = \\mu e$, $x, z > 0$; gap $x^\\top z = n\\mu$."
+          ],
+          "cards": [
+            "NLP-00-13"
+          ]
+        },
+        {
+          "t": "Algorithms",
+          "d": [
+            "$Zd_x + Xd_z = -XZe + \\tau ye$; $y^+ = [1 - \\alpha(1 - \\tau)]y$; short-step: $O(\\sqrt n\\ln(1/\\varepsilon))$; predictor–corrector: $\\tau = (y_{\\text{aff}}/y)^3$."
+          ],
+          "cards": [
+            "NLP-00-14",
+            "NLP-00-27"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Across topics",
+      "items": [
+        {
+          "t": "Letters that change meaning",
+          "d": [
+            "Multipliers u, v / λ, μ / π, z; γ, β, s; H and B."
+          ],
+          "cards": [
+            "NLP-00-28"
+          ]
+        }
+      ]
+    }
+  ],
   "cards": [
     {
-      "id": "NLP-01",
-      "k": "KKT sufficiency",
-      "q": "When are the KKT conditions sufficient for global optimality?",
+      "id": "NLP-00-01",
+      "g": "First pass",
+      "k": "Classifying points",
+      "q": "Unconstrained problem $\\min f(x)$ over $\\mathbb{R}^n$ with $f$ twice continuously differentiable and Hessian $H$. (1) State the first-order necessary, second-order necessary and second-order sufficient conditions. (2) Give the verdicts of the Hessian test at a stationary point. (3) What is done when $H$ is singular there? (4) How are global and strict global minimizers decided?",
       "pts": [
-        "The problem is convex: convex objective f, convex inequality constraints gᵢ(x) ≤ 0, affine equality constraints.",
-        "x* is feasible and there exist multipliers λ ≥ 0 (and μ) with stationarity: ∇f(x*) + Σλᵢ∇gᵢ(x*) + Σμⱼ∇hⱼ(x*) = 0.",
-        "Complementary slackness holds: λᵢ gᵢ(x*) = 0 for all i.",
-        "Then x* is a global minimizer — no constraint qualification is needed for this direction."
+        "(1) FONC: a local minimizer has $\\nabla f(x^*) = 0$. SONC: it also has $H(x^*) \\succeq 0$. SOSC: $\\nabla f(x^*) = 0$ and $H(x^*) \\succ 0$ imply a strict local minimizer.",
+        "(2) $H \\succ 0$: strict local min. $H \\prec 0$: strict local max. $H$ indefinite (for $2 \\times 2$: $\\det H < 0$): saddle.",
+        "(3) The test is inconclusive ($x^4$ and $x^3$ both have second derivative 0 at 0). Compare $f$ with $f(x^*)$ along paths through the point: one path going up and one going down proves a saddle.",
+        "(4) Global: show $f(x) \\ge f(x^*)$ for all $x$ (sum of squares, convexity, or coercivity followed by comparing the values at all stationary points). No global minimizer if $f \\to -\\infty$ along some path. Strict global only if the global minimizer is unique."
       ],
-      "pit": "Slater / a constraint qualification is what makes KKT necessary; it is not needed for sufficiency."
+      "pit": "FONC is only a filter, and SOSC is local: a strict local minimizer with the lowest stationary value is still not global when $f$ is unbounded below.",
+      "src": "See Optimality & convexity 04, 23, 25, 33",
+      "seen": [
+        "MT24 P1",
+        "MT25 P1",
+        "MT26W P1",
+        "MT26F P1"
+      ]
     },
     {
-      "id": "NLP-02",
-      "k": "Slater's condition",
-      "q": "What role does Slater’s condition play in convex optimization?",
+      "id": "NLP-00-02",
+      "g": "First pass",
+      "k": "Convexity",
+      "q": "(1) Define a convex function and state the Hessian test with its hypotheses. (2) When is $\\tfrac12x^\\top Ax + b^\\top x + c$ with $A$ symmetric convex, and when strictly convex? (3) State the two results that make convex problems easy. (4) Which operations preserve convexity of functions and of sets?",
       "pts": [
-        "Definition: there is a strictly feasible point — gᵢ(x) < 0 for the non-affine inequality constraints, with affine constraints satisfied.",
-        "It is a constraint qualification: for a convex problem it guarantees strong duality (zero duality gap).",
-        "If the optimal value is finite, the dual optimum is attained, so KKT multipliers exist — KKT becomes necessary for optimality."
+        "(1) $f(\\lambda x + (1 - \\lambda)y) \\le \\lambda f(x) + (1 - \\lambda)f(y)$ on a convex set. For $f \\in C^2$ on an open convex set $C$: convex iff $H(x) \\succeq 0$ at every $x \\in C$; $H(x) \\succ 0$ everywhere implies strictly convex, but not conversely ($x^4$).",
+        "(2) Convex iff $A \\succeq 0$; strictly convex iff $A \\succ 0$.",
+        "(3) In a convex problem every local minimizer is global (and unique if $f$ is strictly convex). Gradient inequality $f(y) \\ge f(x) + \\nabla f(x)^\\top(y - x)$: on $\\mathbb{R}^n$ a stationary point of a convex $f$ is a global minimizer.",
+        "(4) Functions: sums, positive multiples, $g(f(x))$ with $g$ convex and nondecreasing, $f(Ax + b)$, pointwise maximum. Sets: intersections, scaling, Minkowski sums, and $\\{x : g(x) \\le 0\\}$ for convex $g$. Unions do not."
       ],
-      "pit": "Slater does not imply that a primal optimum exists or is unique, and it is a statement about convex problems."
+      "pit": "Positive definite: all leading principal minors $> 0$. Positive semidefinite: all principal minors $\\ge 0$, not only the leading ones ($2 \\times 2$: $a \\ge 0$, $c \\ge 0$, $ac - b^2 \\ge 0$).",
+      "src": "See Optimality & convexity 09, 11, 13–16, 19, 20",
+      "seen": [
+        "MT25 P2c",
+        "MT26F P2b"
+      ]
     },
     {
-      "id": "NLP-03",
-      "k": "Strong convexity",
-      "q": "What distinguishes convexity from strong convexity?",
+      "id": "NLP-00-03",
+      "g": "First pass",
+      "k": "Newton's method",
+      "q": "Newton's method for minimizing a twice differentiable $f$ with Hessian $H$. (1) Write the Newton system and the update. (2) When is the Newton direction a descent direction, and why? (3) What happens on $\\tfrac12x^\\top Qx - b^\\top x$ with $Q \\succ 0$? (4) When is the convergence quadratic, and when only linear? (5) Give the example where pure Newton fails although $f'' > 0$ everywhere.",
       "pts": [
-        "Convex (differentiable f): f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) — f lies above every tangent plane.",
-        "m-strongly convex (m > 0): f(y) ≥ f(x) + ∇f(x)ᵀ(y − x) + (m/2)‖y − x‖² — a uniform quadratic lower bound on curvature.",
-        "For twice differentiable f: ∇²f(x) ⪰ mI for all x.",
-        "Consequences: at most one minimizer; with L-smoothness, gradient descent converges linearly."
+        "(1) $H(x^{(k)})\\,d^{(k)} = -\\nabla f(x^{(k)})$ and $x^{(k+1)} = x^{(k)} + \\alpha^{(k)}d^{(k)}$, with $\\alpha = 1$ for pure Newton. Solve the system; never form the inverse.",
+        "(2) If $H \\succ 0$ and $\\nabla f \\ne 0$: $\\nabla f^\\top d = -\\nabla f^\\top H^{-1}\\nabla f < 0$ because $H^{-1} \\succ 0$. With an indefinite $H$ the direction may be an ascent direction: Newton looks for stationary points.",
+        "(3) One step from any start: $x^{(1)} = x^{(0)} - Q^{-1}(Qx^{(0)} - b) = Q^{-1}b$, the global minimizer.",
+        "(4) Quadratic near a stationary point with nonsingular Hessian (and Lipschitz Hessian). Only linear when the Hessian is singular at the solution: on $(x - x_0)^4$ the error is multiplied by $\\tfrac23$.",
+        "(5) $f = \\sqrt{1 + x^2}$: $x^+ = -x^3$. It converges for $|x^{(0)}| < 1$, cycles at 1 and diverges beyond: the full step is too long, hence a line search."
       ],
-      "pit": "Strictly convex ≠ strongly convex: eˣ is strictly convex on ℝ but not strongly convex (f″ = eˣ → 0)."
+      "pit": "Cost per step: all second derivatives and an $O(n^3)$ solve.",
+      "src": "See Newton, line search, BFGS 12, 14, 15, 19, 20",
+      "seen": [
+        "MT25 P3",
+        "MT26W P3",
+        "MT26W P4"
+      ]
     },
     {
-      "id": "NLP-04",
-      "k": "Stationary ⇒ global",
-      "q": "When is a stationary point globally optimal?",
+      "id": "NLP-00-04",
+      "g": "First pass",
+      "k": "Line search, BFGS",
+      "q": "Iteration $x^{(k+1)} = x^{(k)} + \\alpha d$; write $s = x^{(k+1)} - x^{(k)}$ and $y$ for the change of the gradient. (1) State the gradient test for a descent direction. (2) State the Armijo condition and backtracking, and why backtracking stops. (3) Write the secant condition and the inverse BFGS update. (4) Prove that the update stays positive definite when $y^\\top s > 0$. (5) When is $y^\\top s > 0$ guaranteed?",
       "pts": [
-        "Unconstrained, differentiable convex f: ∇f(x*) = 0 ⇔ x* is a global minimizer.",
-        "Constrained convex problem: the condition becomes ∇f(x*)ᵀ(x − x*) ≥ 0 for all feasible x (−∇f(x*) lies in the normal cone).",
-        "Nonconvex f: ∇f(x*) = 0 can be a local min, a local max or a saddle point."
+        "(1) $\\nabla f(x)^\\top d < 0$ implies that $d$ is a descent direction (sufficient, not necessary).",
+        "(2) $f(x + \\alpha d) \\le f(x) + \\gamma\\alpha\\nabla f(x)^\\top d$ with $\\gamma \\in (0, 1)$. Start from an initial step and multiply by $\\beta \\in (0, 1)$ until it holds. It stops because the difference quotient tends to $\\nabla f^\\top d < \\gamma\\nabla f^\\top d$.",
+        "(3) $H_{k+1}s = y$, i.e. $H_{k+1}^{-1}y = s$. With $\\rho = 1/(y^\\top s)$: $$H_{k+1}^{-1} = (I - \\rho sy^\\top)H_k^{-1}(I - \\rho ys^\\top) + \\rho ss^\\top$$",
+        "(4) $x^\\top H_{k+1}^{-1}x = w^\\top H_k^{-1}w + \\rho(s^\\top x)^2$ with $w = x - \\rho(s^\\top x)y$. Both terms are $\\ge 0$. If $s^\\top x \\ne 0$ the second is positive; if $s^\\top x = 0$ then $w = x \\ne 0$ and the first is positive.",
+        "(5) For strictly convex $f$ (add the two strict gradient inequalities). Convexity alone gives only $y^\\top s \\ge 0$; otherwise a curvature condition in the line search enforces it."
       ],
-      "pit": "At a constrained optimum ∇f(x*) is usually not zero — don't set the gradient to zero when constraints are active."
+      "pit": "BFGS needs gradients only and $O(n^2)$ work per step; the direction is the product $-H_k^{-1}\\nabla f$, no system is solved.",
+      "src": "See Newton, line search, BFGS 06, 24, 25, 31–34",
+      "seen": [
+        "MT24 P5",
+        "MT24 P6",
+        "MT26F P5b",
+        "MT26F P7a"
+      ]
     },
     {
-      "id": "NLP-05",
-      "k": "PSD Hessian",
-      "q": "Why is a positive semidefinite Hessian useful?",
+      "id": "NLP-00-05",
+      "g": "First pass",
+      "k": "Rates, Newton theorem",
+      "q": "Let $e_k$ be the error of a convergent sequence. (1) Define linear, superlinear and quadratic convergence. (2) State the one-variable Newton theorem for $f(x) = 0$ on an open interval $D$. (3) Prove the error bound. (4) Why is a radius needed, and which one works? (5) Give the version in $\\mathbb{R}^n$.",
       "pts": [
-        "On an open convex set, for f ∈ C²: ∇²f(x) ⪰ 0 for all x ⇔ f is convex.",
-        "∇²f(x) ≻ 0 for all x ⇒ strictly convex (the converse fails: x⁴ is strictly convex but f″(0) = 0).",
-        "∇²f(x) ⪰ mI for all x ⇒ m-strongly convex.",
-        "Locally: ∇f(x*) = 0 and ∇²f(x*) ≻ 0 ⇒ strict local minimum (second-order sufficient condition)."
+        "(1) $\\lim e_{k+1}/e_k = \\delta < 1$; the same limit equal to 0; $\\lim e_{k+1}/e_k^2 = \\delta < \\infty$ (finite, not necessarily below 1). Quadratic implies superlinear implies linear.",
+        "(2) If $f'$ is $\\gamma$-Lipschitz on $D$, $|f'| \\ge \\rho > 0$ on $D$ and there is a root $x^* \\in D$, then for $|x^{(0)} - x^*| < \\eta$ the Newton sequence exists, converges to $x^*$, and $e_{k+1} \\le \\dfrac{\\gamma}{2\\rho}e_k^2$.",
+        "(3) $x^{(k+1)} - x^* = \\dfrac{f(x^*) - f(x^{(k)}) - f'(x^{(k)})(x^* - x^{(k)})}{f'(x^{(k)})}$. The numerator is a tangent-line error, at most $\\tfrac{\\gamma}{2}e_k^2$ by the Key Lemma; the denominator is at least $\\rho$.",
+        "(4) The bound shrinks the error only when $\\tfrac{\\gamma}{2\\rho}e_k < 1$. With $\\eta = \\min\\{\\bar\\eta, \\tau\\tfrac{2\\rho}{\\gamma}\\}$, $\\tau \\in (0, 1)$: $e_{k+1} \\le \\tau e_k$, so the iterates stay in $D$ and $e_k \\le \\tau^ke_0 \\to 0$.",
+        "(5) Jacobian $\\gamma$-Lipschitz near $x^*$ and $\\lVert J(x^*)^{-1} \\rVert \\le \\beta$: $\\lVert e_{k+1} \\rVert \\le \\beta\\gamma\\lVert e_k \\rVert^2$ for starts within $\\varepsilon = \\min\\{r, \\tfrac{1}{2\\beta\\gamma}\\}$."
       ],
-      "pit": "A PSD Hessian at a single point says nothing about global convexity."
+      "pit": "Key Lemma: $|l(y) - l(x) - l'(x)(y - x)| \\le \\tfrac{\\gamma}{2}(y - x)^2$ when $l'$ is $\\gamma$-Lipschitz. $\\bar\\eta$ is the radius of the largest interval around $x^*$ inside $D$.",
+      "src": "See Convergence, gradient methods 01, 07, 09–11, 21",
+      "seen": [
+        "HW2 P1",
+        "T4 P1"
+      ]
     },
     {
-      "id": "NLP-06",
-      "k": "Local vs strict",
-      "q": "What is the difference between a local minimum and a strict local minimum?",
+      "id": "NLP-00-06",
+      "g": "First pass",
+      "k": "Gradient method",
+      "q": "Gradient method $x^+ = x - \\alpha\\nabla f(x)$, where $\\nabla f$ is $L$-Lipschitz. (1) State the descent lemma. (2) Derive the guaranteed decrease and the admissible constant steps. (3) State the convergence theorem. (4) Give the rate of exact steepest descent on $x^\\top Qx$ with $Q \\succ 0$, and the zig-zag property. (5) Name three ways the method breaks.",
       "pts": [
-        "Local minimum: f(x*) ≤ f(x) for all feasible x in some neighborhood of x*.",
-        "Strict local minimum: f(x*) < f(x) for all feasible x ≠ x* in some neighborhood.",
-        "Example: for a constant function every point is a local minimum, but none is strict."
+        "(1) $f(y) \\le f(x) + \\nabla f(x)^\\top(y - x) + \\tfrac{L}{2}\\lVert y - x \\rVert^2$.",
+        "(2) With $y = x^+$: $f(x^+) \\le f(x) - \\alpha\\big(1 - \\tfrac{L\\alpha}{2}\\big)\\lVert \\nabla f(x) \\rVert^2$. A decrease is guaranteed for $0 < \\alpha < \\tfrac2L$; the best guarantee is $\\tfrac{1}{2L}\\lVert \\nabla f \\rVert^2$ at $\\alpha = \\tfrac1L$.",
+        "(3) If $f$ is bounded below and $\\nabla f$ is $L$-Lipschitz, then with a constant step in $(0, \\tfrac2L)$, an exact step or backtracking: $\\nabla f(x^{(k)}) \\to 0$. Nothing more is claimed.",
+        "(4) $f(x^{(k+1)}) \\le \\Big(\\dfrac{\\kappa - 1}{\\kappa + 1}\\Big)^2f(x^{(k)})$ with $\\kappa = M/m$, the ratio of the extreme eigenvalues. Consecutive exact steps are orthogonal: $\\nabla f(x^{(k+1)})^\\top\\nabla f(x^{(k)}) = 0$.",
+        "(5) A step $\\ge \\tfrac2L$ ($x^2 + 2y^2$ with $\\alpha = 0.5$ oscillates); a gradient that is not Lipschitz ($x^4$ with $\\alpha = 0.1$ from 3 diverges); $f$ unbounded below ($f = -x$)."
       ],
-      "pit": "∇f(x*) = 0 and ∇²f(x*) ⪰ 0 are only necessary at an interior local minimum, not sufficient."
+      "pit": "Only the ratio $\\kappa$ matters for the rate, not the difference $M - m$. Newton's guarantees are local and fast; these are global and slow.",
+      "src": "See Convergence, gradient methods 31, 34–36, 38, 39",
+      "seen": [
+        "MT24 P4c"
+      ]
     },
     {
-      "id": "NLP-07",
-      "k": "Duality gap",
-      "q": "What is the duality gap and when is it zero?",
+      "id": "NLP-00-07",
+      "g": "First pass",
+      "k": "Least squares",
+      "q": "$F(w) = \\lVert y - Xw \\rVert^2$ with $X \\in \\mathbb{R}^{n \\times d}$. (1) Compute gradient and Hessian and show convexity. (2) Characterize the minimizers and say when the minimizer is unique. (3) For the mean squared error $f = \\tfrac1n\\lVert Xw - y \\rVert^2$ give the gradient and the cost of one gradient step. (4) With $H = \\tfrac2nX^\\top X$ and eigenvalues $\\lambda_1 \\le \\dots \\le \\lambda_d$, which constant steps converge, and what are the best step and its rate?",
       "pts": [
-        "Weak duality (minimization): the dual optimum d* ≤ primal optimum p*, always — even for nonconvex problems.",
-        "Duality gap = p* − d* ≥ 0.",
-        "The gap is zero (strong duality) for convex problems under a constraint qualification such as Slater; for LP whenever an optimum exists."
+        "(1) $\\nabla F = -2X^\\top(y - Xw)$ and $\\nabla^2F = 2X^\\top X \\succeq 0$, since $v^\\top X^\\top Xv = \\lVert Xv \\rVert^2 \\ge 0$.",
+        "(2) The global minimizers are the solutions of the normal equations $X^\\top Xw = X^\\top y$ (always solvable). Unique iff $\\operatorname{rank}X = d$: $\\hat w = (X^\\top X)^{-1}X^\\top y$.",
+        "(3) $\\nabla f = \\tfrac2nX^\\top(Xw - y)$, at $O(nd)$ per step, against $O(nd^2 + d^3)$ for the normal equations.",
+        "(4) $w_{k+1} - w^* = (I - \\alpha H)(w_k - w^*)$: convergence iff $0 < \\alpha < \\tfrac{2}{\\lambda_d} = \\tfrac2L$, rate $\\max_j|1 - \\alpha\\lambda_j|$; best $\\alpha = \\tfrac{2}{\\lambda_1 + \\lambda_d}$ with rate $\\tfrac{\\kappa - 1}{\\kappa + 1}$."
       ],
-      "pit": "Nonconvex problems (e.g. integer programs) typically have a positive gap; the dual still gives a valid lower bound."
+      "pit": "The largest eigenvalue decides stability, the smallest decides speed. The scalings $\\sum$, $\\tfrac1n\\sum$, $\\tfrac{1}{2n}\\sum$ change $L$ and the allowed step by the same factor.",
+      "src": "See Least squares, SGD 01, 05, 06, 12",
+      "seen": []
     },
     {
-      "id": "NLP-08",
-      "k": "Newton vs GD",
-      "q": "Why can Newton’s method converge faster than gradient descent?",
+      "id": "NLP-00-08",
+      "g": "First pass",
+      "k": "Stochastic gradient",
+      "q": "Objective $f(w) = \\tfrac1n\\sum_{i=1}^n f_i(w)$. (1) Write the stochastic gradient update and its cost for regression, $f_i = (x_i^\\top w - y_i)^2$. (2) In which sense is the sampled gradient unbiased? (3) What happens with a constant step? (4) Which step sequences remove the problem, and at what price? (5) When is the method the right choice?",
       "pts": [
-        "The Newton step solves ∇²f(x)d = −∇f(x): it minimizes the local quadratic model, using curvature.",
-        "Near a minimizer with ∇²f(x*) ≻ 0 (and a Lipschitz Hessian) it converges quadratically.",
-        "Gradient descent converges linearly at best, with a rate that worsens with the condition number κ.",
-        "Newton is affine-invariant, so it is insensitive to bad scaling of the variables."
+        "(1) Pick an index $i$ and set $w \\leftarrow w - \\alpha\\nabla f_i(w)$, with $\\nabla f_i = 2(x_i^\\top w - y_i)x_i$: $O(d)$ per update instead of $O(nd)$; one epoch ($n$ updates) costs one full gradient.",
+        "(2) For $i$ uniform and a fixed $w$: $E_i[\\nabla f_i(w)] = \\nabla f(w)$, so $E[w^+] = w - \\alpha\\nabla f(w)$. It is a statement about one step from a given point.",
+        "(3) With $\\nabla f$ $L$-Lipschitz and $E_i\\lVert \\nabla f_i \\rVert^2 \\le G^2$: $E[f(w_{k+1}) \\mid w_k] \\le f(w_k) - \\alpha\\lVert \\nabla f(w_k) \\rVert^2 + \\tfrac{L\\alpha^2}{2}G^2$. The last term does not vanish as $\\nabla f \\to 0$: fast early progress, then a noise floor proportional to $\\alpha$.",
+        "(4) $\\sum_k\\alpha_k = \\infty$ and $\\sum_k\\alpha_k^2 < \\infty$ (e.g. $\\alpha_k \\propto 1/k$): the floor disappears, but convergence is sublinear.",
+        "(5) When $n$ is so large that a full gradient is already too expensive and moderate accuracy suffices; for high accuracy on moderate data, gradient or Newton-type methods win."
       ],
-      "pit": "Far from the optimum or with an indefinite Hessian Newton can diverge — use line search / damping; each step costs about O(n³)."
+      "pit": "The slides state no convergence result for this method; the bound in part 3 comes from the descent lemma.",
+      "src": "See Least squares, SGD 13, 14, 19, 21, 24",
+      "seen": []
     },
     {
-      "id": "NLP-09",
-      "k": "Compl. slackness",
-      "q": "What is complementary slackness?",
+      "id": "NLP-00-09",
+      "g": "First pass",
+      "k": "KKT conditions",
+      "q": "Standard form $\\min f(x)$ s.t. $g_i(x) \\le 0$, $h_j(x) = 0$, with multipliers $u_i$ for $g_i$ and $v_j$ for $h_j$. (1) State the four KKT conditions at $\\bar x$. (2) State the theorem that makes them necessary. (3) Why is $u_i \\ge 0$ while $v_j$ is free, and how are other forms converted? (4) What does complementary slackness say in each direction?",
       "pts": [
-        "For gᵢ(x) ≤ 0 with multipliers λᵢ ≥ 0, KKT requires λᵢ gᵢ(x*) = 0 for every i.",
-        "Inactive constraint (gᵢ(x*) < 0) ⇒ λᵢ = 0.",
-        "λᵢ > 0 ⇒ the constraint is active (gᵢ(x*) = 0).",
-        "λᵢ is the shadow price: the marginal improvement in the objective from relaxing constraint i."
+        "(1) Primal feasibility $g(\\bar x) \\le 0$, $h(\\bar x) = 0$; stationarity $\\nabla f(\\bar x) + \\sum_iu_i\\nabla g_i(\\bar x) + \\sum_jv_j\\nabla h_j(\\bar x) = 0$; dual feasibility $u \\ge 0$; complementary slackness $u_ig_i(\\bar x) = 0$ for every $i$.",
+        "(2) If $\\bar x$ is a local minimum and LICQ holds there (the gradients of the active inequalities and of all equalities are linearly independent), such $u$ and $v$ exist.",
+        "(3) An active inequality blocks motion only in the direction $+\\nabla g_i$; an equality blocks both. $-\\nabla f$ is a nonnegative combination of the active $\\nabla g_i$ plus any combination of the $\\nabla h_j$. Convert first: $\\max f \\to \\min -f$, $a(x) \\ge b \\to b - a(x) \\le 0$, $x \\ge 0 \\to -x_i \\le 0$.",
+        "(4) Inactive ($g_i < 0$) forces $u_i = 0$; $u_i > 0$ forces active. An active constraint may still have $u_i = 0$ (weakly active)."
       ],
-      "pit": "Active does NOT imply λᵢ > 0: an active constraint can have λᵢ = 0 (degenerate case). The reverse direction, λᵢ > 0 ⇒ active, always holds."
+      "pit": "Without constraints the conditions reduce to $\\nabla f(\\bar x) = 0$. After converting $x_3 \\ge 0$ the constraint gradient is $(0, 0, -1)$.",
+      "src": "See KKT conditions 01, 04–06",
+      "seen": []
     },
     {
-      "id": "NLP-10",
-      "k": "Projected GD",
-      "q": "When is projected gradient descent useful?",
+      "id": "NLP-00-10",
+      "g": "First pass",
+      "k": "Using KKT",
+      "q": "(1) List the steps for solving a constrained problem with KKT when no candidate is given. (2) When is a KKT point a global minimum? (3) What may be concluded when a point is not a KKT point, and when the constraint qualification fails? (4) Compare LICQ and Slater. (5) Solve $\\min x^2$ s.t. $1 - x \\le 0$.",
       "pts": [
-        "Update: xₖ₊₁ = Proj_C(xₖ − αₖ∇f(xₖ)) — take a gradient step, then project back onto the feasible set C.",
-        "Useful when C is closed and convex with a cheap projection: box, ball, simplex.",
-        "A fixed point x* = Proj_C(x* − α∇f(x*)) is exactly the first-order optimality condition on C.",
-        "Portfolio example: long-only, fully invested weights = projection onto the probability simplex."
+        "(1) Standard form; derivatives; guess an active set (multiplier 0 for the rest); solve stationarity with the active constraints, keeping feasible solutions with $u \\ge 0$; conclude with a CQ and convexity. A violated inactive constraint is made active; an active one with $u_i < 0$ is dropped.",
+        "(2) When $f$ and all $g_i$ are convex and all $h_j$ affine. No constraint qualification is needed for this direction.",
+        "(3) Not KKT and a CQ holds at the point: not a local minimum. If the CQ fails, KKT says nothing: the point may be a minimum without being a KKT point.",
+        "(4) LICQ: checked at the candidate, no convexity, unique multipliers. Slater ($g_i$ convex, $h_j$ affine, a point with $g_i < 0$ and $h = 0$): checked once for the problem, needs convexity, multipliers may be non-unique.",
+        "(5) Inactive: $u = 0$ gives $x = 0$, infeasible. Active: $x = 1$, and $2x - u = 0$ gives $u = 2 \\ge 0$. Convex problem, so $x^* = 1$ is the global minimizer."
       ],
-      "pit": "If projecting onto C is itself a hard optimization problem, prefer other methods (Frank–Wolfe, ADMM)."
+      "pit": "Say explicitly which CQ holds before rejecting a point because of a negative multiplier.",
+      "src": "See KKT conditions 10, 12, 23, 24",
+      "seen": [
+        "T6 P3",
+        "HW3 P2"
+      ]
+    },
+    {
+      "id": "NLP-00-11",
+      "g": "First pass",
+      "k": "Second-order test",
+      "q": "$\\min f$ s.t. $g_i \\le 0$, $h_j = 0$. In this part the multipliers are $\\lambda_i$ (inequalities) and $\\mu_j$ (equalities), $L = f + \\sum_i\\lambda_ig_i + \\sum_j\\mu_jh_j$ and $H = \\nabla^2_{xx}L$. (1) State the second-order necessary condition. (2) State the sufficient condition. (3) List the steps of the test. (4) Apply it to $\\min x_1^2 + 2x_2^2$ s.t. $x_1^2 + x_2^2 = 1$.",
+      "pts": [
+        "(1) At a regular local minimum the KKT conditions hold and $d^\\top Hd \\ge 0$ for all $d \\in \\Lambda(x^*) = \\{d : \\nabla g_i^\\top d = 0 \\text{ (active } i), \\nabla h_j^\\top d = 0\\}$. Necessary only.",
+        "(2) If $d^\\top Hd > 0$ for all nonzero $d \\in C(x^*)$, the KKT point is a strict local minimum, where $C(x^*)$ requires $\\nabla h_j^\\top d = 0$, $\\nabla g_i^\\top d = 0$ for active $i$ with $\\lambda_i > 0$, and $\\nabla g_i^\\top d \\le 0$ for active $i$ with $\\lambda_i = 0$.",
+        "(3) Active set and regularity; $H$ with the point's own multipliers; a basis $Z$ of $\\Lambda$; then $Z^\\top HZ$. A negative eigenvalue: not a local minimum. Otherwise the point only passes.",
+        "(4) KKT points $(\\pm 1, 0)$ with $\\mu = -1$ and $(0, \\pm 1)$ with $\\mu = -2$; $H = \\operatorname{diag}(2 + 2\\mu, 4 + 2\\mu)$. At $(\\pm 1, 0)$: $\\operatorname{diag}(0, 2)$ on $d = (0, d_2)$ gives $2d_2^2 \\ge 0$, pass (they are the minimizers, $f = 1$). At $(0, \\pm 1)$: $\\operatorname{diag}(-2, 0)$ on $d = (d_1, 0)$ gives $-2d_1^2 < 0$, fail."
+      ],
+      "pit": "Use $\\nabla^2_{xx}L$, not $\\nabla^2f$ (here $\\nabla^2f \\succ 0$ at all four points), and test only on $\\Lambda$. The sufficient condition is a standard result that is not on the slides.",
+      "src": "See Second order & duality 02, 08–10",
+      "seen": [
+        "T7 P1",
+        "T7 P2b"
+      ]
+    },
+    {
+      "id": "NLP-00-12",
+      "g": "First pass",
+      "k": "Lagrangian duality",
+      "q": "Problem $\\min f(x)$ s.t. $h_i(x) = 0$, $g_j(x) \\le 0$. In the duality part $\\lambda_i$ belongs to the equalities and $\\mu_j \\ge 0$ to the inequalities. (1) Define the dual function and the dual problem. (2) Prove the lower bound property. (3) Why is $q$ concave? (4) State weak and strong duality. (5) Compute the dual of $\\min x^2$ s.t. $x \\ge 1$.",
+      "pts": [
+        "(1) $L = f + \\sum_i\\lambda_ih_i + \\sum_j\\mu_jg_j$ and $q(\\lambda, \\mu) = \\inf_{x \\in \\mathbb{R}^n}L(x, \\lambda, \\mu)$ (over all $x$, possibly $-\\infty$). Dual: $\\max q(\\lambda, \\mu)$ s.t. $\\mu \\ge 0$, with value $d^*$.",
+        "(2) For a feasible $\\bar x$ and $\\mu \\ge 0$: $\\sum_i\\lambda_ih_i(\\bar x) + \\sum_j\\mu_jg_j(\\bar x) \\le 0$, so $q(\\lambda, \\mu) \\le L(\\bar x, \\lambda, \\mu) \\le f(\\bar x)$; hence $q(\\lambda, \\mu) \\le f^*$.",
+        "(3) For fixed $x$, $L$ is affine in the multipliers, and a pointwise infimum of affine functions is concave. No property of $f$, $g$, $h$ is used.",
+        "(4) Weak: $d^* \\le f^*$ always; the gap is $f^* - d^* \\ge 0$. Strong, $d^* = f^*$: for a convex problem with a Slater point, and for an LP with a finite optimum.",
+        "(5) $L = x^2 + \\mu(1 - x)$, minimized at $x = \\tfrac\\mu2$: $q(\\mu) = \\mu - \\tfrac{\\mu^2}{4}$, maximal at $\\mu^* = 2$, $d^* = 1 = f^*$, and $x^* = \\tfrac{\\mu^*}{2} = 1$."
+      ],
+      "pit": "Sign restrictions follow the constraint, never the letter: the second-order slides use $\\lambda$ for inequalities.",
+      "src": "See Second order & duality 26, 28, 29, 34, 40, 42",
+      "seen": [
+        "HW3 P1"
+      ]
+    },
+    {
+      "id": "NLP-00-13",
+      "g": "First pass",
+      "k": "IPM: central path",
+      "q": "LP $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$ with dual $\\max b^\\top\\pi$ s.t. $A^\\top\\pi + z = c$, $z \\ge 0$; $n$ is the number of variables. (1) State and prove the gap identity. (2) Write the optimality conditions. (3) Write the barrier problem and its conditions. (4) Define the central path and give the gap on it. (5) Which $\\mu$ guarantees a primal value within $\\varepsilon$ of optimal?",
+      "pts": [
+        "(1) For a feasible pair $c^\\top x - b^\\top\\pi = (A^\\top\\pi + z)^\\top x - (Ax)^\\top\\pi = x^\\top z \\ge 0$: weak duality, and $x^\\top z$ is the duality gap.",
+        "(2) $Ax = b$; $A^\\top\\pi + z = c$; $x_iz_i = 0$ for all $i$; $x, z \\ge 0$. Only the complementarity equations are nonlinear.",
+        "(3) $\\min c^\\top x - \\mu\\sum_i\\ln x_i$ s.t. $Ax = b$. With $z_i = \\mu/x_i$ its conditions are the same three groups with $x_iz_i = \\mu$ (i.e. $XZe = \\mu e$) and $x, z > 0$.",
+        "(4) The set of solutions of the perturbed conditions for $\\mu > 0$: one point per $\\mu$, approaching optimal solutions as $\\mu \\downarrow 0$. The gap there is $x^\\top z = n\\mu$.",
+        "(5) $0 \\le c^\\top x - p^* \\le c^\\top x - b^\\top\\pi = n\\mu$, so $\\mu \\le \\varepsilon/n$."
+      ],
+      "pit": "The gap identity needs both feasibility equations; at an infeasible point $x^\\top z$ is only complementarity. Total complementarity on the path is $n\\mu$; the average $y$ equals $\\mu$.",
+      "src": "See Interior point methods 03, 05, 07, 09, 11, 13",
+      "seen": [
+        "T8 P1a",
+        "T8 P1c"
+      ]
+    },
+    {
+      "id": "NLP-00-14",
+      "g": "First pass",
+      "k": "IPM: algorithm",
+      "q": "Primal–dual method for the LP $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$ at a strictly feasible point $(x, \\pi, z)$; $y = x^\\top z/n$ and the target is $\\mu = \\tau y$. (1) Write the Newton system. (2) What do the directions preserve, what not, and how is the step chosen? (3) Give the recurrence for $y$. (4) Compare the basic, short-step and predictor–corrector methods. (5) State the iteration bound of the short-step method.",
+      "pts": [
+        "(1) $A^\\top d_\\pi + d_z = 0$, $Ad_x = 0$, $Zd_x + Xd_z = -XZe + \\tau ye$.",
+        "(2) Both feasibility equations hold for every step length; positivity does not. Ratio test: $$\\alpha^{\\max} = \\min\\Big\\{1,\\ \\min_{(d_x)_i < 0} \\frac{-x_i}{(d_x)_i},\\ \\min_{(d_z)_i < 0} \\frac{-z_i}{(d_z)_i}\\Big\\}$$ and $\\alpha = \\eta\\,\\alpha^{\\max}$ with $0 < \\eta < 1$.",
+        "(3) $y^+ = [1 - \\alpha(1 - \\tau)]\\,y$, using $d_x^\\top d_z = 0$; valid for a feasible point, a common step and this right-hand side.",
+        "(4) Basic: any strictly feasible start, fixed $\\tau$, $\\alpha = \\eta\\alpha^{\\max}$, no bound. Short-step: start in $N_2(0.4)$, $\\tau = 1 - 0.4/\\sqrt n$, $\\alpha = 1$, provable. Predictor–corrector: only $x, z > 0$ needed, $\\tau = (y_{\\text{aff}}/y)^3$, separate primal and dual steps, two solves with one matrix, fastest in practice.",
+        "(5) $y^{(k)} = (1 - 0.4/\\sqrt n)^ky^{(0)} \\le e^{-0.4k/\\sqrt n}y^{(0)}$, so $k \\ge \\tfrac{\\sqrt n}{0.4}\\ln\\tfrac{y^{(0)}}{\\varepsilon}$ suffices: $O(\\sqrt n\\ln(1/\\varepsilon))$ iterations."
+      ],
+      "pit": "After a step the products are not all equal to $\\mu$: the linearization dropped $(d_x)_i(d_z)_i$. Only their average equals $\\mu$, and only for $\\alpha = 1$.",
+      "src": "See Interior point methods 16, 18, 28, 36, 37, 58",
+      "seen": [
+        "T8 P2c",
+        "T8 P2d",
+        "T8 P5a"
+      ]
+    },
+    {
+      "id": "NLP-00-15",
+      "g": "Second pass",
+      "k": "Coercivity, existence",
+      "q": "Let $f : \\mathbb{R}^n \\to \\mathbb{R}$ be continuous. (1) Define coercive. (2) State the existence theorem and the idea of its proof. (3) How is it used for a non-convex differentiable $f$? (4) Compare what coercivity and convexity give. (5) Apply it to $f = x^4 - 2x^2 + y^4 - 2y^2$.",
+      "pts": [
+        "(1) $f(x) \\to \\infty$ whenever $\\lVert x \\rVert \\to \\infty$; equivalently every sublevel set is bounded.",
+        "(2) A continuous coercive $f$ has a global minimizer: the sublevel set $\\{f \\le f(x^0)\\}$ is closed, bounded and nonempty, so $f$ attains its minimum on it (Weierstrass), and outside it $f$ is larger.",
+        "(3) The global minimizer is stationary: list all stationary points and compare their values.",
+        "(4) Coercive: a minimizer exists, but stationary points may be saddles or local minima. Convex: every stationary point is global, but none need exist ($e^x$).",
+        "(5) $\\nabla f = 0$ gives $x, y \\in \\{0, \\pm 1\\}$: nine points. $(0, 0)$ strict local max, $(\\pm 1, 0)$ and $(0, \\pm 1)$ saddles, $(\\pm 1, \\pm 1)$ strict local minima with $f = -2$. $f = (x^2 - 1)^2 + (y^2 - 1)^2 - 2 \\ge -2$: four global minimizers, none strict global."
+      ],
+      "pit": "Coercivity gives existence, not uniqueness.",
+      "src": "See Optimality & convexity 28, 34 · Newton, line search, BFGS 02",
+      "seen": [
+        "MT26F P1c",
+        "MT26W P1"
+      ]
+    },
+    {
+      "id": "NLP-00-16",
+      "g": "Second pass",
+      "k": "Definitions and sets",
+      "q": "(1) Define global, local and strict minimizers and say how they imply one another. (2) Define a saddle point; which Hessian condition guarantees one, and is it necessary? (3) Define the epigraph and prove that it is convex when $f$ is. (4) Why are $\\{x : g(x) \\le 0\\}$ for convex $g$ and $\\{x : Ax \\le b\\}$ convex?",
+      "pts": [
+        "(1) Global: $f(x) \\ge f(x^*)$ on the whole set. Local: on a ball around $x^*$ intersected with the set. Strict: $>$ for $x \\ne x^*$. Strict global implies global implies local; a strict global minimizer is unique.",
+        "(2) A stationary point that is neither a local min nor a local max. An indefinite $H(x^*)$ guarantees it; not necessary: $x_1^2 - x_2^4$ has $H(0) = \\operatorname{diag}(2, 0)$ and a saddle at 0.",
+        "(3) $\\operatorname{epi}(f) = \\{(x, \\alpha) : f(x) \\le \\alpha\\}$. For two of its points, $f(\\lambda x + (1 - \\lambda)y) \\le \\lambda f(x) + (1 - \\lambda)f(y) \\le \\lambda\\alpha + (1 - \\lambda)\\beta$, so the combination is in the epigraph.",
+        "(4) $g(\\lambda x + (1 - \\lambda)y) \\le \\lambda g(x) + (1 - \\lambda)g(y) \\le 0$. The second set is an intersection of half-spaces."
+      ],
+      "pit": "For a constant function every point is a global minimizer and none is strict.",
+      "src": "See Optimality & convexity 03, 08, 09, 12, 25",
+      "seen": [
+        "MT24 P2b",
+        "MT26W P2b",
+        "MT26W P6",
+        "MT26F P1b"
+      ]
+    },
+    {
+      "id": "NLP-00-17",
+      "g": "Second pass",
+      "k": "Rates by hand",
+      "q": "Find the recurrence and the convergence rate in each case. (1) Pure Newton for minimizing $(x - x_0)^4$. (2) Pure Newton for minimizing $\\tfrac12t^2 + \\tfrac13t^3$ from $0 < t^{(0)} \\le \\tfrac12$. (3) Gradient descent with constant step $0.5$ on $x^2 - \\tfrac13x^3$ from $x^{(0)} = 1$. (4) What is the common lesson?",
+      "pts": [
+        "(1) $x^+ - x_0 = \\tfrac23(x - x_0)$: linear with ratio $\\tfrac23$ from any start. Not quadratic because $f''(x_0) = 0$.",
+        "(2) $t^+ = t - \\dfrac{t + t^2}{1 + 2t} = \\dfrac{t^2}{1 + 2t}$: $0 < t^+ \\le \\tfrac12t$, and $e_{k+1}/e_k^2 = \\tfrac{1}{1 + 2t} \\to 1$: quadratic. The limit 0 is a strict local minimizer, not global.",
+        "(3) $x^+ = x - \\tfrac12(2x - x^2) = \\tfrac12x^2$: $1, \\tfrac12, \\tfrac18, \\tfrac{1}{128}, \\dots$, with $e_{k+1}/e_k^2 = \\tfrac12$: quadratic, because the step equals $1/f''(0)$.",
+        "(4) Derive the error recursion and take the limit of the ratio; do not infer the rate from the name of the method."
+      ],
+      "pit": "Newton on $x^3$: $x^+ = \\tfrac12x$, linear, again with a zero second derivative at the limit.",
+      "src": "See Newton, line search, BFGS 12, 13 · Convergence, gradient methods 43",
+      "seen": [
+        "MT24 P3",
+        "MT25 P3",
+        "MT26W P3",
+        "MT26F P3"
+      ]
+    },
+    {
+      "id": "NLP-00-18",
+      "g": "Second pass",
+      "k": "Newton: more",
+      "q": "(1) Write Newton's method for a system $F(x) = 0$ with Jacobian $J$. (2) Derive the quadratic error relation in one variable and compare $F = x^2$ with $F = x^2 - 1$. (3) Compare the cost per iteration of Newton and BFGS. (4) Which Armijo constant keeps the full Newton step near a minimizer?",
+      "pts": [
+        "(1) $J(x^{(k)})\\,d^{(k)} = -F(x^{(k)})$, $x^{(k+1)} = x^{(k)} + d^{(k)}$; row $i$ of $J$ is $\\nabla F_i^\\top$ (no transpose in the system).",
+        "(2) Taylor at $x_k$: $0 = F(x_k) - F'(x_k)e_k + \\tfrac12F''(\\xi)e_k^2$, so $e_{k+1} = \\dfrac{F''(\\xi)}{2F'(x_k)}e_k^2$. $x^2 - 1$ near 1: quadratic. $x^2$: $x_{k+1} = \\tfrac12x_k$, linear, since $F'(0) = 0$.",
+        "(3) Newton: all second derivatives and an $O(n^3)$ factorization, with $H \\succ 0$ not guaranteed. BFGS: gradients only, $O(n^2)$, positive definite by construction; but superlinear instead of quadratic.",
+        "(4) $\\gamma < \\tfrac12$: near a minimizer the full Newton step achieves about half of the linear prediction. With $\\gamma = \\tfrac12$ the step is halved every time and the rate drops to linear."
+      ],
+      "pit": "",
+      "src": "See Newton, line search, BFGS 08, 11, 20, 28",
+      "seen": [
+        "MT26F P7"
+      ]
+    },
+    {
+      "id": "NLP-00-19",
+      "g": "Second pass",
+      "k": "BFGS by hand",
+      "q": "Inverse BFGS with $B_0 = I$ (here $B$ approximates the inverse Hessian), step $s = (1, 0)^\\top$ and gradient change $y = (2, 0)^\\top$; update $B_1 = (I - \\rho sy^\\top)B_0(I - \\rho ys^\\top) + \\rho ss^\\top$, $\\rho = 1/(y^\\top s)$. (1) Compute $\\rho$ and $B_1$. (2) Verify the secant condition and positive definiteness, and interpret $B_1$. (3) For the gradient $g_1 = (2, 2)^\\top$ compute the next direction and check descent. (4) What goes wrong if $y^\\top s \\le 0$, and what prevents it?",
+      "pts": [
+        "(1) $y^\\top s = 2$, $\\rho = \\tfrac12$; $I - \\rho sy^\\top = \\operatorname{diag}(0, 1)$ and $\\rho ss^\\top = \\operatorname{diag}(\\tfrac12, 0)$, so $B_1 = \\operatorname{diag}(\\tfrac12, 1)$.",
+        "(2) $B_1y = (1, 0)^\\top = s$; diagonal with positive entries. The curvature measured along $e_1$ is $y_1/s_1 = 2$, so the inverse curvature became $\\tfrac12$; along $e_2$ nothing was learned.",
+        "(3) $d_1 = -B_1g_1 = (-1, -2)^\\top$ and $g_1^\\top d_1 = -6 < 0$.",
+        "(4) For $y^\\top s = 0$ the formula is undefined; for $y^\\top s < 0$ the secant condition gives $y^\\top B_1y = y^\\top s < 0$, so $B_1$ is not positive definite. A curvature condition $\\nabla f(x + \\alpha d)^\\top d \\ge \\sigma\\nabla f(x)^\\top d$ in the line search gives $y^\\top s \\ge \\alpha(\\sigma - 1)\\nabla f^\\top d > 0$."
+      ],
+      "pit": "The slides write the matrix as $H_k^{-1}$; the exercises call it $B_k$.",
+      "src": "See Newton, line search, BFGS 29, 34, 38",
+      "seen": [
+        "MT24 P5b",
+        "MT25 P6",
+        "MT26F P5a"
+      ]
+    },
+    {
+      "id": "NLP-00-20",
+      "g": "Second pass",
+      "k": "Steps on a quadratic",
+      "q": "$f(x) = \\tfrac12(x_1^2 + 9x_2^2)$ and gradient descent with a constant step $\\alpha$. (1) Write the update per coordinate. (2) Describe the behaviour for $\\alpha = \\tfrac{1}{10}$, $\\tfrac29$ and $\\tfrac14$. (3) Find the best constant step and its rate. (4) What does the bound for exact steepest descent give?",
+      "pts": [
+        "(1) $x_1 \\mapsto (1 - \\alpha)x_1$ and $x_2 \\mapsto (1 - 9\\alpha)x_2$.",
+        "(2) $\\tfrac{1}{10}$: factors $0.9$ and $0.1$, converges at rate $0.9$. $\\tfrac29$: factors $\\tfrac79$ and $-1$, $x_2$ oscillates forever ($\\alpha = \\tfrac2L$). $\\tfrac14$: factors $\\tfrac34$ and $-\\tfrac54$, diverges.",
+        "(3) Balance $1 - \\alpha = 9\\alpha - 1$: $\\alpha = \\tfrac{2}{1 + 9} = 0.2$ with both factors of size $0.8 = \\tfrac{\\kappa - 1}{\\kappa + 1}$, $\\kappa = 9$.",
+        "(4) $\\big(\\tfrac{9 - 1}{9 + 1}\\big)^2 = \\tfrac{16}{25}$ per step for the function value, a worst case over starting points."
+      ],
+      "pit": "For a quadratic the per-coordinate analysis is exact, not a bound.",
+      "src": "See Convergence, gradient methods 39, 42 · Least squares, SGD 12",
+      "seen": [
+        "T5 P3"
+      ]
+    },
+    {
+      "id": "NLP-00-21",
+      "g": "Second pass",
+      "k": "Least squares: more",
+      "q": "(1) What happens to gradient descent on $\\tfrac1n\\lVert Xw - y \\rVert^2$ when $\\operatorname{rank}X < d$ and the start is $w = 0$? (2) Scalar model $w^+ = (1 - 2\\alpha_k)w + 2\\alpha_ky_{i_k}$ with $\\alpha_k = \\tfrac{1}{2(k+1)}$: what is $w_k$ and how fast does it converge? (3) What do single-sample updates in a fixed order with a constant step do? (4) Give the costs of the normal equations, one gradient step and one stochastic update for $n = 10^6$, $d = 100$.",
+      "pts": [
+        "(1) The component of the error along eigenvectors with eigenvalue 0 never changes, so the iterates stay in the range of $X^\\top$ and converge to the minimum-norm solution of the normal equations.",
+        "(2) $w_{k+1} = \\big(1 - \\tfrac{1}{k+1}\\big)w_k + \\tfrac{y_{i_k}}{k+1}$: the running mean of the sampled values. The expected excess loss is $\\sigma^2/k$: sublinear.",
+        "(3) The method is deterministic and settles on a limit cycle away from $w^*$.",
+        "(4) About $nd^2 = 10^{10}$; $nd = 10^8$; $d = 100$ (one epoch: $10^8$)."
+      ],
+      "pit": "",
+      "src": "See Least squares, SGD 02, 06, 21, 22, 24",
+      "seen": []
+    },
+    {
+      "id": "NLP-00-22",
+      "g": "Second pass",
+      "k": "KKT worked example",
+      "q": "Solve $\\min \\tfrac12[(x_1 - 3)^2 + (x_2 - 4)^2]$ s.t. $g_1 = x_1^2 + x_2^2 - 2 \\le 0$, $g_2 = x_2 - 1 \\le 0$, with multipliers $u_1, u_2$. (1) Why is KKT both necessary and sufficient here? (2) Write stationarity and rule out $u_1 = 0$. (3) Rule out $u_2 = 0$. (4) Solve the remaining case.",
+      "pts": [
+        "(1) $\\nabla^2f = I$, $\\nabla^2g_1 = 2I$ and $g_2$ is affine: convex, so KKT is sufficient. $(0, 0)$ is a Slater point, $g = (-2, -1) < 0$: necessary.",
+        "(2) $x_1 - 3 + 2u_1x_1 = 0$ and $x_2 - 4 + 2u_1x_2 + u_2 = 0$. If $u_1 = 0$ then $x_1 = 3$ and $g_1 \\ge 9 - 2 > 0$: infeasible.",
+        "(3) If $u_2 = 0$ then $x = (3, 4)/(1 + 2u_1)$ with $g_1$ active: $25/(1 + 2u_1)^2 = 2$, so $x_2 = 4\\sqrt2/5 \\approx 1.13 > 1$, violating $g_2$.",
+        "(4) Both active: $x_2 = 1$, $x_1 = \\pm 1$. $x_1 = 1$ gives $u_1 = 1$ and then $u_2 = 1$. $x_1 = -1$ gives $u_1 = -2 < 0$, rejected. So $x^* = (1, 1)$, $u^* = (1, 1)$, $f^* = \\tfrac{13}{2}$."
+      ],
+      "pit": "A positive multiplier is not enough: the candidate must also satisfy the other constraint.",
+      "src": "See KKT conditions 17",
+      "seen": [
+        "T6 P3"
+      ]
+    },
+    {
+      "id": "NLP-00-23",
+      "g": "Second pass",
+      "k": "Minimum without KKT",
+      "q": "Consider $\\min x_1^2 - x_2$ s.t. $x_2^2 \\le 0$. (1) Find the global minimum. (2) Show that it is not a KKT point. (3) Which hypotheses fail, and why does convexity not help? (4) What do the Fritz John conditions say at this point? (5) Give the pattern for proving “optimal but not a KKT point”.",
+      "pts": [
+        "(1) Feasible points have $x_2 = 0$ and $f = x_1^2$: the minimum is $(0, 0)$.",
+        "(2) $\\nabla f(0, 0) = (0, -1)$ and $\\nabla g(0, 0) = (0, 2x_2) = (0, 0)$: $(0, -1) + u\\,(0, 0) = 0$ has no solution.",
+        "(3) No Slater point ($x_2^2 < 0$ is impossible), and LICQ fails because the only active gradient is the zero vector. Convexity gives “KKT implies minimum”; here the other direction is needed, and it requires a CQ.",
+        "(4) $\\lambda_0\\nabla f + \\lambda_1\\nabla g = 0$ with $(\\lambda_0, \\lambda_1) \\ge 0$ not both zero holds with $\\lambda_0 = 0$, $\\lambda_1 > 0$: true without any CQ, but it does not involve $f$.",
+        "(5) Show optimality directly; show that stationarity has no solution with $u \\ge 0$; name the constraint qualification that fails."
+      ],
+      "pit": "KKT is the Fritz John condition with $\\lambda_0 > 0$.",
+      "src": "See KKT conditions 26, 36",
+      "seen": [
+        "T6 P5c"
+      ]
+    },
+    {
+      "id": "NLP-00-24",
+      "g": "Second pass",
+      "k": "Proof of KKT",
+      "q": "The KKT conditions for $\\min f$ s.t. $g_i(x) \\le 0$ are proved in a chain starting from “$x^*$ is a local minimum”. (1) Which system has no solution at a local minimum? (2) State Gordan's theorem and why its two systems exclude each other. (3) What does it give here? (4) How does LICQ turn the result into KKT?",
+      "pts": [
+        "(1) (S): $\\nabla f(x^*)^\\top d < 0$ and $\\nabla g_i(x^*)^\\top d < 0$ for all active $i$. Such a $d$ would be a feasible descent direction.",
+        "(2) Exactly one of (I) $Ad < 0$ and (II) $\\eta \\ge 0$, $\\eta \\ne 0$, $A^\\top\\eta = 0$ has a solution. Both cannot hold: $\\eta^\\top(Ad) = (A^\\top\\eta)^\\top d = 0$, while $\\eta^\\top(Ad) < 0$.",
+        "(3) With rows $\\nabla f(x^*)^\\top$ and $\\nabla g_i(x^*)^\\top$ (active $i$): there are $\\lambda_0, \\lambda_i \\ge 0$, not all zero, with $\\lambda_0\\nabla f(x^*) + \\sum_{i \\in I(x^*)}\\lambda_i\\nabla g_i(x^*) = 0$. Setting $\\lambda_i = 0$ for inactive $i$ gives the Fritz John conditions.",
+        "(4) If $\\lambda_0 = 0$, the active gradients would have a nontrivial nonnegative combination equal to 0, contradicting linear independence. So $\\lambda_0 > 0$; divide by it: $u_i = \\lambda_i/\\lambda_0$."
+      ],
+      "pit": "The strict inequalities for the active constraints matter: $\\nabla g_i^\\top d = 0$ does not guarantee feasibility.",
+      "src": "See KKT conditions 30, 33–37",
+      "seen": [
+        "T6 P4",
+        "T6 P5a"
+      ]
+    },
+    {
+      "id": "NLP-00-25",
+      "g": "Second pass",
+      "k": "LP duality",
+      "q": "(P): $\\max c^\\top x$ s.t. $Ax \\le b$, $x \\ge 0$. (1) Write the dual. (2) Give the rules for other forms. (3) State and prove weak duality, with its corollary. (4) State strong duality and what happens when the primal is unbounded.",
+      "pts": [
+        "(1) (D): $\\min b^\\top\\pi$ s.t. $A^\\top\\pi \\ge c$, $\\pi \\ge 0$: one dual variable per primal constraint, one dual constraint per primal variable.",
+        "(2) For a max primal: a “$\\le$” row gives $\\pi_i \\ge 0$, “$\\ge$” gives $\\pi_i \\le 0$, “$=$” gives $\\pi_i$ free; $x_j \\ge 0$ gives $(A^\\top\\pi)_j \\ge c_j$, $x_j \\le 0$ gives $\\le$, $x_j$ free gives $=$.",
+        "(3) For feasible $x$ and $\\pi$: $c^\\top x \\le (A^\\top\\pi)^\\top x = \\pi^\\top(Ax) \\le \\pi^\\top b$, using dual feasibility with $x \\ge 0$, then primal feasibility with $\\pi \\ge 0$. Equal values prove that both are optimal.",
+        "(4) If one problem has a finite optimum, so has the other, with the same value. An unbounded primal has an infeasible dual."
+      ],
+      "pit": "Each rule keeps the direction of the inequality when the constraints are combined into a bound.",
+      "src": "See Second order & duality 16, 20, 23, 24",
+      "seen": []
+    },
+    {
+      "id": "NLP-00-26",
+      "g": "Second pass",
+      "k": "Computing duals",
+      "q": "(1) How is $q = \\inf_xL$ computed when $L$ is a strictly convex quadratic in $x$, linear in $x$, or a quadratic form $x^\\top Mx$ plus a constant? (2) Compute the dual of $\\min x^\\top x$ s.t. $Ax = b$ and recover $x^*$. (3) For $\\min (x^2 - 1)^2$ s.t. $x = 0$ find $f^*$, $d^*$ and the gap. (4) How is a primal solution certified from the dual?",
+      "pts": [
+        "(1) Quadratic: set $\\nabla_xL = 0$ and substitute; $q$ is a concave quadratic. Linear: the coefficient of $x$ must vanish, otherwise $q = -\\infty$; those conditions become dual constraints. Quadratic form: the constant if $M \\succeq 0$, else $-\\infty$.",
+        "(2) $x = -\\tfrac12A^\\top\\lambda$, $q(\\lambda) = -\\tfrac14\\lambda^\\top AA^\\top\\lambda - b^\\top\\lambda$, $\\lambda^* = -2(AA^\\top)^{-1}b$, $d^* = b^\\top(AA^\\top)^{-1}b$ and $x^* = A^\\top(AA^\\top)^{-1}b$.",
+        "(3) $f^* = 1$. $L(\\pm 1, \\lambda) = \\pm\\lambda$ gives $q(\\lambda) \\le -|\\lambda| \\le 0 = q(0)$, so $d^* = 0$: gap 1. Weak duality holds; strong duality fails because $f$ is not convex.",
+        "(4) Take the minimizer of $L$ at the dual optimum; if it is feasible and $f(x) = d^*$, weak duality makes both optimal."
+      ],
+      "pit": "For $\\min x^\\top Px$ s.t. $Ax \\le b$ the same formulas hold with $P^{-1}$ inserted, plus the constraint $\\mu \\ge 0$.",
+      "src": "See Second order & duality 31, 33, 38, 42, 47",
+      "seen": [
+        "T7 P5"
+      ]
+    },
+    {
+      "id": "NLP-00-27",
+      "g": "Second pass",
+      "k": "IPM: infeasible start",
+      "q": "Primal–dual method from a point with $x, z > 0$ that need not be feasible; residuals $r_p = Ax - b$, $r_d = A^\\top\\pi + z - c$. (1) How does the Newton system change, and what happens to the residuals after a step? (2) Is $x^\\top z$ the duality gap? (3) Describe the predictor step and the centering rule. (4) Write the corrector equation. (5) Compute $\\tau$ and $\\mu$ for $y = 2$, $y_{\\text{aff}} = 0.5$.",
+      "pts": [
+        "(1) $Ad_x = -r_p$ and $A^\\top d_\\pi + d_z = -r_d$. With steps $\\alpha_x$ for $x$ and $\\alpha_z$ for $(\\pi, z)$: $r_p^+ = (1 - \\alpha_x)r_p$ and $r_d^+ = (1 - \\alpha_z)r_d$.",
+        "(2) No, only complementarity. Optimality needs small residuals and small complementarity.",
+        "(3) Solve with $\\tau = 0$ (right-hand side $-XZe$), take trial ratio tests capped at 1 separately for $x$ and $z$, compute the average product $y_{\\text{aff}}$ after that trial step and set $\\tau = (y_{\\text{aff}}/y)^3$.",
+        "(4) $Zd_x + Xd_z = -XZe - D_xD_ze + \\tau ye$ with $D_x = \\operatorname{diag}(d_x^{\\text{aff}})$, $D_z = \\operatorname{diag}(d_z^{\\text{aff}})$: the dropped product term is estimated by the predictor.",
+        "(5) $\\tau = 0.25^3 = 0.015625$ and $\\mu = \\tau y = 0.03125$."
+      ],
+      "pit": "$\\pi$ and $z$ share one step because they appear together in $A^\\top\\pi + z = c$. The recurrence $y^+ = [1 - \\alpha(1 - \\tau)]y$ does not hold here.",
+      "src": "See Interior point methods 30–33, 40–42",
+      "seen": [
+        "T8 P4a",
+        "T8 P4b",
+        "T8 P4c"
+      ]
+    },
+    {
+      "id": "NLP-00-28",
+      "g": "Second pass",
+      "k": "Traps",
+      "q": "Name the trap attached to each item. (1) The letters of the multipliers. (2) The letters $\\gamma$, $\\beta$, $s$ and $H$. (3) What a condition allows one to conclude. (4) Definiteness and strictness. (5) $x^\\top z$, $\\mu$ and $y$ in interior point methods.",
+      "pts": [
+        "(1) KKT part: $u$ (inequalities), $v$ (equalities). Second-order part: $\\lambda$ (inequalities), $\\mu$ (equalities). Duality part: $\\lambda$ (equalities), $\\mu \\ge 0$ (inequalities). Interior point: $\\pi$ (equalities), $z \\ge 0$ (bounds), and $\\mu$ is the barrier parameter.",
+        "(2) $\\gamma$: Armijo constant or Lipschitz constant. $\\beta$: backtracking factor or bound on $\\lVert J(x^*)^{-1} \\rVert$. $s$: initial step or the BFGS step. $H_k$ approximates the Hessian, while the update is written for $H_k^{-1}$ (called $B_k$ in the exercises).",
+        "(3) FONC and SONC only filter; SOSC is local; a KKT point is a candidate unless the problem is convex; “not KKT” rejects a point only if a CQ holds; the constrained second-order necessary test never confirms a minimum.",
+        "(4) Positive semidefinite needs all principal minors; $H \\succ 0$ everywhere is sufficient but not necessary for strict convexity; Armijo accepts equality; quadratic convergence needs only a finite limit of $e_{k+1}/e_k^2$.",
+        "(5) $x^\\top z$ is the gap only at feasible points; on the central path it equals $n\\mu$ while the average $y$ equals $\\mu$; positive is not the same as feasible."
+      ],
+      "pit": "",
+      "src": "See the Notation traps section of each topic",
+      "seen": []
     }
   ]
 }
