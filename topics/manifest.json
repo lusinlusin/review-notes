@@ -16,6 +16,10 @@
           "file": "nlo/ch04-convergence-gradient.json"
         },
         {
+          "title": "Least squares, SGD",
+          "file": "nlo/ch05-least-squares-sgd.json"
+        },
+        {
           "title": "KKT conditions",
           "file": "nlo/ch06-kkt.json"
         },

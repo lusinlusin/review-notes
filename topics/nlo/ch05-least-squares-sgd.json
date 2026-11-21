@@ -1,0 +1,752 @@
+{
+  "title": "Least squares, SGD",
+  "notes": [
+    {
+      "h": "Least squares",
+      "items": [
+        {
+          "t": "Normal equations",
+          "d": [
+            "$F(w) = \\lVert y - Xw \\rVert^2$: $\\nabla F = -2X^\\top(y - Xw)$, $\\nabla^2F = 2X^\\top X \\succeq 0$. Minimizers solve $X^\\top Xw = X^\\top y$; unique iff $\\operatorname{rank}X = d$, then $\\hat w = (X^\\top X)^{-1}X^\\top y$."
+          ],
+          "cards": [
+            "NLO-05-01",
+            "NLO-05-04"
+          ]
+        },
+        {
+          "t": "Rank deficiency",
+          "d": [
+            "Minimizers form an affine set; gradient descent from $0$ finds the minimum-norm one. Automatic when $n < d$."
+          ],
+          "cards": [
+            "NLO-05-02"
+          ]
+        },
+        {
+          "t": "Cost",
+          "d": [
+            "$O(nd^2)$ to form $X^\\top X$ plus $O(d^3)$ to solve."
+          ],
+          "cards": [
+            "NLO-05-03"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Full gradient",
+      "items": [
+        {
+          "t": "MSE gradient",
+          "d": [
+            "$f = \\tfrac1n\\sum_i E_i^2$, $E_i = x_i^\\top w - y_i$: $\\nabla f = \\tfrac2n X^\\top(Xw - y)$. Cost $O(nd)$ per iteration."
+          ],
+          "cards": [
+            "NLO-05-05"
+          ]
+        },
+        {
+          "t": "Step size",
+          "d": [
+            "$H = \\tfrac2n X^\\top X$; error components are multiplied by $1 - \\alpha\\lambda_j$. Converges iff $0 < \\alpha < \\tfrac2L$; best $\\alpha = \\tfrac{2}{\\lambda_1 + \\lambda_d}$, rate $\\tfrac{\\kappa - 1}{\\kappa + 1}$."
+          ],
+          "cards": [
+            "NLO-05-06",
+            "NLO-05-07",
+            "NLO-05-08"
+          ]
+        },
+        {
+          "t": "What is proved",
+          "d": [
+            "In general only $\\nabla f(w_k) \\to 0$; convergence to a global minimum also needs a minimizer to exist."
+          ],
+          "cards": [
+            "NLO-05-09"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Direction and step",
+      "items": [
+        {
+          "t": "Steepest direction",
+          "d": [
+            "Among unit vectors, $-g/\\lVert g \\rVert$ minimizes $g^\\top d$ (value $-\\lVert g \\rVert$). Comparing $g^\\top d$ across lengths is meaningless."
+          ],
+          "cards": [
+            "NLO-05-10"
+          ]
+        },
+        {
+          "t": "Exact step",
+          "d": [
+            "Consecutive exact steepest-descent directions are orthogonal; the decrease obeys $\\big(\\tfrac{\\kappa - 1}{\\kappa + 1}\\big)^2$."
+          ],
+          "cards": [
+            "NLO-05-11"
+          ]
+        },
+        {
+          "t": "Constant step",
+          "d": [
+            "Coordinate factors $1 - \\alpha\\lambda_i$; the decrease is guaranteed iff $0 < \\alpha < \\tfrac2L$."
+          ],
+          "cards": [
+            "NLO-05-12"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Stochastic gradient",
+      "items": [
+        {
+          "t": "Update",
+          "d": [
+            "$f = \\tfrac1n\\sum_i f_i$: $w \\leftarrow w - \\alpha\\nabla f_i(w)$, $O(d)$ per update. Epoch = $n$ updates, $O(nd)$."
+          ],
+          "cards": [
+            "NLO-05-13"
+          ]
+        },
+        {
+          "t": "Unbiasedness",
+          "d": [
+            "$i$ uniform ⇒ $E_i\\nabla f_i(w) = \\nabla f(w)$ and $E[w^+] = w - \\alpha\\nabla f(w)$ for one step from a fixed $w$."
+          ],
+          "cards": [
+            "NLO-05-14",
+            "NLO-05-17"
+          ]
+        },
+        {
+          "t": "What it does not give",
+          "d": [
+            "$E f(w^+) \\ge f(E w^+)$ with a variance gap; an epoch is a composition, not an average; $w^*$ is a fixed point only if every $\\nabla f_i(w^*) = 0$."
+          ],
+          "cards": [
+            "NLO-05-15",
+            "NLO-05-16",
+            "NLO-05-18"
+          ]
+        },
+        {
+          "t": "Noise floor",
+          "d": [
+            "$$E[f(w_{k+1}) \\mid w_k] \\le f(w_k) - \\alpha\\lVert \\nabla f(w_k) \\rVert^2 + \\tfrac{L\\alpha^2}{2}G^2$$",
+            "Constant $\\alpha$: floor about $\\tfrac{L\\alpha G^2}{2}$. Diminishing $\\alpha_k$ with $\\sum\\alpha_k = \\infty$, $\\sum\\alpha_k^2 < \\infty$: no floor, sublinear rate."
+          ],
+          "cards": [
+            "NLO-05-19",
+            "NLO-05-21"
+          ]
+        },
+        {
+          "t": "Scalar model",
+          "d": [
+            "$f_i = (w - y_i)^2$, $y \\in \\{0, 2\\}$: $w^+ = (1 - 2\\alpha)w + 2\\alpha y_i$; stationary variance $\\tfrac{\\alpha\\sigma^2}{1 - \\alpha}$; with $\\alpha_k = \\tfrac{1}{2(k+1)}$, $w_k$ is the running mean."
+          ],
+          "cards": [
+            "NLO-05-20",
+            "NLO-05-21",
+            "NLO-05-22"
+          ]
+        },
+        {
+          "t": "Step size for SGD",
+          "d": [
+            "A single $f_i$ can be more curved than the average, so the safe step is smaller than for gradient descent."
+          ],
+          "cards": [
+            "NLO-05-23"
+          ]
+        },
+        {
+          "t": "When to use it",
+          "d": [
+            "Huge $n$, moderate accuracy. Otherwise gradient descent or Newton-type methods."
+          ],
+          "cards": [
+            "NLO-05-24",
+            "NLO-05-25"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Overview",
+      "items": [
+        {
+          "t": "Methods",
+          "d": [
+            "Normal equations: exact, $O(nd^2 + d^3)$.  Gradient descent: $O(nd)$ per step, linear.  SGD: $O(d)$ per update, floor or sublinear."
+          ],
+          "cards": [
+            "NLO-05-26"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "Two data points",
+          "d": [
+            "$x_1 = (1,0)$, $y_1 = 1$; $x_2 = (0,2)$, $y_2 = 2$: $f = \\tfrac12(w_1 - 1)^2 + 2(w_2 - 1)^2$, $w^* = (1,1)$; one step with $\\alpha = \\tfrac14$ from $0$: $(\\tfrac14, 1)$."
+          ],
+          "cards": [
+            "NLO-05-07",
+            "NLO-05-08",
+            "NLO-05-23"
+          ]
+        },
+        {
+          "t": "Two scalar pieces",
+          "d": [
+            "$f_1 = w^2$, $f_2 = (w - 2)^2$, $\\alpha = \\tfrac14$, from $w^* = 1$: one SGD step gives $\\tfrac12$ or $\\tfrac32$ ($f = \\tfrac54$); epoch $1,2$ gives $\\tfrac54$; epoch $2,1$ gives $\\tfrac34$; fixed-order cycle $\\tfrac23 \\leftrightarrow \\tfrac43$."
+          ],
+          "cards": [
+            "NLO-05-15",
+            "NLO-05-16",
+            "NLO-05-22"
+          ]
+        },
+        {
+          "t": "Line fit",
+          "d": [
+            "Points $(1,1), (2,2), (3,2)$: $w = (\\tfrac23, \\tfrac12)$."
+          ],
+          "cards": [
+            "NLO-05-04"
+          ]
+        },
+        {
+          "t": "Duplicate feature",
+          "d": [
+            "Minimizers $w_1 + w_2 = \\tfrac76$, value $\\tfrac56$; minimum norm $(\\tfrac{7}{12}, \\tfrac{7}{12})$."
+          ],
+          "cards": [
+            "NLO-05-02"
+          ]
+        },
+        {
+          "t": "Exact line search",
+          "d": [
+            "$\\tfrac12(x_1^2 + 3x_2^2)$ from $(1,1)$: $\\alpha = \\tfrac{5}{14}$, $x^{(1)} = (\\tfrac{9}{14}, -\\tfrac{1}{14})$."
+          ],
+          "cards": [
+            "NLO-05-11"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "x and w",
+          "d": [
+            "Here $x_i$ is data and $w$ the variable; in the gradient-method slides $x$ is the variable. $x_i^j$ is component $j$ of $x_i$, not a power."
+          ],
+          "cards": [
+            "NLO-05-05"
+          ]
+        },
+        {
+          "t": "Scaling of the loss",
+          "d": [
+            "$\\sum$, $\\tfrac1n\\sum$ or $\\tfrac{1}{2n}\\sum$: same minimizer, different gradient, $L$ and step range."
+          ],
+          "cards": [
+            "NLO-05-05",
+            "NLO-05-07"
+          ]
+        },
+        {
+          "t": "Sign of the residual",
+          "d": [
+            "$y_i - x_i^\\top w$ in one place, $E_i = x_i^\\top w - y_i$ in another. Gradients use $E_i$: $\\nabla f_i = 2E_ix_i$."
+          ],
+          "cards": [
+            "NLO-05-05"
+          ]
+        },
+        {
+          "t": "Epoch",
+          "d": [
+            "One pass of $n$ updates, not one update."
+          ],
+          "cards": [
+            "NLO-05-13"
+          ]
+        },
+        {
+          "t": "Stochastic versus fixed order",
+          "d": [
+            "Random index versus the loop over $i = 1, \\dots, n$; they behave differently."
+          ],
+          "cards": [
+            "NLO-05-22"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "Convergence claims",
+          "d": [
+            "Proved: $\\nabla f(w_k) \\to 0$. Convex ⇒ global minimum also needs existence."
+          ],
+          "cards": [
+            "NLO-05-09"
+          ]
+        },
+        {
+          "t": "Normal equations",
+          "d": [
+            "They are $X^\\top Xw = X^\\top y$; the displayed formula is their solution and needs full column rank."
+          ],
+          "cards": [
+            "NLO-05-01",
+            "NLO-05-03"
+          ]
+        },
+        {
+          "t": "Expectation line",
+          "d": [
+            "A factor $\\tfrac1n$ is missing; and the equality with gradient descent is for one step only."
+          ],
+          "cards": [
+            "NLO-05-14",
+            "NLO-05-17"
+          ]
+        },
+        {
+          "t": "Loop on the last slide",
+          "d": [
+            "A fixed order with a constant step converges to a limit cycle; small steps lower the floor but do not remove it."
+          ],
+          "cards": [
+            "NLO-05-22",
+            "NLO-05-25"
+          ]
+        },
+        {
+          "t": "Dot product",
+          "d": [
+            "$E_i(w)x_i$ is scalar times vector; $nd$ is the size of $X$, not the cost."
+          ],
+          "cards": [
+            "NLO-05-25"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "NLO-05-01",
+      "g": "Least squares",
+      "k": "Normal equations",
+      "q": "Data matrix $X \\in \\mathbb{R}^{n \\times d}$ (row $i$ is $x_i^\\top$), responses $y \\in \\mathbb{R}^n$, and $F(w) = \\lVert y - Xw \\rVert^2$. (1) Compute $\\nabla F$ and the Hessian. (2) Characterize the global minimizers. (3) When is the minimizer unique, and what is it? (4) Does a minimizer always exist?",
+      "pts": [
+        "(1) $\\nabla F(w) = -2X^\\top(y - Xw)$ and $\\nabla^2 F = 2X^\\top X$.",
+        "(2) $v^\\top X^\\top X v = \\lVert Xv \\rVert^2 \\ge 0$, so $F$ is convex and $w$ is a global minimizer iff it solves the normal equations $X^\\top X w = X^\\top y$.",
+        "(3) Iff $\\operatorname{rank} X = d$: then $X^\\top X \\succ 0$ ($\\lVert Xv \\rVert^2 = 0$ only for $v = 0$), $F$ is strictly convex, and $\\hat w = (X^\\top X)^{-1}X^\\top y$.",
+        "(4) Yes. $X^\\top y$ lies in the range of $X^\\top$, which equals the range of $X^\\top X$, so the normal equations are always solvable."
+      ],
+      "pit": "The slide labels the formula $(X^\\top X)^{-1}X^\\top y$ as “the normal equations”; that is their solution, and it exists only for full column rank.",
+      "src": "S p5–6",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-02",
+      "g": "Least squares",
+      "k": "Rank deficiency",
+      "q": "$X = \\begin{pmatrix}1&1\\\\2&2\\\\1&1\\end{pmatrix}$, $y = (1, 2, 2)^\\top$, $F(w) = \\lVert y - Xw \\rVert^2$. (1) Why does the closed-form solution not exist? (2) Describe all minimizers and the minimal value. (3) Where does gradient descent from $w_0 = 0$ converge, and why? (4) When is rank deficiency automatic?",
+      "pts": [
+        "(1) The two columns are equal, so $\\det X^\\top X = 0$.",
+        "(2) $Xw = (w_1 + w_2)c$ with $c = (1, 2, 1)$. The best value of $s = w_1 + w_2$ is $\\frac{c^\\top y}{c^\\top c} = \\tfrac76$; every $w$ on that line is a minimizer, with value $\\tfrac56$.",
+        "(3) To $(\\tfrac{7}{12}, \\tfrac{7}{12})$, the minimum-norm solution: the gradient always lies in the row space of $X$, so the iterates never leave it.",
+        "(4) When $n < d$: more features than data points."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-03",
+      "g": "Least squares",
+      "k": "Cost of solving",
+      "q": "Solving least squares through the normal equations with $n$ data points and $d$ features. (1) What does it cost, term by term? (2) Evaluate for $n = 5 \\times 10^6$ and $d = 10^4$. (3) The slides say the matrices are “too large to invert”. What is the accurate statement?",
+      "pts": [
+        "(1) Forming $X^\\top X$: $O(nd^2)$ ($d^2$ entries, each a sum of $n$ terms). Solving the $d \\times d$ system: $O(d^3)$. Total $O(nd^2 + d^3)$.",
+        "(2) $X$ has $nd = 5 \\times 10^{10}$ entries; forming $X^\\top X$ takes about $nd^2 = 5 \\times 10^{14}$ operations; solving takes $d^3 = 10^{12}$.",
+        "(3) The only matrix involved is $d \\times d$, and one solves (Cholesky or QR) instead of inverting. The bottleneck is building $X^\\top X$, and for large $d$ even storing its $d^2$ entries."
+      ],
+      "pit": "",
+      "src": "S p6–8",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-04",
+      "g": "Least squares",
+      "k": "Fitting a line",
+      "q": "Fit $y \\approx w_1 + w_2 t$ to the points $(t, y) = (1, 1), (2, 2), (3, 2)$ by the normal equations. (1) Write $X$. (2) Compute $X^\\top X$ and $X^\\top y$. (3) Solve for $w$.",
+      "pts": [
+        "(1) $X = \\begin{pmatrix}1&1\\\\1&2\\\\1&3\\end{pmatrix}$.",
+        "(2) $X^\\top X = \\begin{pmatrix}3&6\\\\6&14\\end{pmatrix}$ and $X^\\top y = (5, 11)$.",
+        "(3) $\\det = 6$: $w = \\tfrac16\\begin{pmatrix}14&-6\\\\-6&3\\end{pmatrix}\\begin{pmatrix}5\\\\11\\end{pmatrix} = (\\tfrac23, \\tfrac12)$."
+      ],
+      "pit": "For $f = \\tfrac13\\sum E_i^2$ on this data: eigenvalues of $X^\\top X$ are about $0.361$ and $16.64$, so $L = \\tfrac23 \\times 16.64 \\approx 11.1$, the step must satisfy $\\alpha < 0.18$, and $\\kappa \\approx 46$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-05",
+      "g": "Full gradient",
+      "k": "MSE and its gradient",
+      "q": "Mean squared error $f(w) = \\tfrac1n\\sum_{i=1}^n E_i(w)^2$ with $E_i(w) = x_i^\\top w - y_i$. (1) Compute $\\nabla f$ in sum form and in matrix form. (2) What does one gradient-descent iteration cost, and why? (3) How does that compare with the normal equations, and what is the remaining drawback?",
+      "pts": [
+        "(1) $\\nabla E_i^2 = 2E_i x_i$, so $\\nabla f(w) = \\tfrac1n\\sum_i 2E_i(w)x_i = \\tfrac2n X^\\top(Xw - y)$.",
+        "(2) $O(nd)$: each $E_i$ is a dot product of length $d$, there are $n$ of them, and adding the $n$ scaled vectors $E_i x_i$ is another $O(nd)$.",
+        "(3) Much cheaper than $O(nd^2)$ and no Hessian is needed, but every iteration still reads all the data."
+      ],
+      "pit": "Three scalings of the same loss are in use: $\\sum$, $\\tfrac1n\\sum$ and $\\tfrac{1}{2n}\\sum$. The minimizer is the same; the gradient, $L$ and the allowed step change by the same factor.",
+      "src": "S p9–12",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-06",
+      "g": "Full gradient",
+      "k": "Exact step analysis",
+      "q": "Gradient descent with constant step $\\alpha$ on $f(w) = \\tfrac1n\\lVert Xw - y \\rVert^2$, Hessian $H = \\tfrac2n X^\\top X$ with eigenvalues $\\lambda_1 \\le \\dots \\le \\lambda_d$ and eigenvectors $q_j$; assume $\\operatorname{rank} X = d$. (1) Derive how the error $w_k - w^*$ evolves. (2) For which $\\alpha$ does it converge? (3) What is the rate, and the best constant step? (4) What happens to a component with $\\lambda_j = 0$?",
+      "pts": [
+        "(1) $\\nabla f(w) = H(w - w^*)$, so $w_{k+1} - w^* = (I - \\alpha H)(w_k - w^*)$ and $q_j^\\top(w_{k+1} - w^*) = (1 - \\alpha\\lambda_j)\\,q_j^\\top(w_k - w^*)$.",
+        "(2) Iff $|1 - \\alpha\\lambda_j| < 1$ for all $j$: $0 < \\alpha < \\tfrac{2}{\\lambda_d} = \\tfrac2L$ with $L = \\tfrac2n\\lambda_{\\max}(X^\\top X)$.",
+        "(3) Rate $\\max_j|1 - \\alpha\\lambda_j|$; best $\\alpha = \\tfrac{2}{\\lambda_1 + \\lambda_d}$ with rate $\\tfrac{\\kappa - 1}{\\kappa + 1}$, $\\kappa = \\lambda_d/\\lambda_1$.",
+        "(4) It never changes. That is why gradient descent from $0$ on a rank-deficient problem lands on the minimum-norm solution."
+      ],
+      "pit": "For a quadratic this analysis is exact, not just a bound.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-07",
+      "g": "Full gradient",
+      "k": "Least squares by hand",
+      "q": "Two data points $x_1 = (1, 0)$, $y_1 = 1$ and $x_2 = (0, 2)$, $y_2 = 2$, with $f = \\tfrac1n\\sum E_i^2$ and $E_i = x_i^\\top w - y_i$. (1) Write $E_1$, $E_2$ and $f$. (2) Compute $\\nabla f_1$, $\\nabla f_2$ and $\\nabla f$. (3) Take one gradient step from $w = 0$ with $\\alpha = \\tfrac14$. (4) Is the problem solved after this step?",
+      "pts": [
+        "(1) $E_1 = w_1 - 1$, $E_2 = 2w_2 - 2$, $f = \\tfrac12(w_1 - 1)^2 + 2(w_2 - 1)^2$.",
+        "(2) $\\nabla f_1 = 2(w_1 - 1)(1, 0)$, $\\nabla f_2 = 2(2w_2 - 2)(0, 2) = (0, 8(w_2 - 1))$, and $\\nabla f = (w_1 - 1,\\ 4(w_2 - 1))$.",
+        "(3) $\\nabla f(0) = (-1, -4)$: $w^{(1)} = (\\tfrac14, 1)$, and $f$ goes from $\\tfrac52$ to $\\tfrac{9}{32}$.",
+        "(4) No. $w^* = (1, 1)$. $w_2$ is exact (factor $1 - 4\\alpha = 0$) but $w_1$ is only at $\\tfrac14$ (factor $\\tfrac34$): the Hessian $\\operatorname{diag}(1, 4)$ is not a multiple of $I$, so no single gradient step points at $w^*$."
+      ],
+      "pit": "Do not drop the $\\tfrac1n$. And $\\nabla f_2$ carries two factors of $2$: one from the square, one from $x_2 = (0, 2)$.",
+      "src": "",
+      "seen": [
+        "T5 P4"
+      ]
+    },
+    {
+      "id": "NLO-05-08",
+      "g": "Full gradient",
+      "k": "Step range by hand",
+      "q": "For $f(w) = \\tfrac12(w_1 - 1)^2 + 2(w_2 - 1)^2$ (the mean squared error of two data points), gradient descent with constant step $\\alpha$. (1) Find $L$ and the admissible range of $\\alpha$. (2) Give the two error factors for $\\alpha = \\tfrac14$. How many iterations until the $w_1$ error falls from $1$ to $10^{-8}$? (3) What happens for $\\alpha = 0.6$?",
+      "pts": [
+        "(1) $H = \\operatorname{diag}(1, 4)$, $L = 4$, so $0 < \\alpha < \\tfrac12$.",
+        "(2) $1 - \\alpha = \\tfrac34$ and $1 - 4\\alpha = 0$. $(\\tfrac34)^k \\le 10^{-8}$ needs $k \\ge 64.03$: 65 iterations.",
+        "(3) The $w_2$ factor is $1 - 2.4 = -1.4$: divergence."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-09",
+      "g": "Full gradient",
+      "k": "What is guaranteed",
+      "q": "The slides make two claims about gradient descent. For each, say what is actually proved and what else is needed: (1) “Gradient-descent methods converge to stationary points.” (2) “If the function is convex, gradient descent converges to a global minimum.” (3) Do both hold for least squares? (4) What is the real advantage over Newton-type methods?",
+      "pts": [
+        "(1) What is proved is $\\nabla f(w_k) \\to 0$, for $f$ bounded below with Lipschitz gradient and a valid step rule. The iterates themselves may run off to infinity.",
+        "(2) A minimizer must exist and the step rule must be valid. $\\log(1 + e^{-w})$ is convex with no minimizer.",
+        "(3) Yes: a minimizer always exists, and the exact step analysis gives convergence for $0 < \\alpha < \\tfrac2L$.",
+        "(4) No Hessians: a gradient is a vector with $O(d)$ storage, a Hessian is $d \\times d$."
+      ],
+      "pit": "",
+      "src": "S p3",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-10",
+      "g": "Direction and step",
+      "k": "Why unit directions",
+      "q": "$f(x) = \\tfrac12(x_1^2 + 4x_2^2)$ at $x^{(0)} = (3, 1)$. (1) Compute $g = \\nabla f(x^{(0)})$ and test $d_a = (-1, 0)$, $d_b = (0, 1)$, $d_c = -g$. (2) Give the unit steepest-descent direction $u$ and $g^\\top u$. (3) Why is $u$ the most negative among unit vectors? (4) $g^\\top d_c = -25$ is below $g^\\top u$. Is $d_c$ steeper?",
+      "pts": [
+        "(1) $g = (3, 4)$. $g^\\top d_a = -3 < 0$: descent. $g^\\top d_b = 4 > 0$: ascent. $g^\\top d_c = -25 < 0$: descent.",
+        "(2) $\\lVert g \\rVert = 5$, $u = (-\\tfrac35, -\\tfrac45)$, $g^\\top u = -5 = -\\lVert g \\rVert$.",
+        "(3) Cauchy–Schwarz: $g^\\top v \\ge -\\lVert g \\rVert\\lVert v \\rVert = -5$ for every unit $v$, attained only by $u$.",
+        "(4) No. $g^\\top(tv) = t\\,g^\\top v$, so any descent direction looks steeper when stretched; $d_c$ is just $5u$. The statement is about unit directions."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "T5 P1"
+      ]
+    },
+    {
+      "id": "NLO-05-11",
+      "g": "Direction and step",
+      "k": "Perpendicular steps",
+      "q": "$f(x) = \\tfrac12(x_1^2 + 3x_2^2)$, steepest descent with exact line search from $x^{(0)} = (1, 1)$. (1) Give $d^{(0)}$. (2) Find $\\alpha^{(0)}$ from $\\varphi(\\alpha) = f(x^{(0)} + \\alpha d^{(0)})$ and compute $x^{(1)}$. (3) Compute $d^{(1)}$ and $(d^{(0)})^\\top d^{(1)}$. (4) Does perpendicularity mean the minimizer is reached? Compare the decrease of $f$ with the bound.",
+      "pts": [
+        "(1) $d^{(0)} = -(x_1, 3x_2) = (-1, -3)$.",
+        "(2) $\\varphi(\\alpha) = \\tfrac12[(1 - \\alpha)^2 + 3(1 - 3\\alpha)^2] = 2 - 10\\alpha + 14\\alpha^2$, $\\varphi' = 0$ at $\\alpha = \\tfrac{5}{14}$. $x^{(1)} = (\\tfrac{9}{14}, -\\tfrac{1}{14})$.",
+        "(3) $\\nabla f(x^{(1)}) = (\\tfrac{9}{14}, -\\tfrac{3}{14})$, $d^{(1)} = (-\\tfrac{9}{14}, \\tfrac{3}{14})$, and $(d^{(0)})^\\top d^{(1)} = \\tfrac{9}{14} - \\tfrac{9}{14} = 0$.",
+        "(4) No: $x^{(1)} \\ne 0$. $f$ went from $2$ to $\\tfrac{3}{14}$, a ratio $\\tfrac{3}{28} \\approx 0.107$, within the bound $\\big(\\tfrac{3 - 1}{3 + 1}\\big)^2 = \\tfrac14$."
+      ],
+      "pit": "Orthogonality is between consecutive directions, not between the direction and the minimizer.",
+      "src": "",
+      "seen": [
+        "T5 P2"
+      ]
+    },
+    {
+      "id": "NLO-05-12",
+      "g": "Direction and step",
+      "k": "Step and conditioning",
+      "q": "$f(x) = \\tfrac12(x_1^2 + 9x_2^2)$, gradient descent with constant step $\\alpha$. (1) Write the update per coordinate. (2) Describe the behavior for $\\alpha = \\tfrac{1}{10}$, $\\tfrac29$ and $\\tfrac14$. (3) Relate this to the guaranteed-decrease inequality. (4) What does the exact-step bound give for this $\\kappa$?",
+      "pts": [
+        "(1) $x_1 \\mapsto (1 - \\alpha)x_1$ and $x_2 \\mapsto (1 - 9\\alpha)x_2$.",
+        "(2) $\\tfrac{1}{10}$: factors $\\tfrac{9}{10}$ and $\\tfrac{1}{10}$, converges with rate $0.9$. $\\tfrac29$: factors $\\tfrac79$ and $-1$, $x_2$ oscillates forever. $\\tfrac14$: factors $\\tfrac34$ and $-\\tfrac54$, diverges in $x_2$.",
+        "(3) $f(x - \\alpha\\nabla f) \\le f(x) - \\alpha(1 - \\tfrac{9\\alpha}{2})\\lVert \\nabla f \\rVert^2$ with $L = 9$: positive coefficient iff $0 < \\alpha < \\tfrac29$. So $\\tfrac{1}{10}$ is inside, $\\tfrac29$ is the boundary, $\\tfrac14$ is outside.",
+        "(4) $\\kappa = 9$: $\\big(\\tfrac{9 - 1}{9 + 1}\\big)^2 = \\tfrac{16}{25}$ per step."
+      ],
+      "pit": "The largest eigenvalue decides stability; the smallest decides speed. A bound like $\\tfrac{16}{25}$ is worst-case over starting points, not the observed ratio.",
+      "src": "",
+      "seen": [
+        "T5 P3"
+      ]
+    },
+    {
+      "id": "NLO-05-13",
+      "g": "Stochastic gradient",
+      "k": "SGD update",
+      "q": "(1) To which objectives does stochastic gradient descent apply? (2) Write the update. (3) What does one update cost for linear regression, compared with a full gradient step? (4) What is an epoch, and what does it cost?",
+      "pts": [
+        "(1) Averages of many terms: $f(w) = \\tfrac1n\\sum_{i=1}^n f_i(w)$. For regression $f_i = E_i(w)^2$.",
+        "(2) Pick an index $i$ and set $w \\leftarrow w - \\alpha\\nabla f_i(w)$.",
+        "(3) $\\nabla f_i = 2E_i(w)x_i$: one dot product and one scaled vector, $O(d)$ instead of $O(nd)$.",
+        "(4) One pass of $n$ single-sample updates. It costs $O(nd)$, the same as one full gradient step, but moves $w$ $n$ times."
+      ],
+      "pit": "",
+      "src": "S p13–16",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-14",
+      "g": "Stochastic gradient",
+      "k": "Unbiased gradient",
+      "q": "Let $i$ be uniform on $\\{1, \\dots, n\\}$ and $f = \\tfrac1n\\sum_i f_i$. (1) Show that $\\nabla f_i(w)$ is an unbiased estimate of $\\nabla f(w)$. (2) What follows for $E[w^+]$ after one SGD step from a fixed $w$? (3) What is held fixed in this statement? (4) If $i$ is drawn with probabilities $p_i$ instead, which estimate is unbiased?",
+      "pts": [
+        "(1) $E_i[\\nabla f_i(w)] = \\sum_i \\tfrac1n\\nabla f_i(w) = \\nabla f(w)$, by linearity of expectation.",
+        "(2) $E[w^+] = w - \\alpha\\nabla f(w)$: the gradient-descent step.",
+        "(3) $w$ is not random here. The statement is about one step from a given point.",
+        "(4) $\\tfrac{1}{np_i}\\nabla f_i(w)$: its expectation is $\\sum_i p_i\\tfrac{1}{np_i}\\nabla f_i = \\nabla f$."
+      ],
+      "pit": "The slide's second line drops a factor $\\tfrac1n$.",
+      "src": "S p15",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-15",
+      "g": "Stochastic gradient",
+      "k": "One stochastic step",
+      "q": "$f_1(w) = w^2$, $f_2(w) = (w - 2)^2$, $f = \\tfrac12(f_1 + f_2)$, step $\\alpha = \\tfrac14$. (1) Find $w^*$ and the three derivatives $f'$, $f_1'$, $f_2'$ at $w^*$. (2) Do one SGD step from $w^*$ for each index and compute $E[w^+]$. (3) Compute $E[f(w^+)]$ and compare with $f(E[w^+])$. (4) What does this show?",
+      "pts": [
+        "(1) $f = (w - 1)^2 + 1$, so $w^* = 1$. $f'(1) = 0$ but $f_1'(1) = 2$ and $f_2'(1) = -2$: the full gradient vanishes because the pieces cancel.",
+        "(2) $i = 1$: $w^+ = 1 - \\tfrac14 \\times 2 = \\tfrac12$. $i = 2$: $w^+ = \\tfrac32$. $E[w^+] = 1$, the same as the gradient-descent step (which does not move).",
+        "(3) $f(\\tfrac12) = f(\\tfrac32) = \\tfrac54$, so $E[f(w^+)] = \\tfrac54 > 1 = f(E[w^+])$.",
+        "(4) An unbiased gradient does not make each step a descent step: here every outcome increases $f$. The gap $\\tfrac14$ equals $\\tfrac{f''}{2}\\operatorname{Var}(w^+)$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": [
+        "T5 P5"
+      ]
+    },
+    {
+      "id": "NLO-05-16",
+      "g": "Stochastic gradient",
+      "k": "One epoch, fixed order",
+      "q": "$f_1(w) = w^2$, $f_2(w) = (w - 2)^2$, $\\alpha = \\tfrac14$, start at $w = 1$ (the minimizer of $f = \\tfrac12(f_1 + f_2)$). (1) Do one epoch in the order $1, 2$. (2) Do one epoch in the order $2, 1$. (3) Why is neither result equal to the gradient-descent step? (4) Compare the costs of a full-gradient update, one SGD update and one epoch.",
+      "pts": [
+        "(1) Index 1: $w = 1 - \\tfrac14 \\times 2 = \\tfrac12$. Index 2 at the new point: $f_2'(\\tfrac12) = -3$, so $w = \\tfrac12 + \\tfrac34 = \\tfrac54$.",
+        "(2) Index 2: $w = \\tfrac32$. Index 1: $f_1'(\\tfrac32) = 3$, so $w = \\tfrac32 - \\tfrac34 = \\tfrac34$.",
+        "(3) The second gradient is evaluated at a point that depends on the first update: an epoch is a composition of maps, not an average. Gradient descent stays at $1$.",
+        "(4) $O(nd)$; $O(d)$; $n$ updates, $O(nd)$: the same cost as one full step, but $n$ moves, each with a gradient at a different point."
+      ],
+      "pit": "Recompute the gradient at the updated value. Reusing $f_2'(1) = -2$ gives the wrong answer $1$.",
+      "src": "S p16",
+      "seen": [
+        "T5 P5"
+      ]
+    },
+    {
+      "id": "NLO-05-17",
+      "g": "Stochastic gradient",
+      "k": "Mean over many steps",
+      "q": "SGD with indices drawn independently and uniformly. (1) Prove that for quadratic $f$ the mean iterate $E[w_k]$ equals the gradient-descent iterate for every $k$. (2) Where does the proof use “quadratic”? (3) Check with $f_1 = w^4$, $f_2 = (w - 2)^2$, $w_0 = 1$, $\\alpha = \\tfrac{1}{10}$: compare $E[w_1]$ and $E[w_2]$ with gradient descent.",
+      "pts": [
+        "(1) $i_k$ is independent of $w_k$, so $E[w_{k+1}] = E[w_k] - \\alpha E[\\nabla f(w_k)]$. For affine $\\nabla f$, $E[\\nabla f(w_k)] = \\nabla f(E[w_k])$: the means follow the gradient-descent recursion. Induct.",
+        "(2) In $E[\\nabla f(w_k)] = \\nabla f(E[w_k])$, which needs $\\nabla f$ affine.",
+        "(3) One step: $w_1 \\in \\{0.6, 1.2\\}$, mean $0.9$, equal to the gradient-descent step. Two steps: the four paths give $0.5136$, $0.88$, $0.5088$, $1.36$ with mean $0.8156$, but gradient descent gives $0.8642$."
+      ],
+      "pit": "“The expected effect of one SGD iteration equals gradient descent” is a statement about one step from a fixed point.",
+      "src": "S p15",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-18",
+      "g": "Stochastic gradient",
+      "k": "Fixed point of SGD",
+      "q": "Constant-step SGD on $f = \\tfrac1n\\sum_i f_i$. (1) When is the minimizer $w^*$ a fixed point of the update for every index? (2) Specialize to linear regression with all $x_i \\ne 0$. (3) For quadratic $f$ with Hessian $H$ and $\\bar w = E[w^+]$, what is $E[f(w^+)] - f(\\bar w)$? (4) What does this mean near $w^*$?",
+      "pts": [
+        "(1) Iff $\\nabla f_i(w^*) = 0$ for every $i$. In general only the average $\\nabla f(w^*)$ vanishes.",
+        "(2) $\\nabla f_i(w^*) = 2E_i(w^*)x_i = 0$ iff $E_i(w^*) = 0$: every data point is fitted exactly (interpolation).",
+        "(3) $\\tfrac{\\alpha^2}{2}E\\big[(g_i - \\nabla f)^\\top H(g_i - \\nabla f)\\big] \\ge 0$ with $g_i = \\nabla f_i(w)$: a variance penalty.",
+        "(4) $w^*$ is a fixed point of gradient descent but not of constant-step SGD unless the data are interpolated; the iterates keep being pushed away from $w^*$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-19",
+      "g": "Stochastic gradient",
+      "k": "Noise floor",
+      "q": "Let $\\nabla f$ be $L$-Lipschitz, $f \\ge f_{\\inf}$, and $E_i\\lVert \\nabla f_i(w) \\rVert^2 \\le G^2$; indices are i.i.d. uniform. (1) Derive the one-step inequality for $E[f(w_{k+1}) \\mid w_k]$. (2) State the resulting bound for a constant step after $K$ steps. (3) Compare with gradient descent. (4) What do halving $\\alpha$ and a diminishing step do?",
+      "pts": [
+        "(1) Descent lemma at $y = w - \\alpha g_i$: $f(w - \\alpha g_i) \\le f(w) - \\alpha\\nabla f(w)^\\top g_i + \\tfrac{L\\alpha^2}{2}\\lVert g_i \\rVert^2$. Taking $E_i$ and using $E g_i = \\nabla f$: $$E[f(w_{k+1}) \\mid w_k] \\le f(w_k) - \\alpha\\lVert \\nabla f(w_k) \\rVert^2 + \\tfrac{L\\alpha^2}{2}G^2$$",
+        "(2) Telescoping: $$\\frac1K\\sum_{k=0}^{K-1} E\\lVert \\nabla f(w_k) \\rVert^2 \\le \\frac{f(w_0) - f_{\\inf}}{\\alpha K} + \\frac{L\\alpha G^2}{2}$$",
+        "(3) For gradient descent the decrease $\\alpha(1 - \\tfrac{L\\alpha}{2})\\lVert \\nabla f \\rVert^2$ is never negative. Here the term $\\tfrac{L\\alpha^2}{2}G^2$ does not shrink as $\\nabla f \\to 0$: the noise floor.",
+        "(4) Halving $\\alpha$ halves the floor and doubles the time to reach it. With $\\sum\\alpha_k = \\infty$ and $\\sum\\alpha_k^2 < \\infty$ (e.g. $\\alpha_k \\propto 1/k$) the floor disappears, at a sublinear rate."
+      ],
+      "pit": "This bound is not in the slides, which state no convergence result for SGD.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-20",
+      "g": "Stochastic gradient",
+      "k": "Scalar model: floor",
+      "q": "$f_i(w) = (w - y_i)^2$ with $y_i \\in \\{0, 2\\}$ equally likely, so $w^* = 1$, $\\sigma^2 = \\operatorname{Var}(y) = 1$ and $f(w) - f^* = (w - 1)^2$. Constant step $\\alpha$, i.i.d. sampling. (1) Write the SGD update. (2) Find the stationary variance $v$ of $w$. (3) What is the long-run $E f - f^*$ for $\\alpha = \\tfrac14$ and $\\alpha = 0.1$? (4) How does it scale with $\\alpha$?",
+      "pts": [
+        "(1) $w^+ = w - 2\\alpha(w - y_i) = (1 - 2\\alpha)w + 2\\alpha y_i$.",
+        "(2) The mean is $1$ and $v = (1 - 2\\alpha)^2 v + 4\\alpha^2\\sigma^2$, so $v = \\dfrac{\\alpha\\sigma^2}{1 - \\alpha}$.",
+        "(3) $E f - f^* = v = \\tfrac{\\alpha}{1 - \\alpha}$: $\\tfrac13$ at $\\alpha = \\tfrac14$ and $\\tfrac19$ at $\\alpha = 0.1$.",
+        "(4) Roughly proportionally: a smaller constant step lowers the floor but never removes it."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-21",
+      "g": "Stochastic gradient",
+      "k": "Diminishing step",
+      "q": "Same scalar model: $w^+ = (1 - 2\\alpha_k)w + 2\\alpha_k y_{i_k}$ with $y \\in \\{0, 2\\}$, $w^* = 1$, $\\sigma^2 = 1$. Take $\\alpha_k = \\dfrac{1}{2(k + 1)}$. (1) Simplify the update and identify $w_k$. (2) What is $E f(w_k) - f^*$, and which kind of convergence is this? (3) Start at $w_0 = 5$ and let the first sample be $y = 2$. What is $w_1$, and why does the start not matter? (4) Which general conditions on $\\alpha_k$ does this schedule satisfy?",
+      "pts": [
+        "(1) $w_{k+1} = \\big(1 - \\tfrac{1}{k + 1}\\big)w_k + \\tfrac{y_{i_k}}{k + 1}$: $w_k$ is the running mean of the first $k$ sampled values.",
+        "(2) $\\sigma^2/k = 1/k \\to 0$: it converges, but sublinearly (the ratio of successive errors tends to $1$).",
+        "(3) $\\alpha_0 = \\tfrac12$: $w_1 = 5 - \\tfrac12 \\times 2(5 - 2) = 2 = y$. The coefficient of $w_0$ is $1 - 2\\alpha_0 = 0$, so the start is erased.",
+        "(4) $\\sum_k \\alpha_k = \\infty$ and $\\sum_k \\alpha_k^2 < \\infty$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-22",
+      "g": "Stochastic gradient",
+      "k": "Fixed order cycles",
+      "q": "$f_1 = w^2$, $f_2 = (w - 2)^2$, constant step $\\alpha = \\tfrac14$, indices visited in the fixed order $1, 2, 1, 2, \\dots$ as in the slide's loop. (1) Write the map of one epoch. (2) Find its fixed point and the limit cycle. (3) What is $f - f^*$ on the cycle, with $f = (w - 1)^2 + 1$? (4) What is needed for convergence to $w^*$?",
+      "pts": [
+        "(1) Index 1: $w \\mapsto \\tfrac12 w$. Index 2: $w \\mapsto w - \\tfrac12(w - 2) = \\tfrac12 w + 1$. Epoch: $w \\mapsto \\tfrac14 w + 1$.",
+        "(2) Fixed point $\\tfrac43$; within the epoch the iterate alternates $\\tfrac43 \\to \\tfrac23 \\to \\tfrac43$.",
+        "(3) $(\\tfrac13)^2 = \\tfrac19$ at both points: the method is deterministic and biased, and never reaches $w^* = 1$.",
+        "(4) A step $\\alpha_k \\to 0$ with $\\sum\\alpha_k = \\infty$, or data that are fitted exactly."
+      ],
+      "pit": "“Stochastic” means the index is drawn at random. A fixed order is the incremental gradient method and behaves differently.",
+      "src": "S p16",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-23",
+      "g": "Stochastic gradient",
+      "k": "Interpolated data",
+      "q": "Data $x_1 = (1, 0)$, $y_1 = 1$ and $x_2 = (0, 2)$, $y_2 = 2$, $f = \\tfrac12\\sum_i E_i^2$ with minimizer $w^* = (1, 1)$ and Hessian $\\operatorname{diag}(1, 4)$. (1) Does constant-step SGD have a noise floor here? (2) What is the largest safe constant step for gradient descent? (3) What does an SGD update on sample 2 with $\\alpha = \\tfrac14$ do to $w_2$? (4) Which lesson follows for choosing the SGD step?",
+      "pts": [
+        "(1) No: both residuals vanish at $w^*$, so every $\\nabla f_i(w^*) = 0$ and SGD with a small constant step converges to $(1,1)$ exactly.",
+        "(2) $L = 4$, so $\\alpha < \\tfrac12$.",
+        "(3) $\\nabla f_2 = (0, 8(w_2 - 1))$: $w_2 \\mapsto w_2 - 2(w_2 - 1) = 2 - w_2$. It jumps to the mirror image and never settles.",
+        "(4) A single $f_i$ can be more curved than the average (here $8$ against $4$), so a step that is safe for gradient descent can be too large for SGD."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-24",
+      "g": "Stochastic gradient",
+      "k": "When SGD wins",
+      "q": "Compare the normal equations, full gradient descent and SGD on (1) cost, (2) progress per pass over the data. (3) Evaluate the costs for $n = 10^6$, $d = 100$. (4) In which regime is SGD the right choice, and when not?",
+      "pts": [
+        "(1) Normal equations: $O(nd^2 + d^3)$ once. Gradient descent: $O(nd)$ per iteration. SGD: $O(d)$ per update, $O(nd)$ per epoch.",
+        "(2) Normal equations: exact (full column rank). Gradient descent: one step per pass, linear rate at best $\\tfrac{\\kappa - 1}{\\kappa + 1}$. SGD: $n$ steps per pass, large early gains, then a floor (constant step) or slow $O(1/k)$ convergence (diminishing step).",
+        "(3) Normal equations about $nd^2 = 10^{10}$ (plus $d^3 = 10^6$); one gradient iteration $10^8$; one SGD update $100$; one epoch $10^8$.",
+        "(4) When $n$ is so large that one full gradient is already too expensive and moderate accuracy suffices, as in machine learning. For high accuracy on a moderate data set, gradient descent or Newton-type methods win."
+      ],
+      "pit": "",
+      "src": "S p12, 16",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-25",
+      "g": "Stochastic gradient",
+      "k": "True or false",
+      "q": "Decide and justify: (1) “One epoch of SGD has the same expected effect as one gradient-descent step.” (2) “Small step lengths control the variance, so constant-step SGD converges to the minimizer.” (3) “The error $E_i(w)x_i$ is a dot product.” (4) “$nd$ in the tens of billions is the cost of the normal equations.”",
+      "pts": [
+        "(1) False in general. It holds for the mean after one update from a fixed $w$. Over an epoch the updates compose; and even with i.i.d. sampling and quadratic $f$ the mean matches $n$ gradient steps of size $\\alpha$, not one.",
+        "(2) False. A small constant step lowers the noise floor (proportionally) but does not remove it, unless every residual at $w^*$ is zero.",
+        "(3) False: it is a scalar times a vector. The dot product is inside $E_i(w) = x_i^\\top w - y_i$. Both cost $O(d)$.",
+        "(4) False: $nd$ is the size of $X$. The normal-equation cost is $nd^2$."
+      ],
+      "pit": "",
+      "src": "S p8, 11, 15–16",
+      "seen": []
+    },
+    {
+      "id": "NLO-05-26",
+      "g": "Overview",
+      "k": "Method summary",
+      "q": "For each method give the update, the cost, and how it can fail or be weak: (1) normal equations, (2) full gradient descent on the mean squared error, (3) SGD with a constant step, (4) SGD with a diminishing step, (5) single-sample updates in a fixed order.",
+      "pts": [
+        "(1) Solve $X^\\top Xw = X^\\top y$; $O(nd^2 + d^3)$; exact, but too costly for large $n, d$ and not unique when $\\operatorname{rank}X < d$.",
+        "(2) $w - \\alpha\\tfrac2n X^\\top(Xw - y)$; $O(nd)$ per iteration; linear with factor $\\max_j|1 - \\alpha\\lambda_j|$; fails for $\\alpha \\ge \\tfrac2L$, slow for large $\\kappa$.",
+        "(3) $w - 2\\alpha E_i(w)x_i$ with $i$ uniform; $O(d)$ per update; fast early progress, then a noise floor proportional to $\\alpha$.",
+        "(4) The same with $\\sum\\alpha_k = \\infty$, $\\sum\\alpha_k^2 < \\infty$; converges, but sublinearly.",
+        "(5) Deterministic; with a constant step it settles on a limit cycle away from $w^*$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}
