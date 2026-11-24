@@ -211,10 +211,12 @@
         {
           "t": "Slater condition",
           "d": [
-            "$g_i$ convex, $h_j$ affine, and a point $\\hat x$ with $g_i(\\hat x) < 0$ for all $i$ and $h(\\hat x) = 0$. Checked once for the whole problem."
+            "$g_i$ convex, $h_j$ affine, and a point $\\hat x$ with $g_i(\\hat x) < 0$ for all $i$ and $h(\\hat x) = 0$. Checked once for the whole problem. $f$ need not be convex.",
+            "Conclusion: every local minimum is a KKT point (the slides state it for the global minimum). Reason: $d = \\hat x - \\bar x$ has $\\nabla g_i^\\top d < 0$ for active $i$ and $\\nabla h_j^\\top d = 0$ (MFCQ). Linear independence of the $\\nabla h_j$ is not needed: dependent affine equalities are inconsistent or redundant."
           ],
           "cards": [
-            "NLP-06-24"
+            "NLP-06-24",
+            "NLP-06-24a"
           ]
         },
         {
@@ -931,13 +933,29 @@
       "id": "NLP-06-24",
       "g": "Constraint qualif.",
       "k": "LICQ vs Slater",
-      "q": "Define (1) LICQ (a regular point) and (2) the Slater condition. (3) Compare them: where is each checked, does it need convexity, and are the multipliers unique?",
+      "q": "Define (1) LICQ (a regular point) and (2) the Slater condition. (3) Compare them: where is each checked, does it need convexity, and are the multipliers unique? (4) What does each guarantee?",
       "pts": [
         "(1) A feasible $\\bar x$ is regular if $\\{\\nabla g_i(\\bar x) : i \\in I(\\bar x)\\} \\cup \\{\\nabla h_j(\\bar x)\\}$ is linearly independent.",
         "(2) The $g_i$ are convex, the $h_j$ are affine, and there is a Slater point $\\hat x$ with $g_i(\\hat x) < 0$ for all $i$ and $h(\\hat x) = 0$.",
-        "(3) LICQ: checked at the candidate point (local); no convexity needed; multipliers unique. Slater: checked once for the whole problem; needs convexity; multipliers may be non-unique."
+        "(3) LICQ: checked at the candidate point (local); no convexity needed; multipliers unique. Slater: checked once for the whole problem; needs convexity; multipliers may be non-unique.",
+        "(4) LICQ at $\\bar x$: $\\bar x$ a local minimum ⇒ $\\bar x$ a KKT point, with unique multipliers. Slater: the slides say “global minimum ⇒ KKT point”; in fact every local minimum is a KKT point. $f$ need not be convex for either."
       ],
       "pit": "Neither implies the other and neither is necessary. For $\\min -x$ s.t. $x \\le 0$, $2x \\le 0$: Slater holds ($\\hat x = -1$), LICQ fails at $0$, and KKT holds with many multipliers.",
+      "src": "K2 p8",
+      "seen": []
+    },
+    {
+      "id": "NLP-06-24a",
+      "g": "Constraint qualif.",
+      "k": "Slater ⇒ local min is KKT",
+      "q": "Assume the Slater condition: $g_i$ convex, $h_j$ affine, and a Slater point $\\hat x$ with $g_i(\\hat x) < 0$ for all $i$, $h(\\hat x) = 0$. Let $\\bar x$ be any local minimum and $d = \\hat x - \\bar x$. (1) What does $d$ satisfy for each active $g_i$ and each $h_j$? (2) Which CQ does this give, and what follows? (3) Why does the argument not need $\\bar x$ to be a global minimum? (4) The slides also require the $\\nabla h_j$ to be linearly independent. Is that needed?",
+      "pts": [
+        "(1) Active $g_i$: by convexity $\\nabla g_i(\\bar x)^\\top d \\le g_i(\\hat x) - g_i(\\bar x) = g_i(\\hat x) < 0$. $h_j$: affine and both points feasible, so $\\nabla h_j^\\top d = h_j(\\hat x) - h_j(\\bar x) = 0$.",
+        "(2) With linearly independent $\\nabla h_j$ this is MFCQ (a CQ from outside the course), which gives local minimum ⇒ KKT point.",
+        "(3) Only the feasibility of $\\bar x$ was used, so it works at every feasible point: every local minimum is a KKT point, not only the global one the slides mention.",
+        "(4) No. Linearly dependent affine equalities are either inconsistent (empty feasible set) or redundant: $x_1 + x_2 = 1$ and $2x_1 + 2x_2 = 2$. Drop the redundant ones; the feasible set is unchanged and they get multiplier $0$. The slides include it because MFCQ's definition does."
+      ],
+      "pit": "$f$ need not be convex. Slater is checked once for the whole problem, and the multipliers it guarantees need not be unique.",
       "src": "K2 p8",
       "seen": []
     },

@@ -45,6 +45,15 @@
           ]
         },
         {
+          "t": "Using a theorem",
+          "d": [
+            "Under [applicability], A ⇒ B. Verify the applicability condition first (regular: at each point; convex: once for the problem), check the computable condition, conclude only in the theorem's direction. SONC and first-order KKT can only rule out; KKT + convexity confirms a global minimum."
+          ],
+          "cards": [
+            "NLP-07-04a"
+          ]
+        },
+        {
           "t": "Reduced Hessian",
           "d": [
             "With the columns of $Z$ a basis of $\\Lambda(x^*)$: the condition is $Z^\\top H Z \\succeq 0$. $H$ itself need not be PSD."
@@ -67,12 +76,31 @@
           ]
         },
         {
+          "t": "Λ ⊆ C ⊆ F",
+          "d": [
+            "$\\Lambda$: active $\\nabla g_i^\\top d = 0$.  $C$: $= 0$ if $\\lambda_i > 0$, $\\le 0$ if $\\lambda_i = 0$.  $F$: active $\\nabla g_i^\\top d \\le 0$. For $d \\in F$, $\\nabla f^\\top d = \\sum \\lambda_i(-\\nabla g_i^\\top d) \\ge 0$: directions into a constraint with $\\lambda_i > 0$ raise $f$ at first order; with $\\lambda_i = 0$ curvature decides."
+          ],
+          "cards": [
+            "NLP-07-14a",
+            "NLP-07-13"
+          ]
+        },
+        {
           "t": "Verdicts",
           "d": [
             "Negative eigenvalue of $Z^\\top H Z$: not a local minimum.  Convex problem: global minimum.  $Z^\\top H Z \\succ 0$ with positive active multipliers: strict local minimum.  Otherwise: no conclusion."
           ],
           "cards": [
             "NLP-07-15"
+          ]
+        },
+        {
+          "t": "Necessary vs sufficient",
+          "d": [
+            "CQs enter only the necessary conditions (local min ⇒ …). A minimum is concluded only by the strict sufficient condition on $C$ or by convexity. Wrong reverses: $x^3$ at $0$; T7 P3 at the origin; $\\min -x^2$ on $[-1, 1]$ at $0$."
+          ],
+          "cards": [
+            "NLP-07-15a"
           ]
         }
       ]
@@ -172,7 +200,8 @@
           "d": [
             "For any $\\lambda$ and any $\\mu \\ge 0$: $q(\\lambda, \\mu) \\le f^*$. Proof at a feasible $\\bar x$:",
             "$$q(\\lambda, \\mu) \\le L(\\bar x, \\lambda, \\mu) = f(\\bar x) + \\sum_i \\lambda_i h_i(\\bar x) + \\sum_j \\mu_j g_j(\\bar x) \\le f(\\bar x)$$",
-            "$\\mu \\ge 0$ is essential."
+            "$\\mu \\ge 0$ is essential.",
+            "Taking the supremum over $\\lambda$, $\\mu \\ge 0$ gives weak duality. Feasibility of $\\bar x$ and $\\mu \\ge 0$ are used in one step only; with an infeasible $\\bar x$ the bound fails."
           ],
           "cards": [
             "NLP-07-29",
@@ -216,7 +245,7 @@
           "t": "Dual problem",
           "d": [
             "$$d^* = \\max_{\\lambda, \\mu}\\ q(\\lambda, \\mu) \\quad \\text{s.t.} \\quad \\mu \\ge 0$$",
-            "Always a convex problem."
+            "$q$ is a concave function; the dual problem ($\\min -q$ over $\\mu \\ge 0$) is a convex problem."
           ],
           "cards": [
             "NLP-07-34"
@@ -229,7 +258,18 @@
           ],
           "cards": [
             "NLP-07-34",
+            "NLP-07-29",
             "NLP-07-39"
+          ]
+        },
+        {
+          "t": "Certificate",
+          "d": [
+            "Feasible $\\hat x$, $\\hat\\mu \\ge 0$ and $q(\\hat\\lambda, \\hat\\mu) = f(\\hat x)$ ⇒ both optimal, gap $0$. Needs only weak duality. T7 P4: $\\hat x = (\\tfrac32, \\tfrac12)$, $(\\hat\\lambda, \\hat\\mu) = (-\\tfrac12, 1)$, value $\\tfrac54$."
+          ],
+          "cards": [
+            "NLP-07-34",
+            "NLP-07-44"
           ]
         },
         {
@@ -326,7 +366,7 @@
         {
           "t": "Unit circle",
           "d": [
-            "$(\\pm 1, 0)$ pass and are the global minimizers ($f = 1$); $(0, \\pm 1)$ fail."
+            "$(\\pm 1, 0)$ pass and are the global minimizers ($f = 1$); $(0, \\pm 1)$ fail. Argument: a minimizer exists (compact circle), every point is regular, so it is among the KKT points that pass."
           ],
           "cards": [
             "NLP-07-10"
@@ -335,7 +375,7 @@
         {
           "t": "Disk and plane",
           "d": [
-            "$x^* = (1, 0, 0)$, $\\lambda_1 = 1$, $\\mu_1 = 0$; $H = \\operatorname{diag}(4, 4, -2)$, $\\Lambda = \\operatorname{span}\\{(0, 2, 1)\\}$, curvature $14t^2$; $f^* = 1$."
+            "$x^* = (1, 0, 0)$, $\\lambda_1 = 1$, $\\mu_1 = 0$; $H = \\operatorname{diag}(4, 4, -2)$, $\\Lambda = \\operatorname{span}\\{(0, 2, 1)\\}$, curvature $14t^2$; $f^* = 1$. Unique: eliminating $x_3$ gives a convex problem with strictly convex $F = (x_1 - 2)^2 + \\tfrac34 x_2^2$."
           ],
           "cards": [
             "NLP-07-11",
@@ -459,6 +499,25 @@
             "NLP-07-10",
             "NLP-07-11",
             "NLP-07-12"
+          ]
+        },
+        {
+          "t": "Existence + elimination",
+          "d": [
+            "Only necessary conditions at hand: show a minimizer exists (compact feasible set, continuous $f$), show the CQ holds everywhere, rule points out with the necessary conditions; the survivors with the smallest value are the global minimizers."
+          ],
+          "cards": [
+            "NLP-07-10"
+          ]
+        },
+        {
+          "t": "Verify, check, conclude",
+          "d": [
+            "State the applicability condition (regularity or convexity) in its own sentence before using a theorem; a necessary condition only rules out."
+          ],
+          "cards": [
+            "NLP-07-04a",
+            "NLP-07-15a"
           ]
         },
         {
@@ -727,6 +786,23 @@
       "seen": []
     },
     {
+      "id": "NLP-07-04a",
+      "g": "Second order",
+      "k": "Applicability vs unknown",
+      "q": "Theorems that decide optimality have the shape “under [applicability conditions], A ⇒ B”. (1) Name the three roles a condition can play and how you handle each. (2) For SONC and for KKT sufficiency (Lecture 6), give the applicability condition, the unknown, what you check, and what each outcome lets you conclude. (3) In what order does a written answer go? (4) Apply this to $\\min x_1^2 - 2x_1x_2 + 3x_2^2$ s.t. $g_1 = x_1 + x_2 - 1 \\le 0$, $g_2 = -x_1 \\le 0$ at $x^* = (0, 0)$, $\\lambda^* = (0, 0)$.",
+      "pts": [
+        "(1) Applicability condition: a property of the problem or the point (regular, convex) that can be verified from the data; verify it first. Condition to check: something computable (KKT holds, the sign of a quadratic form). The unknown: what is to be decided (“is $x^*$ a minimum?”); only the theorem decides it.",
+        "(2) SONC: applicability $x^*$ regular; unknown “local minimum”, left of ⇒; check KKT and $d^\\top \\nabla^2_{xx} L\\,d \\ge 0$ on $\\Lambda$. Fails ⇒ not a local minimum; passes ⇒ still a candidate. KKT sufficiency: applicability $f$, $g_i$ convex and $h_j$ affine (regularity not needed); unknown “global minimum”, right of ⇒; check KKT. Holds ⇒ global minimum; fails ⇒ no conclusion. First-order KKT is of the SONC type.",
+        "(3) Verify the applicability condition in its own sentence → check the conditions → conclude in the theorem's direction: a necessary condition only rules out, a sufficient one confirms. If the applicability condition fails, the theorem says nothing; keep the point as a candidate.",
+        "(4) $\\nabla g_2 = (-1, 0) \\ne 0$: regular, so SONC applies. $\\nabla f(x^*) = 0$, so KKT holds with $\\lambda^* = 0$; $H = \\nabla^2 f = \\begin{pmatrix} 2 & -2 \\\\ -2 & 6 \\end{pmatrix} \\succ 0$ (minors $2$, $8$), so SONC holds: not ruled out, not yet a minimum. To confirm, use sufficiency: $f$ strictly convex, constraints affine ⇒ a convex problem, and KKT ⇒ the unique global minimum."
+      ],
+      "pit": "Convexity belongs to the whole problem and is checked once; regularity belongs to a point and is checked at every candidate. Regularity also makes the multipliers unique, so the second-order test uses the one you computed.",
+      "src": "",
+      "seen": [
+        "HW3 P2"
+      ]
+    },
+    {
       "id": "NLP-07-05",
       "g": "Second order",
       "k": "Three KKT points",
@@ -805,14 +881,15 @@
       "id": "NLP-07-10",
       "g": "Second order",
       "k": "Unit circle",
-      "q": "Consider $\\min f = x_1^2 + 2x_2^2$ s.t. $h_1 = x_1^2 + x_2^2 - 1 = 0$ (multiplier $\\mu$). (1) Find all KKT points. (2) Compute $H = \\nabla^2_{xx} L$ and apply the second-order test at each. (3) Find the global minimizers directly. (4) Why can $\\nabla^2 f$ alone not distinguish the points?",
+      "q": "Consider $\\min f = x_1^2 + 2x_2^2$ s.t. $h_1 = x_1^2 + x_2^2 - 1 = 0$ (multiplier $\\mu$). (1) Find all KKT points. (2) Compute $H = \\nabla^2_{xx} L$ and apply the second-order test at each. (3) Both tests are only necessary. How do you still conclude which points are global minimizers? (4) Check by eliminating a variable. (5) Why can $\\nabla^2 f$ alone not distinguish the points?",
       "pts": [
         "(1) $2x_1(1 + \\mu) = 0$, $2x_2(2 + \\mu) = 0$, $x_1^2 + x_2^2 = 1$. If $\\mu = -1$: $x_2 = 0$, $x_1 = \\pm 1$. If $x_1 = 0$: $x_2 = \\pm 1$, $\\mu = -2$. Four points, all regular since $\\nabla h_1 = (2x_1, 2x_2) \\ne 0$ on the circle.",
         "(2) $H = \\operatorname{diag}(2 + 2\\mu,\\ 4 + 2\\mu)$. At $(\\pm 1, 0)$: $\\operatorname{diag}(0, 2)$, $\\Lambda = \\operatorname{span}\\{(0,1)\\}$, $d^\\top H d = 2d_2^2 \\ge 0$: pass. At $(0, \\pm 1)$: $\\operatorname{diag}(-2, 0)$, $\\Lambda = \\operatorname{span}\\{(1,0)\\}$, $d^\\top H d = -2d_1^2 < 0$: fail.",
-        "(3) On the circle $f = 1 + x_2^2$: minimum $1$ at $(\\pm 1, 0)$, maximum $2$ at $(0, \\pm 1)$.",
-        "(4) $\\nabla^2 f = \\operatorname{diag}(2, 4) \\succ 0$ at all four points. The difference comes from $\\mu \\nabla^2 h_1$, the curvature of the constraint."
+        "(3) Existence + elimination. The circle is compact and $f$ continuous, so a global minimizer $\\hat x$ exists (Weierstrass). Every point is regular, so $\\hat x$ must be a KKT point and pass the second-order test (contrapositives of the two necessary conditions). Only $(\\pm 1, 0)$ survive, both with $f = 1$: both are global minimizers, $f^* = 1$.",
+        "(4) On the circle $f = 1 + x_2^2$: minimum $1$ at $(\\pm 1, 0)$, maximum $2$ at $(0, \\pm 1)$.",
+        "(5) $\\nabla^2 f = \\operatorname{diag}(2, 4) \\succ 0$ at all four points. The difference comes from $\\mu \\nabla^2 h_1$, the curvature of the constraint."
       ],
-      "pit": "Do not replace $\\nabla^2_{xx} L$ by $\\nabla^2 f$, and do not require $H$ to be PSD on all of $\\mathbb{R}^2$.",
+      "pit": "Existence cannot be skipped: unconstrained $\\min x^3$ has the single candidate $x = 0$, which passes $f''(0) = 0 \\ge 0$, yet no minimum exists. Also, do not replace $\\nabla^2_{xx} L$ by $\\nabla^2 f$, and do not require $H$ to be PSD on all of $\\mathbb{R}^2$.",
       "src": "",
       "seen": [
         "T7 P1"
@@ -839,12 +916,12 @@
       "id": "NLP-07-12",
       "g": "Second order",
       "k": "Curvature on Λ",
-      "q": "At the KKT point $x^* = (1, 0, 0)$ of $\\min (x_1 - 2)^2 + x_2^2 - x_3^2$ s.t. $x_1^2 + x_2^2 - 1 \\le 0$, $x_3 - \\tfrac12 x_2 = 0$, the multipliers are $\\lambda_1 = 1$ and $\\mu_1 = 0$, with $\\nabla g_1 = (2, 0, 0)$ and $\\nabla h_1 = (0, -\\tfrac12, 1)$. (1) Find $\\Lambda(x^*)$. (2) Compute $H = \\nabla^2_{xx} L$. Is it PSD on $\\mathbb{R}^3$? (3) Test it on $\\Lambda(x^*)$. (4) Confirm by eliminating $x_3$.",
+      "q": "At the KKT point $x^* = (1, 0, 0)$ of $\\min (x_1 - 2)^2 + x_2^2 - x_3^2$ s.t. $x_1^2 + x_2^2 - 1 \\le 0$, $x_3 - \\tfrac12 x_2 = 0$, the multipliers are $\\lambda_1 = 1$ and $\\mu_1 = 0$, with $\\nabla g_1 = (2, 0, 0)$ and $\\nabla h_1 = (0, -\\tfrac12, 1)$. (1) Find $\\Lambda(x^*)$. (2) Compute $H = \\nabla^2_{xx} L$. Is it PSD on $\\mathbb{R}^3$? (3) Test it on $\\Lambda(x^*)$. (4) Show it is the unique global minimizer by eliminating $x_3$ and using convexity.",
       "pts": [
         "(1) $2d_1 = 0$ and $-\\tfrac12 d_2 + d_3 = 0$: $\\Lambda = \\{t(0, 2, 1)\\}$.",
         "(2) $H = \\operatorname{diag}(2, 2, -2) + 1 \\cdot \\operatorname{diag}(2, 2, 0) = \\operatorname{diag}(4, 4, -2)$. Not PSD: $d = (0, 0, 1)$ gives $-2$.",
         "(3) For $d = t(0, 2, 1)$: $d^\\top H d = t^2(16 - 2) = 14t^2$, which is $\\ge 0$ and $> 0$ for $t \\ne 0$. Since also $\\lambda_1 > 0$, the sufficient condition holds: a strict local minimum.",
-        "(4) $f = (x_1 - 2)^2 + \\tfrac34 x_2^2$ on the disk. Since $x_1 \\le 1$, $(x_1 - 2)^2 \\ge 1$ with equality iff $x_1 = 1$. So $f \\ge 1$ with equality only at $(1, 0, 0)$: the unique global minimizer."
+        "(4) $x_3 = \\tfrac12 x_2$ gives $F = (x_1 - 2)^2 + \\tfrac34 x_2^2$ s.t. $x_1^2 + x_2^2 \\le 1$, with one-to-one feasible points and equal values. $\\nabla^2 F = \\operatorname{diag}(2, \\tfrac32) \\succ 0$ and $g_1$ is convex: a convex problem with a strictly convex objective. $(1, 0)$ is a KKT point ($\\lambda_1 = 1$), so $(1, 0, 0)$ is the unique global minimizer, $f^* = 1$."
       ],
       "pit": "The negative-curvature direction $(0, 0, 1)$ is not in $\\Lambda$: the equality ties $x_3$ to $x_2$. Do not conclude “not a minimum” from the $-x_3^2$ term or from a negative eigenvalue of $H$.",
       "src": "",
@@ -886,6 +963,23 @@
       ]
     },
     {
+      "id": "NLP-07-14a",
+      "g": "Second order",
+      "k": "Λ ⊆ C ⊆ F",
+      "q": "At a regular KKT point with multipliers $\\lambda_i \\ge 0$, three sets of directions all require $\\nabla h_j^\\top d = 0$ and differ only in the active inequalities: $\\Lambda$, the critical cone $C$, and the first-order feasible directions $F$. (1) Define each and order them by inclusion. (2) Show $\\nabla f^\\top d \\ge 0$ for $d \\in F$. What does it mean for directions into a constraint with $\\lambda_i > 0$? (3) And with $\\lambda_i = 0$? (4) Which set does each second-order condition use?",
+      "pts": [
+        "(1) $\\Lambda$: $\\nabla g_i^\\top d = 0$ for every active $i$ (a subspace). $C$: $= 0$ where $\\lambda_i > 0$, $\\le 0$ where $\\lambda_i = 0$; equivalently $C = F \\cap \\{d : \\nabla f^\\top d = 0\\}$. $F$: $\\nabla g_i^\\top d \\le 0$ for every active $i$. So $\\Lambda \\subseteq C \\subseteq F$, and $C = \\Lambda$ when every active $\\lambda_i > 0$.",
+        "(2) Stationarity: $\\nabla f^\\top d = \\sum_{\\text{active}} \\lambda_i (-\\nabla g_i^\\top d) \\ge 0$. Into a constraint with $\\lambda_i > 0$ this is $> 0$: $f$ rises at first order, so no curvature condition applies there. Example: $\\min x - 10x^2$ s.t. $-x \\le 0$; $x = 0$ is a local minimum with $\\lambda = 1$, yet $f'' = -20$.",
+        "(3) $\\nabla f^\\top d = 0$: first order is silent and curvature decides. $C$ contains these directions; $\\Lambda$ does not, because the slides treat every active constraint as an equality.",
+        "(4) Necessary (slides): $d^\\top H d \\ge 0$ on $\\Lambda$; the stronger version holds on $C$. Sufficient (beyond the slides): $d^\\top H d > 0$ for every nonzero $d \\in C$ ⇒ strict local minimum. If some nonzero $d$ gives $0$, second order cannot decide ($x^3$ and $x^4$)."
+      ],
+      "pit": "In the exam follow the slides: fails on $\\Lambda$ ⇒ not a local minimum; passes ⇒ no conclusion. When an active constraint has $\\lambda_i = 0$, try a direction into its interior (T7 P3: $d = (1, 0)$ gives $-2$).",
+      "src": "",
+      "seen": [
+        "T7 P3"
+      ]
+    },
+    {
       "id": "NLP-07-15",
       "g": "Second order",
       "k": "Second-order verdicts",
@@ -899,6 +993,24 @@
       "pit": "One step earlier: a regular point that is not a KKT point is not a local minimum at all.",
       "src": "",
       "seen": []
+    },
+    {
+      "id": "NLP-07-15a",
+      "g": "Second order",
+      "k": "Necessary vs sufficient",
+      "q": "Compare optimality conditions without and with constraints. For the first-order necessary, second-order necessary, second-order sufficient and convexity conditions give (1) the direction of the implication, (2) the unconstrained form, (3) the constrained form, (4) whether a CQ is needed. (5) Give a counterexample to each wrong reverse: “$\\nabla f = 0$, $\\nabla^2 f \\succeq 0$ ⇒ local minimum”, “KKT and positive on $\\Lambda$ ⇒ local minimum”, “KKT ⇒ local minimum”.",
+      "pts": [
+        "First-order necessary (local min ⇒ …): $\\nabla f = 0$ | KKT. CQ needed: LICQ or Slater.",
+        "Second-order necessary (local min ⇒ …): $\\nabla f = 0$, $\\nabla^2 f \\succeq 0$ | KKT and $d^\\top \\nabla^2_{xx} L\\,d \\ge 0$ on $\\Lambda$. CQ needed: LICQ.",
+        "Second-order sufficient (… ⇒ strict local min): $\\nabla f = 0$, $\\nabla^2 f \\succ 0$ | KKT and $d^\\top \\nabla^2_{xx} L\\,d > 0$ for nonzero $d$ in the critical cone (beyond the slides). No CQ.",
+        "Convexity (… ⇒ global min): $f$ convex, $\\nabla f = 0$ | convex problem and KKT. No CQ.",
+        "(5) $f = x^3$ at $0$: $f' = f'' = 0$ but $f(-t) < 0$. T7 P3: $\\min -x_1^2 + x_2^2$ s.t. $-x_1 \\le 0$ at the origin: $2d_2^2 > 0$ on $\\Lambda$, but $f(t, 0) = -t^2$. $\\min -x^2$ on $[-1, 1]$: $x = 0$ is a KKT point and the global maximum."
+      ],
+      "pit": "CQs appear only in the necessary conditions. Concluding a minimum needs the strict sufficient condition or convexity; with only the slides' theorem, the second-order test mainly rules points out.",
+      "src": "",
+      "seen": [
+        "T7 P3"
+      ]
     },
     {
       "id": "NLP-07-16",
@@ -1087,17 +1199,20 @@
     {
       "id": "NLP-07-29",
       "g": "Dual function",
-      "k": "Lower bound property",
-      "q": "Lower bound property: for any $\\lambda$ and any $\\mu \\ge 0$, $q(\\lambda, \\mu) \\le f^*$, where $f^*$ is the primal optimal value ($\\lambda$: equalities $h_i = 0$; $\\mu$: inequalities $g_j \\le 0$). Prove it, starting from an arbitrary feasible point $\\bar{x}$: (1) the sign of the constraint terms, (2) $L$ versus $f$ at $\\bar{x}$, (3) bringing in the infimum, (4) the conclusion.",
+      "k": "Weak duality proof",
+      "q": "Prove weak duality $d^* \\le f^*$ ($\\lambda$: equalities $h_i = 0$; $\\mu \\ge 0$: inequalities $g_j \\le 0$). Start from any feasible $\\bar x$, any $\\lambda$ and any $\\mu \\ge 0$, and give five links: (1) $q$ versus $L(\\bar x)$, (2) expanding $L(\\bar x)$, (3) $L(\\bar x)$ versus $f(\\bar x)$, (4) the lower bound property, (5) weak duality. Where are feasibility and $\\mu \\ge 0$ used?",
       "pts": [
-        "(1) $\\sum_i \\lambda_i h_i(\\bar x) + \\sum_j \\mu_j g_j(\\bar x) \\le 0$: each $h_i(\\bar x) = 0$, and each $\\mu_j g_j(\\bar x)$ is nonnegative times nonpositive. This is where $\\mu \\ge 0$ is needed.",
-        "(2) Hence $L(\\bar x, \\lambda, \\mu) \\le f(\\bar x)$.",
-        "(3) $q(\\lambda, \\mu) = \\inf_x L(x, \\lambda, \\mu) \\le L(\\bar x, \\lambda, \\mu) \\le f(\\bar x)$.",
-        "(4) This holds for every feasible $\\bar x$, so $q(\\lambda, \\mu) \\le f^*$."
+        "(1) $q(\\lambda, \\mu) = \\inf_x L(x, \\lambda, \\mu) \\le L(\\bar x, \\lambda, \\mu)$: an infimum is at most any value.",
+        "(2) $L(\\bar x, \\lambda, \\mu) = f(\\bar x) + \\sum_i \\lambda_i h_i(\\bar x) + \\sum_j \\mu_j g_j(\\bar x)$, by definition.",
+        "(3) $\\le f(\\bar x)$: each $h_i(\\bar x) = 0$, and each $\\mu_j g_j(\\bar x)$ is nonnegative times nonpositive. This is the only link that uses feasibility and $\\mu \\ge 0$.",
+        "(4) Infimum over feasible $\\bar x$: $q(\\lambda, \\mu) \\le f^*$ (the lower bound property).",
+        "(5) Supremum over $\\lambda$ and $\\mu \\ge 0$: $d^* \\le f^*$."
       ],
-      "pit": "The slides print the second sum as $\\sum \\mu_i h_i(\\bar x)$; it should be $\\sum_j \\mu_j g_j(\\bar x)$.",
-      "src": "D p10–16",
-      "seen": []
+      "pit": "Both sides must be feasible (“if it's not feasible, all bets are off”). In T7 P4 the infeasible $\\bar x = (0, 0)$ has $f = 0 < q(-\\tfrac12, 1) = \\tfrac54$. The slides print the second sum as $\\sum \\mu_i h_i(\\bar x)$; it should be $\\sum_j \\mu_j g_j(\\bar x)$.",
+      "src": "D p10–16, p25",
+      "seen": [
+        "T7 P4"
+      ]
     },
     {
       "id": "NLP-07-30",
@@ -1161,16 +1276,19 @@
       "id": "NLP-07-34",
       "g": "Dual problem",
       "k": "Dual and weak duality",
-      "q": "With $\\lambda$ for equalities and $\\mu \\ge 0$ for inequalities: (1) define the Lagrange dual problem and its optimal value $d^*$. (2) State weak duality and say why it holds. (3) Define the duality gap. (4) Why is the dual useful even when the primal is hard?",
+      "q": "With $\\lambda$ for equalities and $\\mu \\ge 0$ for inequalities: (1) define the Lagrange dual problem and its optimal value $d^*$. (2) State weak duality. (3) Define the duality gap. (4) The dual function $q$ is concave, yet the dual problem is called convex. Why is there no conflict, and why does it matter? (5) A feasible $\\hat x$ and multipliers $(\\hat\\lambda, \\hat\\mu)$ with $\\hat\\mu \\ge 0$ satisfy $q(\\hat\\lambda, \\hat\\mu) = f(\\hat x)$. What follows? Is convexity or Slater needed?",
       "pts": [
         "(1) $\\max_{\\lambda, \\mu} q(\\lambda, \\mu)$ s.t. $\\mu \\ge 0$; its optimal value is $d^*$.",
-        "(2) $d^* \\le f^*$, for every problem. Each $q(\\lambda, \\mu)$ with $\\mu \\ge 0$ is $\\le f^*$, so their maximum is too.",
-        "(3) $f^* - d^* \\ge 0$.",
-        "(4) The dual is always a convex problem (maximize a concave function subject to $\\mu \\ge 0$) and always gives a lower bound. Even with a positive gap, $d^*$ is a usable bound."
+        "(2) $d^* \\le f^*$ for every problem, also when $d^*$ or $f^*$ is infinite.",
+        "(3) $f^* - d^* \\ge 0$; it is $0$ exactly under strong duality.",
+        "(4) One is a function, the other a problem. $q$ is concave (a pointwise infimum of functions linear in $(\\lambda, \\mu)$). $\\max q$ s.t. $\\mu \\ge 0$ is $\\min (-q)$ over the convex set $\\{\\mu \\ge 0\\}$, a convex problem: a local maximum is global, so the dual is tractable however hard the primal is, and it always gives a lower bound.",
+        "(5) $q(\\hat\\lambda, \\hat\\mu) \\le d^* \\le f^* \\le f(\\hat x)$ with equal ends, so all are equal: $\\hat x$ is primal optimal, $(\\hat\\lambda, \\hat\\mu)$ dual optimal, gap $0$. Only weak duality is used: no convexity, no Slater."
       ],
       "pit": "The dual function $q$ is a function; the dual problem is $\\max q$ s.t. $\\mu \\ge 0$. One slide writes the gap as $d^* - f^*$, which is $\\le 0$.",
       "src": "D p23–26",
-      "seen": []
+      "seen": [
+        "T7 P4"
+      ]
     },
     {
       "id": "NLP-07-35",

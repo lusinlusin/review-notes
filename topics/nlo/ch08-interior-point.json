@@ -28,11 +28,20 @@
         {
           "t": "KKT conditions of an LP",
           "d": [
-            "$Ax = b$;  $A^\\top\\pi + z = c$;  $x_i z_i = 0$ for all $i$;  $x, z \\ge 0$.",
-            "They characterize optimality. Only complementarity is nonlinear."
+            "$Ax = b$;  $A^\\top\\pi + z = c$;  $x_i z_i = 0$ for all $i$;  $x, z \\ge 0$. KKT ⇔ optimal: ⇒ by weak duality, ⇐ by strong duality. A general NLP needs a CQ for ⇐ and convexity for ⇒; an LP has both. Only complementarity is nonlinear."
           ],
           "cards": [
             "NLP-08-05"
+          ]
+        },
+        {
+          "t": "Simplex",
+          "d": [
+            "Vertex to better adjacent vertex. BFS $x_B = B^{-1}b$; reduced costs $\\bar c_j = c_j - \\pi^\\top A_j$ with $\\pi^\\top = c_B^\\top B^{-1}$; all $\\ge 0$ ⇒ optimal; ratio test picks the leaving variable. Exact and finite, exponential in the worst case, LP only."
+          ],
+          "cards": [
+            "NLP-08-05a",
+            "NLP-08-06"
           ]
         },
         {
@@ -70,6 +79,15 @@
           "cards": [
             "NLP-08-09",
             "NLP-08-10"
+          ]
+        },
+        {
+          "t": "Why ln",
+          "d": [
+            "The barrier keeps $x > 0$ inactive, so only equations remain. $\\ln$ gives the symmetric $x_i z_i = \\mu$ and gap exactly $n\\mu$; $\\mu\\sum 1/x_i$ would give $x_i^2 z_i = \\mu$."
+          ],
+          "cards": [
+            "NLP-08-09a"
           ]
         },
         {
@@ -183,7 +201,8 @@
           "d": [
             "$D = XZ^{-1}$,  $w = -x + \\mu Z^{-1}e$,  $M = ADA^\\top$:",
             "$$M d_\\pi = -Aw,\\qquad d_z = -A^\\top d_\\pi,\\qquad d_x = w + DA^\\top d_\\pi$$",
-            "$M$ is symmetric positive definite when $A$ has full row rank."
+            "$M$ is symmetric positive definite when $A$ has full row rank.",
+            "General right-hand side $(-r_d, -r_p, r_c)$: $M d_\\pi = -r_p - A(Z^{-1}r_c + Dr_d)$, $d_z = -r_d - A^\\top d_\\pi$, $d_x = Z^{-1}r_c - Dd_z$. Same $M$ for both Mehrotra solves."
           ],
           "cards": [
             "NLP-08-24",
@@ -784,15 +803,31 @@
       "id": "NLP-08-05",
       "g": "LP optimality",
       "k": "KKT for an LP",
-      "q": "For the pair $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$ and $\\max b^\\top\\pi$ s.t. $A^\\top\\pi + z = c$, $z \\ge 0$: (1) Why does $x^\\top z = 0$ force every $x_i z_i = 0$? (2) Write the KKT conditions. (3) Why does a point satisfying them solve both problems? (4) Count unknowns and equations. Which equations are nonlinear?",
+      "q": "For the pair $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$ and $\\max b^\\top\\pi$ s.t. $A^\\top\\pi + z = c$, $z \\ge 0$: (1) Why does $x^\\top z = 0$ force every $x_i z_i = 0$? (2) Write the KKT conditions. (3) Why does a point satisfying them solve both problems? (4) Prove the converse: optimal ⇒ KKT. (5) For a general NLP each direction needs its own assumption. Which, and why does an LP get both for free? (6) Count unknowns and equations. Which equations are nonlinear?",
       "pts": [
         "(1) Each $x_i z_i \\ge 0$, and a sum of nonnegative terms is $0$ only if every term is $0$. So for each $i$ at least one of $x_i$, $z_i$ is $0$ (complementarity).",
         "(2) $Ax = b$; $A^\\top\\pi + z = c$; $x_i z_i = 0$ for all $i$; $x \\ge 0$, $z \\ge 0$.",
         "(3) Feasibility with $x^\\top z = 0$ gives $c^\\top x = b^\\top\\pi$. Any feasible $x'$ has $c^\\top x' \\ge b^\\top\\pi = c^\\top x$ by weak duality, so $x$ is optimal; symmetrically for $(\\pi, z)$.",
-        "(4) Unknowns: $n + m + n$. Equations: $m + n + n$. Only $x_i z_i = 0$ is nonlinear (a product of two unknowns); the sign conditions are inequalities."
+        "(4) An optimal pair is feasible, so the first two groups and $x, z \\ge 0$ hold. Strong duality gives $c^\\top x^* = b^\\top\\pi^*$, so $(x^*)^\\top z^* = 0$; each term is $\\ge 0$, hence each $x_i^* z_i^* = 0$.",
+        "(5) Optimal ⇒ KKT needs a CQ; KKT ⇒ optimal needs convexity (Lecture 6). An LP has linear constraints (the CQ holds automatically) and a linear objective (convex), so KKT ⇔ optimal.",
+        "(6) Unknowns: $n + m + n$. Equations: $m + n + n$. Only $x_i z_i = 0$ is nonlinear (a product of two unknowns); the sign conditions are inequalities."
       ],
-      "pit": "The converse (optimal ⇒ KKT) needs strong duality: an LP with a finite optimum has an optimal pair with zero gap.",
+      "pit": "Two uses: checking the KKT conditions certifies a given $(x, \\pi, z)$ without solving the LP; and solving the LP means solving this system, which is what an interior point method does.",
       "src": "IP s.14–16",
+      "seen": []
+    },
+    {
+      "id": "NLP-08-05a",
+      "g": "LP optimality",
+      "k": "Simplex method",
+      "q": "The simplex method for $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$. (1) Which theorem lets it search only vertices, and why may it stop at the first vertex with no better neighbour? (2) List the steps: the starting vertex, the optimality test, the entering and the leaving variable. (3) What does it need, and where does it not apply?",
+      "pts": [
+        "(1) Fundamental theorem of LP: linear objective on a polyhedron ⇒ if an optimum exists, one is at a vertex. An LP is convex, so a local optimum is global: stop when no adjacent vertex is better.",
+        "(2) Start at a BFS: $m$ basic columns $B$, $x_B = B^{-1}b \\ge 0$, $x_N = 0$. Compute $\\pi^\\top = c_B^\\top B^{-1}$ and the reduced costs $\\bar c_j = c_j - \\pi^\\top A_j$ (the rate of change of the objective as $x_j$ rises from $0$). All $\\bar c_j \\ge 0$ ⇒ optimal. Otherwise some $x_j$ with $\\bar c_j < 0$ enters; ratio test: the basic variable that reaches $0$ first leaves, giving the adjacent vertex. Repeat.",
+        "(3) Standard form and an initial BFS (otherwise Phase I or Big-M). LP only: a nonlinear objective can have an interior optimum, e.g. $(x_1 - \\tfrac12)^2 + (x_2 - \\tfrac12)^2$ on $[0, 1]^2$. Finitely many steps to an exact optimal vertex, but exponentially many in the worst case."
+      ],
+      "pit": "Unit square ($\\min -x_1 - x_2$): $(0, 0) \\to (1, 0) \\to (1, 1)$; at $(1, 1)$, $\\bar c = (0, 0, 1, 1) \\ge 0$, stop.",
+      "src": "IP s.4",
       "seen": []
     },
     {
@@ -852,6 +887,21 @@
       ],
       "pit": "This is perturbed complementarity. It gives Newton's method a target that is not on the boundary.",
       "src": "IP s.23–24",
+      "seen": []
+    },
+    {
+      "id": "NLP-08-09a",
+      "g": "Barrier and path",
+      "k": "Why the log barrier",
+      "q": "Why add $-\\mu\\sum_i \\ln x_i$ to the LP objective? (1) What does it do for Newton's method? (2) Why do the stationarity conditions of $P_\\mu$ characterize its solution? (3) Why $\\ln$ and not, say, $\\mu\\sum_i 1/x_i$? (4) What happens as $\\mu \\to 0$?",
+      "pts": [
+        "(1) Newton's method solves equations and cannot handle $x \\ge 0$. The term $\\to +\\infty$ as $x_i \\downarrow 0$, so the solution of $P_\\mu$ never touches the boundary: $x > 0$ is never active and only equations remain (steps just have to keep $x > 0$).",
+        "(2) $P_\\mu$ is convex with linear constraints, so $x > 0$ is optimal ⇔ some $\\pi$ gives $c - \\mu X^{-1}e - A^\\top\\pi = 0$, $Ax = b$.",
+        "(3) The derivative of $-\\mu\\ln x_i$ is $-\\mu/x_i = -z_i$, so every $i$ gets the same condition $x_i z_i = \\mu$ and the gap is exactly $n\\mu$. With $\\mu\\sum_i 1/x_i$ the condition is $x_i^2 z_i = \\mu$: complementarity still returns as $\\mu \\to 0$, but not symmetrically, and the gap is no longer $n\\mu$.",
+        "(4) With $A$ of full row rank and strictly feasible points on both sides, $P_\\mu$ has a unique solution, with gap $x^\\top z = n\\mu > 0$. As $\\mu \\to 0$, $c^\\top x - p^* \\le n\\mu \\to 0$ and the solution tends to an LP optimum."
+      ],
+      "pit": "One dimension: $\\min_{x > 0} x - \\mu\\ln x$ gives $x(\\mu) = \\mu \\to 0 = x^*$.",
+      "src": "IP s.20–23",
       "seen": []
     },
     {
@@ -1073,12 +1123,13 @@
       "id": "NLP-08-24",
       "g": "Steps by hand",
       "k": "Reduce to m × m",
-      "q": "Feasible-start Newton system: $A^\\top d_\\pi + d_z = 0$, $A d_x = 0$, $Z d_x + X d_z = -XZe + \\mu e$. Define $D = XZ^{-1}$, $w = -x + \\mu Z^{-1}e$ and $M = ADA^\\top$. (1) Derive an equation for $d_\\pi$ alone. (2) Give the back-substitution for $d_z$ and $d_x$. (3) Why is $M$ invertible? (4) Why does this matter in practice?",
+      "q": "Feasible-start Newton system: $A^\\top d_\\pi + d_z = 0$, $A d_x = 0$, $Z d_x + X d_z = -XZe + \\mu e$. Define $D = XZ^{-1}$, $w = -x + \\mu Z^{-1}e$ and $M = ADA^\\top$. (1) Derive an equation for $d_\\pi$ alone. (2) Give the back-substitution for $d_z$ and $d_x$. (3) Why is $M$ invertible? (4) Why does this matter in practice? (5) For an infeasible start or Mehrotra's second solve the right-hand side is $(-r_d, -r_p, r_c)$. What changes in the elimination?",
       "pts": [
         "(1) Multiply the third block by $Z^{-1}$: $d_x + D d_z = w$. Insert $d_z = -A^\\top d_\\pi$: $d_x = w + DA^\\top d_\\pi$. Apply $A$ and use $A d_x = 0$: $$M d_\\pi = -Aw$$",
         "(2) $d_z = -A^\\top d_\\pi$ and $d_x = w + DA^\\top d_\\pi$.",
         "(3) $v^\\top M v = \\sum_i \\frac{x_i}{z_i}(A^\\top v)_i^2 \\ge 0$, and it is $0$ only if $A^\\top v = 0$; with $A$ of full row rank that forces $v = 0$. So $M$ is symmetric positive definite.",
-        "(4) The system shrinks from $2n + m$ unknowns to $m$, with a symmetric positive definite matrix. From one iteration to the next only the diagonal $D$ changes."
+        "(4) The system shrinks from $2n + m$ unknowns to $m$, with a symmetric positive definite matrix. From one iteration to the next only the diagonal $D$ changes.",
+        "(5) Only the right-hand side: $$M d_\\pi = -r_p - A(Z^{-1}r_c + D r_d),\\quad d_z = -r_d - A^\\top d_\\pi,\\quad d_x = Z^{-1}r_c - D d_z$$ The matrix is still $M = ADA^\\top$, so the two solves of one Mehrotra iteration share one factorization of $M$."
       ],
       "pit": "This $D = XZ^{-1}$ is not the $D_x = \\operatorname{diag}(d_x^{\\text{aff}})$ of the predictor–corrector.",
       "src": "SN §11",
