@@ -1,0 +1,936 @@
+{
+  "title": "Optimal stopping",
+  "notes": [
+    {
+      "h": "Big picture",
+      "items": [
+        {
+          "t": "Where it sits",
+          "d": [
+            "Before: rates, $P_t = e^{tA}$, birth-and-death chains. All earlier chapters only watched a chain: where does it go, how often does it return, what is its equilibrium?",
+            "This chapter: you may stop the chain at any time and collect a payoff, which leads to the value function $v$, superharmonic functions and an algorithm (4.1); each extra step costs something (4.2); money later is worth less (4.3).",
+            "After: conditional expectation, martingales and the optional sampling theorem, the general theory behind “what is a fair game, and can a stopping rule beat it?”."
+          ],
+          "cards": [
+            "STO-04-01"
+          ]
+        },
+        {
+          "t": "The question",
+          "d": [
+            "A Markov chain moves; at each step you may stop and collect $f(\\text{current state})$, or let it move once more. Which rule maximises the expected payoff, and what is that maximum?",
+            "The answer is the value function $v$, which satisfies one equation: $v(x) = \\max\\{f(x), Pv(x)\\}$ with $Pv(x) = \\sum_y p(x, y)v(y)$.",
+            "“Stop now” is worth $f(x)$; “go one more step and then play optimally” is worth $Pv(x)$. Stop where the first is at least the second.",
+            "New compared with before: someone acts; the unknowns are the value and the stopping set; the equation is non-linear; it is solved by guessing the stopping set and solving a linear system, or by iterating."
+          ],
+          "cards": [
+            "STO-04-01",
+            "STO-04-03"
+          ]
+        },
+        {
+          "t": "Two running examples",
+          "d": [
+            "A, the die game: roll a die; a 6 ends the game; stopping on $k \\le 5$ pays $k$. Plain: continue on 1, 2, stop on 4, 5, either on 3, $v = [3, 3, 3, 4, 5, 0]$. With a cost of 1 per roll: continue only on 1. With $\\alpha = 0.8$: continue on 1, 2.",
+            "B, a random walk with a payoff: simple random walk on $\\{0, \\dots, 6\\}$ absorbed at 0 and 6, $f = [0, 2, 4, 5, 9, 3, 0]$. Plain: stop on $\\{0, 4, 6\\}$, $v = [0, \\tfrac94, \\tfrac92, \\tfrac{27}{4}, 9, \\tfrac92, 0]$. With a cost, or with $\\alpha = 0.9$: stop on $\\{0, 1, 2, 4, 6\\}$."
+          ],
+          "cards": [
+            "STO-04-02",
+            "STO-04-08",
+            "STO-04-20"
+          ]
+        },
+        {
+          "t": "Insights",
+          "d": [
+            "The optimal rule only needs the current state: stop the first time the chain enters $S_2 = \\{x : v(x) = f(x)\\}$.",
+            "For a simple random walk, superharmonic means concave, so $v$ is the smallest concave function above $f$: stretch a string over the graph of $f$.",
+            "Finance reading: an American option. $f$ is the exercise payoff, $\\alpha$ the discount factor, $\\alpha Pv$ the value of waiting, $S_2$ the early-exercise region."
+          ],
+          "cards": [
+            "STO-04-09",
+            "STO-04-21"
+          ]
+        },
+        {
+          "t": "Key symbols",
+          "d": [
+            "$P$, $p(x, y)$: transition matrix. $f(x)$: payoff if you stop at $x$, written as a vector in state order. $g(x)$: cost paid when you continue from $x$. $\\alpha$: discount factor, $0 < \\alpha < 1$.",
+            "$T$: stopping time, the step at which you stop; it may only depend on the past and present. $S_1$, $S_2$: continuation set and stopping set; $T = \\min\\{j \\ge 0 : X_j \\in S_2\\}$.",
+            "$v(x)$: the best expected payoff from $x$. $Pv(x)$: the expected value of continuing one step and then playing optimally. $u$: a generic function, a candidate value, a superharmonic function or an iterate $u_n$.",
+            "Flow: guess $S_2$; solve “$u = f$ on $S_2$, $u = \\alpha Pu - g$ on $S_1$”; check $u = \\max\\{f, \\alpha Pu - g\\}$ everywhere. Or iterate from a large $u_1$."
+          ],
+          "cards": [
+            "STO-04-03",
+            "STO-04-31"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "4.1 Optimal stopping of Markov chains",
+      "items": [
+        {
+          "t": "Running example A: the die game",
+          "d": [
+            "$f = [1, 2, 3, 4, 5, 0]$; $v(k)$ = expected winnings with roll $k$ in hand; $u$ = value of rolling again, the same for every $k \\le 5$ because the next roll ignores the current one. $u = \\tfrac16[v(1) + \\dots + v(6)]$ and $v(k) = \\max\\{f(k), u\\}$.",
+            "1. $v \\ge f$, so $u \\ge \\tfrac{15}{6} = \\tfrac52$: on a 1 or 2 rolling again beats stopping.",
+            "2. If continuing on 4 were optimal, so would continuing on 3; the game would run until a 5 or a 6: $\\tfrac{5 + 0}{2} = \\tfrac52 < 4$. Stop on 4.",
+            "3. Continue on 1, 2, 3: $u = \\tfrac12u + \\tfrac16 \\cdot 4 + \\tfrac16 \\cdot 5$, so $u = 3 = f(3)$: indifferent.",
+            "4. $v = [3, 3, 3, 4, 5, 0]$. Rule: roll again on 1 or 2, stop on 4, 5, either on 3."
+          ],
+          "cards": [
+            "STO-04-02"
+          ]
+        },
+        {
+          "t": "The general problem",
+          "d": [
+            "$X_n$ a chain on a finite $S$, $f$ a payoff. A stopping rule decides at step $n$ using only $X_0, \\dots, X_n$. The sensible rules split $S$ into $S_1$ (continue) and $S_2$ (stop).",
+            "$v(x) = \\max_T\\mathbb{E}[f(X_T) \\mid X_0 = x]$. Then $v(x) \\ge f(x)$ (4.1), $v(x) \\ge Pv(x)$ (4.2), and $v(x) = \\max\\{f(x), Pv(x)\\}$ (4.3).",
+            "With $S_2$ the set where the optimal rule stops and $T = \\min\\{j \\ge 0 : X_j \\in S_2\\}$: $v(x) = \\mathbb{E}[f(X_T) \\mid X_0 = x]$. If you start in $S_2$, $T = 0$.",
+            "In interesting cases the chain is not irreducible; otherwise you would wait for the state with the largest payoff."
+          ],
+          "cards": [
+            "STO-04-03"
+          ]
+        },
+        {
+          "t": "Superharmonic functions",
+          "d": [
+            "$u$ is superharmonic if $u(x) \\ge Pu(x)$ for all $x$: the expected value of $u$ one step later is never larger than its value now. If $u = Pu$ it is harmonic.",
+            "Key fact: with $T_n = \\min\\{T, n\\}$, $u(x) \\ge \\mathbb{E}[u(X_{T_n}) \\mid X_0 = x]$. Induction: split on $z = X_{T_{n-1}}$; if $z \\in S_2$ the chain has stopped (term $u(z)$); if $z \\in S_1$ it takes one more step (term $Pu(z) \\le u(z)$).",
+            "Let $n \\to \\infty$ ($u$ bounded, $T < \\infty$): $u(x) \\ge \\mathbb{E}[u(X_T) \\mid X_0 = x]$. If also $u \\ge f$: $u(x) \\ge \\mathbb{E}[f(X_T) \\mid X_0 = x]$ for every rule, hence $u \\ge v$.",
+            "$v$ itself is superharmonic and above $f$. Fact: $v$ is the smallest superharmonic function that is greater than or equal to $f$.",
+            "Along the chain a superharmonic function is a supermartingale: on average it does not grow."
+          ],
+          "cards": [
+            "STO-04-04",
+            "STO-04-05"
+          ]
+        },
+        {
+          "t": "An algorithm",
+          "d": [
+            "Start with a superharmonic function that is surely too large: $u_1 = f$ at absorbing states and $\\max f$ elsewhere. Then $u_n = \\max\\{Pu_{n-1}, f\\}$.",
+            "$u_1 \\ge u_2 \\ge \\dots \\ge f$, every $u_n$ is superharmonic, and $v = \\lim u_n$.",
+            "Example A from $u_1 = [5, 5, 5, 5, 5, 0]$: $u_n(1) = 5, 4.167, 3.611, 3.306, 3.153, \\dots$, with $u_{10}(1) = 3.0048$ and $u_{11}(1) = 3.0024$; from $n = 4$ on the error halves at each step. $u_n(4) = 5, 4.167, 4, 4, \\dots$"
+          ],
+          "cards": [
+            "STO-04-06",
+            "STO-04-07"
+          ]
+        },
+        {
+          "t": "Running example B: random walk with a payoff",
+          "d": [
+            "$f = [0, 2, 4, 5, 9, 3, 0]$. States 0, 6: absorbing, stop. State 4: the largest payoff, stop.",
+            "State 5: continuing is worth at least $\\tfrac{9 + 0}{2} = \\tfrac92 > 3$. State 3: $\\tfrac{4 + 9}{2} = \\tfrac{13}{2} > 5$. State 2: at least $\\tfrac{2 + 13/2}{2} = \\tfrac{17}{4} > 4$. State 1: at least $\\tfrac{17}{8} > 2$. Continue at all four.",
+            "So $S_2 = \\{0, 4, 6\\}$ and $v(x) = 9\\,\\mathbb{P}\\{\\text{hit 4 first}\\}$: $\\tfrac x4$ on $[0, 4]$ and $\\tfrac{6 - x}{2}$ on $[4, 6]$. $v = [0, \\tfrac94, \\tfrac92, \\tfrac{27}{4}, 9, \\tfrac92, 0]$.",
+            "Picture: superharmonic = concave for this walk, so $v$ is a string pulled tight over the graph of $f$, and $S_2$ is where the string touches $f$."
+          ],
+          "cards": [
+            "STO-04-08",
+            "STO-04-09"
+          ]
+        },
+        {
+          "t": "Dirichlet problem and convergence",
+          "d": [
+            "For a known split, the payoff $u$ of that rule solves $u = f$ on $S_2$ (4.4) and $u = Pu$ on $S_1$ (4.5): boundary values plus “harmonic in the interior”. On a finite chain: $|S_1|$ linear equations.",
+            "Why $\\lim u_n = v$: the limit $u$ is superharmonic and above $f$, so $u \\ge v$. With $S_2 = \\{u = f\\}$ and $S_1 = \\{u > f\\}$, $u$ is harmonic on $S_1$ (otherwise some $u_{n+1}(z)$ would fall below $u(z)$). So $u$ is the payoff of an actual rule, and $u \\le v$."
+          ],
+          "cards": [
+            "STO-04-10",
+            "STO-04-11"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "4.2 Optimal stopping with cost",
+      "items": [
+        {
+          "t": "Value with a cost per step",
+          "d": [
+            "$g(x)$ = cost paid to continue from $x$. $v(x) = \\max_T\\mathbb{E}[f(X_T) - \\sum_{j=0}^{T-1}g(X_j) \\mid X_0 = x]$.",
+            "$v(x) = \\max\\{f(x), Pv(x) - g(x)\\}$; $v$ is the smallest $u$ with $u \\ge f$ and $u \\ge Pu - g$; the same algorithm works with $u_n = \\max\\{f, Pu_{n-1} - g\\}$.",
+            "A cost makes stopping earlier more attractive, and makes the problem non-trivial even for an irreducible chain."
+          ],
+          "cards": [
+            "STO-04-12"
+          ]
+        },
+        {
+          "t": "Example A with a cost of 1 per roll",
+          "d": [
+            "Rolls 3, 4, 5: stop (a cost only makes rolling worse, and at 3 we were indifferent). Roll 1: rolling is worth at least $\\tfrac52 - 1 = \\tfrac32 > 1$, continue.",
+            "Roll 2: try “continue on 1, 2”: $u = \\tfrac16(u + u + 12) - 1$, so $u = \\tfrac32 < 2$: stop.",
+            "On $S_1 = \\{1\\}$: $v(1) = \\tfrac16(v(1) + 14) - 1$, so $v(1) = \\tfrac85$. $v = [\\tfrac85, 2, 3, 4, 5, 0]$."
+          ],
+          "cards": [
+            "STO-04-13"
+          ]
+        },
+        {
+          "t": "Example B with a cost",
+          "d": [
+            "$g = [.5, .5, .5, 1, 1, 1, 1]$. State 5: $\\tfrac92 - 1 = 3.5 > 3$, continue. State 3: $\\tfrac{13}{2} - 1 = 5.5 > 5$, continue. State 2: $\\tfrac{2 + 5.5}{2} - 0.5 = 3.25 < 4$, stop. State 1: $2 - 0.5 = 1.5 < 2$, stop.",
+            "$v = [0, 2, 4, 5.5, 9, 3.5, 0]$, $S_2 = \\{0, 1, 2, 4, 6\\}$. States 1 and 2 switch to “stop”: their payoffs were small and walking up to 4 now costs too much."
+          ],
+          "cards": [
+            "STO-04-14"
+          ]
+        },
+        {
+          "t": "An irreducible chain with a cost",
+          "d": [
+            "Two dice; stop and take the sum, or pay 2 (sum below 5) or 1 (sum 5 or more) and roll again. Continuing is worth the same $W = Pv$ from every state, minus that state's cost: $v(s) = \\max\\{s, W - g(s)\\}$.",
+            "Guess “stop on 7 to 12”: $W = \\tfrac{6}{36}(W - 2) + \\tfrac{9}{36}(W - 1) + \\tfrac{182}{36}$, so $W = \\tfrac{23}{3}$. Check: at 6, $\\tfrac{20}{3} > 6$; at 7, $\\tfrac{20}{3} < 7$.",
+            "$v = 5\\tfrac23$ on 2, 3, 4; $6\\tfrac23$ on 5, 6; $v(s) = s$ from 7 on."
+          ],
+          "cards": [
+            "STO-04-15"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "4.3 Optimal stopping with discounting",
+      "items": [
+        {
+          "t": "Value with a discount factor",
+          "d": [
+            "One dollar one step later is worth $\\alpha$ now: $v(x) = \\max_T\\mathbb{E}[\\alpha^Tf(X_T) \\mid X_0 = x]$.",
+            "$v = \\max\\{f, \\alpha Pv\\}$; $v$ is the smallest $u$ with $u \\ge f$ and $u \\ge \\alpha Pu$; iterate $u_n = \\max\\{f, \\alpha Pu_{n-1}\\}$.",
+            "With a cost as well: $u \\ge f$ and $u \\ge \\alpha Pu - g$. Continuing pays $g(x)$ now and receives tomorrow's value discounted by $\\alpha$."
+          ],
+          "cards": [
+            "STO-04-16"
+          ]
+        },
+        {
+          "t": "Examples A and B with discounting",
+          "d": [
+            "A, $\\alpha = 0.8$: stop on 3, 4, 5. On a 1 rolling is worth at least $0.8 \\cdot \\tfrac52 = 2 > 1$. Try “continue on 1, 2”: $u = 0.8(\\tfrac u3 + 2)$, $u = \\tfrac{24}{11} \\approx 2.18 > 2$. So $v = [\\tfrac{24}{11}, \\tfrac{24}{11}, 3, 4, 5, 0]$.",
+            "B, $\\alpha = 0.9$: state 5: $4.05 > 3$; state 3: $5.85 > 5$; state 2: $0.9 \\cdot \\tfrac{2 + 5.85}{2} \\approx 3.53 < 4$; state 1: $1.8 < 2$. $v = [0, 2, 4, 5.85, 9, 4.05, 0]$, $S_2 = \\{0, 1, 2, 4, 6\\}$."
+          ],
+          "cards": [
+            "STO-04-17",
+            "STO-04-18"
+          ]
+        },
+        {
+          "t": "Cost and discount together",
+          "d": [
+            "B with $g = [.5, .5, .5, 1, 1, 1, 1]$ and $\\alpha = 0.9$: at 3, $5.85 - 1 = 4.85 < 5$, so 3 stops too; at 5, $3.05 > 3$. $v = [0, 2, 4, 5, 9, 3.05, 0]$, $S_2 = \\{0, 1, 2, 3, 4, 6\\}$.",
+            "Walk on $\\{0, \\dots, 10\\}$ with $f(x) = x^2$, cost $0.6$ per move, $\\alpha = 0.95$: $v \\approx [0, 1.51, 4.45, 9.11, 16, 25, \\dots, 100]$, $S_2 = \\{0, 4, 5, \\dots, 10\\}$. At 1, 2, 3 it pays to walk towards the large squares; from 4 on, cost and discount make stopping better."
+          ],
+          "cards": [
+            "STO-04-18",
+            "STO-04-19"
+          ]
+        },
+        {
+          "t": "One equation, four versions",
+          "d": [
+            "$v(x) = \\max\\{f(x), \\alpha Pv(x) - g(x)\\}$ with $(\\alpha, g) = (1, 0)$, $(1, g)$, $(\\alpha, 0)$, $(\\alpha, g)$.",
+            "A: plain $[3, 3, 3, 4, 5, 0]$; cost 1: $[\\tfrac85, 2, 3, 4, 5, 0]$; $\\alpha = 0.8$: $[\\tfrac{24}{11}, \\tfrac{24}{11}, 3, 4, 5, 0]$.",
+            "B, $v$: plain $[0, \\tfrac94, \\tfrac92, \\tfrac{27}{4}, 9, \\tfrac92, 0]$; cost $[0, 2, 4, 5.5, 9, 3.5, 0]$; discount $[0, 2, 4, 5.85, 9, 4.05, 0]$; both $[0, 2, 4, 5, 9, 3.05, 0]$. Continue on: $\\{1, 2, 3, 5\\}$; $\\{3, 5\\}$; $\\{3, 5\\}$; $\\{5\\}$.",
+            "A cost or a discount can only lower the value of continuing, so the stopping set can only grow. A fixed cost hits states with small payoffs hardest; a discount scales everything down by the same factor."
+          ],
+          "cards": [
+            "STO-04-20"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Exercise map",
+      "items": [
+        {
+          "t": "After 4.1",
+          "d": [
+            "4.1 (walk on $\\{0, \\dots, 10\\}$, $f = [0, 2, 4, 3, 10, 0, 6, 4, 3, 3, 0]$): $S_2 = \\{0, 4, 9, 10\\}$, $v = [0, 2.5, 5, 7.5, 10, 8.6, 7.2, 5.8, 4.4, 3, 0]$.",
+            "4.2 (two dice, a 7 loses): always stopping after the first roll gives $\\tfrac{35}{6}$; optimal play gives $\\tfrac{20}{3}$, stopping on 8 to 12.",
+            "4.8 (wheel): spin while the total is below 6600 dollars; expected winnings about 2565 dollars.",
+            "4.10 (prophet): die game $[\\tfrac{223}{60}, \\tfrac{47}{12}, \\tfrac{25}{6}, \\tfrac92, 5, 0]$, i.e. $3.55$ before the first roll against 3.",
+            "4.7: an infimum of superharmonic functions is superharmonic. 4.9: with payoff n² on an infinite walk the value is infinite and no optimal rule exists."
+          ],
+          "cards": [
+            "STO-04-22",
+            "STO-04-23",
+            "STO-04-28",
+            "STO-04-30",
+            "STO-04-05",
+            "STO-04-29"
+          ]
+        },
+        {
+          "t": "After 4.2 and 4.3",
+          "d": [
+            "4.3 (4.1 with penalties): cost $0.75$: continue on 3, 5, $v(3) = \\tfrac{25}{4}$, $v(5) = \\tfrac{29}{4}$; $\\alpha = 0.95$: continue on 2, 3, 5, 7, 8; both: continue on 3, 5, $v(3) = 5.9$, $v(5) = 6.85$.",
+            "4.4 (4.2 with penalties): value of rolling $\\tfrac{196}{33}$ (stop on 4 and above); $\\tfrac{475}{78}$ (stop on 5 and above); $\\tfrac{515}{88}$ (stop on 3 and above).",
+            "4.5 (square): $Pf = \\tfrac72$ at every vertex; the largest $\\alpha$ with “stop everywhere” is $\\tfrac47$.",
+            "4.6 (squared die): roll again on 2, 3, 4, value $\\tfrac{61}{3}$; the smallest cost for “roll again only on 2” is $\\tfrac{41}{6}$."
+          ],
+          "cards": [
+            "STO-04-24",
+            "STO-04-25",
+            "STO-04-26",
+            "STO-04-27"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recipe",
+      "items": [
+        {
+          "t": "Steps",
+          "d": [
+            "1. Easy states: absorbing states and the largest payoff stop; states whose payoff is below a quick lower bound on continuing continue. Example B: stop at 0, 6, 4.",
+            "2. Guess $S_2$ by one-step checks with the values known so far. Example B: $\\{0, 4, 6\\}$.",
+            "3. Solve $u = f$ on $S_2$, $u = \\alpha Pu - g$ on $S_1$. Example B: linear interpolation.",
+            "4. Check $u \\ge f$ on $S_1$ and $f \\ge \\alpha Pu - g$ on $S_2$; if one fails, move that state and solve again. Example B at 4: $9 \\ge \\tfrac{27/4 + 9/2}{2}$.",
+            "Or iterate $u_n = \\max\\{f, \\alpha Pu_{n-1} - g\\}$ from a large $u_1$ until it stops changing; then $S_2 = \\{u = f\\}$."
+          ],
+          "cards": [
+            "STO-04-31",
+            "STO-04-32"
+          ]
+        },
+        {
+          "t": "Shortcuts",
+          "d": [
+            "Simple random walk, plain problem: the smallest concave function above f.",
+            "Next state independent of the current one (dice): continuing has one value u from every state, the rule is a threshold, and u solves one equation.",
+            "Total that only grows (wheel): compare stopping with one more step; once stopping wins it keeps winning."
+          ],
+          "cards": [
+            "STO-04-09",
+            "STO-04-23",
+            "STO-04-28"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "u",
+          "d": [
+            "Die game: the value of rolling again. Then: any superharmonic function; the iterates $u_n$; the payoff of a given rule; the limit of the iterates. Always check which one."
+          ],
+          "cards": [
+            "STO-04-02",
+            "STO-04-04",
+            "STO-04-06"
+          ]
+        },
+        {
+          "t": "α",
+          "d": [
+            "Here the discount factor. For continuous-time chains $\\alpha(x, y)$ were rates; for countable chains $\\alpha(x)$ was a hitting probability."
+          ],
+          "cards": [
+            "STO-04-16"
+          ]
+        },
+        {
+          "t": "S₁ and S₂",
+          "d": [
+            "$S_1$ = continue, $S_2$ = stop. Easy to swap."
+          ],
+          "cards": [
+            "STO-04-03"
+          ]
+        },
+        {
+          "t": "T",
+          "d": [
+            "$T = \\min\\{j \\ge 0 : X_j \\in S_2\\}$ can be 0. A return time was $\\min\\{n > 0\\}$."
+          ],
+          "cards": [
+            "STO-04-03"
+          ]
+        },
+        {
+          "t": "Vectors",
+          "d": [
+            "Entries are listed in state order starting from the first state: die game states 1 to 6, walk states 0 to 6, two dice sums 2 to 12."
+          ],
+          "cards": [
+            "STO-04-02",
+            "STO-04-08",
+            "STO-04-15"
+          ]
+        },
+        {
+          "t": "Pu",
+          "d": [
+            "$Pu(x) = \\sum_y p(x, y)u(y)$: matrix times a column, a function of the starting state. This chapter never uses a row vector times $P$."
+          ],
+          "cards": [
+            "STO-04-03"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Errata",
+      "items": [
+        {
+          "t": "LW p90",
+          "d": [
+            "“$u(x) = \\mathbb{E}[u(X_T) \\mid X_0 = x] \\ge \\mathbb{E}[f(X_T) \\mid X_0 = x] = v(x)$”: the first relation should be $\\ge$; the last equality holds for the optimal $T$."
+          ],
+          "cards": [
+            "STO-04-05"
+          ]
+        },
+        {
+          "t": "LW p91",
+          "d": [
+            "“In 10 iterations $u_{10} = [3.002, \\dots]$”: with the book's recursion $u_{10}(1) = 3.0048$; $3.002$ is $u_{11}$. The book's “$n$ iterations” sometimes means $u_n$ and sometimes $u_{n+1}$."
+          ],
+          "cards": [
+            "STO-04-07",
+            "STO-04-18"
+          ]
+        },
+        {
+          "t": "LW p97",
+          "d": [
+            "The payoff of the last example is printed as $[0, 1, 4, 5, 9, \\dots, 100]$; it should be the squares $[0, 1, 4, 9, 16, \\dots, 100]$."
+          ],
+          "cards": [
+            "STO-04-19"
+          ]
+        },
+        {
+          "t": "LW p96, p99",
+          "d": [
+            "“is the the same as” has one word too many; in the wheel exercise “edges” should be “wedges”."
+          ],
+          "cards": [
+            "STO-04-28"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "STO-04-01",
+      "g": "4.1 Optimal stopping",
+      "k": "What is new",
+      "q": "Compare an optimal stopping problem with the earlier study of Markov chains: (1) who acts; (2) the main unknown; (3) the main equation; (4) how it is solved. (5) State the equation in words.",
+      "pts": [
+        "(1) Before, nobody: the chain was only described. Now you decide at each step whether to stop and collect $f(\\text{current state})$ or to let the chain move once more.",
+        "(2) Before: $\\bar\\pi$, $p_n(x, y)$, hitting probabilities. Now: the value $v(x)$ and the stopping set $S_2$.",
+        "(3) Before, linear: $\\bar\\pi P = \\bar\\pi$, $\\alpha = P\\alpha$. Now, non-linear: $v(x) = \\max\\{f(x), Pv(x)\\}$.",
+        "(4) Before: linear algebra. Now: guess $S_2$ and solve a linear system, or iterate $u_n = \\max\\{f, Pu_{n-1}\\}$.",
+        "(5) Stopping now is worth $f(x)$; going one more step and then playing optimally is worth $Pv(x)$. Stop where the first is at least the second."
+      ],
+      "pit": "The optimal rule only needs the current state: stop the first time the chain enters the stopping set.",
+      "src": "LW p87–89",
+      "seen": []
+    },
+    {
+      "id": "STO-04-02",
+      "g": "4.1 Optimal stopping",
+      "k": "Die game",
+      "q": "Die game: roll a die. A 6 ends the game with nothing. On a roll of $k \\le 5$ you may stop and take $k$ dollars, or roll again. Let $v(k)$ be the expected winnings with roll $k$ in hand under optimal play, and $u$ the value of rolling again (the same from every $k \\le 5$). (1) Write the two relations between $v$, $u$ and $f = [1, 2, 3, 4, 5, 0]$, and find a lower bound for $u$. (2) Decide what to do on a 4. (3) Decide what to do on a 3. (4) Give $v$ and the optimal rule.",
+      "pts": [
+        "(1) $u = \\tfrac16\\big[v(1) + \\dots + v(6)\\big]$ and $v(k) = \\max\\{f(k), u\\}$. Since $v \\ge f$: $u \\ge \\tfrac{1+2+3+4+5+0}{6} = \\tfrac52$, so on a 1 or 2 rolling again beats stopping.",
+        "(2) If continuing on 4 were right, so would continuing on 3; the game would then run until a 5 or a 6, equally likely: $\\tfrac{5+0}{2} = \\tfrac52 < 4$. Stop on 4.",
+        "(3) Continue on 1, 2, 3 and stop on 4, 5: $u = \\tfrac12u + \\tfrac16 \\cdot 4 + \\tfrac16 \\cdot 5$, so $u = 3 = f(3)$. Indifferent.",
+        "(4) $v = [3, 3, 3, 4, 5, 0]$: roll again on 1 or 2, stop on 4 or 5, either on 3."
+      ],
+      "pit": "Continuing only on 1 would give $v(1) = \\tfrac{14}{5} < 3$, so 2 must be a state where you roll again.",
+      "src": "LW p87–88",
+      "seen": []
+    },
+    {
+      "id": "STO-04-03",
+      "g": "4.1 Optimal stopping",
+      "k": "General problem",
+      "q": "Markov chain $X_n$ on a finite state space $S$ with transition matrix $P$ and payoff function $f$; $Pu(x) = \\sum_y p(x, y)u(y)$. (1) What is a stopping rule, and which form do the sensible rules take? (2) Define the value $v(x)$. (3) State the two inequalities and the equation for $v$. (4) Describe the optimal rule and its stopping time. (5) Why are the interesting cases not irreducible?",
+      "pts": [
+        "(1) A rule $T$ that decides at step $n$ using only $X_0, \\dots, X_n$; it cannot look into the future. For a time-homogeneous chain: split $S$ into a set $S_1$ where you continue and a set $S_2$ where you stop.",
+        "(2) $v(x) = \\max_T\\mathbb{E}\\big[f(X_T) \\mid X_0 = x\\big]$, the maximum over all legal stopping rules.",
+        "(3) $v(x) \\ge f(x)$ (stopping now is one option); $v(x) \\ge Pv(x)$ (continuing one step and then playing optimally is another); and $v(x) = \\max\\{f(x), Pv(x)\\}$.",
+        "(4) $S_2 = \\{x : v(x) = f(x)\\}$, $T = \\min\\{j \\ge 0 : X_j \\in S_2\\}$, and $v(x) = \\mathbb{E}[f(X_T) \\mid X_0 = x]$.",
+        "(5) In an irreducible chain you could simply wait until the chain reaches the state with the largest payoff."
+      ],
+      "pit": "$j \\ge 0$: if the chain starts in $S_2$ then $T = 0$. In the die game $Pv(k) = 3$ for $k \\le 5$, so $v(k) = \\max\\{f(k), 3\\}$.",
+      "src": "LW p88–89",
+      "seen": []
+    },
+    {
+      "id": "STO-04-04",
+      "g": "4.1 Optimal stopping",
+      "k": "Superharmonic",
+      "q": "Markov chain $X_n$ on a finite state space $S$ with transition matrix $P$ and payoff function $f$; $Pu(x) = \\sum_y p(x, y)u(y)$. (1) Define superharmonic and harmonic. (2) For a superharmonic $u$, a stopping rule $T$ given by sets $S_1$, $S_2$, and $T_n = \\min\\{T, n\\}$, state the key inequality. (3) Prove it by induction on $n$. (4) Pass to the limit.",
+      "pts": [
+        "(1) Superharmonic: $u(x) \\ge Pu(x)$ for all $x$; the expected value of $u$ one step later is never larger than its value now. Harmonic: $u = Pu$.",
+        "(2) $u(x) \\ge \\mathbb{E}\\big[u(X_{T_n}) \\mid X_0 = x\\big]$.",
+        "(3) $n = 0$: equality. Step: split on $z = X_{T_{n-1}}$. If $z \\in S_2$ the chain has stopped and contributes $u(z)$; if $z \\in S_1$ it takes one more step and contributes $Pu(z) \\le u(z)$. So $\\mathbb{E}[u(X_{T_n})] \\le \\mathbb{E}[u(X_{T_{n-1}})] \\le u(x)$.",
+        "(4) $u$ is bounded (finite $S$) and $T < \\infty$, so $u(x) \\ge \\mathbb{E}\\big[u(X_T) \\mid X_0 = x\\big]$."
+      ],
+      "pit": "No stopping rule can increase a superharmonic function in expectation. Along the chain it is a supermartingale.",
+      "src": "LW p89–90",
+      "seen": []
+    },
+    {
+      "id": "STO-04-05",
+      "g": "4.1 Optimal stopping",
+      "k": "Smallest majorant",
+      "q": "Markov chain $X_n$ on a finite state space $S$ with transition matrix $P$ and payoff function $f$; $Pu(x) = \\sum_y p(x, y)u(y)$; $v$ is the value of the optimal stopping problem. (1) Show that every superharmonic $u$ with $u \\ge f$ satisfies $u \\ge v$. (2) Why is $v$ itself such a function? (3) Show that the infimum of a family of superharmonic functions is superharmonic. (4) State the characterisation of $v$.",
+      "pts": [
+        "(1) For every stopping rule, $u(x) \\ge \\mathbb{E}[u(X_T) \\mid X_0 = x] \\ge \\mathbb{E}[f(X_T) \\mid X_0 = x]$; with the optimal $T$ the right side is $v(x)$.",
+        "(2) $v \\ge f$ and $v \\ge Pv$ are the two basic inequalities.",
+        "(3) If $u = \\inf_iu_i$ then $u \\le u_i$, so $Pu(x) \\le Pu_i(x) \\le u_i(x)$ for every $i$. The left side does not depend on $i$: take the infimum on the right, $Pu(x) \\le u(x)$.",
+        "(4) $v$ is the smallest superharmonic function that is greater than or equal to $f$: $v(x) = \\inf u(x)$ over all superharmonic $u \\ge f$."
+      ],
+      "pit": "The book writes the first relation in part 1 as “$u(x) = \\mathbb{E}[u(X_T) \\mid X_0 = x]$”; it should be $\\ge$, which is what the line before it proves.",
+      "src": "LW p90–91",
+      "seen": [
+        "Ex 4.7"
+      ]
+    },
+    {
+      "id": "STO-04-06",
+      "g": "4.1 Optimal stopping",
+      "k": "Algorithm",
+      "q": "Markov chain $X_n$ on a finite state space $S$ with transition matrix $P$ and payoff function $f$; $Pu(x) = \\sum_y p(x, y)u(y)$. (1) Define the starting function $u_1$ of the iteration. (2) Why is $u_1$ superharmonic and above $f$? (3) Define $u_n$. (4) Show that the sequence decreases and stays superharmonic. (5) What is the limit?",
+      "pts": [
+        "(1) $u_1(x) = f(x)$ at absorbing states and $u_1(x) = \\max_yf(y)$ elsewhere.",
+        "(2) At an absorbing state $Pu_1(x) = u_1(x)$; elsewhere $Pu_1(x) \\le \\max f = u_1(x)$.",
+        "(3) $u_n(x) = \\max\\{Pu_{n-1}(x), f(x)\\}$.",
+        "(4) $u_2 \\le u_1$ because $Pu_1 \\le u_1$ and $f \\le u_1$. Then $Pu_2 \\le Pu_1 \\le u_2$, so $u_2$ is again superharmonic and above $f$. Repeating: $u_1 \\ge u_2 \\ge \\dots \\ge f$.",
+        "(5) $v(x) = \\lim_{n \\to \\infty}u_n(x)$."
+      ],
+      "pit": "Started instead from $u_1 = f$, the same recursion gives the value when at most $n - 1$ more steps are allowed; those iterates increase to $v$.",
+      "src": "LW p91",
+      "seen": []
+    },
+    {
+      "id": "STO-04-07",
+      "g": "4.1 Optimal stopping",
+      "k": "Die game: iteration",
+      "q": "Die game: roll a die. A 6 ends the game with nothing. On a roll of $k \\le 5$ you may stop and take $k$ dollars, or roll again. Run the iteration $u_n = \\max\\{Pu_{n-1}, f\\}$ with $f = [1, 2, 3, 4, 5, 0]$ and $u_1 = [5, 5, 5, 5, 5, 0]$. (1) Compute $u_2$ and $u_3$. (2) Give the recursion for $u_n(1)$ from $n = 4$ on and the speed of convergence. (3) Give the limit. (4) What is $u_{10}(1)$?",
+      "pts": [
+        "(1) $Pu_1(k) = \\tfrac{25}{6}$ for $k \\le 5$: $u_2 = [\\tfrac{25}{6}, \\tfrac{25}{6}, \\tfrac{25}{6}, \\tfrac{25}{6}, 5, 0]$. Then $Pu_2 = \\tfrac16(4 \\cdot \\tfrac{25}{6} + 5) \\approx 3.611$: $u_3 = [3.611, 3.611, 3.611, 4, 5, 0]$.",
+        "(2) $u_n(1) = \\tfrac16\\big(3u_{n-1}(1) + 4 + 5\\big)$, so $u_n(1) - 3 = \\tfrac12\\big(u_{n-1}(1) - 3\\big)$: the error halves at each step.",
+        "(3) $[3, 3, 3, 4, 5, 0]$.",
+        "(4) $3.0048$ (and $u_{11}(1) = 3.0024$)."
+      ],
+      "pit": "The book reports $u_{10} = [3.002, \\dots]$ “in 10 iterations”; with its own recursion that value is $u_{11}$, ten updates after $u_1$.",
+      "src": "LW p91",
+      "seen": []
+    },
+    {
+      "id": "STO-04-08",
+      "g": "4.1 Optimal stopping",
+      "k": "Walk with a payoff",
+      "q": "Simple random walk on $\\{0, 1, \\dots, 6\\}$ (one step left or right with probability $\\tfrac12$ each), absorbed at 0 and 6; stopping at $x$ pays $f(x)$, with $f = [0, 2, 4, 5, 9, 3, 0]$ on the states $0, \\dots, 6$. (1) Decide for the states 0, 6 and 4. (2) Decide for 5 and 3. (3) Decide for 2 and 1. (4) Give the stopping set and compute $v$.",
+      "pts": [
+        "(1) 0 and 6 are absorbing; 4 has the largest payoff: stop.",
+        "(2) At 5, continuing is worth at least $\\tfrac{f(4) + f(6)}{2} = \\tfrac92 > 3$. At 3, one step and then stop gives $\\tfrac{4 + 9}{2} = \\tfrac{13}{2} > 5$. Continue at both, and $v(3) \\ge \\tfrac{13}{2}$.",
+        "(3) At 2: at least $\\tfrac{f(1) + v(3)}{2} \\ge \\tfrac{17}{4} > 4$. At 1: at least $\\tfrac{v(2)}{2} \\ge \\tfrac{17}{8} > 2$. Continue at both.",
+        "(4) $S_2 = \\{0, 4, 6\\}$ and $v(x) = 9\\,\\mathbb{P}\\{\\text{reach 4 before 0 or 6}\\}$: $\\tfrac x4$ from $x \\le 4$ and $\\tfrac{6-x}{2}$ from $x \\ge 4$ (gambler's ruin). $v = [0, \\tfrac94, \\tfrac92, \\tfrac{27}{4}, 9, \\tfrac92, 0]$."
+      ],
+      "pit": "The iteration from $[0, 9, 9, 9, 9, 9, 0]$ needs about 20 steps to get within $0.01$.",
+      "src": "LW p91–92",
+      "seen": []
+    },
+    {
+      "id": "STO-04-09",
+      "g": "4.1 Optimal stopping",
+      "k": "Concave picture",
+      "q": "Simple random walk on $\\{0, \\dots, N\\}$ absorbed at both ends, with payoff $f$. (1) What does superharmonic mean for this chain? (2) What is the value function, geometrically? (3) Where is the stopping set? (4) Apply this to the walk on $\\{0, \\dots, 6\\}$ with $f = [0, 2, 4, 5, 9, 3, 0]$.",
+      "pts": [
+        "(1) $u(x) \\ge \\tfrac{u(x-1) + u(x+1)}{2}$: every point lies above the chord between its neighbours, i.e. $u$ is concave.",
+        "(2) The smallest concave function above $f$: a string pulled tight over the graph of $f$.",
+        "(3) Where the string touches $f$.",
+        "(4) The string runs straight from $(0, 0)$ to $(4, 9)$ and from $(4, 9)$ to $(6, 0)$: $v = [0, \\tfrac94, \\tfrac92, \\tfrac{27}{4}, 9, \\tfrac92, 0]$, touching $f$ at $0, 4, 6$."
+      ],
+      "pit": "This shortcut only works for the plain problem on a simple random walk; with a cost or a discount the equation changes.",
+      "src": "LW p91–92",
+      "seen": [
+        "Ex 4.1"
+      ]
+    },
+    {
+      "id": "STO-04-10",
+      "g": "4.1 Optimal stopping",
+      "k": "Dirichlet problem",
+      "q": "Markov chain $X_n$ on a finite state space $S$ with transition matrix $P$ and payoff function $f$; $Pu(x) = \\sum_y p(x, y)u(y)$. Suppose the split into a continuation set $S_1$ and a stopping set $S_2$ is known. (1) Which equations does the expected payoff $u$ of that rule satisfy? (2) Why is this called a Dirichlet problem? (3) Give its solution in probabilistic form. (4) What is it computationally? Illustrate with the walk on $\\{0, \\dots, 6\\}$, $S_2 = \\{0, 4, 6\\}$, $f(4) = 9$, $f(0) = f(6) = 0$.",
+      "pts": [
+        "(1) $u(x) = f(x)$ for $x \\in S_2$ and $u(x) = Pu(x)$ for $x \\in S_1$.",
+        "(2) Prescribed values on the “boundary” $S_2$, and a difference equation (“$u$ is harmonic”) in the “interior” $S_1$.",
+        "(3) $u(x) = \\mathbb{E}\\big[f(X_T) \\mid X_0 = x\\big]$ with $T = \\min\\{j \\ge 0 : X_j \\in S_2\\}$.",
+        "(4) $k$ linear equations in $k$ unknowns, $k = |S_1|$. In the example each $u(x)$ on $S_1 = \\{1, 2, 3, 5\\}$ is the average of its neighbours: straight-line interpolation between $(0, 0)$, $(4, 9)$ and $(6, 0)$."
+      ],
+      "pit": "",
+      "src": "LW p92",
+      "seen": []
+    },
+    {
+      "id": "STO-04-11",
+      "g": "4.1 Optimal stopping",
+      "k": "Why iteration works",
+      "q": "Markov chain $X_n$ on a finite state space $S$ with transition matrix $P$ and payoff function $f$; $Pu(x) = \\sum_y p(x, y)u(y)$. The iterates $u_n = \\max\\{Pu_{n-1}, f\\}$ decrease, are superharmonic and stay above $f$; let $u = \\lim_nu_n$. Prove $u = v$. (1) Show $u \\ge v$. (2) Define a split by $u$. (3) Show that $u$ is harmonic on the continuation set. (4) Show $u \\le v$.",
+      "pts": [
+        "(1) $u$ is a decreasing limit of superharmonic functions, hence superharmonic, and $u \\ge f$; so $u \\ge v$ by the characterisation of $v$.",
+        "(2) $S_2 = \\{z : u(z) = f(z)\\}$ and $S_1 = \\{z : u(z) > f(z)\\}$.",
+        "(3) If $Pu(z) < u(z)$ for some $z \\in S_1$, then for large $n$ also $Pu_n(z) < u(z)$, and $f(z) < u(z)$, so $u_{n+1}(z) = \\max\\{Pu_n(z), f(z)\\} < u(z)$: impossible, because $u_{n+1} \\ge u$.",
+        "(4) So $u$ solves the Dirichlet problem for this split, i.e. $u(z) = \\mathbb{E}[f(X_T) \\mid X_0 = z]$ is the payoff of an actual rule, and $v$ is the best over all rules."
+      ],
+      "pit": "",
+      "src": "LW p93",
+      "seen": []
+    },
+    {
+      "id": "STO-04-12",
+      "g": "4.2 With a cost",
+      "k": "Cost per step",
+      "q": "Markov chain $X_n$ on a finite state space $S$ with transition matrix $P$ and payoff function $f$; $Pu(x) = \\sum_y p(x, y)u(y)$. Continuing from $x$ costs $g(x)$. (1) Define the value. (2) Give the equation for $v$ and the stopping set. (3) Characterise $v$ as a smallest function. (4) Give the algorithm. (5) What does a cost change for an irreducible chain?",
+      "pts": [
+        "(1) $v(x) = \\max_T\\mathbb{E}\\Big[f(X_T) - \\sum_{j=0}^{T-1}g(X_j) \\,\\Big|\\, X_0 = x\\Big]$: the cost is paid at each state you continue from.",
+        "(2) $v(x) = \\max\\{f(x), Pv(x) - g(x)\\}$; stop on $S_2 = \\{x : v(x) = f(x)\\}$.",
+        "(3) The smallest $u$ with $u \\ge f$ and $u \\ge Pu - g$.",
+        "(4) $u_1 = f$ on absorbing states and $\\max f$ elsewhere; $u_n(x) = \\max\\{f(x), Pu_{n-1}(x) - g(x)\\}$; $v = \\lim u_n$.",
+        "(5) The problem becomes non-trivial: without a cost you would just wait for the best state; with it, waiting has a price."
+      ],
+      "pit": "",
+      "src": "LW p93–94",
+      "seen": []
+    },
+    {
+      "id": "STO-04-13",
+      "g": "4.2 With a cost",
+      "k": "Die game with a cost",
+      "q": "Die game: roll a die. A 6 ends the game with nothing. On a roll of $k \\le 5$ you may stop and take $k$ dollars, or roll again; now each further roll costs 1 dollar. (1) Decide for the rolls 3, 4, 5. (2) Decide for a 1. (3) Decide for a 2. (4) Give the stopping set and $v$.",
+      "pts": [
+        "(1) Stopping on 4 and 5 was already right without the cost, and at 3 we were indifferent; a cost only makes rolling worse. Stop on 3, 4, 5.",
+        "(2) Rolling is worth at least $\\tfrac52 - 1 = \\tfrac32 > 1$: continue.",
+        "(3) Try “continue on 1 and 2” with common value $u$: $u = \\tfrac16(u + u + 3 + 4 + 5 + 0) - 1 = \\tfrac13u + 1$, so $u = \\tfrac32 < 2 = f(2)$. Stop on 2.",
+        "(4) $S_2 = \\{2, 3, 4, 5, 6\\}$. On $S_1 = \\{1\\}$: $v(1) = \\tfrac16\\big(v(1) + 2 + 3 + 4 + 5\\big) - 1$, so $\\tfrac56v(1) = \\tfrac86$ and $v(1) = \\tfrac85$. $v = [\\tfrac85, 2, 3, 4, 5, 0]$."
+      ],
+      "pit": "A trial stopping set is confirmed or rejected by checking the state at its edge.",
+      "src": "LW p94–95",
+      "seen": []
+    },
+    {
+      "id": "STO-04-14",
+      "g": "4.2 With a cost",
+      "k": "Walk with a cost",
+      "q": "Simple random walk on $\\{0, 1, \\dots, 6\\}$ (one step left or right with probability $\\tfrac12$ each), absorbed at 0 and 6; stopping at $x$ pays $f(x)$, with $f = [0, 2, 4, 5, 9, 3, 0]$ on the states $0, \\dots, 6$. Moving costs $0.5$ from the states 0, 1, 2 and $1$ from the states 3, 4, 5, 6. (1) Decide for 5 and 3. (2) Decide for 2 and 1. (3) Give $v$ and $S_2$. (4) Compare with the problem without cost.",
+      "pts": [
+        "(1) At 5: $\\tfrac{9 + 0}{2} - 1 = 3.5 > 3$, continue. At 3: $\\tfrac{4 + 9}{2} - 1 = 5.5 > 5$, continue.",
+        "(2) At 2: $\\tfrac{2 + 5.5}{2} - 0.5 = 3.25 < 4$, stop. At 1: $\\tfrac{0 + 4}{2} - 0.5 = 1.5 < 2$, stop.",
+        "(3) $v = [0, 2, 4, 5.5, 9, 3.5, 0]$ and $S_2 = \\{0, 1, 2, 4, 6\\}$.",
+        "(4) States 1 and 2 switch from continue to stop: their payoffs are small, and walking up to 4 now costs too much."
+      ],
+      "pit": "The iteration from $[0, 9, 9, 9, 9, 9, 0]$ reaches $v$ exactly at $u_6$.",
+      "src": "LW p95",
+      "seen": []
+    },
+    {
+      "id": "STO-04-15",
+      "g": "4.2 With a cost",
+      "k": "Two dice with a cost",
+      "q": "Roll two dice. You may stop and take the sum $s$, or pay to roll again: the cost is 2 if $s < 5$ and 1 if $s \\ge 5$. (1) Why would the problem be trivial without the cost, and what simplifies it with the cost? (2) Write the equation for $v$. (3) Guess “stop on $7, \\dots, 12$” and solve. (4) Check the guess and give $v$.",
+      "pts": [
+        "(1) The chain is irreducible, so without a cost you would wait for a 12. The next roll ignores the current one, so continuing is worth the same amount $W = Pv$ from every state, minus that state's cost.",
+        "(2) $v(s) = \\max\\{s, W - g(s)\\}$ with $W = \\sum_{t=2}^{12}\\mathbb{P}\\{\\text{sum} = t\\}v(t)$.",
+        "(3) The sums 2, 3, 4 have probability $\\tfrac{6}{36}$, the sums 5, 6 have $\\tfrac{9}{36}$, and $\\sum_{s \\ge 7}\\mathbb{P}\\{s\\}s = \\tfrac{182}{36}$: $W = \\tfrac{6}{36}(W - 2) + \\tfrac{9}{36}(W - 1) + \\tfrac{182}{36}$, so $21W = 161$ and $W = \\tfrac{23}{3}$.",
+        "(4) At 6: $W - 1 = \\tfrac{20}{3} > 6$, continue. At 7: $\\tfrac{20}{3} < 7$, stop. $v = 5\\tfrac23$ on $2, 3, 4$; $6\\tfrac23$ on $5, 6$; and $v(s) = s$ for $s \\ge 7$."
+      ],
+      "pit": "",
+      "src": "LW p95",
+      "seen": []
+    },
+    {
+      "id": "STO-04-16",
+      "g": "4.3 Discounting",
+      "k": "Discount factor",
+      "q": "Markov chain $X_n$ on a finite state space $S$ with transition matrix $P$ and payoff function $f$; $Pu(x) = \\sum_y p(x, y)u(y)$. A discount factor $\\alpha \\in (0, 1)$ is given. (1) What does it mean? (2) Define the value. (3) Give the equation and the characterisation. (4) Give the version with a cost $g$ as well and read it. (5) Which earlier problems are special cases?",
+      "pts": [
+        "(1) One dollar received one step later is worth $\\alpha$ dollars now, so a payoff received after $k$ steps is worth $\\alpha^k$ times its face value.",
+        "(2) $v(x) = \\max_T\\mathbb{E}\\big[\\alpha^Tf(X_T) \\mid X_0 = x\\big]$.",
+        "(3) $v = \\max\\{f, \\alpha Pv\\}$; $v$ is the smallest $u$ with $u \\ge f$ and $u \\ge \\alpha Pu$. Iteration: $u_n = \\max\\{f, \\alpha Pu_{n-1}\\}$.",
+        "(4) $v(x) = \\max\\{f(x), \\alpha Pv(x) - g(x)\\}$: continuing pays the cost $g(x)$ now and receives tomorrow's value discounted by $\\alpha$.",
+        "(5) $\\alpha = 1$, $g = 0$: the plain problem. $\\alpha = 1$: the problem with a cost."
+      ],
+      "pit": "",
+      "src": "LW p96–97",
+      "seen": []
+    },
+    {
+      "id": "STO-04-17",
+      "g": "4.3 Discounting",
+      "k": "Die game, α = 0.8",
+      "q": "Die game: roll a die. A 6 ends the game with nothing. On a roll of $k \\le 5$ you may stop and take $k$ dollars, or roll again; future winnings are discounted by $\\alpha = 0.8$ per roll. (1) Decide for 3, 4, 5. (2) Decide for a 1. (3) Decide for a 2. (4) Give $S_2$ and $v$. (5) What changes for $\\alpha = \\tfrac12$?",
+      "pts": [
+        "(1) Discounting only makes stopping more attractive: stop on 3, 4, 5.",
+        "(2) Rolling is worth at least $0.8 \\cdot \\tfrac52 = 2 > 1$: continue.",
+        "(3) Try “continue on 1, 2” with value $u$ of rolling: $u = 0.8\\big(\\tfrac u3 + \\tfrac{3 + 4 + 5}{6}\\big) = 0.8\\big(\\tfrac u3 + 2\\big)$, so $\\tfrac{11}{15}u = 1.6$ and $u = \\tfrac{24}{11} \\approx 2.18 > 2$. Continue on 2.",
+        "(4) $S_2 = \\{3, 4, 5, 6\\}$, $v = [\\tfrac{24}{11}, \\tfrac{24}{11}, 3, 4, 5, 0]$.",
+        "(5) Rolling is worth less than 2, so stop on 2 as well; continue only on 1: $v(1) = \\tfrac12 \\cdot \\tfrac16\\big(v(1) + 14\\big)$, $v(1) = \\tfrac{14}{11}$."
+      ],
+      "pit": "",
+      "src": "LW p96",
+      "seen": []
+    },
+    {
+      "id": "STO-04-18",
+      "g": "4.3 Discounting",
+      "k": "Walk, discounted",
+      "q": "Simple random walk on $\\{0, 1, \\dots, 6\\}$ (one step left or right with probability $\\tfrac12$ each), absorbed at 0 and 6; stopping at $x$ pays $f(x)$, with $f = [0, 2, 4, 5, 9, 3, 0]$ on the states $0, \\dots, 6$. (1) With discount factor $\\alpha = 0.9$ and no cost, decide for 5, 3, 2, 1. (2) Give $v$ and $S_2$. (3) Add the cost $g = [.5, .5, .5, 1, 1, 1, 1]$ to the discount: decide for 3 and 5. (4) Give $v$ and $S_2$ for cost and discount together.",
+      "pts": [
+        "(1) At 5: $0.9 \\cdot \\tfrac{9 + 0}{2} = 4.05 > 3$, continue. At 3: $0.9 \\cdot \\tfrac{4 + 9}{2} = 5.85 > 5$, continue. At 2: $0.9 \\cdot \\tfrac{2 + 5.85}{2} \\approx 3.53 < 4$, stop. At 1: $0.9 \\cdot \\tfrac{0 + 4}{2} = 1.8 < 2$, stop.",
+        "(2) $v = [0, 2, 4, 5.85, 9, 4.05, 0]$, $S_2 = \\{0, 1, 2, 4, 6\\}$.",
+        "(3) At 3: $5.85 - 1 = 4.85 < 5$, now stop. At 5: $4.05 - 1 = 3.05 > 3$, still continue.",
+        "(4) $v = [0, 2, 4, 5, 9, 3.05, 0]$, $S_2 = \\{0, 1, 2, 3, 4, 6\\}$."
+      ],
+      "pit": "From $[0, 9, 9, 9, 9, 9, 0]$ the iteration reaches the first answer at $u_7$ and the second at $u_4$ (“three iterations” in the book means three updates after $u_1$).",
+      "src": "LW p97",
+      "seen": []
+    },
+    {
+      "id": "STO-04-19",
+      "g": "4.3 Discounting",
+      "k": "Payoff = squares",
+      "q": "Simple random walk on $\\{0, \\dots, 10\\}$ absorbed at both ends; stopping at $x$ pays $f(x) = x^2$, each move costs $0.6$, and the discount factor is $\\alpha = 0.95$. The value function is $v \\approx [0, 1.51, 4.45, 9.11, 16, 25, \\dots, 100]$. (1) Verify the decision at 3. (2) Verify the decision at 4. (3) If both neighbours of $x$ are stopping states, for which $x$ does it pay to continue? (4) Give $S_2$.",
+      "pts": [
+        "(1) $0.95 \\cdot \\tfrac{4.45 + 16}{2} - 0.6 \\approx 9.11 > 9$: continue.",
+        "(2) $0.95 \\cdot \\tfrac{9.11 + 25}{2} - 0.6 \\approx 15.60 < 16$: stop.",
+        "(3) $0.95 \\cdot \\tfrac{(x-1)^2 + (x+1)^2}{2} - 0.6 = 0.95x^2 + 0.35$, which exceeds $x^2$ only if $x^2 < 7$. So from 4 on, cost and discount make stopping better.",
+        "(4) $S_2 = \\{0, 4, 5, \\dots, 10\\}$; at 1, 2, 3 it pays to walk towards the large squares."
+      ],
+      "pit": "The book prints the payoff as $f = [0, 1, 4, 5, 9, \\dots, 100]$; the squares are $[0, 1, 4, 9, 16, \\dots, 100]$, and the book's own numbers use the squares.",
+      "src": "LW p97",
+      "seen": []
+    },
+    {
+      "id": "STO-04-20",
+      "g": "4.3 Discounting",
+      "k": "One equation",
+      "q": "All versions of the stopping problem are solved by $v(x) = \\max\\{f(x), \\alpha Pv(x) - g(x)\\}$. (1) Give $\\alpha$ and $g$ in the four versions. (2) For the walk on $\\{0, \\dots, 6\\}$ with $f = [0, 2, 4, 5, 9, 3, 0]$, give the continuation set in each version (cost $0.5$ from 0–2 and $1$ from 3–6; $\\alpha = 0.9$). (3) What is the general relation between the stopping sets? (4) How do a fixed cost and a discount differ in effect?",
+      "pts": [
+        "(1) Plain: $\\alpha = 1$, $g = 0$. Cost: $\\alpha = 1$, $g$. Discount: $\\alpha$, $g = 0$. Both: $\\alpha$, $g$.",
+        "(2) Plain: $\\{1, 2, 3, 5\\}$. Cost: $\\{3, 5\\}$. Discount: $\\{3, 5\\}$. Both: $\\{5\\}$.",
+        "(3) A cost or a discount can only lower the value of continuing, so the stopping set can only grow.",
+        "(4) A fixed cost hits states with small payoffs hardest (it does not scale with the payoff); a discount scales the value of waiting down by the same factor everywhere."
+      ],
+      "pit": "Die game for comparison: plain $[3, 3, 3, 4, 5, 0]$; cost 1: $[\\tfrac85, 2, 3, 4, 5, 0]$; $\\alpha = 0.8$: $[\\tfrac{24}{11}, \\tfrac{24}{11}, 3, 4, 5, 0]$.",
+      "src": "LW p93–97",
+      "seen": []
+    },
+    {
+      "id": "STO-04-21",
+      "g": "4.3 Discounting",
+      "k": "Finance reading",
+      "q": "Read the stopping problem $v = \\max\\{f, \\alpha Pv\\}$ as the pricing of an American option. (1) What are $f$, $\\alpha$ and $\\alpha Pv$? (2) What is $S_2$? (3) What does “superharmonic” become along the chain? (4) How is the characterisation of $v$ phrased?",
+      "pts": [
+        "(1) $f$ is the exercise payoff, $\\alpha$ the discount factor, $\\alpha Pv$ the value of waiting one more period.",
+        "(2) The early-exercise region.",
+        "(3) A supermartingale: on average it does not grow.",
+        "(4) $v$ is the smallest such process that dominates the payoff (the Snell envelope)."
+      ],
+      "pit": "This reading is not in the book.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-04-22",
+      "g": "Exercises",
+      "k": "Ex 4.1: concave hull",
+      "q": "Simple random walk on $\\{0, 1, \\dots, 10\\}$ absorbed at both ends, with payoff $f = [0, 2, 4, 3, 10, 0, 6, 4, 3, 3, 0]$. (1) Which property of $v$ is used? (2) Find the corners of the smallest concave function above $f$. (3) Give $v$ and the optimal rule. (4) Check the value at 5, and explain why you do not stop at 6.",
+      "pts": [
+        "(1) For this walk superharmonic means concave, so $v$ is the smallest concave function above $f$.",
+        "(2) From $(0, 0)$ the steepest slope is to $(4, 10)$, $\\tfrac{10}{4} = 2.5$; from $(4, 10)$ the largest slope to the right is to $(9, 3)$, $-\\tfrac75$; then $(9, 3)$ to $(10, 0)$. Slopes $2.5, -1.4, -3$ decrease, so the function is concave.",
+        "(3) $v = [0, 2.5, 5, 7.5, 10, 8.6, 7.2, 5.8, 4.4, 3, 0]$; stop on $S_2 = \\{0, 4, 9, 10\\}$, continue elsewhere.",
+        "(4) From 5 the walk runs until 4 or 9: $\\tfrac45 \\cdot 10 + \\tfrac15 \\cdot 3 = 8.6$. At 6 the chord between 4 and 9 has height $7.2 > 6 = f(6)$."
+      ],
+      "pit": "",
+      "src": "LW p98",
+      "seen": [
+        "Ex 4.1"
+      ]
+    },
+    {
+      "id": "STO-04-23",
+      "g": "Exercises",
+      "k": "Ex 4.2: a 7 loses",
+      "q": "Roll two dice. A sum of 7 ends the game with nothing. Otherwise you may stop and take the sum, or roll again. The numbers of ways to roll $2, \\dots, 12$ are $1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1$ out of 36. (1) Find the expected winnings if you always stop after the first roll. (2) Why is the optimal rule a threshold rule? (3) Solve for the value $u$ of rolling. (4) Give the optimal rule and the value before the first roll.",
+      "pts": [
+        "(1) $\\mathbb{E}[S] - 7\\,\\mathbb{P}\\{S = 7\\} = 7 - \\tfrac76 = \\tfrac{35}{6} \\approx 5.83$.",
+        "(2) The value $u = Pv$ of rolling again is the same from every state, so you stop exactly when the sum in hand exceeds $u$.",
+        "(3) Try stopping on $8, \\dots, 12$: $36u = (40 + 36 + 30 + 22 + 12) + 15u = 140 + 15u$, so $u = \\tfrac{140}{21} = \\tfrac{20}{3} \\approx 6.67$.",
+        "(4) Consistent: sums up to 6 are below $u$, sums from 8 on are above. Stop on $8, \\dots, 12$, roll again on $2, \\dots, 6$; the value is $\\tfrac{20}{3}$."
+      ],
+      "pit": "The threshold $\\tfrac{20}{3}$ lies between 6 and 7, but 7 itself is the losing roll, so the split is between 6 and 8.",
+      "src": "LW p98",
+      "seen": [
+        "Ex 4.2"
+      ]
+    },
+    {
+      "id": "STO-04-24",
+      "g": "Exercises",
+      "k": "Ex 4.3: cost, discount",
+      "q": "Simple random walk on $\\{0, \\dots, 10\\}$ absorbed at both ends, $f = [0, 2, 4, 3, 10, 0, 6, 4, 3, 3, 0]$; without cost or discount the stopping set is $\\{0, 4, 9, 10\\}$. Solve with (1) a cost of $0.75$ per move; (2) a discount factor $\\alpha = 0.95$; (3) both. (4) Explain the difference between the first two.",
+      "pts": [
+        "(1) Continue only on 3 and 5: $v(3) = \\tfrac{4 + 10}{2} - \\tfrac34 = \\tfrac{25}{4}$, $v(5) = \\tfrac{10 + 6}{2} - \\tfrac34 = \\tfrac{29}{4}$; elsewhere $v = f$.",
+        "(2) Continue on 2, 3, 5, 7, 8: $v \\approx [0, 2, 4.14, 6.72, 10, 7.6, 6, 4.55, 3.59, 3, 0]$, where $v(5) = 0.95 \\cdot \\tfrac{10 + 6}{2} = 7.6$ and the others come from a linear system (exact values $\\tfrac{1710}{413}, \\tfrac{2774}{413}, \\tfrac{1881}{413}, \\tfrac{1482}{413}$).",
+        "(3) Continue only on 3 and 5: $v(3) = 0.95 \\cdot 7 - 0.75 = 5.9$, $v(5) = 0.95 \\cdot 8 - 0.75 = 6.85$.",
+        "(4) The fixed cost does not scale with the payoff, so it removes the states with small payoffs that are far from a good target (1, 2, 7, 8). The discount is proportional, so 2, 3, 7, 8 are still worth walking from."
+      ],
+      "pit": "Convention: the cost is paid when deciding to continue and is not discounted; the future value is discounted.",
+      "src": "LW p98",
+      "seen": [
+        "Ex 4.3"
+      ]
+    },
+    {
+      "id": "STO-04-25",
+      "g": "Exercises",
+      "k": "Ex 4.4: 7 loses, costs",
+      "q": "Two dice; a sum of 7 ends the game with nothing; otherwise stop and take the sum $s$ or roll again. The numbers of ways to roll $2, \\dots, 12$ are $1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1$ out of 36. Let $u$ be the value of rolling. Find $u$ and the rule with (1) a cost of 2 to roll again when $s \\le 5$ and 1 when $s \\ge 6$; (2) a discount factor $0.8$; (3) both. (4) Compare with the threshold 8 of the plain game.",
+      "pts": [
+        "(1) Continue on 2, 3: $36u = 202 + 3(u - 2)$, so $u = \\tfrac{196}{33} \\approx 5.94$; stop on $s \\ge 4$.",
+        "(2) Continue on 2, 3, 4: $36u = 190 + 6(0.8u)$, so $u = \\tfrac{475}{78} \\approx 6.09$; stop on $s \\ge 5$.",
+        "(3) Continue only on 2: $36u = 208 + (0.8u - 2)$, so $u = \\tfrac{515}{88} \\approx 5.85$; stop on $s \\ge 3$.",
+        "(4) The threshold drops from 8 to 4, 5 and 3: the heavier the penalty for waiting, the earlier you stop."
+      ],
+      "pit": "The stopped part is $\\sum n_ss$ over the stopping sums other than 7, e.g. $202 = 12 + 20 + 30 + 40 + 36 + 30 + 22 + 12$.",
+      "src": "LW p98",
+      "seen": [
+        "Ex 4.4"
+      ]
+    },
+    {
+      "id": "STO-04-26",
+      "g": "Exercises",
+      "k": "Ex 4.5: largest α",
+      "q": "Simple random walk on a square with vertices $A, B, C, D$ in this order around the square; payoffs $f(A) = 2$, $f(B) = 4$, $f(C) = 5$, $f(D) = 3$; no cost, discount factor $\\alpha$. (1) When is “stop at every vertex” optimal? (2) Compute $Pf$. (3) Find the largest such $\\alpha$. (4) Which vertex is the bottleneck, and why?",
+      "pts": [
+        "(1) Exactly when $f(x) \\ge \\alpha Pf(x)$ for all $x$: then $f$ itself satisfies $u \\ge f$, $u \\ge \\alpha Pu$, so $v \\le f$ and hence $v = f$; conversely $f = v \\ge \\alpha Pv = \\alpha Pf$.",
+        "(2) $Pf(A) = Pf(C) = \\tfrac{4 + 3}{2} = \\tfrac72$ and $Pf(B) = Pf(D) = \\tfrac{2 + 5}{2} = \\tfrac72$.",
+        "(3) $\\alpha \\le \\min_x\\tfrac{f(x)}{7/2} = \\tfrac{2}{7/2} = \\tfrac47$.",
+        "(4) $A$, the vertex with the smallest payoff: unless the discount pushes the value of one step, $3.5\\alpha$, below 2, you should leave $A$."
+      ],
+      "pit": "",
+      "src": "LW p98",
+      "seen": [
+        "Ex 4.5"
+      ]
+    },
+    {
+      "id": "STO-04-27",
+      "g": "Exercises",
+      "k": "Ex 4.6: squared die",
+      "q": "Roll a die. A 1 ends the game with nothing. On $k > 1$ you may take $k^2$ dollars or roll again. (1) Find the optimal rule and the value $u$ of rolling. (2) What goes wrong with the guess “roll again only on 2”? (3) Now each roll costs $r$. Find $u$ when you roll again only on 2. (4) Find the smallest $r$ for which that rule is optimal.",
+      "pts": [
+        "(1) Continue on $2, 3, 4$: $6u = 3u + 25 + 36$, so $u = \\tfrac{61}{3} \\approx 20.33$; consistent, since $16 < u < 25$. Stop on 5 and 6.",
+        "(2) It gives $u = \\tfrac{86}{5} = 17.2$, but then $9 < u$ and $16 < u$ say that 3 and 4 should continue too: not consistent.",
+        "(3) $6u = (u - r) + 9 + 16 + 25 + 36$, so $u = \\tfrac{86 - r}{5}$.",
+        "(4) Stop at 3 requires $9 \\ge u - r = \\tfrac{86 - 6r}{5}$, i.e. $r \\ge \\tfrac{41}{6} \\approx 6.83$ (continuing at 2 only needs $r < 11$). So $r = \\tfrac{41}{6}$; there $u - r = 9$, a tie at 3."
+      ],
+      "pit": "",
+      "src": "LW p98–99",
+      "seen": [
+        "Ex 4.6"
+      ]
+    },
+    {
+      "id": "STO-04-28",
+      "g": "Exercises",
+      "k": "Ex 4.8: wheel",
+      "q": "A wheel has 12 equal wedges: eleven marked $100, 200, \\dots, 1100$ dollars and one marked “bankrupt”. You may spin as often as you like; each number is added to your total, but “bankrupt” ends the game and you lose everything. You may quit at any time with your total $w$. (1) Compare stopping with spinning once more. (2) Give the resulting rule. (3) Why is this one-step rule optimal? (4) What are the expected winnings?",
+      "pts": [
+        "(1) One more spin gains $\\tfrac{1}{12}(100 + \\dots + 1100) = 550$ on average and loses $w$ with probability $\\tfrac{1}{12}$: it pays exactly when $\\tfrac{w}{12} < 550$.",
+        "(2) Spin while the total is below 6600 dollars; stop at 6600 or more.",
+        "(3) The total only grows, so once stopping is better than one more spin it stays better: the stopping region is never left.",
+        "(4) By backward recursion from the threshold: about 2565 dollars."
+      ],
+      "pit": "The expected winnings are far below the threshold: reaching 6600 takes about eleven spins, and surviving 11 spins has probability about 0.38.",
+      "src": "LW p99",
+      "seen": [
+        "Ex 4.8"
+      ]
+    },
+    {
+      "id": "STO-04-29",
+      "g": "Exercises",
+      "k": "Ex 4.9: no best rule",
+      "q": "Random walk on $\\{0, 1, 2, \\dots\\}$ absorbed at 0, with $p(n, n+1) = p(n, n-1) = \\tfrac12$ for $n \\ge 1$ and payoff $f(n) = n^2$. (1) Compute $\\mathbb{E}[f(X_{n+1}) \\mid X_n = m]$ for $m \\ge 1$ and draw the conclusion about stopping. (2) The walk is recurrent, so never stopping above 0 pays 0. Compute the payoff of “stop on reaching 0 or $N$” from $x$. (3) What is the value, and what was wrong? (4) Which assumption of the theory fails?",
+      "pts": [
+        "(1) $\\tfrac{(m+1)^2 + (m-1)^2}{2} = m^2 + 1 > m^2$: stopping at any $m > 0$ is worse than taking one more step and then stopping.",
+        "(2) By gambler's ruin the walk reaches $N$ first with probability $\\tfrac xN$: the payoff is $\\tfrac xN \\cdot N^2 = xN$.",
+        "(3) $xN \\to \\infty$, so the value is $+\\infty$ and no optimal rule exists. The error was to assume that one does: “nothing is better than waiting” does not make waiting optimal when the supremum is not attained.",
+        "(4) The state space is infinite and $f$ unbounded; the step “$u$ is bounded, let $n \\to \\infty$” needs a finite state space or a bounded payoff."
+      ],
+      "pit": "In the concave picture: the smallest concave function above n² is +∞.",
+      "src": "LW p99",
+      "seen": [
+        "Ex 4.9"
+      ]
+    },
+    {
+      "id": "STO-04-30",
+      "g": "Exercises",
+      "k": "Ex 4.10: prophet",
+      "q": "A “prophet” knows the whole future of the chain and collects $v_{\\text{prop}}(x) = \\mathbb{E}\\big[\\max_nf(X_n) \\mid X_0 = x\\big]$. (1) Why is $v_{\\text{prop}} \\ge v$, and why can the gap be positive? (2) Die game (a 6 ends it, payoff $k$ on $k \\le 5$): let $W$ be the largest roll before the first 6. Find $\\mathbb{P}\\{W \\le j\\}$. (3) Give $v_{\\text{prop}}(k)$. (4) Compare the values before the first roll.",
+      "pts": [
+        "(1) For any legal rule $f(X_T) \\le \\max_nf(X_n)$, so $\\mathbb{E}[f(X_T)] \\le v_{\\text{prop}}$. The gap is positive because a legal rule must decide without knowing whether a better state is coming: $\\mathbb{E}[\\max]$ against $\\max\\mathbb{E}$.",
+        "(2) The number of rolls before the first 6 is geometric and each is uniform on $\\{1, \\dots, 5\\}$: $\\mathbb{P}\\{W \\le j\\} = \\sum_{m \\ge 0}\\tfrac16\\big(\\tfrac56\\big)^m\\big(\\tfrac j5\\big)^m = \\dfrac{1}{6 - j}$.",
+        "(3) The prophet gets $\\max(k, W)$: $v_{\\text{prop}}(k) = k + \\sum_{j=k}^4\\big(1 - \\tfrac{1}{6-j}\\big)$, i.e. $[\\tfrac{223}{60}, \\tfrac{47}{12}, \\tfrac{25}{6}, \\tfrac92, 5, 0]$.",
+        "(4) $\\tfrac{71}{20} = 3.55$ for the prophet against 3 for the best legal rule."
+      ],
+      "pit": "For the walk on $\\{0, \\dots, 10\\}$ with $f = [0, 2, 4, 3, 10, 0, 6, 4, 3, 3, 0]$: $v_{\\text{prop}} = [0, \\tfrac92, 7, \\tfrac{17}{2}, 10, \\tfrac{28}{3}, \\tfrac{26}{3}, \\tfrac{15}{2}, 6, \\tfrac92, 0]$.",
+      "src": "LW p100",
+      "seen": [
+        "Ex 4.10"
+      ]
+    },
+    {
+      "id": "STO-04-31",
+      "g": "Recipe",
+      "k": "Solving skeleton",
+      "q": "A stopping problem $v = \\max\\{f, \\alpha Pv - g\\}$ on a finite chain is given. (1) Which states are settled first? (2) How is the stopping set guessed? (3) What is solved once it is guessed? (4) What must be checked, and what if the check fails? (5) What is the alternative?",
+      "pts": [
+        "(1) Absorbing states and the state with the largest payoff: stop. States whose payoff is below a quick lower bound on continuing: continue.",
+        "(2) By one-step checks with the values known so far.",
+        "(3) $u = f$ on $S_2$ and $u = \\alpha Pu - g$ on $S_1$: a linear system with $|S_1|$ unknowns.",
+        "(4) $u \\ge f$ on $S_1$ and $f \\ge \\alpha Pu - g$ on $S_2$. If one fails, move that state to the other set and solve again.",
+        "(5) Iterate: $u_1$ large, $u_n = \\max\\{f, \\alpha Pu_{n-1} - g\\}$ until it stops changing; then $S_2 = \\{u = f\\}$."
+      ],
+      "pit": "When the next state does not depend on the current one (dice), continuing has the same value from every state and the rule is a threshold: one equation in one unknown.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "STO-04-32",
+      "g": "Recipe",
+      "k": "Practice",
+      "q": "(1) Simple random walk on $\\{0, 1, 2, 3, 4\\}$ absorbed at the ends, $f = [0, 1, 3, 1, 0]$: find $S_2$ and $v$. (2) In the die game (a 6 ends it, payoff $k$ on $k \\le 5$), what is the difference between $v(k)$ and the value $u$ of rolling again? (3) Where is $v$ harmonic? (4) If the iteration $u_n = \\max\\{f, Pu_{n-1}\\}$ starts from $u_1 = f$, what does $u_n$ mean? Give $u_2$ for the die game. (5) In the walk on $\\{0, \\dots, 6\\}$ with $f = [0, 2, 4, 5, 9, 3, 0]$ and a cost of 1 per move from 5, why do you still continue at 5?",
+      "pts": [
+        "(1) The smallest concave function above $f$: $v = [0, \\tfrac32, 3, \\tfrac32, 0]$, $S_2 = \\{0, 2, 4\\}$. At 1: stopping gives 1, continuing $\\tfrac{0 + 3}{2} = \\tfrac32$.",
+        "(2) $v(k)$ is the value with roll $k$ in hand, when you may still stop; $u$ is the value if you roll again. $v(k) = \\max\\{f(k), u\\}$ and $u = 3$.",
+        "(3) On the continuation set $S_1$, where $v = Pv$; on $S_2$ it equals $f$.",
+        "(4) The value when you must stop within $n - 1$ more steps; these increase to $v$. $u_2 = \\max\\{f, Pf\\} = [\\tfrac52, \\tfrac52, 3, 4, 5, 0]$.",
+        "(5) One step leads to 4 (payoff 9) or 6 (payoff 0): $\\tfrac92 - 1 = \\tfrac72 > 3 = f(5)$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    }
+  ]
+}

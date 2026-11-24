@@ -88,6 +88,10 @@
         {
           "title": "Continuous-time Markov chains",
           "file": "stochastic/ch03-continuous-time-markov-chains.json"
+        },
+        {
+          "title": "Optimal stopping",
+          "file": "stochastic/ch04-optimal-stopping.json"
         }
       ]
     },
