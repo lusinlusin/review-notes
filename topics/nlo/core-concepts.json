@@ -7,7 +7,7 @@
         {
           "t": "Half an hour",
           "d": [
-            "First pass: fourteen cards, two per topic."
+            "First pass: sixteen cards, two or three per topic."
           ],
           "cards": [
             "NLP-00-01",
@@ -190,6 +190,15 @@
           ]
         },
         {
+          "t": "Using a theorem",
+          "d": [
+            "Verify the applicability condition (regular point, or convex problem), check, conclude in the theorem's direction: necessary conditions only rule out; KKT + convexity confirms a global minimum."
+          ],
+          "cards": [
+            "NLP-00-11a"
+          ]
+        },
+        {
           "t": "Duality",
           "d": [
             "$q(\\lambda, \\mu) = \\inf_xL$ is concave; $q \\le f^*$ for $\\mu \\ge 0$; $d^* \\le f^*$; equality for convex problems with a Slater point and for LPs."
@@ -205,6 +214,15 @@
     {
       "h": "Interior point methods",
       "items": [
+        {
+          "t": "LP optimality",
+          "d": [
+            "KKT ⇔ optimal for an LP: ⇒ by weak duality, ⇐ by strong duality. A general NLP needs a CQ for one direction and convexity for the other; an LP has both."
+          ],
+          "cards": [
+            "NLP-00-12a"
+          ]
+        },
         {
           "t": "Central path",
           "d": [
@@ -442,6 +460,23 @@
       ]
     },
     {
+      "id": "NLP-00-11a",
+      "g": "First pass",
+      "k": "Using a theorem",
+      "q": "Theorems that decide optimality read “under [applicability conditions], A ⇒ B”. (1) What is an applicability condition, what is the condition to check, and what is the unknown? (2) Sort first-order KKT, SONC, the second-order sufficient condition and KKT + convexity: applicability condition, direction, what a pass and a fail allow you to say. (3) In what order does a written answer go?",
+      "pts": [
+        "(1) Applicability: a property of the problem or point you can verify from the data (regular, convex). To check: something computable (KKT, the sign of a quadratic form). Unknown: “is $x^*$ a minimum?”, which only the theorem decides.",
+        "(2) First-order KKT and SONC: applicability regularity (LICQ; Slater for first order); local min ⇒ condition. Fail ⇒ not a local min; pass ⇒ still a candidate. Second-order sufficient: no CQ; KKT and $d^\\top\\nabla^2_{xx}L\\,d > 0$ on $C \\setminus \\{0\\}$ ⇒ strict local min (beyond the slides). KKT + convexity: applicability $f$, $g_i$ convex, $h_j$ affine; KKT ⇒ global min; fail ⇒ no conclusion.",
+        "(3) Verify the applicability condition in its own sentence → check → conclude only in the theorem's direction. If the applicability condition fails, the theorem says nothing about the point."
+      ],
+      "pit": "Convexity is checked once for the problem; regularity at every candidate. With only necessary conditions, add existence: a minimizer exists (compact set) and every point is regular ⇒ it is among the survivors (T7 P1).",
+      "src": "See Second order & duality 04a, 10, 15a",
+      "seen": [
+        "HW3 P2",
+        "T7 P1"
+      ]
+    },
+    {
       "id": "NLP-00-12",
       "g": "First pass",
       "k": "Lagrangian duality",
@@ -458,6 +493,22 @@
       "seen": [
         "HW3 P1"
       ]
+    },
+    {
+      "id": "NLP-00-12a",
+      "g": "First pass",
+      "k": "LP: KKT ⇔ optimal",
+      "q": "LP $\\min c^\\top x$ s.t. $Ax = b$, $x \\ge 0$ with dual $\\max b^\\top\\pi$ s.t. $A^\\top\\pi + z = c$, $z \\ge 0$. (1) Write the KKT conditions. (2) Prove KKT ⇒ optimal. (3) Prove optimal ⇒ KKT. (4) For a general NLP each direction needs its own assumption. Which, and why does an LP get both? (5) What are the two uses of this equivalence?",
+      "pts": [
+        "(1) $Ax = b$; $A^\\top\\pi + z = c$; $x_iz_i = 0$ for all $i$; $x, z \\ge 0$.",
+        "(2) The pair is feasible, so $c^\\top x - b^\\top\\pi = x^\\top z = 0$. Weak duality: every feasible $x'$ has $c^\\top x' \\ge b^\\top\\pi = c^\\top x$, and symmetrically for $\\pi$.",
+        "(3) Optimal ⇒ feasible. Strong duality gives $c^\\top x^* = b^\\top\\pi^*$, so $(x^*)^\\top z^* = 0$; every term is $\\ge 0$, so every $x_i^*z_i^* = 0$.",
+        "(4) Optimal ⇒ KKT needs a CQ; KKT ⇒ optimal needs convexity. Linear constraints give the CQ, and a linear objective with linear constraints is convex.",
+        "(5) Checking KKT certifies a given $(x, \\pi, z)$ without solving; and solving the LP means solving this system, which interior point methods do."
+      ],
+      "pit": "Only $x_iz_i = 0$ is nonlinear, and $x, z \\ge 0$ must be kept: that is the whole difficulty interior point methods address.",
+      "src": "See Interior point methods 03, 05",
+      "seen": []
     },
     {
       "id": "NLP-00-13",
