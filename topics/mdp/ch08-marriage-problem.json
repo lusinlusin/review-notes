@@ -1,0 +1,922 @@
+{
+  "title": "Marriage problem",
+  "notes": [
+    {
+      "h": "The problem",
+      "items": [
+        {
+          "t": "Rules",
+          "d": [
+            "$T$ candidates in random order (all $T!$ equally likely); accept (stop) or reject for good; the last must be accepted. Objective: maximize $P(\\text{accept the best of all})$."
+          ],
+          "cards": [
+            "MDP-08-01"
+          ]
+        },
+        {
+          "t": "Two ranks",
+          "d": [
+            "Absolute rank: among all $T$, hidden. Apparent rank $Z_t$: among the first $t$, seen. Line-up $4,6,3,5,1,2,7$ → $Z = 1,2,1,3,1,2,7$."
+          ],
+          "cards": [
+            "MDP-08-02"
+          ]
+        },
+        {
+          "t": "Baseline",
+          "d": [
+            "Fixed position: $\\tfrac1T$. $T = 3$: accept 1st $\\tfrac13$; reject 1st then first best so far $\\tfrac12$; wait for 3rd $\\tfrac13$."
+          ],
+          "cards": [
+            "MDP-08-03"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Model",
+      "items": [
+        {
+          "t": "Process",
+          "d": [
+            "$X_t = Z_t$ until acceptance, then $\\tau$ (absorbing). $U = \\{\\text{accept}, \\text{reject}\\}$. $X_{t+1} = Z_{t+1}$ after a rejection."
+          ],
+          "cards": [
+            "MDP-08-04"
+          ]
+        },
+        {
+          "t": "Disturbance",
+          "d": [
+            "$Z_t$ uniform on $\\{1, \\dots, t\\}$, independent: the map from orders to rank vectors is a bijection, $T!$ each, so each vector has probability $\\prod_t \\tfrac1t$."
+          ],
+          "cards": [
+            "MDP-08-05"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Reward and DP",
+      "items": [
+        {
+          "t": "Reward",
+          "d": [
+            "Accept with $Z_t = 1$: $P(\\text{best of all} \\mid Z_t = 1) = \\dfrac{1/T}{1/t} = \\dfrac{t}{T}$; with $Z_t \\ne 1$: 0. Given any history: $\\prod_{s=t+1}^{T}\\tfrac{s-1}{s} = \\tfrac{t}{T}$."
+          ],
+          "cards": [
+            "MDP-08-06",
+            "MDP-08-07"
+          ]
+        },
+        {
+          "t": "Equal orders needed",
+          "d": [
+            "Best always last ($2,3,1$ or $3,2,1$): $P(\\text{best} \\mid Z_2 = 1) = 0$ and waiting for the last wins surely."
+          ],
+          "cards": [
+            "MDP-08-08",
+            "MDP-08-24"
+          ]
+        },
+        {
+          "t": "Recursion",
+          "d": [
+            "$V_T(1) = 1$, $V_T(x) = 0$ ($x \\ne 1$).",
+            "$$V_t(1) = \\max\\Big\\{\\frac{t}{T}, \\frac{1}{t+1}\\sum_{z=1}^{t+1}V_{t+1}(z)\\Big\\}, \\quad V_t(x) = \\frac{1}{t+1}\\sum_{z=1}^{t+1}V_{t+1}(z)\\ (x \\ne 1)$$"
+          ],
+          "cards": [
+            "MDP-08-09"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Threshold in time",
+      "items": [
+        {
+          "t": "Two states",
+          "d": [
+            "$$V_t(1) = \\max\\Big\\{\\frac{t}{T}, V_t(\\neg 1)\\Big\\}, \\qquad V_t(\\neg 1) = \\frac{1}{t+1}\\big(V_{t+1}(1) + t\\,V_{t+1}(\\neg 1)\\big)$$",
+            "$V_t(\\neg 1)$ = value of rejecting at $t$. Accept at rank 1 iff $\\tfrac{t}{T} \\ge V_t(\\neg 1)$."
+          ],
+          "cards": [
+            "MDP-08-10"
+          ]
+        },
+        {
+          "t": "T = 7 values",
+          "d": [
+            "$V_t(\\neg 1)$ for $t = 1, \\dots, 7$: $\\tfrac{29}{70}, \\tfrac{29}{70}, \\tfrac{57}{140}, \\tfrac{37}{105}, \\tfrac{11}{42}, \\tfrac17, 0$ $= 0.414, 0.414, 0.407, 0.352, 0.262, 0.143, 0$. Against $\\tfrac{t}{7}$: reject at $t = 1, 2$, accept from 3."
+          ],
+          "cards": [
+            "MDP-08-11",
+            "MDP-08-12"
+          ]
+        },
+        {
+          "t": "Monotonicity",
+          "d": [
+            "$V_t(\\neg 1) \\ge V_{t+1}(\\neg 1)$ (use $V_{t+1}(1) \\ge V_{t+1}(\\neg 1)$); $\\tfrac{t}{T}$ rises: one crossing."
+          ],
+          "cards": [
+            "MDP-08-13"
+          ]
+        },
+        {
+          "t": "Lemma",
+          "d": [
+            "$\\tfrac{t}{T} < V_t(\\neg 1)$ ⇒ $V_t(1) = V_t(\\neg 1)$ ⇒ $V_{t-1}(\\neg 1) = V_t(\\neg 1)$ ⇒ $\\tfrac{t-1}{T} < V_{t-1}(\\neg 1)$: reject at $t-1$ too."
+          ],
+          "cards": [
+            "MDP-08-14"
+          ]
+        },
+        {
+          "t": "Policy",
+          "d": [
+            "Reject for $t \\le t^*$; for $t > t^*$ accept the first $Z_t = 1$; $Z_t \\ne 1$ always rejected except at $T$. Slides 8–9: $t^*$ = last rejection; slide 12 and KE: first acceptance ($+1$)."
+          ],
+          "cards": [
+            "MDP-08-15"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Computing t*",
+      "items": [
+        {
+          "t": "After t*",
+          "d": [
+            "$V_t(\\neg 1) = \\tfrac1T + \\tfrac{t}{t+1}V_{t+1}(\\neg 1)$; $J_t = V_t(\\neg 1)/t = \\tfrac1T\\big(\\tfrac1t + \\dots + \\tfrac{1}{T-1}\\big)$ for $t^* \\le t \\le T-1$."
+          ],
+          "cards": [
+            "MDP-08-16",
+            "MDP-08-21"
+          ]
+        },
+        {
+          "t": "Sum condition",
+          "d": [
+            "$$t^* = \\max\\Big\\{t : \\frac1t + \\frac{1}{t+1} + \\dots + \\frac{1}{T-1} > 1\\Big\\}$$",
+            "Success: $\\tfrac{t^*}{T}\\big(\\tfrac{1}{t^*} + \\dots + \\tfrac{1}{T-1}\\big)$."
+          ],
+          "cards": [
+            "MDP-08-17",
+            "MDP-08-19",
+            "MDP-08-20"
+          ]
+        },
+        {
+          "t": "Large T",
+          "d": [
+            "$\\ln\\tfrac{T}{t^*} \\approx 1$: $t^* \\approx T/e$, success $\\approx 1/e = 0.368$. Exact $t^*$: $T = 3, 4, 5, 7, 10, 20, 100, 1000$ → $1, 1, 2, 2, 3, 7, 37, 368$; success 0.500, 0.458, 0.433, 0.414, 0.399, 0.384, 0.371, 0.368."
+          ],
+          "cards": [
+            "MDP-08-18"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Line-up revisited",
+      "items": [
+        {
+          "t": "Reject the first r",
+          "d": [
+            "$P = \\tfrac{r}{T}\\big(\\tfrac1r + \\dots + \\tfrac{1}{T-1}\\big)$ ($r \\ge 1$), $\\tfrac1T$ for $r = 0$. $T = 7$, $r = 0, \\dots, 6$: 0.143, 0.350, 0.414, 0.407, 0.352, 0.262, 0.143."
+          ],
+          "cards": [
+            "MDP-08-22"
+          ]
+        },
+        {
+          "t": "2 against 3",
+          "d": [
+            "$T = 7$: reject 2 wins in 2088 of 5040 orders, reject 3 in 2052. On the slides' line-up reject 2 takes absolute rank 3 at $t = 3$; reject 3 takes the best at $t = 5$."
+          ],
+          "cards": [
+            "MDP-08-23"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Matroid secretary",
+      "items": [
+        {
+          "t": "Guarantee",
+          "d": [
+            "$\\Gamma$-probability-competitive: each OPT element accepted with probability $\\ge \\tfrac1\\Gamma$; implies $E[\\text{value}] \\ge \\text{OPT}/\\Gamma$. Huang (2026, preprint): $\\Gamma = e$ for every matroid, ordinal, unknown matroid. Rank 1 = marriage problem, so $e$ cannot be beaten."
+          ],
+          "cards": [
+            "MDP-08-25"
+          ]
+        },
+        {
+          "t": "Survival process",
+          "d": [
+            "Keep each element arrived before $p$ with probability $\\ln\\tfrac{\\sigma_e}{p}$. OPT element: $\\tfrac{p}{t}\\ln\\tfrac{t}{p}$; at $t = 1$, $p = \\tfrac1e$: $\\tfrac1e$. Needs $p \\ge \\tfrac1e$."
+          ],
+          "cards": [
+            "MDP-08-26"
+          ]
+        },
+        {
+          "t": "Algorithm",
+          "d": [
+            "Reject before $p$; after, reject if $e \\notin \\text{OPT}(S + e)$, else accept w.p. $\\tfrac{p}{t}\\cdot\\tfrac{\\mathcal D_{S,t,e}(A)}{\\mathcal D_{S,t}(A)}$. Accepted set $\\sim \\mathcal D_{S,t}$ (Theorem 2)."
+          ],
+          "cards": [
+            "MDP-08-27",
+            "MDP-08-28"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Prophet inequality",
+      "items": [
+        {
+          "t": "Ratio",
+          "d": [
+            "$\\alpha(f)$ = worst-case (online value)/$E[\\max X_i]$ with swap fee $f \\times$ cancelled value. $\\alpha(\\infty) = \\tfrac12$, $\\alpha \\to 1$ as $f \\to 0$."
+          ],
+          "cards": [
+            "MDP-08-29"
+          ]
+        },
+        {
+          "t": "Worst instance",
+          "d": [
+            "$X_1 = 1$; $X_2 = 1 + f$ w.p. $\\tfrac{1}{1+f}$: swap and keep tie, ratio $\\tfrac{1+f}{1+2f}$."
+          ],
+          "cards": [
+            "MDP-08-30"
+          ]
+        },
+        {
+          "t": "Closed form",
+          "d": [
+            "$\\alpha = \\dfrac{1}{2 - y_f(1)}$; for $f \\ge 1$, $y_f(t) = (1+f)(t - c_f)^2$, $c_f = \\tfrac{f}{1+f}$, so $\\alpha(f) = \\dfrac{1+f}{1+2f}$."
+          ],
+          "cards": [
+            "MDP-08-32"
+          ]
+        },
+        {
+          "t": "Recall in the DP",
+          "d": [
+            "With recall the state includes the value held. Offers 1, 3, 10 (0.6, 0.3, 0.1), three of them: 4.06 without recall, 4.24 with $f = 1$."
+          ],
+          "cards": [
+            "MDP-08-31"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Worked examples",
+      "items": [
+        {
+          "t": "T = 7",
+          "d": [
+            "$t^* = 2$ (reject the first two); success $\\tfrac{29}{70} = 0.414$ against $\\tfrac17$."
+          ],
+          "cards": [
+            "MDP-08-12",
+            "MDP-08-17"
+          ]
+        },
+        {
+          "t": "T = 4",
+          "d": [
+            "$V_3(\\neg 1) = \\tfrac14$, $V_2(\\neg 1) = \\tfrac{5}{12}$, $V_1(\\neg 1) = \\tfrac{11}{24}$; $t^* = 1$; success $\\tfrac{11}{24} = 0.458$."
+          ],
+          "cards": [
+            "MDP-08-19"
+          ]
+        },
+        {
+          "t": "T = 50",
+          "d": [
+            "$t^* = 18$, success $0.374$."
+          ],
+          "cards": [
+            "MDP-08-20"
+          ]
+        },
+        {
+          "t": "T = 20",
+          "d": [
+            "A best-so-far candidate at $t = 5$ is the best with probability $0.25$; at $t = 15$, $0.75$."
+          ],
+          "cards": [
+            "MDP-08-06"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Recurring patterns",
+      "items": [
+        {
+          "t": "Backward with two numbers",
+          "d": [
+            "From $V_T(1) = 1$, $V_T(\\neg 1) = 0$: compute $V_t(\\neg 1)$, compare with $\\tfrac{t}{T}$; the first “reject” going back is $t^*$, and earlier values all equal $V_{t^*}(\\neg 1)$."
+          ],
+          "cards": [
+            "MDP-08-11",
+            "MDP-08-19",
+            "MDP-08-33"
+          ]
+        },
+        {
+          "t": "Shape before numbers",
+          "d": [
+            "Prove “reject at $t$ ⇒ reject at $t - 1$”, conclude a threshold, then solve the recursion in closed form after the threshold."
+          ],
+          "cards": [
+            "MDP-08-14",
+            "MDP-08-16"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Notation traps",
+      "items": [
+        {
+          "t": "t*",
+          "d": [
+            "Slides 8–9: last rejection time. Slide 12, KE and the Optimal stopping topic: first acceptance time, one larger."
+          ],
+          "cards": [
+            "MDP-08-15",
+            "MDP-08-34"
+          ]
+        },
+        {
+          "t": "J and V",
+          "d": [
+            "$J_t = V_t(\\neg 1)/t$ here; asset selling's $J_t$ is different; KE's $J_t$ is the value function and KE's $V_t$ is $T$ times this $J_t$."
+          ],
+          "cards": [
+            "MDP-08-16",
+            "MDP-08-34"
+          ]
+        }
+      ]
+    },
+    {
+      "h": "Slide errata",
+      "items": [
+        {
+          "t": "s.5",
+          "d": [
+            "$X = \\{1, \\dots, T\\} \\cup \\{\\tau\\}$, but at time $t$ only $1, \\dots, t$ occur; $X_0 = 1$ is a fictitious start."
+          ],
+          "cards": [
+            "MDP-08-04"
+          ]
+        },
+        {
+          "t": "s.6–7",
+          "d": [
+            "The recursion has no range ($t = T-1, \\dots, 1$); slide 7 skips the chain $\\tfrac{t-1}{T} < \\tfrac{t}{T} < V_t(\\neg 1) = V_{t-1}(\\neg 1)$."
+          ],
+          "cards": [
+            "MDP-08-09",
+            "MDP-08-14"
+          ]
+        },
+        {
+          "t": "s.9",
+          "d": [
+            "“$\\forall t > t^*$” should be $t \\ge t^*$; “$V_T = 0$” means $V_T(\\neg 1) = 0$; “$V_t > \\tfrac1T$” and “$V_{t^*} \\approx \\tfrac1T$” should be $J_t$, $J_{t^*}$."
+          ],
+          "cards": [
+            "MDP-08-16",
+            "MDP-08-17"
+          ]
+        },
+        {
+          "t": "s.11–12",
+          "d": [
+            "“Test the first 3” is $T/e$ rounded up; the exact optimum rejects 2. The table prints 0.85 and 0.40 for 0.857 and 0.407."
+          ],
+          "cards": [
+            "MDP-08-23",
+            "MDP-08-12"
+          ]
+        },
+        {
+          "t": "KE p75",
+          "d": [
+            "The $T = 7$ table header reads 1, 2, 3, 4, 5, 7, 7; the sixth entry should be 6."
+          ],
+          "cards": [
+            "MDP-08-11"
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "MDP-08-01",
+      "g": "The problem",
+      "k": "Rules and objective",
+      "q": "A bride sees $T$ bachelors one at a time. (1) State the five rules of the marriage problem. (2) State the objective. (3) What is new compared with asset selling, where the offer is seen when you stop?",
+      "pts": [
+        "(1) Random order, all $T!$ orders equally likely; at each time she can rank those already seen; each one is accepted (the process stops) or rejected; a rejected one cannot be recalled; the last must be accepted.",
+        "(2) Maximize the probability of accepting the best of all $T$.",
+        "(3) The quantity that matters (is he the best of all?) is not known when she stops. The DP uses its conditional probability given what she has seen as the stopping reward."
+      ],
+      "pit": "Also called the secretary problem.",
+      "src": "S8 s.2",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-02",
+      "g": "The problem",
+      "k": "Absolute vs apparent",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. The absolute rank is a candidate's position among all $T$ (1 = best); the apparent rank $Z_t$ is the position of the $t$-th candidate among the first $t$. (1) Which one does the bride see at time $t$? (2) For the line-up with absolute ranks $4, 6, 3, 5, 1, 2, 7$ write $Z_1, \\dots, Z_7$. (3) At which times is the candidate best so far, and which of them is the best of all?",
+      "pts": [
+        "(1) Only $Z_t$. The absolute rank is known only after all $T$ have been seen.",
+        "(2) $Z = (1, 2, 1, 3, 1, 2, 7)$. Example: at $t = 4$ the absolute rank 5 is third among $3, 4, 5, 6$.",
+        "(3) $Z_t = 1$ at $t = 1, 3, 5$; only the one at $t = 5$ (absolute rank 1) is the best of all, and she cannot tell the three apart when they appear."
+      ],
+      "pit": "“Rank 1” in the state always means apparent rank 1 (best so far), never best of all.",
+      "src": "S8 s.3–4",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-03",
+      "g": "The problem",
+      "k": "Baseline and T = 3",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. (1) She fixes a position $k$ in advance and accepts whoever is there. What is the success probability? (2) For $T = 3$ compare by enumerating the 6 orders: accept the 1st; reject the 1st, then accept the first best so far; wait for the 3rd. (3) What does this show?",
+      "pts": [
+        "(1) $\\tfrac1T$ for every $k$: the best is equally likely to be at each position (an open-loop policy).",
+        "(2) Accept the 1st: wins in 2 orders, $\\tfrac13$. Reject the 1st, then first best so far: wins in 3 ($2,1,3$; $2,3,1$; $3,1,2$), $\\tfrac12$. Wait for the 3rd: 2 orders, $\\tfrac13$.",
+        "(3) Using the apparent ranks raises $\\tfrac13$ to $\\tfrac12$. The rest of the problem finds the best such rule for any $T$."
+      ],
+      "pit": "In the order $3, 2, 1$ the middle rule takes the 2nd (best so far, absolute rank 2) and loses.",
+      "src": "S8 s.2 · KE p72",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-04",
+      "g": "Model",
+      "k": "Process model",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. Write the problem as a controlled process: (1) the disturbance, (2) the states, (3) the actions, (4) the dynamics, (5) the distribution of the disturbance.",
+      "pts": [
+        "(1) $Z_t$ = apparent rank of the $t$-th candidate, in $\\{1, \\dots, t\\}$.",
+        "(2) $X_t = Z_t$ while all of the first $t$ were rejected; $X_t = \\tau$ (married, absorbing) once one was accepted.",
+        "(3) $U = \\{\\text{accept}, \\text{reject}\\}$; accept takes the $t$-th candidate and stops.",
+        "(4) $X_{t+1} = Z_{t+1}$ if $X_t \\ne \\tau$ and $U_t = $ reject; $X_{t+1} = \\tau$ if $X_t = \\tau$ or $U_t = $ accept.",
+        "(5) $Z_{t+1}$ is uniform on $\\{1, \\dots, t+1\\}$ and independent of all past disturbances."
+      ],
+      "pit": "The slides write $X = \\{1, \\dots, T\\} \\cup \\{\\tau\\}$ and $X_0 = 1$: at time $t$ only $1, \\dots, t$ occur, and $X_0 = 1$ is a fictitious start with no decision. The $Z_t$ are independent but not identically distributed.",
+      "src": "S8 s.5 · KE p72–73",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-05",
+      "g": "Model",
+      "k": "Why Z is uniform",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $Z_t$ is the apparent rank of the $t$-th candidate. (1) Why is $Z_t$ uniform on $\\{1, \\dots, t\\}$? (2) Prove that $Z_1, \\dots, Z_T$ are independent. (3) What does this imply for the dynamics, compared with asset selling?",
+      "pts": [
+        "(1) Among the first $t$, the newcomer is equally likely to be the best, second best, …, worst: $P(Z_t = z) = \\tfrac1t$.",
+        "(2) Each order gives one vector $(Z_1, \\dots, Z_T)$ and can be rebuilt from it (place candidate $t$ at position $Z_t$ among the first $t$). There are $1 \\cdot 2 \\cdots T = T!$ vectors, as many as orders, so each has probability $\\tfrac{1}{T!} = \\prod_t \\tfrac1t$, the product of the marginals.",
+        "(3) The next state does not depend on the current state, as in asset selling with i.i.d. offers."
+      ],
+      "pit": "The slides state uniformity and independence without a reason; both come from “all orders equally likely”.",
+      "src": "S8 s.5 · KE p73",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-06",
+      "g": "Reward and DP",
+      "k": "Reward t/T",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. Let $A$ = “the $t$-th candidate is the best of all $T$” and $B$ = “he is the best of the first $t$” ($Z_t = 1$). (1) What is the reward for accepting when $Z_t \\ne 1$? (2) Compute $P(A \\mid B)$. (3) Check it for $T = 3$, $t = 2$.",
+      "pts": [
+        "(1) 0: he is not even the best of the first $t$.",
+        "(2) $P(A) = \\tfrac1T$, $P(B) = \\tfrac1t$, and $A \\subseteq B$, so $P(A \\mid B) = \\dfrac{P(A)}{P(B)} = \\dfrac{t}{T}$.",
+        "(3) $Z_2 = 1$ in the orders $2,1,3$; $3,1,2$; $3,2,1$; the 2nd is the best of all in two of them: $\\tfrac23$."
+      ],
+      "pit": "The later a best-so-far candidate appears, the more likely he is the best of all; for $T = 7$, $t = 3$: $\\tfrac37 = 0.429$.",
+      "src": "S8 s.6 · KE p73–74",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-07",
+      "g": "Reward and DP",
+      "k": "History is irrelevant",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $Z_t$ is the apparent rank of the $t$-th candidate. (1) Write “the $t$-th candidate is the best of all” in terms of $Z_t, \\dots, Z_T$. (2) Show that $P(\\text{best of all} \\mid Z_1, \\dots, Z_{t-1}, Z_t = 1) = \\tfrac{t}{T}$. (3) Why can a probability be used as the reward?",
+      "pts": [
+        "(1) $Z_t = 1$ and $Z_s \\ne 1$ for all $s = t+1, \\dots, T$: nobody after him is best so far.",
+        "(2) The later $Z_s$ are independent of the history, so the probability is $$\\prod_{s=t+1}^{T}\\frac{s-1}{s} = \\frac{t}{t+1}\\cdot\\frac{t+1}{t+2}\\cdots\\frac{T-1}{T} = \\frac{t}{T}$$",
+        "(3) The objective is the expectation of “1 if the accepted one is the best, 0 otherwise”. The DP needs only expected rewards, and the expected value given what she has seen is $\\tfrac{t}{T}$ or 0."
+      ],
+      "pit": "",
+      "src": "S8 s.6 · KE p74",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-08",
+      "g": "Reward and DP",
+      "k": "Unequal orders",
+      "q": "Three candidates, but the best always comes last: only the orders $2, 3, 1$ and $3, 2, 1$ occur, each with probability $\\tfrac12$. (1) What is $P(\\text{best of all} \\mid Z_2 = 1)$? (2) What is the best rule and its success probability? (3) How does “reject the 1st, then accept the first best so far” do?",
+      "pts": [
+        "(1) 0, not $\\tfrac23$: in $3, 2, 1$ the 2nd has $Z_2 = 1$ but is never the best.",
+        "(2) Wait for the last candidate: success probability 1.",
+        "(3) It takes the 2nd in $3, 2, 1$ and loses: $\\tfrac12$."
+      ],
+      "pit": "The reward $\\tfrac{t}{T}$, the uniform $Z_t$ and their independence all rest on “all orders equally likely”.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-09",
+      "g": "Reward and DP",
+      "k": "Value recursion",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $V_t(x)$ is the maximum probability of choosing the best when the state at time $t$ is $x$ and nobody has been accepted. (1) Give $V_T(x)$. (2) Write the recursion for $x = 1$. (3) For $x = 2, \\dots, t$. (4) Why has the second line no max?",
+      "pts": [
+        "(1) The last must be accepted: $V_T(1) = 1$, $V_T(x) = 0$ for $x = 2, \\dots, T$.",
+        "(2) $$V_t(1) = \\max\\Big\\{\\frac{t}{T},\\ \\frac{1}{t+1}\\sum_{z=1}^{t+1}V_{t+1}(z)\\Big\\}$$",
+        "(3) $$V_t(x) = \\frac{1}{t+1}\\sum_{z=1}^{t+1}V_{t+1}(z)$$",
+        "(4) The full line is $\\max\\{0, \\cdot\\}$, and the value of rejecting is a probability, so $\\ge 0$: a candidate who is not best so far is rejected."
+      ],
+      "pit": "The recursion runs for $t = T-1, \\dots, 1$; the slides give no range.",
+      "src": "S8 s.6 · KE p75",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-10",
+      "g": "Threshold in time",
+      "k": "Two states: 1 and ¬1",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. In the recursion the right-hand side for $x \\ne 1$ is the same number; call it $V_t(\\neg 1)$. (1) Why does it not depend on $x$? (2) Split $\\sum_{z=1}^{t+1}V_{t+1}(z)$ and write the two recursions. (3) Interpret $V_t(\\neg 1)$ and the weights in the second recursion.",
+      "pts": [
+        "(1) For $x \\ne 1$ accepting gives 0, and after a rejection the next state $Z_{t+1}$ has a distribution that does not depend on $x$.",
+        "(2) One term with $z = 1$ and $t$ terms with $z \\ne 1$: $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$ and $V_t(\\neg 1) = \\tfrac{1}{t+1}\\big(V_{t+1}(1) + t\\,V_{t+1}(\\neg 1)\\big)$, with $V_T(1) = 1$, $V_T(\\neg 1) = 0$. ",
+        "(3) $V_t(\\neg 1)$ is the value of rejecting at $t$, from any state. After a rejection the next one is best so far with probability $\\tfrac{1}{t+1}$, not with probability $\\tfrac{t}{t+1}$."
+      ],
+      "pit": "$\\neg 1$ is one symbol for all states $2, \\dots, t$.",
+      "src": "S8 s.7 · KE p75",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-11",
+      "g": "Threshold in time",
+      "k": "T = 7: t = 6, 5, 4",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$ and $V_t(\\neg 1) = \\tfrac{1}{t+1}\\big(V_{t+1}(1) + t\\,V_{t+1}(\\neg 1)\\big)$, with $V_T(1) = 1$, $V_T(\\neg 1) = 0$. Take $T = 7$. (1) Compute $V_6(\\neg 1)$ and the action at rank 1. (2) $V_5(\\neg 1)$ and the action. (3) $V_4(\\neg 1)$ and the action.",
+      "pts": [
+        "(1) $V_6(\\neg 1) = \\tfrac17(1 + 6 \\cdot 0) = \\tfrac17$; $\\tfrac67 > \\tfrac17$: accept, $V_6(1) = \\tfrac67$.",
+        "(2) $V_5(\\neg 1) = \\tfrac16\\big(\\tfrac67 + 5 \\cdot \\tfrac17\\big) = \\tfrac{11}{42} = 0.262$; $\\tfrac57 = 0.714$: accept, $V_5(1) = \\tfrac57$.",
+        "(3) $V_4(\\neg 1) = \\tfrac15\\big(\\tfrac57 + 4 \\cdot \\tfrac{11}{42}\\big) = \\tfrac{37}{105} = 0.352$; $\\tfrac47 = 0.571$: accept."
+      ],
+      "pit": "",
+      "src": "S8 s.12 · KE p75",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-12",
+      "g": "Threshold in time",
+      "k": "T = 7: t = 3, 2, 1",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$ and $V_t(\\neg 1) = \\tfrac{1}{t+1}\\big(V_{t+1}(1) + t\\,V_{t+1}(\\neg 1)\\big)$, with $V_T(1) = 1$, $V_T(\\neg 1) = 0$. Take $T = 7$; from the later steps $V_4(1) = \\tfrac47$ and $V_4(\\neg 1) = \\tfrac{37}{105}$. (1) Compute $V_3(\\neg 1)$ and the action at rank 1. (2) $V_2(\\neg 1)$ and the action. (3) $V_1(\\neg 1)$, $t^*$ and the success probability.",
+      "pts": [
+        "(1) $V_3(\\neg 1) = \\tfrac14\\big(\\tfrac47 + 3 \\cdot \\tfrac{37}{105}\\big) = \\tfrac{57}{140} = 0.407$; $\\tfrac37 = 0.429 > 0.407$: accept, $V_3(1) = \\tfrac37$.",
+        "(2) $V_2(\\neg 1) = \\tfrac13\\big(\\tfrac37 + 2 \\cdot \\tfrac{57}{140}\\big) = \\tfrac{29}{70} = 0.414$; $\\tfrac27 = 0.286 < 0.414$: reject, $V_2(1) = \\tfrac{29}{70}$.",
+        "(3) $V_1(\\neg 1) = \\tfrac12\\big(\\tfrac{29}{70} + \\tfrac{29}{70}\\big) = \\tfrac{29}{70}$; $\\tfrac17 < 0.414$: reject. $t^* = 2$: reject the first two, then accept the first best so far; success $\\tfrac{29}{70} = 0.414$, $2.9$ times $\\tfrac17$."
+      ],
+      "pit": "Slide 12 prints 0.85 and 0.40 for $\\tfrac67 = 0.857$ and $\\tfrac{57}{140} = 0.407$ (cut off, not rounded).",
+      "src": "S8 s.12 · KE p75",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-13",
+      "g": "Threshold in time",
+      "k": "V(¬1) never rises",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$ and $V_t(\\neg 1) = \\tfrac{1}{t+1}\\big(V_{t+1}(1) + t\\,V_{t+1}(\\neg 1)\\big)$, with $V_T(1) = 1$, $V_T(\\neg 1) = 0$. (1) Show that going back in time $V_t(\\neg 1)$ does not fall: $V_t(\\neg 1) \\ge V_{t+1}(\\neg 1)$. (2) What does $\\tfrac{t}{T}$ do going back? (3) What follows for the comparison at rank 1?",
+      "pts": [
+        "(1) By the first recursion $V_{t+1}(1) \\ge V_{t+1}(\\neg 1)$; in the second, $V_t(\\neg 1) \\ge \\tfrac{1}{t+1}\\big(V_{t+1}(\\neg 1) + t\\,V_{t+1}(\\neg 1)\\big) = V_{t+1}(\\neg 1)$.",
+        "(2) It falls.",
+        "(3) Going forward, $\\tfrac{t}{T}$ rises and the value of rejecting never rises, so they cross once. The next card proves the switch does not reverse."
+      ],
+      "pit": "",
+      "src": "S8 s.7",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-14",
+      "g": "Threshold in time",
+      "k": "Reject at t ⇒ at t − 1",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$ and $V_t(\\neg 1) = \\tfrac{1}{t+1}\\big(V_{t+1}(1) + t\\,V_{t+1}(\\neg 1)\\big)$, with $V_T(1) = 1$, $V_T(\\neg 1) = 0$. Assume $\\tfrac{t}{T} < V_t(\\neg 1)$: at time $t$ rejecting a best-so-far candidate is strictly better. (1) What is $V_t(1)$? (2) Show $V_{t-1}(\\neg 1) = V_t(\\neg 1)$. (3) Conclude the decision at $t - 1$. (4) State the result and its contrapositive.",
+      "pts": [
+        "(1) $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\} = V_t(\\neg 1)$.",
+        "(2) $V_{t-1}(\\neg 1) = \\tfrac1t\\big(V_t(1) + (t-1)V_t(\\neg 1)\\big) = \\tfrac1t \\cdot t\\,V_t(\\neg 1) = V_t(\\neg 1)$.",
+        "(3) $\\tfrac{t-1}{T} < \\tfrac{t}{T} < V_t(\\neg 1) = V_{t-1}(\\neg 1)$, so $V_{t-1}(1) = V_{t-1}(\\neg 1)$: reject at $t - 1$ too.",
+        "(4) Not worth accepting one who is best out of $t$ ⇒ not worth accepting one who is best out of $t - 1$. Contrapositive: worth accepting at $t - 1$ ⇒ worth accepting at $t$."
+      ],
+      "pit": "Slide 7 leaves out the chain in (3). In words: if she rejects at $t$ whatever she sees, what she sees at $t$ does not matter.",
+      "src": "S8 s.7–8 · KE p75–76",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-15",
+      "g": "Threshold in time",
+      "k": "Threshold policy",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. (1) State the shape of the optimal policy. (2) Define $t^*$ in the slides' convention and in KE's. (3) For $T = 7$, give $t^*$ in both. (4) Compare with the threshold in asset selling.",
+      "pts": [
+        "(1) Times at which a rank-1 candidate is rejected form a block $1, \\dots, t^*$: reject everyone for $t \\le t^*$; for $t > t^*$ accept the first candidate with $Z_t = 1$; a candidate with $Z_t \\ne 1$ is rejected unless $t = T$.",
+        "(2) Slides 8–9: $t^*$ = last rejection time (accept iff $t > t^*$). Slide 12 and KE: first acceptance time (accept iff $t \\ge t^*$), one larger.",
+        "(3) $t^* = 2$ (slides 8–9) and $t^* = 3$ (slide 12, KE): both mean reject the first two.",
+        "(4) Asset selling: a threshold on the value, one per time (sell if $x > \\alpha_t$). Here only rank 1 can pay, and the threshold is on time."
+      ],
+      "pit": "Always state the convention. The Optimal stopping topic uses KE's (first acceptance time).",
+      "src": "S8 s.8–9, s.12 · KE p76",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-16",
+      "g": "Computing t*",
+      "k": "Solving after t*",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$ and $V_t(\\neg 1) = \\tfrac{1}{t+1}\\big(V_{t+1}(1) + t\\,V_{t+1}(\\neg 1)\\big)$, with $V_T(1) = 1$, $V_T(\\neg 1) = 0$. $t^*$ is the last time a rank-1 candidate is rejected. (1) What is $V_{t+1}(1)$ for $t \\ge t^*$? (2) Put it into the recursion for $V_t(\\neg 1)$. (3) With $J_t = V_t(\\neg 1)/t$, solve for $J_t$.",
+      "pts": [
+        "(1) $t + 1 > t^*$, so accepting is optimal there: $V_{t+1}(1) = \\tfrac{t+1}{T}$.",
+        "(2) $V_t(\\neg 1) = \\tfrac{1}{t+1}\\big(\\tfrac{t+1}{T} + t\\,V_{t+1}(\\neg 1)\\big) = \\tfrac1T + \\tfrac{t}{t+1}V_{t+1}(\\neg 1)$.",
+        "(3) Dividing by $t$: $J_t = \\tfrac{1}{tT} + J_{t+1}$ with $J_T = 0$, so $$J_t = \\frac1T\\Big(\\frac1t + \\frac{1}{t+1} + \\dots + \\frac{1}{T-1}\\Big), \\quad t^* \\le t \\le T-1$$"
+      ],
+      "pit": "Slide 9 writes “$\\forall t > t^*$”; the recursions hold for $t \\ge t^*$, and $t = t^*$ is needed. This $J_t$ is not the $J_t$ of asset selling; KE's $V_t$ is $T$ times it.",
+      "src": "S8 s.9 · KE p76",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-17",
+      "g": "Computing t*",
+      "k": "Sum condition",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. For $t \\ge t^*$: $V_t(\\neg 1) = \\tfrac{t}{T}\\big(\\tfrac1t + \\dots + \\tfrac{1}{T-1}\\big)$, and a rank-1 candidate is rejected iff $V_t(\\neg 1) > \\tfrac{t}{T}$. (1) Characterize $t^*$ by a sum. (2) Apply it to $T = 7$. (3) Give the success probability for $T = 7$.",
+      "pts": [
+        "(1) $V_t(\\neg 1) > \\tfrac{t}{T}$ ⇔ the sum from $t$ exceeds 1. It does at $t^*$ and does not at any $t > t^*$: $$t^* = \\max\\Big\\{t : \\tfrac1t + \\tfrac{1}{t+1} + \\dots + \\tfrac{1}{T-1} > 1\\Big\\}$$",
+        "(2) From $t = 3$: $\\tfrac13 + \\tfrac14 + \\tfrac15 + \\tfrac16 = 0.95 \\le 1$; from $t = 2$: $1.45 > 1$. So $t^* = 2$.",
+        "(3) Everyone up to $t^*$ is rejected, so it is $V_{t^*}(\\neg 1) = \\tfrac27 \\times 1.45 = \\tfrac{29}{70} = 0.414$."
+      ],
+      "pit": "Slide 9 writes “largest $t$ for which $V_t > \\tfrac1T$”; it should be $J_t > \\tfrac1T$.",
+      "src": "S8 s.9 · KE p76–77",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-18",
+      "g": "Computing t*",
+      "k": "t* ≈ T/e",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $t^*$ is the largest $t$ with $\\tfrac1t + \\dots + \\tfrac{1}{T-1} > 1$. (1) Approximate the sum by an integral and find $t^*$ for large $T$. (2) Give the success probability for large $T$. (3) Is $T/e$ rounded up or down to get $t^*$? (4) The slides' age example.",
+      "pts": [
+        "(1) $\\sum_{s=t^*}^{T-1}\\tfrac1s \\approx \\int_{t^*}^{T}\\tfrac{ds}{s} = \\ln\\tfrac{T}{t^*} \\approx 1$, so $t^* \\approx \\tfrac{T}{e} \\approx 0.368\\,T$.",
+        "(2) $\\tfrac{t^*}{T}\\big(\\tfrac{1}{t^*} + \\dots + \\tfrac{1}{T-1}\\big) \\approx \\tfrac1e \\cdot 1 = 0.368$.",
+        "(3) Neither always: $T = 7$, $T/e = 2.58$, $t^* = 2$ (down); $T = 100$, $T/e = 36.79$, $t^* = 37$ (up). Test both neighbours with the sum.",
+        "(4) Ages 18 to 40 (22 years): not before $18 + 0.368 \\times 22 \\approx 26$."
+      ],
+      "pit": "The success probability falls towards $1/e$ as $T$ grows: 0.500, 0.458, 0.433, 0.414 for $T = 3, 4, 5, 7$.",
+      "src": "S8 s.9–10 · KE p77",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-19",
+      "g": "Computing t*",
+      "k": "T = 4 by recursion",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $V_t(1) = \\max\\{\\tfrac{t}{T}, V_t(\\neg 1)\\}$ and $V_t(\\neg 1) = \\tfrac{1}{t+1}\\big(V_{t+1}(1) + t\\,V_{t+1}(\\neg 1)\\big)$, with $V_T(1) = 1$, $V_T(\\neg 1) = 0$. Take $T = 4$. (1) Compute $V_3$ and the action at rank 1. (2) $V_2$. (3) $V_1$, $t^*$ and the success probability. (4) Check with the sum condition.",
+      "pts": [
+        "(1) $V_3(\\neg 1) = \\tfrac14$; $\\tfrac34 > \\tfrac14$: accept, $V_3(1) = \\tfrac34$.",
+        "(2) $V_2(\\neg 1) = \\tfrac13\\big(\\tfrac34 + 2 \\cdot \\tfrac14\\big) = \\tfrac{5}{12} = 0.417$; $\\tfrac24 = 0.5 > 0.417$: accept, $V_2(1) = \\tfrac12$.",
+        "(3) $V_1(\\neg 1) = \\tfrac12\\big(\\tfrac12 + \\tfrac{5}{12}\\big) = \\tfrac{11}{24} = 0.458$; $\\tfrac14 < 0.458$: reject. $t^* = 1$: reject the first; success $\\tfrac{11}{24}$.",
+        "(4) $\\tfrac12 + \\tfrac13 = 0.833 \\le 1$; $1 + \\tfrac12 + \\tfrac13 = 1.833 > 1$: $t^* = 1$."
+      ],
+      "pit": "In the Optimal stopping topic the same answer reads $t^* = 2$ (KE's first-acceptance convention).",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-20",
+      "g": "Computing t*",
+      "k": "T = 50",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. $T = 50$, and $\\tfrac{1}{18} + \\dots + \\tfrac{1}{49} = 1.0397$, $\\tfrac{1}{19} + \\dots + \\tfrac{1}{49} = 0.9841$. (1) What rule does $t^* \\approx T/e$ suggest? (2) Find the exact $t^*$. (3) Give the success probability.",
+      "pts": [
+        "(1) $50/e = 18.39$: reject about the first 18, then accept the first best so far.",
+        "(2) The sum from 18 exceeds 1 and the sum from 19 does not, so $t^* = 18$.",
+        "(3) $\\tfrac{18}{50} \\times 1.0397 = 0.374$."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-21",
+      "g": "Line-up revisited",
+      "k": "Formula fails at t = 1",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. For $T = 7$, $t^* = 2$ and the table gives $V_1(\\neg 1) = 0.414$, but the formula $V_t(\\neg 1) = \\tfrac{t}{T}\\big(\\tfrac1t + \\dots + \\tfrac{1}{T-1}\\big)$ gives 0.350 at $t = 1$. (1) Which is right? (2) Why does the formula fail at $t = 1$? (3) What does 0.350 mean?",
+      "pts": [
+        "(1) 0.414.",
+        "(2) The formula used $V_{t+1}(1) = \\tfrac{t+1}{T}$, which needs $t + 1 > t^*$, i.e. $t \\ge 2$. At $t = 1$, $V_2(1) = V_2(\\neg 1) = 0.414$ (reject), so $V_1(\\neg 1) = \\tfrac12(0.414 + 0.414) = 0.414$.",
+        "(3) The success probability of “reject only the first, then accept the first best so far”."
+      ],
+      "pit": "Slide 12 shows “–” for $V_1(\\neg 1)$ because state $\\neg 1$ cannot occur at $t = 1$; 0.414 is still the value of rejecting the first.",
+      "src": "S8 s.12",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-22",
+      "g": "Line-up revisited",
+      "k": "Reject the first r",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. Rule $R_r$: reject the first $r \\ge 1$, then accept the first best so far. (1) When does $R_r$ win? (2) Derive its success probability. (3) Give the values for $T = 7$, $r = 1, 2, 3$.",
+      "pts": [
+        "(1) The best of all is at some $s > r$, and the best of the first $s - 1$ is among the first $r$ (so nobody in $r+1, \\dots, s-1$ is best so far).",
+        "(2) $P(\\text{best at } s) = \\tfrac1T$; given that, the best of the first $s - 1$ is among the first $r$ with probability $\\tfrac{r}{s-1}$: $$P(R_r \\text{ wins}) = \\sum_{s=r+1}^{T}\\frac1T\\cdot\\frac{r}{s-1} = \\frac{r}{T}\\Big(\\frac1r + \\dots + \\frac{1}{T-1}\\Big)$$",
+        "(3) $r = 1$: 0.350; $r = 2$: 0.414 (optimal); $r = 3$: 0.407."
+      ],
+      "pit": "For $r = 0$ (accept the first) it is $\\tfrac1T$. For $r \\ge t^*$ the formula equals $V_r(\\neg 1)$.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-23",
+      "g": "Line-up revisited",
+      "k": "Reject 2 or 3?",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. For $T = 7$ slide 11 says “test the first $\\lceil 7 \\times 0.368 \\rceil = 3$”, while the exact DP rejects 2. On the line-up with absolute ranks $4, 6, 3, 5, 1, 2, 7$ (apparent ranks $1, 2, 1, 3, 1, 2, 7$): (1) What does each rule do, and which wins? (2) Does this contradict the optimality of rejecting 2? (3) Where does slide 11's 3 come from?",
+      "pts": [
+        "(1) Reject 2: accepts at $t = 3$ (best so far, absolute rank 3), loses. Reject 3: rejects 4 ($Z_4 = 3$), accepts at $t = 5$ (absolute rank 1), wins.",
+        "(2) No. Optimal means largest probability over all 5040 orders: reject 2 wins in 2088 (0.414), reject 3 in 2052 (0.407). This line-up is one order where 3 wins.",
+        "(3) From $t^* \\approx T/e = 2.58$ rounded up; the exact threshold is 2."
+      ],
+      "pit": "A rule is judged by its probability of success, not by one realization.",
+      "src": "S8 s.11–12",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-24",
+      "g": "Line-up revisited",
+      "k": "Equal orders: uses",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. Name the three places where “all $T!$ orders are equally likely” is used, and what each gives.",
+      "pts": [
+        "(1) $Z_{t+1}$ is uniform on $\\{1, \\dots, t+1\\}$: the expectation in the recursion is a plain average.",
+        "(2) $Z_{t+1}$ is independent of the past: the current apparent rank and $t$ are enough as the state.",
+        "(3) The best is equally likely at each position, and with (1): $P(\\text{best of all} \\mid Z_t = 1) = \\tfrac{t}{T}$."
+      ],
+      "pit": "If orders are not equally likely, set up the reward and the recursion again from scratch.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-25",
+      "g": "Matroid secretary",
+      "k": "Problem and guarantee",
+      "q": "Matroid secretary problem: elements with hidden values arrive in random order; each is accepted or rejected on the spot, and the accepted set must stay independent in a matroid (e.g. “at most $k$ elements”). (1) What do “ordinal” and “unknown matroid” mean? (2) Define $\\Gamma$-probability-competitive. (3) Why does it imply $\\Gamma$-competitive (expected value $\\ge$ OPT$/\\Gamma$)? (4) What is the rank-1 case, and why can no constant below $e$ work?",
+      "pts": [
+        "(1) Ordinal: the algorithm can only compare two elements, not see values. Unknown matroid: it can only ask whether a set of arrived elements is independent.",
+        "(2) Every element of the optimal set OPT is accepted with probability $\\ge \\tfrac1\\Gamma$.",
+        "(3) Sum over OPT: $E[\\text{value}] \\ge \\tfrac1\\Gamma\\sum_{e \\in \\text{OPT}}v_e$. At most 2 of values 10, 7, 4: OPT = $\\{10, 7\\}$, so $\\ge \\tfrac{17}{e} = 6.25$. The converse fails.",
+        "(4) Choosing one element: the marriage problem, where $\\tfrac1e$ is the best possible as $T \\to \\infty$."
+      ],
+      "pit": "Huang (2026) claims $e$-probability-competitive for every matroid. It is a preprint, not peer-reviewed.",
+      "src": "Huang 2026 §1–2",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-26",
+      "g": "Matroid secretary",
+      "k": "Survival process",
+      "q": "Matroid secretary in continuous time: each element arrives at an independent uniform time in $[0, 1]$; $p$ is a cut-off time. The survival process keeps each element that arrived before $p$ independently with probability $\\ln\\tfrac{\\sigma_e}{p}$, where $\\sigma_e$ is the first time $e$ is spanned by a larger arrived element ($\\sigma_e = t$ if never). (1) Give $P(e \\text{ survives})$ for $e \\in \\text{OPT}(S)$ at time $t$. (2) Evaluate at $t = 1$, $p = \\tfrac1e$. (3) Why $p \\ge \\tfrac1e$, and why exactly $\\tfrac1e$? (4) Is it an online algorithm?",
+      "pts": [
+        "(1) $\\sigma_e = t$ (OPT elements are never spanned by larger ones); arrived before $p$ with probability $\\tfrac{p}{t}$; so $\\tfrac{p}{t}\\ln\\tfrac{t}{p}$ (Lemma 3.1).",
+        "(2) $\\tfrac1e \\cdot \\ln e = \\tfrac1e$.",
+        "(3) A probability needs $\\ln\\tfrac1p \\le 1$, i.e. $p \\ge \\tfrac1e$. $p\\ln\\tfrac1p$ has derivative $\\ln\\tfrac1p - 1 \\le 0$ on $[\\tfrac1e, 1]$, so take the smallest $p$. $p = 0.5$ would give $0.5\\ln 2 = 0.347$.",
+        "(4) No: it keeps elements that arrived before $p$ with probabilities that depend on later arrivals. It only defines a target distribution."
+      ],
+      "pit": "",
+      "src": "Huang 2026 §3",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-27",
+      "g": "Matroid secretary",
+      "k": "Online algorithm",
+      "q": "Huang's online algorithm (cut-off $p = \\tfrac1e$, arrival times uniform on $[0, 1]$, $S$ = arrived elements, $A$ = accepted set). (1) State its rule. (2) What does Theorem 2 say? (3) How does Theorem 1 follow? (4) Compare the elements each process selects.",
+      "pts": [
+        "(1) Reject everything before $p$. At $t > p$: reject $e$ if $e \\notin \\text{OPT}(S + e)$; otherwise accept with probability $\\tfrac{p}{t}\\cdot\\tfrac{\\mathcal D_{S,t,e}(A)}{\\mathcal D_{S,t}(A)}$.",
+        "(2) For every $t \\in [p, 1]$, given $S$, the accepted set has the same distribution $\\mathcal D_{S,t}$ as the survival process.",
+        "(3) At $t = 1$, $A \\sim \\mathcal D_{E,1}$, so by Lemma 3.1 each OPT element is accepted with probability $p\\ln\\tfrac1p = \\tfrac1e$.",
+        "(4) Survival: elements before $p$, not executable online. Algorithm: elements after $p$, executable. Different elements, same distribution of the set: analyse one, run the other."
+      ],
+      "pit": "The ratio of the two distributions is hard to compute; the paper's §5 implements the same rule without computing it.",
+      "src": "Huang 2026 §4",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-28",
+      "g": "Matroid secretary",
+      "k": "Rank 1 vs Dynkin",
+      "q": "Rank 1 (choose one), arrival times uniform on $[0, 1]$, cut-off $p = \\tfrac1e$. Dynkin's rule: after $p$ accept the first best so far. Huang's rule accepts a best-so-far element with probability $\\le 1$. (1) With a single candidate arriving at $t$, what is Huang's acceptance probability, and his total probability of being chosen? (2) Compare success probabilities for $n = 1$ and $n = 7$: exact optimum, Dynkin, Huang. (3) What is the point of the weaker rule?",
+      "pts": [
+        "(1) $\\tfrac{p}{t}$; total $\\int_p^1\\tfrac{p}{t}\\,dt = p\\ln\\tfrac1p = \\tfrac1e = 0.368$ (accepting him outright would give 1).",
+        "(2) $n = 1$: 1, 0.632, 0.368. $n = 7$: 0.414, 0.369, 0.368.",
+        "(3) Every OPT element gets exactly $\\tfrac1e$ and the accepted set has an explicit distribution, which makes an induction over all matroids possible; it is not best on any one instance."
+      ],
+      "pit": "These numbers are from the paper card's own calculations; the paper gives no numerical example.",
+      "src": "Huang 2026 §3–4",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-29",
+      "g": "Prophet inequality",
+      "k": "Setting and ratio",
+      "q": "Prophet inequality with cancellation costs: independent offers $X_1, \\dots, X_n$ with known distributions arrive in order; one may accept, then later swap to a new offer by paying $f \\times$ the cancelled value. (1) What is the benchmark, and what is $\\alpha(f)$? (2) Give $\\alpha(\\infty)$ and $\\lim_{f \\to 0}\\alpha(f)$. (3) Contrast with asset selling. (4) Contrast with the marriage problem's $\\tfrac1e$.",
+      "pts": [
+        "(1) The prophet's $E[\\max_i X_i]$. $\\alpha(f)$ = worst case over instances of (optimal online net value) / $E[\\max_i X_i]$.",
+        "(2) $f = \\infty$: no recall, the classical $\\tfrac12$. $f \\to 0$: free swaps, ratio $\\to 1$.",
+        "(3) Asset selling asks for the optimal policy of one instance (accepting ends it); here the state also holds the kept value, and the question is the worst-case ratio over all instances.",
+        "(4) Marriage: distributions unknown, order random, only ranks seen, guarantee $\\tfrac1e$. Prophet: distributions known, order fixed, values seen, guarantee $\\tfrac12$ without recall."
+      ],
+      "pit": "$\\alpha(f)$ is a ratio; it has nothing to do with the threshold $\\alpha_t$ of asset selling.",
+      "src": "Ekbatani et al. 2024 §1",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-30",
+      "g": "Prophet inequality",
+      "k": "Worst instance",
+      "q": "Prophet inequality with cancellation cost $f$: $X_1 = 1$ for sure; $X_2 = 1 + f$ with probability $\\tfrac{1}{1+f}$, else 0. (1) Compute the prophet value. (2) Compute the online value with and without taking $X_1$. (3) Give the ratio. (4) Why is this instance chosen this way?",
+      "pts": [
+        "(1) $\\tfrac{f}{1+f} \\cdot 1 + \\tfrac{1}{1+f}(1 + f) = \\tfrac{1+2f}{1+f}$; for $f = 1$: 1.5.",
+        "(2) Take $X_1$: swapping gives $(1 + f) - f = 1$, the same as keeping, so 1. Skip $X_1$: $\\tfrac{1}{1+f}(1+f) = 1$. Both 1.",
+        "(3) $\\tfrac{1+f}{1+2f}$; $f = 1$: $\\tfrac23$.",
+        "(4) Indifference: $X_2 = (1 + f)X_1$ makes swapping and keeping equally good, so the right to cancel is worth nothing."
+      ],
+      "pit": "The classical bad case $X_2 = 4$ w.p. $\\tfrac14$ gives $\\tfrac{1}{1.75} = 0.571$ without recall, but $0.857$ with $f = 1$: worst cases must be rebuilt.",
+      "src": "Ekbatani et al. 2024 §1, §3.2",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-31",
+      "g": "Prophet inequality",
+      "k": "Recall changes the DP",
+      "q": "Three i.i.d. offers, each 1, 3 or 10 with probabilities 0.6, 0.3, 0.1; $E[X] = 2.5$, $E[\\max] = 4.465$. (1) Without recall ($f = \\infty$), find the thresholds and the value. (2) With $f = 1$, holding 3 with one offer left, and with two left: values? (3) With $f = 1$, do you accept a first offer of 3, and what is the total value?",
+      "pts": [
+        "(1) Last offer 2.5; second: accept 3 or 10, $0.6 \\cdot 2.5 + 0.3 \\cdot 3 + 0.1 \\cdot 10 = 3.4$; first: accept only 10, $0.9 \\cdot 3.4 + 0.1 \\cdot 10 = 4.06$.",
+        "(2) One left: swap only for 10 (net $10 - 3 = 7$): $0.9 \\cdot 3 + 0.1 \\cdot 7 = 3.4$. Two left: $0.1 \\cdot 7 + 0.9 \\cdot 3.4 = 3.76$.",
+        "(3) Not holding, two left: $0.6 \\cdot 2.5 + 0.3 \\cdot 3.4 + 0.1 \\cdot 10 = 3.52 < 3.76$, so accept 3. Total $0.6 \\cdot 3.52 + 0.3 \\cdot 3.76 + 0.1 \\cdot 10 = 4.24$ (ratio 0.95 against 0.909)."
+      ],
+      "pit": "With recall the state must include the value held. The example is from the paper card, not the paper.",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-32",
+      "g": "Prophet inequality",
+      "k": "Closed form, f ≥ 1",
+      "q": "Ekbatani et al.: $\\alpha(f) = \\dfrac{1}{2 - y_f(1)}$, where $y_f$ solves a differential equation on $[c_f, 1]$, $c_f = \\tfrac{f}{1+f}$. For $f \\ge 1$, $y_f(t) = (1+f)(t - c_f)^2$. (1) Compute $\\alpha(f)$ for $f \\ge 1$. (2) Why only for $f \\ge 1$? (3) Give $\\alpha$ at $f = 1, 2, 5$. (4) For $f = 1$, holding quantile $s = 0.1$, when do you swap?",
+      "pts": [
+        "(1) $y_f(1) = (1+f)\\big(\\tfrac{1}{1+f}\\big)^2 = \\tfrac{1}{1+f}$, so $\\alpha(f) = \\dfrac{1}{2 - \\frac{1}{1+f}} = \\dfrac{1+f}{1+2f}$.",
+        "(2) The formula is the first piece of the solution, valid for $t \\ge y_f(1)$; it covers $[c_f, 1]$ only if $\\tfrac{1}{1+f} \\le \\tfrac{f}{1+f}$, i.e. $f \\ge 1$.",
+        "(3) $\\tfrac23 = 0.667$, $\\tfrac35 = 0.6$, $\\tfrac{6}{11} = 0.545$.",
+        "(4) Swap when the new quantile $t$ has $y(t) = 2(t - 0.5)^2 > 0.1$, i.e. $t > 0.724$."
+      ],
+      "pit": "For $\\tfrac13 \\le f < 1$ there is a longer closed form ($\\alpha(0.5) = 0.737$); below $\\tfrac13$ none.",
+      "src": "Ekbatani et al. 2024 §2.4",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-33",
+      "g": "Overview",
+      "k": "Which tool",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. Which result or method answers each request? (1) The probability that a best-so-far candidate at $t$ is the best. (2) The action for a candidate who is not best so far. (3) $t^*$ for small $T$. (4) $t^*$ for large $T$. (5) The success probability. (6) A version with unequal orders.",
+      "pts": [
+        "(1) $\\tfrac{t}{T}$.",
+        "(2) Reject (accept only at $t = T$, forced).",
+        "(3) The recursion backwards, or add $\\tfrac{1}{T-1} + \\tfrac{1}{T-2} + \\dots$ until the sum first exceeds 1; the last term added is $\\tfrac{1}{t^*}$.",
+        "(4) $T/e$, then test the two neighbouring integers with the sum.",
+        "(5) $\\tfrac{t^*}{T}\\big(\\tfrac{1}{t^*} + \\dots + \\tfrac{1}{T-1}\\big)$; about 0.368 for large $T$.",
+        "(6) The formulas do not apply: set up the reward and the recursion again."
+      ],
+      "pit": "",
+      "src": "",
+      "seen": []
+    },
+    {
+      "id": "MDP-08-34",
+      "g": "Overview",
+      "k": "Notation traps",
+      "q": "Marriage problem: $T$ candidates arrive one at a time in random order (all $T!$ orders equally likely); each is accepted (the process stops) or rejected for good, the last must be accepted, and the aim is to maximize the probability of accepting the best of all $T$. What does each symbol mean here, and what is it confused with? (1) $t^*$. (2) $J_t$. (3) KE's $V_t$. (4) “rank 1”. (5) $\\neg 1$.",
+      "pts": [
+        "(1) Slides 8–9: last rejection time (accept iff $t > t^*$). Slide 12 and KE: first acceptance time. $T = 7$: 2 against 3.",
+        "(2) $V_t(\\neg 1)/t$ (slide 9); not the $J_t$ of asset selling. In KE, $J_t$ is the value function.",
+        "(3) $\\tfrac{T}{t}J_t(\\neg 1)$ in KE's letters: $T$ times the slides' $J_t$, i.e. the sum $\\tfrac1t + \\dots + \\tfrac{1}{T-1}$.",
+        "(4) Apparent rank 1 (best so far), not best of all.",
+        "(5) All states $2, \\dots, t$ at once; $V_t(\\neg 1)$ is also the value of rejecting at $t$."
+      ],
+      "pit": "",
+      "src": "S8 s.9, s.12 · KE p75–77",
+      "seen": []
+    }
+  ]
+}

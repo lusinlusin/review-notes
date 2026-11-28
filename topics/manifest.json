@@ -65,6 +65,10 @@
           "file": "mdp/ch07-optimal-stopping.json"
         },
         {
+          "title": "Marriage problem",
+          "file": "mdp/ch08-marriage-problem.json"
+        },
+        {
           "title": "Core concepts",
           "file": "mdp/core-concepts.json"
         }
